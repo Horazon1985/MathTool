@@ -1,6 +1,7 @@
 package mathtool;
 
 import expressionbuilder.ExpressionException;
+import javax.swing.*;
 
 public class MathCommandCompiler {
 
@@ -140,7 +141,7 @@ public class MathCommandCompiler {
     
 
     //Führt den Befehl aus.
-    public void executeCommand(String commandLine) {
+    public void executeCommand(String commandLine, JTextArea area) {
         
         
     
