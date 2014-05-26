@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 
 public class MathToolForm extends javax.swing.JFrame {
 
-    JTextArea solutionArea;
+    JTextArea mathToolArea;
     
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
@@ -33,10 +33,10 @@ public class MathToolForm extends javax.swing.JFrame {
         InputField.setBounds(10, 530, 1150, 25);
         
         //Ausgabefeld ausrichten
-        solutionArea = new JTextArea();
-        add(solutionArea);
-        solutionArea.setBounds(10, 20, 1250, 500);
-        solutionArea.setEditable(false);
+        mathToolArea = new JTextArea();
+        add(mathToolArea);
+        mathToolArea.setBounds(10, 20, 1250, 500);
+        mathToolArea.setEditable(false);
         
         //Labels ausrichten
         
@@ -111,8 +111,13 @@ public class MathToolForm extends javax.swing.JFrame {
      
             String[] param = c.getCommandAndArguments(s);
             for (String par : param){
-                solutionArea.append(par + "\n");
+                mathToolArea.append(par + "\n");
             }
+            
+        c.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D);
+        mathToolArea.append("\n");
+        
+            
 //        } catch(CompileException e){
 //            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
 //        } catch(NoParameterException e){
@@ -120,9 +125,6 @@ public class MathToolForm extends javax.swing.JFrame {
         } catch(WrongCommandFormException e){
             JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
-        
-        c.area = solutionArea;
-        c.executeCommand("mal sehen", solutionArea);
         
     }//GEN-LAST:event_InputButtonActionPerformed
 

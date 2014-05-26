@@ -1,11 +1,13 @@
 package mathtool;
 
 import expressionbuilder.ExpressionException;
+import expressionbuilder.GraphicMethods2D;
+import expressionbuilder.GraphicMethods3D;
 import javax.swing.*;
 
 public class MathCommandCompiler {
 
-    JTextArea area = new JTextArea();
+    private final String[] commands = {"showGraph", "diff"};
     
     //String commandLine. Ausgelesen wird der Befehl für die jeweilige math. Operation UND die Parameter in der Befehlsklammer
     public String[] getCommandAndArguments(String commandLine) throws WrongCommandFormException {
@@ -143,9 +145,34 @@ public class MathCommandCompiler {
     
 
     //Führt den Befehl aus.
-    public void executeCommand(String commandLine, JTextArea area) {
-        this.area = area;
-        this.area.append(commandLine + "...klappt!");
+    public void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
+            GraphicMethods3D graphicMethods3D) {
+
+        String[] command_and_params = new String[2];
+        try{
+            command_and_params = getCommandAndArguments(commandLine);
+            String command = command_and_params[0];
+            String[] params = new String[1];
+            params = getArguments(command_and_params[1]);
+            
+            boolean valid_command = false;
+            for (String c : commands){
+                if (command.equals(c)){
+                    valid_command = true;
+                }
+            }
+            
+            if (!valid_command){
+                area.append("ungültiger Befehl");
+                return;
+            }
+
+            area.append("Befehl OK");
+
+        } catch(Exception e){
+            return;
+        }
+
     } 
     
     
