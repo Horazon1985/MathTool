@@ -5,6 +5,8 @@ import javax.swing.*;
 
 public class MathCommandCompiler {
 
+    JTextArea area = new JTextArea();
+    
     //String commandLine. Ausgelesen wird der Befehl für die jeweilige math. Operation UND die Parameter in der Befehlsklammer
     public String[] getCommandAndArguments(String commandLine) throws WrongCommandFormException {
         
@@ -142,10 +144,8 @@ public class MathCommandCompiler {
 
     //Führt den Befehl aus.
     public void executeCommand(String commandLine, JTextArea area) {
-        
-        
-    
-    
+        this.area = area;
+        this.area.append(commandLine + "...klappt!");
     } 
     
     

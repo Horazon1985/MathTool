@@ -120,6 +120,10 @@ public class MathToolForm extends javax.swing.JFrame {
         } catch(WrongCommandFormException e){
             JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
+        
+        c.area = solutionArea;
+        c.executeCommand("mal sehen", solutionArea);
+        
     }//GEN-LAST:event_InputButtonActionPerformed
 
     public static void main(String args[]) {
