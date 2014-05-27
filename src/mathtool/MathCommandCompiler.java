@@ -145,8 +145,7 @@ public class MathCommandCompiler {
     
 
     //Führt den Befehl aus.
-    public void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D) throws CompileException, NoParameterException, 
+    public Commands executeCommand(String commandLine) throws CompileException, NoParameterException, 
             WrongCommandFormException, WrongParameterException {
 
         String[] command_and_params = new String[2];
@@ -164,46 +163,32 @@ public class MathCommandCompiler {
         }
             
         if (!valid_command){
-            area.append("Ungültiger Befehl \n");
-            return;
+            throw new WrongCommandFormException("Ungültiger Befehl");
         }
 
         Commands c = new Commands();
         
         if (command.equals("diff")){
             try{
-                c.diff(params, area);
+                c = c.diff(params);
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
             }
         }
         
         if (command.equals("int")){
-            try{
-                c.diff(params, area);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-            }
+
         }
         
         if (command.equals("showGraph")){
-            try{
-                c.diff(params, area);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-            }
+
         }
         
         if (command.equals("solve")){
-            try{
-                c.diff(params, area);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-            }
+
         }
 
-        
-        
+        return c;
 
     } 
     

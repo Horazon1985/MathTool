@@ -104,7 +104,8 @@ public class MathToolForm extends javax.swing.JFrame {
 
 //        graphicMethods2D.setBounds(770, 20, 500, 500);
         
-        MathCommandCompiler c = new MathCommandCompiler();
+        MathCommandCompiler mcc = new MathCommandCompiler();
+        Commands c = new Commands();
         
         String s = InputField.getText();
 
@@ -116,7 +117,11 @@ public class MathToolForm extends javax.swing.JFrame {
         try{
         
             Expression expr = Expression.build(s, new HashSet());
-            mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
+            if (expr.equals(expr.simplify())){
+                mathToolArea.append(expr.writeFormula() + "\n");
+            } else {
+                mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
+            }    
             return;
         
         } catch (ExpressionException e){
@@ -125,7 +130,8 @@ public class MathToolForm extends javax.swing.JFrame {
         try{
      
             mathToolArea.append(s + "\n");
-            c.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D);
+            c = mcc.executeCommand(s);
+            c.output(mathToolArea, graphicMethods2D, graphicMethods3D);
             
         } catch(Exception e){
             JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
