@@ -71,7 +71,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("command(x, y, z)");
+        InputField.setText("diff(x^2, x)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -106,25 +106,31 @@ public class MathToolForm extends javax.swing.JFrame {
         
         MathCommandCompiler c = new MathCommandCompiler();
         
+        String s = InputField.getText();
+
+        /**
+        Zunächst: es wird geschaut, ob der Befehl ein mathematischer Ausdruck ist.
+        Ja -> Ausdruck und vereinfachten Ausdruck ausgeben.
+        Nein -> Weiter.
+         */
         try{
-            String s = InputField.getText();
-     
-            String[] param = c.getCommandAndArguments(s);
-            for (String par : param){
-                mathToolArea.append(par + "\n");
-            }
-            
-        c.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D);
-        mathToolArea.append("\n");
         
-            
-//        } catch(CompileException e){
-//            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-//        } catch(NoParameterException e){
-//            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-        } catch(WrongCommandFormException e){
-            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+            Expression expr = Expression.build(s, new HashSet());
+            mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
+            return;
+        
+        } catch (ExpressionException e){
         }
+        
+        try{
+     
+            mathToolArea.append(s + "\n");
+            c.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D);
+            
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+        } 
+
         
     }//GEN-LAST:event_InputButtonActionPerformed
 
