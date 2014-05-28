@@ -10,7 +10,7 @@ public class MathCommandCompiler {
     private final String[] commands = {"diff", "int", "showGraph", "solve"};
     
     //String commandLine. Ausgelesen wird der Befehl für die jeweilige math. Operation UND die Parameter in der Befehlsklammer
-    public String[] getCommandAndArguments(String commandLine) throws WrongCommandFormException {
+    public String[] getCommandAndArguments(String commandLine) throws CompileException {
         
         int l = commandLine.length();
         
@@ -41,17 +41,17 @@ public class MathCommandCompiler {
         
         //Wenn der Befehl leer ist -> Fehler.
         if (result[0].length() == 0){
-            throw new WrongCommandFormException("Der Befehl ist leer.");
+            throw new CompileException("Der Befehl ist leer.");
         }
         
         //Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...)).
         if (result[0].length() > l - 2){
-            throw new WrongCommandFormException("Der Befehl besitzt die falsche Form. Er muss von der Form command(...) sein.");
+            throw new CompileException("Der Befehl " + commandLine + " ist kein gültiger Befehl.");
         }
         
         //Wenn am Ende nicht ")" steht.
         if (!commandLine.substring(l - 1, l).equals(")")){
-            throw new WrongCommandFormException("Es fehlt am Ende eine schließende Klammer.");
+            throw new CompileException("Im Befehl " + commandLine + " fehlt am Ende eine schließende Klammer.");
         }
         
         result[1] = commandLine.substring(result[0].length() + 1, l - 1);
@@ -62,7 +62,7 @@ public class MathCommandCompiler {
     
     
     //Input: String commandline. Nach einem eingelesenen Komma werden die Parameter getrennt.
-    public String[] getArguments(String commandLine) throws NoParameterException, CompileException {
+    public String[] getArguments(String commandLine) throws CompileException {
 
         //n ist später die Anzahl der Parameter im String commandLine
         int n = 1;
@@ -87,7 +87,7 @@ public class MathCommandCompiler {
 
         //Falls Parameterstring leer ist -> Fehlermeldung auswerfen.
         if (commandLine.equals("")){
-            throw new NoParameterException("Keine Parameter.");
+            throw new CompileException("Keine Parameter.");
         }
 
         for(int i = 0; i < l; i++){
@@ -124,7 +124,7 @@ public class MathCommandCompiler {
             if (commandLine_part.equals(")")) brackets_count--;
             if ((brackets_count==0) && (commandLine_part.equals(","))){
                 if (commandLine.substring(start_pos, i).equals("")){
-                    throw new NoParameterException("Leerer Parameter.");
+                    throw new CompileException("Leerer Parameter.");
                 }
                 result[param_count] = commandLine.substring(start_pos, i);
                 start_pos = i + 1;
@@ -132,7 +132,7 @@ public class MathCommandCompiler {
             }
             if (i == l - 1){
                 if (start_pos == l){
-                    throw new NoParameterException("Leerer Parameter.");
+                    throw new CompileException("Leerer Parameter.");
                 }
                 result[n - 1] = commandLine.substring(start_pos, l);
             }
@@ -145,8 +145,7 @@ public class MathCommandCompiler {
     
 
     //Führt den Befehl aus.
-    public Commands executeCommand(String commandLine) throws CompileException, NoParameterException, 
-            WrongCommandFormException, WrongParameterException {
+    public Commands executeCommand(String commandLine) throws CompileException {
 
         String[] command_and_params = new String[2];
 
@@ -163,7 +162,7 @@ public class MathCommandCompiler {
         }
             
         if (!valid_command){
-            throw new WrongCommandFormException("Ungültiger Befehl");
+            throw new CompileException("Unbekannter Befehl: " + command + "\n");
         }
 
         Commands c = new Commands();

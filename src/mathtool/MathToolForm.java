@@ -71,7 +71,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("diff(x^2, x)");
+        InputField.setText("diff(diff(diff(x^7,x),x,2), x,2)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -111,14 +111,16 @@ public class MathToolForm extends javax.swing.JFrame {
 
         /**
         Zunächst: es wird geschaut, ob der Befehl ein mathematischer Ausdruck ist.
-        Ja -> Ausdruck und vereinfachten Ausdruck ausgeben.
+        Ja -> Ausdruck (und evtl. vereinfachten Ausdruck) ausgeben.
         Nein -> Weiter.
          */
         try{
         
             Expression expr = Expression.build(s, new HashSet());
+            //Falls man den Ausdruck noch vereinfachen kann -> vereinfachen und auch ausgeben.
             if (expr.equals(expr.simplify())){
                 mathToolArea.append(expr.writeFormula() + "\n");
+            //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
             } else {
                 mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
             }    
@@ -134,7 +136,8 @@ public class MathToolForm extends javax.swing.JFrame {
             c.output(mathToolArea, graphicMethods2D, graphicMethods3D);
             
         } catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+//            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
         } 
 
         
