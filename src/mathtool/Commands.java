@@ -75,7 +75,7 @@ public class Commands {
     
     
     
-    public Commands diff(String[] params) throws CompileException {
+    public Commands diff(String[] params) throws CompileException, EvaluationException {
         
         if (params.length < 2){
             throw new CompileException("Zu wenig Parameter.");
@@ -108,6 +108,7 @@ public class Commands {
             return c;
             
         } catch (ExpressionException e){
+        } catch (EvaluationException e){
         }
         
         

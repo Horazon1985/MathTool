@@ -3,6 +3,7 @@ package mathtool;
 import expressionbuilder.Expression;
 import java.awt.*; 
 import expressionbuilder.ExpressionException;
+import expressionbuilder.EvaluationException;
 import expressionbuilder.AnalysisMethods;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.awt.event.KeyListener; 
 
 
 public class MathToolForm extends javax.swing.JFrame {
@@ -71,7 +73,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("diff(diff(diff(x^7,x),x,2), x,2)");
+        InputField.setText("x+diff(3*x,x)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,6 +120,16 @@ public class MathToolForm extends javax.swing.JFrame {
         
             Expression expr = Expression.build(s, new HashSet());
             //Falls man den Ausdruck noch vereinfachen kann -> vereinfachen und auch ausgeben.
+
+            //Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+            try{
+                Expression expr_simplified = expr.simplify();
+            } catch (EvaluationException e){
+                mathToolArea.append(expr.writeFormula() + "\n");
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                return;
+            } 
+            
             if (expr.equals(expr.simplify())){
                 mathToolArea.append(expr.writeFormula() + "\n");
             //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
@@ -127,6 +139,7 @@ public class MathToolForm extends javax.swing.JFrame {
             return;
         
         } catch (ExpressionException e){
+        } catch (EvaluationException e){
         }
         
         try{
@@ -143,6 +156,7 @@ public class MathToolForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_InputButtonActionPerformed
 
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
