@@ -8,6 +8,7 @@ import expressionbuilder.AnalysisMethods;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.Variable;
 
 import java.util.HashSet;
 import javax.swing.JOptionPane;
@@ -73,7 +74,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("x+diff(3*x,x)");
+        InputField.setText("int(x^4,0,1)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,38 +122,35 @@ public class MathToolForm extends javax.swing.JFrame {
             Expression expr = Expression.build(s, new HashSet());
             //Falls man den Ausdruck noch vereinfachen kann -> vereinfachen und auch ausgeben.
 
-            //Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+            /**Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+             * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber beim Auswerten einen Fehler.
+             */
             try{
                 Expression expr_simplified = expr.simplify();
+                if (expr.equals(expr_simplified)){
+                    mathToolArea.append(expr.writeFormula() + "\n");
+                //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
+                } else {
+                    mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
+                }    
             } catch (EvaluationException e){
                 mathToolArea.append(expr.writeFormula() + "\n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;
             } 
-            
-            if (expr.equals(expr.simplify())){
-                mathToolArea.append(expr.writeFormula() + "\n");
-            //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
-            } else {
-                mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
-            }    
-            return;
         
         } catch (ExpressionException e){
-        } catch (EvaluationException e){
+                mathToolArea.append("ExpressionException" + "\n");
         }
         
-        try{
+//        try{
      
-            mathToolArea.append(s + "\n");
-            c = mcc.executeCommand(s);
-            c.output(mathToolArea, graphicMethods2D, graphicMethods3D);
+//            mathToolArea.append(s + "\n");
+//            mcc.executeCommand(s);
             
-        } catch(Exception e){
-//            JOptionPane.showMessageDialog(null, "Fehler! " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
-        } 
-
+//        } catch(Exception e){
+//            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+//        } 
         
     }//GEN-LAST:event_InputButtonActionPerformed
 
@@ -184,7 +182,7 @@ public class MathToolForm extends javax.swing.JFrame {
             public void run() {
                 MathToolForm MyMathToolForm = new MathToolForm();
                 MyMathToolForm.setVisible(true);
-                MyMathToolForm.setTitle("MathTool");
+                MyMathToolForm.setTitle("MathTool for Analysis and Numerical Computation");
                 MyMathToolForm.setBounds(20,50,1300,650);
             }
         });
