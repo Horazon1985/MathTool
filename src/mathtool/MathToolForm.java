@@ -1,19 +1,17 @@
 package mathtool;
 
 import expressionbuilder.Expression;
-import java.awt.*; 
+import java.awt.Graphics; 
 import expressionbuilder.ExpressionException;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.AnalysisMethods;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
-import expressionbuilder.Variable;
 
 import java.util.HashSet;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 import java.awt.event.KeyListener; 
 
 
@@ -33,22 +31,28 @@ public class MathToolForm extends javax.swing.JFrame {
         //Objekte ausrichten
         
         //Eingabefelder ausrichten
-        InputField.setBounds(10, 530, 1150, 25);
+        InputField.setBounds(10, 530, 650, 25);
         
         //Ausgabefeld ausrichten
         mathToolArea = new JTextArea();
         add(mathToolArea);
-        mathToolArea.setBounds(10, 20, 1250, 500);
+        mathToolArea.setBounds(10, 20, 750, 500);
         mathToolArea.setEditable(false);
-        
-        //Labels ausrichten
-        
+        mathToolArea.setLineWrap(true);
+        mathToolArea.setWrapStyleWord(true);        
+        JScrollPane scrollPane = new JScrollPane(mathToolArea, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBounds(10,20,750,500);
+        add(scrollPane);
+//        scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);        
+
         //Buttons ausrichten
-        InputButton.setBounds(1160, 530, 100, 25);
+        InputButton.setBounds(660, 530, 100, 25);
         
         //Grafik-Objekte initialisieren
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
+        graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
         
         //Numerische Objekte initialisieren
@@ -74,7 +78,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("int(x^4,0,1)");
+        InputField.setText("plot(taylor(exp(x),x,0,5),-1,2)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,14 +105,9 @@ public class MathToolForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-//        solutionArea.setBounds(10, 20, 750, 500);
-//        InputField.setBounds(10, 530, 650, 25);
-//        InputButton.setBounds(660, 530, 100, 25);
-
-//        graphicMethods2D.setBounds(770, 20, 500, 500);
         
         MathCommandCompiler mcc = new MathCommandCompiler();
-        Commands c = new Commands();
+        Command c = new Command();
         
         String s = InputField.getText();
 
@@ -132,7 +131,8 @@ public class MathToolForm extends javax.swing.JFrame {
                 //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                 } else {
                     mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
-                }    
+                }
+                return;
             } catch (EvaluationException e){
                 mathToolArea.append(expr.writeFormula() + "\n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
@@ -140,17 +140,16 @@ public class MathToolForm extends javax.swing.JFrame {
             } 
         
         } catch (ExpressionException e){
-                mathToolArea.append("ExpressionException" + "\n");
         }
         
-//        try{
+        try{
      
-//            mathToolArea.append(s + "\n");
-//            mcc.executeCommand(s);
+            mathToolArea.append(s + "\n");
+            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
             
-//        } catch(Exception e){
-//            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
-//        } 
+        } catch(Exception e){
+            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+        } 
         
     }//GEN-LAST:event_InputButtonActionPerformed
 
