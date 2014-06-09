@@ -176,6 +176,9 @@ public class MathCommandCompiler {
      * etc.
      */
     
+    /** c Enthält genau 3 Parameter 
+     * Parameter: Expression, double, double (als Strings)
+     */
     private void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
         
@@ -199,8 +202,29 @@ public class MathCommandCompiler {
     }
 
     
-    private void executePlot3D(Command c, GraphicMethods3D graphicMethods3D){
+    /** c Enthält genau 5 Parameter 
+     * Parameter: Expression, double, double, double, double (als Strings)
+     */
+    private void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
+            EvaluationException {
     
+        HashSet vars = new HashSet();
+        Expression expr = Expression.build(c.getParams()[0], vars);
+        expr = expr.simplify();
+        double x_0 = Double.parseDouble(c.getParams()[1]);
+        double x_1 = Double.parseDouble(c.getParams()[2]);
+        double y_0 = Double.parseDouble(c.getParams()[1]);
+        double y_1 = Double.parseDouble(c.getParams()[2]);
+
+        Iterator iter = vars.iterator();
+        String var1 = (String) iter.next();
+        String var2 = (String) iter.next();
+        
+//        graphicMethods3D.expressionToGraph(expr, var, x_0, x_1);
+//        Graphics g = graphicMethods3D.getGraphics();
+//        graphicMethods3D.setParameters(var, 0, 0, critical_line_exists, pos_of_critical_line);
+//        graphicMethods3D.drawGraph();
+
     }
 
     
