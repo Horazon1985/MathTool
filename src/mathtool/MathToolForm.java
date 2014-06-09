@@ -49,12 +49,18 @@ public class MathToolForm extends javax.swing.JFrame {
         //Buttons ausrichten
         InputButton.setBounds(660, 530, 100, 25);
         
-        //Grafik-Objekte initialisieren
+        //2D-Grafikobjekte initialisieren
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
         graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
         
+        //3D-Grafikobjekte initialisieren
+        graphicMethods3D = new GraphicMethods3D();
+        add(graphicMethods3D);
+        graphicMethods3D.setBounds(770, 20, 500, 500);
+        repaint();
+
         //Numerische Objekte initialisieren
         numericalMethods = new NumericalMethods();
         
@@ -78,7 +84,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("plot(taylor(exp(x),x,0,5),-1,2)");
+        InputField.setText("plot(x^2+y^2, -1, 1, -1, 1)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -2,6 +2,7 @@ package mathtool;
 
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
+import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
@@ -185,6 +186,12 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = Expression.build(c.getParams()[0], vars);
         expr = expr.simplify();
+        
+        //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
+        if (expr instanceof Constant){
+            vars.add("x");
+        }
+        
         double x_0 = Double.parseDouble(c.getParams()[1]);
         double x_1 = Double.parseDouble(c.getParams()[2]);
 
@@ -211,6 +218,25 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = Expression.build(c.getParams()[0], vars);
         expr = expr.simplify();
+        
+        //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
+        if (expr instanceof Constant){
+            vars.add("x");
+            vars.add("y");
+        }
+
+        /** Falls der Ausdruck expr nur von einer Variablen abhängt, 
+         * sollen die andere Achse eine fest gewählte Bezeichnung tragen.
+         * 
+         */
+        if (vars.size() == 1){
+            if (vars.contains("x")) {
+                vars.add("y");
+            } else {
+                vars.add("x");
+            }
+        }
+        
         double x_0 = Double.parseDouble(c.getParams()[1]);
         double x_1 = Double.parseDouble(c.getParams()[2]);
         double y_0 = Double.parseDouble(c.getParams()[1]);
@@ -220,10 +246,10 @@ public class MathCommandCompiler {
         String var1 = (String) iter.next();
         String var2 = (String) iter.next();
         
-//        graphicMethods3D.expressionToGraph(expr, var, x_0, x_1);
-//        Graphics g = graphicMethods3D.getGraphics();
-//        graphicMethods3D.setParameters(var, 0, 0, critical_line_exists, pos_of_critical_line);
-//        graphicMethods3D.drawGraph();
+        graphicMethods3D.expressionToGraph(expr, var1, var2, x_0, x_1, y_0, y_1);
+        Graphics g = graphicMethods3D.getGraphics();
+        graphicMethods3D.setParameters(150, 75, 75, 30);
+        graphicMethods3D.drawGraph();
 
     }
 
