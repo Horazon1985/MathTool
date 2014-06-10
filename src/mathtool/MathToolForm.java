@@ -20,7 +20,9 @@ public class MathToolForm extends javax.swing.JFrame {
     JTextArea mathToolArea;
     
     GraphicMethods2D graphicMethods2D;
+    Graphics g2D;
     GraphicMethods3D graphicMethods3D;
+    Graphics g3D;
     NumericalMethods numericalMethods;
     AnalysisMethods analysisMethods;
 
@@ -51,12 +53,14 @@ public class MathToolForm extends javax.swing.JFrame {
         
         //2D-Grafikobjekte initialisieren
         graphicMethods2D = new GraphicMethods2D();
+        g2D = graphicMethods2D.getGraphics();
         add(graphicMethods2D);
         graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
         
         //3D-Grafikobjekte initialisieren
         graphicMethods3D = new GraphicMethods3D();
+        g3D = graphicMethods3D.getGraphics();
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
@@ -151,7 +155,7 @@ public class MathToolForm extends javax.swing.JFrame {
         try{
      
             mathToolArea.append(s + "\n");
-            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
+            mcc.executeCommand(s, g2D, g3D, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
             
         } catch(Exception e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");

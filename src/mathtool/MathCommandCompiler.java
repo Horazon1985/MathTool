@@ -130,7 +130,7 @@ public class MathCommandCompiler {
             
     
     //Führt den Befehl aus.
-    public void executeCommand(String commandLine, JTextArea area,
+    public void executeCommand(String commandLine, Graphics g2D, Graphics g3D, JTextArea area,
             NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D) throws ExpressionException, EvaluationException {
         
@@ -160,10 +160,10 @@ public class MathCommandCompiler {
         Command c = getCommand(command, params);
         
         if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
-            executePlot2D(c, graphicMethods2D);
+            executePlot2D(c, g2D, graphicMethods2D);
         } else 
         if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
-            executePlot3D(c, graphicMethods3D);
+            executePlot3D(c, g3D, graphicMethods3D);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -180,7 +180,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 3 Parameter 
      * Parameter: Expression, double, double (als Strings)
      */
-    private void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
+    private void executePlot2D(Command c, Graphics g, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
         
         HashSet vars = new HashSet();
@@ -202,7 +202,7 @@ public class MathCommandCompiler {
         double pos_of_critical_line = 0;
         
         graphicMethods2D.expressionToGraph(expr, var, x_0, x_1);
-        Graphics g = graphicMethods2D.getGraphics();
+//        Graphics g = graphicMethods2D.getGraphics();
         graphicMethods2D.setParameters(var, 0, 0, critical_line_exists, pos_of_critical_line);
         graphicMethods2D.drawGraph();
         
@@ -212,7 +212,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 5 Parameter 
      * Parameter: Expression, double, double, double, double (als Strings)
      */
-    private void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
+    private void executePlot3D(Command c, Graphics g, GraphicMethods3D graphicMethods3D) throws ExpressionException,
             EvaluationException {
     
         HashSet vars = new HashSet();
@@ -246,9 +246,9 @@ public class MathCommandCompiler {
         String var1 = (String) iter.next();
         String var2 = (String) iter.next();
         
-        graphicMethods3D.expressionToGraph(expr, var1, var2, x_0, x_1, y_0, y_1);
-        Graphics g = graphicMethods3D.getGraphics();
-        graphicMethods3D.setParameters(150, 75, 75, 30);
+        graphicMethods3D.setParameters(var1, var2, 150, 75, 75, 30);
+        graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
+//        Graphics g = graphicMethods3D.getGraphics();
         graphicMethods3D.drawGraph();
 
     }
