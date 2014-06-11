@@ -87,7 +87,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("plot(x^2+y^2, -1, 1, -1, 1)");
+        InputField.setText("plot(x^2, -1, 1)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,7 +160,6 @@ public class MathToolForm extends javax.swing.JFrame {
             if ((com[0].equals("plot")) && (params.length == 3)){
 //                remove(graphicMethods3D);
 //                validate();
-//                update(this.getGraphics());
                 graphicMethods2D = new GraphicMethods2D();
                 add(graphicMethods2D);
                 graphicMethods2D.setBounds(770, 20, 500, 500);
@@ -169,7 +168,6 @@ public class MathToolForm extends javax.swing.JFrame {
             if ((com[0].equals("plot")) && (params.length == 5)){
 //                remove(graphicMethods2D);
 //                validate();
-//                update(this.getGraphics());
                 graphicMethods3D = new GraphicMethods3D();
                 add(graphicMethods3D);
                 graphicMethods3D.setBounds(770, 20, 500, 500);

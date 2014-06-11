@@ -1,5 +1,6 @@
 package mathtool;
 
+import expressionbuilder.BinaryOperation;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.Constant;
@@ -7,6 +8,8 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.TypeBinary;
+import expressionbuilder.Variable;
 import java.awt.Graphics;
 import javax.swing.*;
 import java.util.HashSet;
@@ -124,6 +127,37 @@ public class MathCommandCompiler {
             }
         }
         
+        //TANGENT
+        if (command.equals("tangent")){
+
+            try{
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(params[0], vars);
+            } catch (ExpressionException e){
+                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein.");
+            }
+            
+            HashSet vars = new HashSet();
+            Expression expr = Expression.build(params[0], vars);
+            if (vars.size() != params.length - 1){
+                throw new ExpressionException("Falsche Anzahl von Parametern.");
+            }
+
+            for (int i = 1; i < params.length; i++){
+                try{
+                    Double x = Double.parseDouble(params[i]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der " + String.valueOf(i) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl sein.");
+                }
+            }
+            
+            result.setName(command);
+            result.setParams(params);
+            result.setLeft(expr);
+            return result;
+        
+        }
+        
         return result;
         
     }
@@ -164,6 +198,9 @@ public class MathCommandCompiler {
         } else 
         if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
             executePlot3D(c, g3D, graphicMethods3D);
+        } else 
+        if ((c.getName().equals("tangent")) && (c.getParams().length >= 2)){
+            executeTangent(c, area);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -202,7 +239,6 @@ public class MathCommandCompiler {
         double pos_of_critical_line = 0;
         
         graphicMethods2D.expressionToGraph(expr, var, x_0, x_1);
-//        Graphics g = graphicMethods2D.getGraphics();
         graphicMethods2D.setParameters(var, 0, 0, critical_line_exists, pos_of_critical_line);
         graphicMethods2D.drawGraph();
         
@@ -248,12 +284,36 @@ public class MathCommandCompiler {
         
         graphicMethods3D.setParameters(var1, var2, 150, 75, 75, 30);
         graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
-//        Graphics g = graphicMethods3D.getGraphics();
         graphicMethods3D.drawGraph();
 
     }
 
     
-    
+    private void executeTangent(Command c, JTextArea area) throws ExpressionException,
+            EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression expr = Expression.build(c.getParams()[0], vars);
+        
+        Iterator iter = vars.iterator();
+        for (int i = 0; i < c.getParams().length - 1; i++){
+            String var = (String) iter.next();
+//            Variable.setValue(var, i);
+        }
+
+        Expression result = new Variable("z", 0);
+        double part_derivative;
+        for (int i = 0; i < c.getParams().length - 1; i++){
+            String var = (String) iter.next();
+            part_derivative = expr.diff(var, 0).evaluate();
+            result = new BinaryOperation(result, new BinaryOperation(new Constant(part_derivative), 
+                    new BinaryOperation(new Variable(var, 0), new Constant(Double.parseDouble(c.getParams()[i - 1])), 
+                    TypeBinary.MINUS), TypeBinary.TIMES), TypeBinary.PLUS);
+        }
+        
+        area.append("Tangentialebene: " + result.writeFormula() + " = " + String.valueOf(expr.evaluate()));
+        
+    }    
+        
     
 }
