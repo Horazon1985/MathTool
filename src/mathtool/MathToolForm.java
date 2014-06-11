@@ -46,11 +46,10 @@ public class MathToolForm extends javax.swing.JFrame {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(10,20,750,500);
         add(scrollPane);
-//        scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);        
 
         //Buttons ausrichten
         InputButton.setBounds(660, 530, 100, 25);
-        
+/**        
         //2D-Grafikobjekte initialisieren
         graphicMethods2D = new GraphicMethods2D();
         g2D = graphicMethods2D.getGraphics();
@@ -64,7 +63,7 @@ public class MathToolForm extends javax.swing.JFrame {
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
-
+*/
         //Numerische Objekte initialisieren
         numericalMethods = new NumericalMethods();
         
@@ -155,6 +154,29 @@ public class MathToolForm extends javax.swing.JFrame {
         try{
      
             mathToolArea.append(s + "\n");
+            
+            String[] com = Expression.getOperatorAndArguments(s);
+            String[] params = Expression.getArguments(com[1]);
+            if ((com[0].equals("plot")) && (params.length == 3)){
+//                remove(graphicMethods3D);
+//                validate();
+//                update(this.getGraphics());
+                graphicMethods2D = new GraphicMethods2D();
+                add(graphicMethods2D);
+                graphicMethods2D.setBounds(770, 20, 500, 500);
+                repaint();
+            }
+            if ((com[0].equals("plot")) && (params.length == 5)){
+//                remove(graphicMethods2D);
+//                validate();
+//                update(this.getGraphics());
+                graphicMethods3D = new GraphicMethods3D();
+                add(graphicMethods3D);
+                graphicMethods3D.setBounds(770, 20, 500, 500);
+                repaint();
+            }
+            
+            
             mcc.executeCommand(s, g2D, g3D, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
             
         } catch(Exception e){

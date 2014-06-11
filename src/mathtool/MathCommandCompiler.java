@@ -239,8 +239,8 @@ public class MathCommandCompiler {
         
         double x_0 = Double.parseDouble(c.getParams()[1]);
         double x_1 = Double.parseDouble(c.getParams()[2]);
-        double y_0 = Double.parseDouble(c.getParams()[1]);
-        double y_1 = Double.parseDouble(c.getParams()[2]);
+        double y_0 = Double.parseDouble(c.getParams()[3]);
+        double y_1 = Double.parseDouble(c.getParams()[4]);
 
         Iterator iter = vars.iterator();
         String var1 = (String) iter.next();
