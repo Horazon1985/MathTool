@@ -11,15 +11,20 @@ import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.TypeBinary;
 import expressionbuilder.Variable;
 import java.awt.Graphics;
+import java.util.Arrays;
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 public class MathCommandCompiler {
 
     private final String[] commands = {"plot", "solve"};
     
     
+    /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
+     * Diese wurden bereits im Vorfeld beseitigt. 
+     */
     private static Command getCommand(String command, String[] params) throws ExpressionException {
 
         Command result = new Command();
@@ -127,32 +132,63 @@ public class MathCommandCompiler {
             }
         }
         
-        //TANGENT
-        if (command.equals("tangent")){
+        //DEFINE
+        if (command.equals("define")){
 
-            try{
-                HashSet vars = new HashSet();
-                Expression expr = Expression.build(params[0], vars);
-            } catch (ExpressionException e){
-                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein.");
+            String par = params[0];
+            String eq = "=";
+
+            if (!par.contains(eq)){
+                throw new ExpressionException("im Befehl 'define' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
             }
             
-            HashSet vars = new HashSet();
-            Expression expr = Expression.build(params[0], vars);
-            if (vars.size() != params.length - 1){
-                throw new ExpressionException("Falsche Anzahl von Parametern.");
+            String function_name_and_params = par.substring(0, par.indexOf(eq));
+            String function_term = par.substring(par.indexOf(eq) + 1, par.length());
+            
+            try{
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(function_term, vars);
+            } catch (ExpressionException e){
+                throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite.");
             }
 
-            for (int i = 1; i < params.length; i++){
-                try{
-                    Double x = Double.parseDouble(params[i]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der " + String.valueOf(i) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl sein.");
+            /** Falls man hier ankommt, muss das obige try funktioniert haben.
+             * Jetzt wird die rechte Seite gelesen (durch den die Funktion auf der linken Seite von "=" definiert wird).
+             */
+            HashSet vars = new HashSet();
+            Expression expr = Expression.build(function_term, vars);
+            
+            try{
+                String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
+                String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
+            } catch (ExpressionException e){
+                throw new ExpressionException("Ungültige Funktionsdefinition.");
+            }
+            
+            /** Funktionsnamen und Variablen auslesen.
+             */
+            String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
+            String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
+            
+            /** Prüfen, ob alle Variablen, die in expr auftreten, auch als Funktionsparameter vorhanden sind.
+             * Sonst -> Fehler ausgeben.
+             */
+            
+            List<String> vars_list = Arrays.asList(function_vars);
+            Iterator iter = vars.iterator();
+            String var;
+            for (int i = 0; i < vars.size(); i++){
+                var = (String) iter.next();
+                if (!vars_list.contains(var)){
+                    throw new ExpressionException("Auf der rechten Seite taucht eine Variable auf, die nicht als Funktionsparameter vorkommt.");
                 }
             }
             
+            String[] command_param_left = new String[1];
+            command_param_left[0] = function_name_and_params; 
+            
             result.setName(command);
-            result.setParams(params);
+            result.setParams(command_param_left);
             result.setLeft(expr);
             return result;
         
@@ -199,8 +235,8 @@ public class MathCommandCompiler {
         if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
             executePlot3D(c, g3D, graphicMethods3D);
         } else 
-        if ((c.getName().equals("tangent")) && (c.getParams().length >= 2)){
-            executeTangent(c, area);
+        if ((c.getName().equals("define")) && (c.getParams().length == 1)){
+            executeDefine(c, area);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -287,33 +323,17 @@ public class MathCommandCompiler {
         graphicMethods3D.drawGraph();
 
     }
+        
 
-    
-    private void executeTangent(Command c, JTextArea area) throws ExpressionException,
+    private void executeDefine(Command c, JTextArea area) throws ExpressionException,
             EvaluationException {
 
-        HashSet vars = new HashSet();
-        Expression expr = Expression.build(c.getParams()[0], vars);
         
-        Iterator iter = vars.iterator();
-        for (int i = 0; i < c.getParams().length - 1; i++){
-            String var = (String) iter.next();
-//            Variable.setValue(var, i);
-        }
-
-        Expression result = new Variable("z", 0);
-        double part_derivative;
-        for (int i = 0; i < c.getParams().length - 1; i++){
-            String var = (String) iter.next();
-            part_derivative = expr.diff(var, 0).evaluate();
-            result = new BinaryOperation(result, new BinaryOperation(new Constant(part_derivative), 
-                    new BinaryOperation(new Variable(var, 0), new Constant(Double.parseDouble(c.getParams()[i - 1])), 
-                    TypeBinary.MINUS), TypeBinary.TIMES), TypeBinary.PLUS);
-        }
         
-        area.append("Tangentialebene: " + result.writeFormula() + " = " + String.valueOf(expr.evaluate()));
+        
         
     }    
         
+    
     
 }

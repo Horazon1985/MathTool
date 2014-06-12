@@ -87,7 +87,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("plot(x^2, -1, 1)");
+        InputField.setText("div(x^2+y^2+z)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
