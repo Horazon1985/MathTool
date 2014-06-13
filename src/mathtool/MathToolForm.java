@@ -10,6 +10,7 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 
 import java.util.HashSet;
+import java.util.Hashtable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.event.KeyListener; 
@@ -20,22 +21,29 @@ public class MathToolForm extends javax.swing.JFrame {
     JTextArea mathToolArea;
     
     GraphicMethods2D graphicMethods2D;
-    Graphics g2D;
     GraphicMethods3D graphicMethods3D;
-    Graphics g3D;
     NumericalMethods numericalMethods;
     AnalysisMethods analysisMethods;
 
+    /** Diese Objekte werden im Laufe des Programms erweitert.
+     * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
+     */
+    static Hashtable<String, Double> definedVars = new Hashtable<String, Double>();
+    static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
+    
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
 
-        //Objekte ausrichten
+        /**Objekte ausrichten
+         */
         
-        //Eingabefelder ausrichten
-        InputField.setBounds(10, 530, 650, 25);
+        /**Eingabefelder ausrichten
+         */
+        InputField.setBounds(10, 530, 650, 30);
         
-        //Ausgabefeld ausrichten
+        /**Ausgabefeld ausrichten
+         */
         mathToolArea = new JTextArea();
         add(mathToolArea);
         mathToolArea.setBounds(10, 20, 750, 500);
@@ -47,27 +55,32 @@ public class MathToolForm extends javax.swing.JFrame {
         scrollPane.setBounds(10,20,750,500);
         add(scrollPane);
 
-        //Buttons ausrichten
-        InputButton.setBounds(660, 530, 100, 25);
-/**        
-        //2D-Grafikobjekte initialisieren
+        /**Buttons ausrichten
+         */
+        InputButton.setBounds(660, 530, 100, 30);
+        
+        /**2D-Grafikobjekte initialisieren
+         */
         graphicMethods2D = new GraphicMethods2D();
-        g2D = graphicMethods2D.getGraphics();
         add(graphicMethods2D);
         graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
+        graphicMethods2D.setVisible(false);
         
-        //3D-Grafikobjekte initialisieren
+        /**3D-Grafikobjekte initialisieren
+         */
         graphicMethods3D = new GraphicMethods3D();
-        g3D = graphicMethods3D.getGraphics();
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
-*/
-        //Numerische Objekte initialisieren
+        graphicMethods3D.setVisible(false);
+
+        /**Numerische Objekte initialisieren
+         */
         numericalMethods = new NumericalMethods();
         
-        //Analytische Objekte initialisieren
+        /**Analytische Objekte initialisieren
+         */
         analysisMethods = new AnalysisMethods();
     }
 
@@ -87,7 +100,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("plot(x_1^2+x^2,-1,1,-2,2)");
+        InputField.setText("define(x = 5)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,24 +171,20 @@ public class MathToolForm extends javax.swing.JFrame {
             String[] com = Expression.getOperatorAndArguments(s);
             String[] params = Expression.getArguments(com[1]);
             if ((com[0].equals("plot")) && (params.length == 3)){
-//                remove(graphicMethods3D);
-//                validate();
-                graphicMethods2D = new GraphicMethods2D();
-                add(graphicMethods2D);
-                graphicMethods2D.setBounds(770, 20, 500, 500);
+                graphicMethods2D.setVisible(true);
+                graphicMethods3D.setVisible(false);
                 repaint();
             }
             if ((com[0].equals("plot")) && (params.length == 5)){
-//                remove(graphicMethods2D);
-//                validate();
-                graphicMethods3D = new GraphicMethods3D();
-                add(graphicMethods3D);
-                graphicMethods3D.setBounds(770, 20, 500, 500);
+                graphicMethods2D.setVisible(false);
+                graphicMethods3D.setVisible(true);
                 repaint();
             }
             
+            definedVars.put("x", (double) 4);
+            definedVars.put("y", (double) 7);
             
-            mcc.executeCommand(s, g2D, g3D, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
+            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, definedVars);
             
         } catch(ExpressionException e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");

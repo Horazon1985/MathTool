@@ -1,6 +1,5 @@
 package mathtool;
 
-import expressionbuilder.BinaryOperation;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.Constant;
@@ -8,12 +7,11 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
-import expressionbuilder.TypeBinary;
-import expressionbuilder.Variable;
 import java.awt.Graphics;
 import java.util.Arrays;
 import javax.swing.*;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -144,7 +142,27 @@ public class MathCommandCompiler {
             
             String function_name_and_params = par.substring(0, par.indexOf(eq));
             String function_term = par.substring(par.indexOf(eq) + 1, par.length());
+
+            /** Falls der linke Teil eine Variable ist, dann ist es eine Zuweisung, die dieser Variablen einen
+             * festen Wert zuweist.
+             */
+            if (Expression.isValidVariable(function_name_and_params)){
+                try{
+                    double value = Double.parseDouble(function_term);
+                    String[] command_param_left = new String[1];
+                    command_param_left[0] = function_name_and_params; 
+                    result.setName(command);
+                    result.setParams(command_param_left);
+                    result.setLeft(new Constant(value));
+                    return result;
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Variablen ein reeller Wert zugewiesen werden.");
+                }                
+            }
             
+            /** Nun wird geprüft, ob es sich um eine Funktionsdeklaration handelt.
+             * Zunächst wird versucht, den rechten Teilstring vom "=" in einen Ausdruck umzuwandeln.
+             */
             try{
                 HashSet vars = new HashSet();
                 Expression expr = Expression.build(function_term, vars);
@@ -200,9 +218,12 @@ public class MathCommandCompiler {
             
     
     //Führt den Befehl aus.
-    public void executeCommand(String commandLine, Graphics g2D, Graphics g3D, JTextArea area,
+//    public void executeCommand(String commandLine, Graphics g2D, Graphics g3D, JTextArea area,
+//            NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
+//            GraphicMethods3D graphicMethods3D, Hashtable definedVars) throws ExpressionException, EvaluationException {
+    public void executeCommand(String commandLine, JTextArea area,
             NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D) throws ExpressionException, EvaluationException {
+            GraphicMethods3D graphicMethods3D, Hashtable definedVars) throws ExpressionException, EvaluationException {
         
         int n = commandLine.length();
 
@@ -230,13 +251,13 @@ public class MathCommandCompiler {
         Command c = getCommand(command, params);
         
         if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
-            executePlot2D(c, g2D, graphicMethods2D);
+            executePlot2D(c, graphicMethods2D);
         } else 
         if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
-            executePlot3D(c, g3D, graphicMethods3D);
+            executePlot3D(c, graphicMethods3D);
         } else 
         if ((c.getName().equals("define")) && (c.getParams().length == 1)){
-            executeDefine(c, area);
+            executeDefine(c, area, definedVars);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -253,7 +274,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 3 Parameter 
      * Parameter: Expression, double, double (als Strings)
      */
-    private void executePlot2D(Command c, Graphics g, GraphicMethods2D graphicMethods2D) throws ExpressionException,
+    private void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
         
         HashSet vars = new HashSet();
@@ -284,7 +305,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 5 Parameter 
      * Parameter: Expression, double, double, double, double (als Strings)
      */
-    private void executePlot3D(Command c, Graphics g, GraphicMethods3D graphicMethods3D) throws ExpressionException,
+    private void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
             EvaluationException {
     
         HashSet vars = new HashSet();
@@ -353,9 +374,15 @@ public class MathCommandCompiler {
     }
         
 
-    private void executeDefine(Command c, JTextArea area) throws ExpressionException,
+    private void executeDefine(Command c, JTextArea area, Hashtable definedVars) throws ExpressionException,
             EvaluationException {
 
+        if (definedVars.containsKey(c.getParams()[0])){
+            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
+        } else {
+            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
+        }
+        
         
         
         

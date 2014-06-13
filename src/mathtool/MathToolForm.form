@@ -56,7 +56,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="plot(x_1^2+x^2,-1,1,-2,2)"/>
+        <Property name="text" type="java.lang.String" value="define(x = 5)"/>
       </Properties>
     </Component>
   </SubComponents>
