@@ -87,7 +87,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("div(x^2+y^2+z)");
+        InputField.setText("plot(x_1^2+x^2,-1,1,-2,2)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -177,9 +177,11 @@ public class MathToolForm extends javax.swing.JFrame {
             
             mcc.executeCommand(s, g2D, g3D, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D);
             
-        } catch(Exception e){
+        } catch(ExpressionException e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
-        } 
+        } catch (EvaluationException e){
+            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+        }
         
     }//GEN-LAST:event_InputButtonActionPerformed
 

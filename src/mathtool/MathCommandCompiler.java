@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MathCommandCompiler {
 
-    private final String[] commands = {"plot", "solve"};
+    private final String[] commands = {"plot", "define"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -302,10 +302,10 @@ public class MathCommandCompiler {
          * 
          */
         if (vars.size() == 1){
-            if (vars.contains("x")) {
-                vars.add("y");
+            if (vars.contains("z")) {
+                vars.add("z_1");
             } else {
-                vars.add("x");
+                vars.add("z");
             }
         }
         
@@ -318,7 +318,35 @@ public class MathCommandCompiler {
         String var1 = (String) iter.next();
         String var2 = (String) iter.next();
         
-        graphicMethods3D.setParameters(var1, var2, 150, 75, 75, 30);
+        /** Die Variablen var1 und var2 sind evtl. noch nicht in alphabetischer Reihenfolge.
+         * Dies wird hier nachgeholt.
+         * GRUND: Der Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den Variablen in
+         * ALPHABETISCHER Reihenfolge entsprechen.
+         */
+        
+        String var1_alphabetical = var1;
+        String var2_alphabetical = var2;
+        
+        if ((int) var1.charAt(0) > (int) var2.charAt(0)){
+            var1_alphabetical = var2;
+            var2_alphabetical = var1;
+        }
+        if ((int) var1.charAt(0) == (int) var2.charAt(0)){
+            if ((var1.length() > 1) && (var2.length() == 1)){
+                var1_alphabetical = var2;
+                var2_alphabetical = var1;
+            }
+            if ((var1.length() > 1) && (var2.length() > 1)){
+                int index_var1 = Integer.parseInt(var1.substring(2));
+                int index_var2 = Integer.parseInt(var2.substring(2));
+                if (index_var1 > index_var2){
+                    var1_alphabetical = var2;
+                    var2_alphabetical = var1;
+                }
+            }
+        }
+        
+        graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 75, 75, 30);
         graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
         graphicMethods3D.drawGraph();
 
