@@ -8,7 +8,6 @@ import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.Variable;
-import java.awt.Graphics;
 import java.util.Arrays;
 import javax.swing.*;
 import java.util.HashSet;
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class MathCommandCompiler {
 
-    private final String[] commands = {"plot", "define"};
+    private final String[] commands = {"plot", "def", "definedvars", "undef"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -132,17 +131,16 @@ public class MathCommandCompiler {
         }
         
         //DEFINE
-        if (command.equals("define")){
+        if (command.equals("def")){
 
-            String par = params[0];
             String eq = "=";
 
-            if (!par.contains(eq)){
-                throw new ExpressionException("im Befehl 'define' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
+            if (!params[0].contains(eq)){
+                throw new ExpressionException("Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
             }
             
-            String function_name_and_params = par.substring(0, par.indexOf(eq));
-            String function_term = par.substring(par.indexOf(eq) + 1, par.length());
+            String function_name_and_params = params[0].substring(0, params[0].indexOf(eq));
+            String function_term = params[0].substring(params[0].indexOf(eq) + 1, params[0].length());
 
             /** Falls der linke Teil eine Variable ist, dann ist es eine Zuweisung, die dieser Variablen einen
              * festen Wert zuweist.
@@ -150,10 +148,10 @@ public class MathCommandCompiler {
             if (Expression.isValidVariable(function_name_and_params)){
                 try{
                     double value = Double.parseDouble(function_term);
-                    String[] command_param_left = new String[1];
-                    command_param_left[0] = function_name_and_params; 
+                    String[] command_params = new String[1];
+                    command_params[0] = function_name_and_params; 
                     result.setName(command);
-                    result.setParams(command_param_left);
+                    result.setParams(command_params);
                     result.setLeft(new Constant(value));
                     return result;
                 } catch (NumberFormatException e){
@@ -203,16 +201,32 @@ public class MathCommandCompiler {
                 }
             }
             
-            String[] command_param_left = new String[1];
-            command_param_left[0] = function_name_and_params; 
+            String[] command_params = new String[1 + function_vars.length];
+            command_params[0] = function_name; 
+            for (int i = 1; i <= function_vars.length; i++){
+                command_params[i] = function_vars[i - 1];
+            }
             
             result.setName(command);
-            result.setParams(command_param_left);
+            result.setParams(command_params);
             result.setLeft(expr);
             return result;
         
         }
         
+        //UNDEFINE
+        if (command.equals("undef")){
+
+            if ((params.length != 1) || (!Expression.isValidVariable(params[0]))){
+                throw new ExpressionException("Im Befehl 'undef' muss genau eine gültige Variable stehen.");
+            }
+            result.setName(command);
+            result.setParams(params);
+            result.setLeft(new Variable(params[0]));
+            return result;
+        
+        }
+
         return result;
         
     }
@@ -258,8 +272,11 @@ public class MathCommandCompiler {
         if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
             executePlot3D(c, graphicMethods3D);
         } else 
-        if ((c.getName().equals("define")) && (c.getParams().length == 1)){
+        if ((c.getName().equals("def")) && (c.getParams().length >= 1)){
             executeDefine(c, area, definedVars, definedVarsSet);
+        } else 
+        if ((c.getName().equals("undef")) && (c.getParams().length == 1)){
+            executeUndefine(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -379,15 +396,38 @@ public class MathCommandCompiler {
     private void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
+        /** Falls ein Variablenwert definiert wird.
+         */
         definedVars.put(c.getParams()[0], c.getLeft().evaluate());
         Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
         definedVarsSet.add(c.getParams()[0]);
-        
+        area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
         
         
         
     }    
         
     
+    private void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
+
+        /** Falls ein Variablenwert freigegeben wird.
+         */
+        if (definedVarsSet.contains(c.getParams()[0])){
+            definedVarsSet.remove(c.getParams()[0]);
+        }
+        
+        /** An sich unnötig, aber trotzdem der Sauberkeit halber (weil Variablenwerte aus dem Hashtable
+         * definedVars nicht gelesen werden, wenn sie nicht in definedVarsSet vorhanden sind).
+         * Hier wird die Variable zusätzlich aus dem Hashtable für die Variablenwerte entfernt.
+         */
+        if (definedVars.containsKey(c.getParams()[0])){
+            definedVars.remove(c.getParams()[0]);
+        }    
+
+        area.append("Die Variable " + c.getParams()[0] + " ist wieder eine Unbestimmte. \n");
+        
+    }    
+
     
 }
