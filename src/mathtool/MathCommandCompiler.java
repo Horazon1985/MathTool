@@ -7,6 +7,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.Variable;
 import java.awt.Graphics;
 import java.util.Arrays;
 import javax.swing.*;
@@ -223,7 +224,8 @@ public class MathCommandCompiler {
 //            GraphicMethods3D graphicMethods3D, Hashtable definedVars) throws ExpressionException, EvaluationException {
     public void executeCommand(String commandLine, JTextArea area,
             NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, Hashtable definedVars) throws ExpressionException, EvaluationException {
+            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
         
         int n = commandLine.length();
 
@@ -257,7 +259,7 @@ public class MathCommandCompiler {
             executePlot3D(c, graphicMethods3D);
         } else 
         if ((c.getName().equals("define")) && (c.getParams().length == 1)){
-            executeDefine(c, area, definedVars);
+            executeDefine(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -374,15 +376,12 @@ public class MathCommandCompiler {
     }
         
 
-    private void executeDefine(Command c, JTextArea area, Hashtable definedVars) throws ExpressionException,
-            EvaluationException {
+    private void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
 
-        if (definedVars.containsKey(c.getParams()[0])){
-            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
-        } else {
-            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
-        }
-        
+        definedVars.put(c.getParams()[0], c.getLeft().evaluate());
+        Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
+        definedVarsSet.add(c.getParams()[0]);
         
         
         

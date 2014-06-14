@@ -29,6 +29,7 @@ public class MathToolForm extends javax.swing.JFrame {
      * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
      */
     static Hashtable<String, Double> definedVars = new Hashtable<String, Double>();
+    static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
     
     public MathToolForm() {
@@ -147,12 +148,13 @@ public class MathToolForm extends javax.swing.JFrame {
              * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber beim Auswerten einen Fehler.
              */
             try{
-                Expression expr_simplified = expr.simplify();
+                Expression expr_simplified = expr.evaluate(definedVarsSet);
+                expr_simplified = expr_simplified.simplify();
                 if (expr.equals(expr_simplified)){
                     mathToolArea.append(expr.writeFormula() + "\n");
                 //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                 } else {
-                    mathToolArea.append(expr.writeFormula() + " = " + expr.simplify().writeFormula() + "\n");
+                    mathToolArea.append(expr.writeFormula() + " = " + expr_simplified.writeFormula() + "\n");
                 }
                 return;
             } catch (EvaluationException e){
@@ -180,11 +182,14 @@ public class MathToolForm extends javax.swing.JFrame {
                 graphicMethods3D.setVisible(true);
                 repaint();
             }
-            
+/**            
             definedVars.put("x", (double) 4);
             definedVars.put("y", (double) 7);
-            
-            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, definedVars);
+            definedVarsSet.add("x");
+            definedVarsSet.add("y");
+*/            
+            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
+                    definedVars, definedVarsSet);
             
         } catch(ExpressionException e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
