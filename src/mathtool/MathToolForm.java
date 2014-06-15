@@ -1,7 +1,6 @@
 package mathtool;
 
 import expressionbuilder.Expression;
-import java.awt.Graphics; 
 import expressionbuilder.ExpressionException;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.AnalysisMethods;
