@@ -100,7 +100,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("def(x=2)");
+        InputField.setText("def(f(x,y) = x+y^2)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,10 +134,43 @@ public class MathToolForm extends javax.swing.JFrame {
         String s = InputField.getText();
 
         /**
-        Zunächst: es wird geschaut, ob der Befehl ein mathematischer Ausdruck ist.
-        Ja -> Ausdruck (und evtl. vereinfachten Ausdruck) ausgeben.
-        Nein -> Weiter.
+        Zunächst: es wird geschaut, ob die Zeile einen Befehl bildet.
+        Ja -> Befehl ausführen.
+        Nein -> Prüfen, ob dies ein mathematischer ausdruck ist.
          */
+        try{
+     
+            mathToolArea.append(s + "\n");
+            
+            String[] com = Expression.getOperatorAndArguments(s);
+            String[] params = Expression.getArguments(com[1]);
+            if ((com[0].equals("plot")) && (params.length == 3)){
+                graphicMethods2D.setVisible(true);
+                graphicMethods3D.setVisible(false);
+                repaint();
+            }
+            if ((com[0].equals("plot")) && (params.length == 5)){
+                graphicMethods2D.setVisible(false);
+                graphicMethods3D.setVisible(true);
+                repaint();
+            }
+
+            boolean valid_command = false;
+            for (int i = 0; i < MathCommandCompiler.commands.length; i++){
+                if (com[0].equals(MathCommandCompiler.commands[i])){
+                    valid_command = true;
+                }
+            }
+            if (valid_command){
+                mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
+                        definedVars, definedVarsSet);
+                return;
+            }
+            
+        } catch(ExpressionException e){
+        } catch (EvaluationException e){
+        }
+
         try{
         
             Expression expr = Expression.build(s, new HashSet());
@@ -163,36 +196,6 @@ public class MathToolForm extends javax.swing.JFrame {
             } 
         
         } catch (ExpressionException e){
-        }
-        
-        try{
-     
-            mathToolArea.append(s + "\n");
-            
-            String[] com = Expression.getOperatorAndArguments(s);
-            String[] params = Expression.getArguments(com[1]);
-            if ((com[0].equals("plot")) && (params.length == 3)){
-                graphicMethods2D.setVisible(true);
-                graphicMethods3D.setVisible(false);
-                repaint();
-            }
-            if ((com[0].equals("plot")) && (params.length == 5)){
-                graphicMethods2D.setVisible(false);
-                graphicMethods3D.setVisible(true);
-                repaint();
-            }
-/**            
-            definedVars.put("x", (double) 4);
-            definedVars.put("y", (double) 7);
-            definedVarsSet.add("x");
-            definedVarsSet.add("y");
-*/            
-            mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
-                    definedVars, definedVarsSet);
-            
-        } catch(ExpressionException e){
-            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
-        } catch (EvaluationException e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
         }
         

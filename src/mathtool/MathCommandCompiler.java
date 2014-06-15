@@ -7,6 +7,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
 import java.util.Arrays;
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class MathCommandCompiler {
 
-    private final String[] commands = {"plot", "def", "definedvars", "undef"};
+    public static final String[] commands = {"plot", "def", "definedvars", "undef"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -144,6 +145,10 @@ public class MathCommandCompiler {
 
             /** Falls der linke Teil eine Variable ist, dann ist es eine Zuweisung, die dieser Variablen einen
              * festen Wert zuweist.
+             * Beispiel: def(x = 2) liefert:
+             * result.name = "def"
+             * result.params = {"x"}
+             * result.left = 2 (als Expression)
              */
             if (Expression.isValidVariable(function_name_and_params)){
                 try{
@@ -176,6 +181,13 @@ public class MathCommandCompiler {
             Expression expr = Expression.build(function_term, vars);
             
             try{
+                /** function_name = Funktionsname
+                 * function_vars = Funktionsvariablen
+                 * Beispiel: def(f(x, y) = x^2+y)
+                 * Dann: 
+                 * function_name = "f"
+                 * function_vars = {"x_ABSTRACT", "y_ABSTRACT"}
+                 */
                 String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
                 String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
             } catch (ExpressionException e){
@@ -186,9 +198,21 @@ public class MathCommandCompiler {
              */
             String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
             String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
+
+            /** Hier wird den Variablen der Index "_ABSTRACT" angehängt.
+             * Dies dient der kennzeichnung, dass diese Variablen Platzhalter für weitere Ausdrücke  
+             * und keine echten Variablen sind. Solche Variablen können niemals in einem geparsten Ausdruck
+             * vorkommen, da der Parser Expression.build solche Variablen nicht akzeptiert.
+             */
+            for (int i = 0; i < function_vars.length; i++){
+                function_vars[i] = function_vars[i] + "_ABSTRACT";
+            }
             
             /** Prüfen, ob alle Variablen, die in expr auftreten, auch als Funktionsparameter vorhanden sind.
              * Sonst -> Fehler ausgeben.
+             *
+             * Zugleich: Im Ausdruck expr werden alle Variablen der Form var durch Variablen der Form
+             * var_ABSTRACT ersetzt und alle Variablen im HashSet vars ebenfalls. 
              */
             
             List<String> vars_list = Arrays.asList(function_vars);
@@ -196,17 +220,27 @@ public class MathCommandCompiler {
             String var;
             for (int i = 0; i < vars.size(); i++){
                 var = (String) iter.next();
+                expr = expr.replaceVariable(var, new Variable(var + "_ABSTRACT"));
+                var = var + "_ABSTRACT";
                 if (!vars_list.contains(var)){
                     throw new ExpressionException("Auf der rechten Seite taucht eine Variable auf, die nicht als Funktionsparameter vorkommt.");
                 }
             }
             
+            /** result.params werden gesetzt.
+             */
             String[] command_params = new String[1 + function_vars.length];
             command_params[0] = function_name; 
             for (int i = 1; i <= function_vars.length; i++){
                 command_params[i] = function_vars[i - 1];
             }
             
+            
+            /** Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
+             * result.name = "def"
+             * result.params = {"f", "x_ABSTRACT", "y_ABSTRACT"}
+             * result.left = x_ABSTRACT^2+y_ABSTRACT (als Expression).
+             */
             result.setName(command);
             result.setParams(command_params);
             result.setLeft(expr);
@@ -398,12 +432,24 @@ public class MathCommandCompiler {
 
         /** Falls ein Variablenwert definiert wird.
          */
-        definedVars.put(c.getParams()[0], c.getLeft().evaluate());
-        Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
-        definedVarsSet.add(c.getParams()[0]);
-        area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
-        
-        
+        if (c.getParams().length == 1){
+            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
+            Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
+            definedVarsSet.add(c.getParams()[0]);
+            area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
+        } else {
+        /** Falls eine Funktion definiert wird.
+         */
+            String[] vars = new String[c.getParams().length - 1];
+            Expression[] exprs_for_vars = new Expression[c.getParams().length - 1];
+            for (int i = 0; i < vars.length; i++){
+                vars[i] = c.getParams()[i + 1];
+                exprs_for_vars[i] = new Variable(vars[i]);
+            }
+            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(c.getParams()[0], c.getLeft());
+            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(c.getParams()[0], exprs_for_vars);
+            SelfDefinedFunction.varsForSelfDefinedFunctions.put(c.getParams()[0], vars);
+        }
         
     }    
         
