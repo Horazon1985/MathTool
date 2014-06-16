@@ -142,6 +142,8 @@ public class MathToolForm extends javax.swing.JFrame {
      
             mathToolArea.append(s + "\n");
             
+            /** Falls es ein Grafikbefehl ist -> entsprechendes Panel sichtbar machen und das andere unsichtbar.
+             */
             String[] com = Expression.getOperatorAndArguments(s);
             String[] params = Expression.getArguments(com[1]);
             if ((com[0].equals("plot")) && (params.length == 3)){
