@@ -30,6 +30,8 @@ public class MathToolForm extends javax.swing.JFrame {
     static Hashtable<String, Double> definedVars = new Hashtable<String, Double>();
     static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
+    public Hashtable<Integer, String> listOfCommands = new Hashtable<Integer, String>();
+    public int command_count = 0;
     
     public MathToolForm() {
         initComponents();
@@ -130,9 +132,15 @@ public class MathToolForm extends javax.swing.JFrame {
         
         MathCommandCompiler mcc = new MathCommandCompiler();
         Command c = new Command();
+        boolean valid_command = false;
         
         String s = InputField.getText();
 
+        /** Befehl loggen!
+         */
+        listOfCommands.put(command_count, s);
+        command_count++;
+        
         /**
         Zunächst: es wird geschaut, ob die Zeile einen Befehl bildet.
         Ja -> Befehl ausführen.
@@ -157,7 +165,6 @@ public class MathToolForm extends javax.swing.JFrame {
                 repaint();
             }
 
-            boolean valid_command = false;
             for (int i = 0; i < MathCommandCompiler.commands.length; i++){
                 if (com[0].equals(MathCommandCompiler.commands[i])){
                     valid_command = true;
@@ -166,11 +173,30 @@ public class MathToolForm extends javax.swing.JFrame {
             if (valid_command){
                 mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
-                return;
             }
             
         } catch(ExpressionException e){
+            /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthield oder nicht)
+             * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
+             */
+            if(valid_command){
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                return;
+            }
+            /** Analog wie oben.
+             */
         } catch (EvaluationException e){
+            if(valid_command){
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                return;
+            }
+        }
+
+        /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthield oder nicht)
+         * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
+         */
+        if(valid_command){
+            return;
         }
 
         try{

@@ -251,8 +251,17 @@ public class MathCommandCompiler {
         //UNDEFINE
         if (command.equals("undef")){
 
-            if ((params.length != 1) || (!Expression.isValidVariable(params[0]))){
-                throw new ExpressionException("Im Befehl 'undef' muss genau eine gültige Variable stehen.");
+            /** Prüft, ob alle Parameter gültige Variablen sind.
+             */
+            boolean contains_only_valid_variables = true;
+            for (int i = 0; i < params.length; i++){
+                if (!Expression.isValidVariable(params[0])){
+                    contains_only_valid_variables = false;
+                }
+            }
+            
+            if (!contains_only_valid_variables){
+                throw new ExpressionException("Im Befehl 'undef' müssen als Parameter gültige Variablen stehen.");
             }
             result.setName(command);
             result.setParams(params);
@@ -309,7 +318,7 @@ public class MathCommandCompiler {
         if ((c.getName().equals("def")) && (c.getParams().length >= 1)){
             executeDefine(c, area, definedVars, definedVarsSet);
         } else 
-        if ((c.getName().equals("undef")) && (c.getParams().length == 1)){
+        if ((c.getName().equals("undef")) && (c.getParams().length >= 1)){
             executeUndefine(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
@@ -433,8 +442,8 @@ public class MathCommandCompiler {
         /** Falls ein Variablenwert definiert wird.
          */
         if (c.getParams().length == 1){
-            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
             Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
+            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
             definedVarsSet.add(c.getParams()[0]);
             area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
         } else {
@@ -459,19 +468,19 @@ public class MathCommandCompiler {
 
         /** Falls ein Variablenwert freigegeben wird.
          */
-        if (definedVarsSet.contains(c.getParams()[0])){
-            definedVarsSet.remove(c.getParams()[0]);
+        for (int i = 0; i < c.getParams().length; i++){
+            if (definedVarsSet.contains(c.getParams()[i])){
+                definedVarsSet.remove(c.getParams()[i]);
+                area.append("Die Variable " + c.getParams()[i] + " ist wieder eine Unbestimmte. \n");
+            }
+            /** An sich unnötig, aber trotzdem der Sauberkeit halber (weil Variablenwerte aus dem Hashtable
+             * definedVars nicht gelesen werden, wenn sie nicht in definedVarsSet vorhanden sind).
+             * Hier wird die Variable zusätzlich aus dem Hashtable für die Variablenwerte entfernt.
+             */
+            if (definedVars.contains(c.getParams()[i])){
+                definedVars.remove(c.getParams()[i]);
+            }
         }
-        
-        /** An sich unnötig, aber trotzdem der Sauberkeit halber (weil Variablenwerte aus dem Hashtable
-         * definedVars nicht gelesen werden, wenn sie nicht in definedVarsSet vorhanden sind).
-         * Hier wird die Variable zusätzlich aus dem Hashtable für die Variablenwerte entfernt.
-         */
-        if (definedVars.containsKey(c.getParams()[0])){
-            definedVars.remove(c.getParams()[0]);
-        }    
-
-        area.append("Die Variable " + c.getParams()[0] + " ist wieder eine Unbestimmte. \n");
         
     }    
 
