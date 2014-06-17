@@ -5,6 +5,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.AnalysisMethods;
 import expressionbuilder.NumericalMethods;
+import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 
@@ -129,6 +130,14 @@ public class MathToolForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
+       
+        /**
+        GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
+        try{
+            System.out.println(gr.getHeightOfFormula(Expression.build("1258", new HashSet())));
+        } catch (Exception e){
+        }
+        */ 
         
         MathCommandCompiler mcc = new MathCommandCompiler();
         Command c = new Command();
@@ -148,8 +157,6 @@ public class MathToolForm extends javax.swing.JFrame {
          */
         try{
      
-            mathToolArea.append(s + "\n");
-            
             /** Falls es ein Grafikbefehl ist -> entsprechendes Panel sichtbar machen und das andere unsichtbar.
              */
             String[] com = Expression.getOperatorAndArguments(s);
@@ -171,6 +178,7 @@ public class MathToolForm extends javax.swing.JFrame {
                 }
             }
             if (valid_command){
+                mathToolArea.append(s + "\n");
                 mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
             }

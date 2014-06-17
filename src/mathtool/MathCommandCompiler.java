@@ -429,7 +429,7 @@ public class MathCommandCompiler {
             }
         }
         
-        graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 75, 75, 30);
+        graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 75, 150, 30);
         graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
         graphicMethods3D.drawGraph();
 
