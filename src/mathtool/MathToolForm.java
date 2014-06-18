@@ -8,6 +8,7 @@ import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import java.awt.*;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -22,6 +23,7 @@ public class MathToolForm extends javax.swing.JFrame {
     
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
+    GraphicPresentationOfFormula graphicPresentationOfFormula;
     NumericalMethods numericalMethods;
     AnalysisMethods analysisMethods;
 
@@ -130,15 +132,17 @@ public class MathToolForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-       
-        /**
+/**       
         GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
         try{
-            System.out.println(gr.getHeightOfFormula(Expression.build("1258", new HashSet())));
+            Expression ex = Expression.build("1258", new HashSet());
+            Graphics g;
+            g = graphicPresentationOfFormula.getGraphics();
+            int k = gr.getHeightOfFormula(g, ex);
+            System.out.println(k);
         } catch (Exception e){
         }
-        */ 
-        
+*/        
         MathCommandCompiler mcc = new MathCommandCompiler();
         Command c = new Command();
         boolean valid_command = false;
