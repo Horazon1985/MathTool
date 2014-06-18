@@ -80,6 +80,14 @@ public class MathToolForm extends javax.swing.JFrame {
         repaint();
         graphicMethods3D.setVisible(false);
 
+        /**Sonstige Grafikobjekte initialisieren
+         */
+        graphicPresentationOfFormula = new GraphicPresentationOfFormula();
+        add(graphicPresentationOfFormula);
+        graphicPresentationOfFormula.setBounds(770, 20, 500, 500);
+        repaint();
+        graphicPresentationOfFormula.setVisible(false);
+        
         /**Numerische Objekte initialisieren
          */
         numericalMethods = new NumericalMethods();
@@ -136,10 +144,8 @@ public class MathToolForm extends javax.swing.JFrame {
         GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
         try{
             Expression ex = Expression.build("1258", new HashSet());
-            Graphics g;
-            g = graphicPresentationOfFormula.getGraphics();
-            int k = gr.getHeightOfFormula(g, ex);
-            System.out.println(k);
+            Graphics g = graphicPresentationOfFormula.getGraphics();
+            System.out.println(gr.getHeightOfFormula(g, ex));
         } catch (Exception e){
         }
 */        
