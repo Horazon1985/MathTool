@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
     private boolean bStart;
+    private boolean bThreadStarted;
     JTextArea mathToolArea;
     
     GraphicMethods2D graphicMethods2D;
@@ -43,6 +44,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         initComponents();
         this.setLayout(null);
         this.bStart = false;
+        this.bThreadStarted=false;
         InputField.addKeyListener(this);
         addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e){
@@ -86,7 +88,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /**3D-Grafikobjekte initialisieren
          */
         graphicMethods3D = new GraphicMethods3D();
-        this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
+        
         
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
@@ -108,7 +110,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /**Analytische Objekte initialisieren
          */
         analysisMethods = new AnalysisMethods();
-        threadRotate.start();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -282,14 +284,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     private void RotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RotateButtonActionPerformed
         if(!bStart){
+            this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
             bStart = true;
             graphicMethods3D.setBStart(true);
-           // threadRotate.start();
+            threadRotate.start();
+            
         } else {
             bStart = false;
             graphicMethods3D.setBStart(false);
-           // threadRotate.interrupt();
-            System.err.println(""+threadRotate.isInterrupted());
+            threadRotate.interrupt();
         }
         
         
