@@ -1,24 +1,27 @@
 package mathtool;
 
+import expressionbuilder.AnalysisMethods;
+import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
-import expressionbuilder.EvaluationException;
-import expressionbuilder.AnalysisMethods;
-import expressionbuilder.NumericalMethods;
-import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.GraphicPresentationOfFormula;
+import expressionbuilder.NumericalMethods;
 import java.awt.*;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Hashtable;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import java.awt.event.KeyListener; 
+import javax.swing.JTextArea;
 
 
-public class MathToolForm extends javax.swing.JFrame {
-
+public class MathToolForm extends javax.swing.JFrame implements KeyListener{
+    private Thread threadRotate;
+    private boolean bStart;
     JTextArea mathToolArea;
     
     GraphicMethods2D graphicMethods2D;
@@ -39,7 +42,13 @@ public class MathToolForm extends javax.swing.JFrame {
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
-
+        this.bStart = false;
+        InputField.addKeyListener(this);
+        addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e){
+                InputField.requestFocus();
+            }
+        });
         /**Objekte ausrichten
          */
         
@@ -63,6 +72,8 @@ public class MathToolForm extends javax.swing.JFrame {
         /**Buttons ausrichten
          */
         InputButton.setBounds(660, 530, 100, 30);
+        RotateButton.setBounds(910, 530, 200, 30);
+        RotateButton.setVisible(false);
         
         /**2D-Grafikobjekte initialisieren
          */
@@ -75,6 +86,8 @@ public class MathToolForm extends javax.swing.JFrame {
         /**3D-Grafikobjekte initialisieren
          */
         graphicMethods3D = new GraphicMethods3D();
+        this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
+        
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
@@ -95,6 +108,7 @@ public class MathToolForm extends javax.swing.JFrame {
         /**Analytische Objekte initialisieren
          */
         analysisMethods = new AnalysisMethods();
+        threadRotate.start();
     }
 
     @SuppressWarnings("unchecked")
@@ -103,6 +117,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
         InputButton = new javax.swing.JButton();
         InputField = new javax.swing.JTextField();
+        RotateButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,7 +128,14 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
 
-        InputField.setText("def(f(x,y) = x+y^2)");
+        InputField.setText("plot(x+y,-1,1,-1,1)");
+
+        RotateButton.setText("3D-Graphen rotieren lassen");
+        RotateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RotateButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,6 +147,10 @@ public class MathToolForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(InputButton)
                 .addGap(76, 76, 76))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(RotateButton)
+                .addGap(190, 190, 190))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,22 +159,22 @@ public class MathToolForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(InputButton)
                     .addComponent(InputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(RotateButton)
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-/**       
-        GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
+    private void execute(){
+    /*       GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
         try{
             Expression ex = Expression.build("1258", new HashSet());
             Graphics g = graphicPresentationOfFormula.getGraphics();
             System.out.println(gr.getHeightOfFormula(g, ex));
         } catch (Exception e){
         }
-*/        
+    */        
         MathCommandCompiler mcc = new MathCommandCompiler();
         Command c = new Command();
         boolean valid_command = false;
@@ -174,12 +200,16 @@ public class MathToolForm extends javax.swing.JFrame {
             if ((com[0].equals("plot")) && (params.length == 3)){
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
+                RotateButton.setVisible(false);
                 repaint();
-            }
+            } else
             if ((com[0].equals("plot")) && (params.length == 5)){
                 graphicMethods2D.setVisible(false);
                 graphicMethods3D.setVisible(true);
+                RotateButton.setVisible(true);
                 repaint();
+            } else {
+                RotateButton.setVisible(false);
             }
 
             for (int i = 0; i < MathCommandCompiler.commands.length; i++){
@@ -245,7 +275,26 @@ public class MathToolForm extends javax.swing.JFrame {
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
         }
         
+    }
+    private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
+        execute();
     }//GEN-LAST:event_InputButtonActionPerformed
+
+    private void RotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RotateButtonActionPerformed
+        if(!bStart){
+            bStart = true;
+            graphicMethods3D.setBStart(true);
+           // threadRotate.start();
+        } else {
+            bStart = false;
+            graphicMethods3D.setBStart(false);
+           // threadRotate.interrupt();
+            System.err.println(""+threadRotate.isInterrupted());
+        }
+        
+        
+        
+    }//GEN-LAST:event_RotateButtonActionPerformed
 
     
     public static void main(String args[]) {
@@ -284,5 +333,25 @@ public class MathToolForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
+    private javax.swing.JButton RotateButton;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+      
+    }
+    
+    @Override
+    public void keyPressed(KeyEvent e) {
+        
+        if(KeyEvent.VK_ENTER==e.getKeyCode()){
+            execute();
+            
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+       
+    }
 }
