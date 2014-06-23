@@ -143,16 +143,17 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(InputField, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(InputButton)
-                .addGap(76, 76, 76))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(RotateButton)
-                .addGap(190, 190, 190))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(InputField, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(InputButton)
+                        .addGap(76, 76, 76))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(RotateButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,15 +289,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             bStart = true;
             graphicMethods3D.setBStart(true);
             threadRotate.start();
-            
+            RotateButton.setText("Rotation stoppen");
         } else {
             bStart = false;
             graphicMethods3D.setBStart(false);
             threadRotate.interrupt();
+            RotateButton.setText("3D-Graphen rotieren lassen");
         }
-        
-        
-        
     }//GEN-LAST:event_RotateButtonActionPerformed
 
     
