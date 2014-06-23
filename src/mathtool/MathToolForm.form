@@ -66,7 +66,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="plot(x+y,-1,1,-1,1)"/>
+        <Property name="text" type="java.lang.String" value="def(x=2)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="RotateButton">

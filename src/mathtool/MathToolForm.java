@@ -33,7 +33,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     /** Diese Objekte werden im Laufe des Programms erweitert.
      * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
-     */
+     */ 
     static Hashtable<String, Double> definedVars = new Hashtable<String, Double>();
     static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
@@ -130,7 +130,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
-        InputField.setText("plot(x+y,-1,1,-1,1)");
+        InputField.setText("def(x=2)");
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -170,19 +170,22 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void execute(){
-    /*       GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
+        /**       
+        GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
         try{
             Expression ex = Expression.build("1258", new HashSet());
             Graphics g = graphicPresentationOfFormula.getGraphics();
             System.out.println(gr.getHeightOfFormula(g, ex));
         } catch (Exception e){
         }
-    */        
+        */        
         MathCommandCompiler mcc = new MathCommandCompiler();
         Command c = new Command();
         boolean valid_command = false;
         
-        String s = InputField.getText();
+        /**Leerzeichen werden im Vorfeld beseitigt.
+         */
+        String s = InputField.getText().replaceAll(" ", "");
 
         /** Befehl loggen!
          */
