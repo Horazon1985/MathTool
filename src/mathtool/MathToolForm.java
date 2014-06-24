@@ -38,7 +38,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
     public Hashtable<Integer, String> listOfCommands = new Hashtable<Integer, String>();
+    /** Variablen, die eine Rolle beim Loggen der Befehle spielen.
+     * command_count = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
+     * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
+     */
     public int command_count = 0;
+    public int log_position = 0;
+    
     
     public MathToolForm() {
         initComponents();
@@ -74,7 +80,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /**Buttons ausrichten
          */
         InputButton.setBounds(660, 530, 100, 30);
-        RotateButton.setBounds(910, 530, 200, 30);
+        RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
         
         /**2D-Grafikobjekte initialisieren
@@ -113,6 +119,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
     }
 
+    
+    private void showLoggedCommand(int i){
+        InputField.setText(listOfCommands.get(i));
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -191,6 +202,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
          */
         listOfCommands.put(command_count, s);
         command_count++;
+        log_position = command_count;
         
         /**
         Zunächst: es wird geschaut, ob die Zeile einen Befehl bildet.
@@ -230,7 +242,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
             
         } catch(ExpressionException e){
-            /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthield oder nicht)
+            /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthielt oder nicht)
              * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
              */
             if(valid_command){
@@ -282,10 +294,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         }
         
     }
+
+
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
         execute();
     }//GEN-LAST:event_InputButtonActionPerformed
 
+    
     private void RotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RotateButtonActionPerformed
         if(!bStart){
             this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
@@ -331,6 +346,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 MyMathToolForm.setVisible(true);
                 MyMathToolForm.setTitle("MathTool for Analysis and Numerical Computation");
                 MyMathToolForm.setBounds(20,50,1300,650);
+                MyMathToolForm.getContentPane().setBackground(new Color(255,200,0));
             }
         });
     }
@@ -349,10 +365,25 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         
-        if(KeyEvent.VK_ENTER==e.getKeyCode()){
+        if(KeyEvent.VK_ENTER == e.getKeyCode()){
             execute();
-            
         }
+        if(KeyEvent.VK_UP == e.getKeyCode()){
+            if (log_position > 0){
+                log_position--;
+            }
+            if (log_position == command_count - 1){
+                log_position--;
+            }
+            showLoggedCommand(log_position);
+        }
+        if(KeyEvent.VK_DOWN == e.getKeyCode()){
+            if (log_position < command_count - 1){
+                log_position++;
+            }
+            showLoggedCommand(log_position);
+        }
+        
     }
 
     @Override

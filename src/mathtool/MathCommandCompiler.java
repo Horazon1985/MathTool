@@ -255,116 +255,17 @@ public class MathCommandCompiler {
         //DEFINEDVARS; TO DO
         if (command.equals("defvars")){
 
-            String eq = "=";
-
-            if (!params[0].contains(eq)){
-                throw new ExpressionException("Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
+            /** Prüft, ob der Befehl keine Parameter besitzt.
+             */
+            if (params.length > 0){
+                throw new ExpressionException("Im Befehl 'undefall' dürfen keine Parameter stehen.");
             }
             
-            String function_name_and_params = params[0].substring(0, params[0].indexOf(eq));
-            String function_term = params[0].substring(params[0].indexOf(eq) + 1, params[0].length());
-
-            /** Falls der linke Teil eine Variable ist, dann ist es eine Zuweisung, die dieser Variablen einen
-             * festen Wert zuweist.
-             * Beispiel: def(x = 2) liefert:
-             * result.name = "def"
-             * result.params = {"x"}
-             * result.left = 2 (als Expression)
-             */
-            if (Expression.isValidVariable(function_name_and_params)){
-                try{
-                    double value = Double.parseDouble(function_term);
-                    String[] command_params = new String[1];
-                    command_params[0] = function_name_and_params; 
-                    result.setName(command);
-                    result.setParams(command_params);
-                    result.setLeft(new Constant(value));
-                    return result;
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Variablen ein reeller Wert zugewiesen werden.");
-                }                
-            }
-            
-            /** Nun wird geprüft, ob es sich um eine Funktionsdeklaration handelt.
-             * Zunächst wird versucht, den rechten Teilstring vom "=" in einen Ausdruck umzuwandeln.
-             */
-            try{
-                HashSet vars = new HashSet();
-                Expression expr = Expression.build(function_term, vars);
-            } catch (ExpressionException e){
-                throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite.");
-            }
-
-            /** Falls man hier ankommt, muss das obige try funktioniert haben.
-             * Jetzt wird die rechte Seite gelesen (durch den die Funktion auf der linken Seite von "=" definiert wird).
-             */
-            HashSet vars = new HashSet();
-            Expression expr = Expression.build(function_term, vars);
-            
-            try{
-                /** function_name = Funktionsname
-                 * function_vars = Funktionsvariablen
-                 * Beispiel: def(f(x, y) = x^2+y)
-                 * Dann: 
-                 * function_name = "f"
-                 * function_vars = {"x_ABSTRACT", "y_ABSTRACT"}
-                 */
-                String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
-                String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
-            } catch (ExpressionException e){
-                throw new ExpressionException("Ungültige Funktionsdefinition.");
-            }
-            
-            /** Funktionsnamen und Variablen auslesen.
-             */
-            String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
-            String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
-
-            /** Hier wird den Variablen der Index "_ABSTRACT" angehängt.
-             * Dies dient der kennzeichnung, dass diese Variablen Platzhalter für weitere Ausdrücke  
-             * und keine echten Variablen sind. Solche Variablen können niemals in einem geparsten Ausdruck
-             * vorkommen, da der Parser Expression.build solche Variablen nicht akzeptiert.
-             */
-            for (int i = 0; i < function_vars.length; i++){
-                function_vars[i] = function_vars[i] + "_ABSTRACT";
-            }
-            
-            /** Prüfen, ob alle Variablen, die in expr auftreten, auch als Funktionsparameter vorhanden sind.
-             * Sonst -> Fehler ausgeben.
-             *
-             * Zugleich: Im Ausdruck expr werden alle Variablen der Form var durch Variablen der Form
-             * var_ABSTRACT ersetzt und alle Variablen im HashSet vars ebenfalls. 
-             */
-            
-            List<String> function_vars_list = Arrays.asList(function_vars);
-            Iterator iter = vars.iterator();
-            String var;
-            for (int i = 0; i < vars.size(); i++){
-                var = (String) iter.next();
-                expr = expr.replaceVariable(var, new Variable(var + "_ABSTRACT"));
-                var = var + "_ABSTRACT";
-                if (!function_vars_list.contains(var)){
-                    throw new ExpressionException("Auf der rechten Seite taucht eine Variable auf, die nicht als Funktionsparameter vorkommt.");
-                }
-            }
-            
-            /** result.params werden gesetzt.
-             */
-            String[] command_params = new String[1 + function_vars.length];
-            command_params[0] = function_name; 
-            for (int i = 1; i <= function_vars.length; i++){
-                command_params[i] = function_vars[i - 1];
-            }
-            
-            
-            /** Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
-             * result.name = "def"
-             * result.params = {"f", "x_ABSTRACT", "y_ABSTRACT"}
-             * result.left = x_ABSTRACT^2+y_ABSTRACT (als Expression).
-             */
             result.setName(command);
-            result.setParams(command_params);
-            result.setLeft(expr);
+            result.setParams(params);
+            /**Linker Teil ist in diesem Fall völlig irrelevant; muss aber angegeben werden.
+             */
+            result.setLeft(new Constant(0));
             return result;
         
         }
@@ -457,11 +358,14 @@ public class MathCommandCompiler {
         if ((c.getName().equals("def")) && (c.getParams().length >= 1)){
             executeDefine(c, area, definedVars, definedVarsSet);
         } else 
+        if ((c.getName().equals("defvars")) && (c.getParams().length == 0)){
+            executeDefVars(c, area, definedVars, definedVarsSet);
+        } else 
         if ((c.getName().equals("undef")) && (c.getParams().length >= 1)){
-            executeUndefine(c, area, definedVarsSet);
+            executeUndefine(c, area, definedVars, definedVarsSet);
         } else 
         if ((c.getName().equals("undefall")) && (c.getParams().length == 0)){
-            executeUndefineAll(c, area, definedVarsSet);
+            executeUndefineAll(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -605,7 +509,13 @@ public class MathCommandCompiler {
     }    
         
     
-    private void executeUndefine(Command c, JTextArea area, HashSet definedVarsSet) 
+    private void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
+        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars);
+    }    
+
+    
+    private void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
         /** Falls ein Variablenwert freigegeben wird.
@@ -613,6 +523,7 @@ public class MathCommandCompiler {
         for (int i = 0; i < c.getParams().length; i++){
             if (definedVarsSet.contains(c.getParams()[i])){
                 definedVarsSet.remove(c.getParams()[i]);
+                definedVars.remove(c.getParams()[i]);
                 area.append("Die Variable " + c.getParams()[i] + " ist wieder eine Unbestimmte. \n");
             }
         }
@@ -620,10 +531,13 @@ public class MathCommandCompiler {
     }    
 
     
-    private void executeUndefineAll(Command c, JTextArea area, HashSet definedVarsSet) 
+    private void executeUndefineAll(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
-        definedVarsSet.removeAll(definedVarsSet);
+        /** Entleert definedVarsSet und definedVars
+         */
+        definedVarsSet.clear();
+        definedVars.clear();
         area.append("Alle Variablen sind wieder Unbestimmte. \n");
         
     }    
