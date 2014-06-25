@@ -9,8 +9,10 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
-import java.util.Arrays;
+
 import javax.swing.*;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -22,7 +24,7 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"plot", "def", "defvars", "undef", "undefall"};
+    public static final String[] commands = {"def", "defvars", "plot", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -319,7 +321,7 @@ public class MathCommandCompiler {
 //    public void executeCommand(String commandLine, Graphics g2D, Graphics g3D, JTextArea area,
 //            NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
 //            GraphicMethods3D graphicMethods3D, Hashtable definedVars) throws ExpressionException, EvaluationException {
-    public void executeCommand(String commandLine, JTextArea area,
+    public static void executeCommand(String commandLine, JTextArea area,
             NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
@@ -382,7 +384,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 3 Parameter 
      * Parameter: Expression, double, double (als Strings)
      */
-    private void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
+    private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
         
         HashSet vars = new HashSet();
@@ -413,7 +415,7 @@ public class MathCommandCompiler {
     /** c Enthält genau 5 Parameter 
      * Parameter: Expression, double, double, double, double (als Strings)
      */
-    private void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
+    private static void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
             EvaluationException {
     
         HashSet vars = new HashSet();
@@ -482,7 +484,7 @@ public class MathCommandCompiler {
     }
         
 
-    private void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+    private static void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
         /** Falls ein Variablenwert definiert wird.
@@ -509,13 +511,13 @@ public class MathCommandCompiler {
     }    
         
     
-    private void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+    private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
-        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars);
+        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars + "\n");
     }    
 
     
-    private void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+    private static void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
         /** Falls ein Variablenwert freigegeben wird.
@@ -531,7 +533,7 @@ public class MathCommandCompiler {
     }    
 
     
-    private void executeUndefineAll(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+    private static void executeUndefineAll(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 
         /** Entleert definedVarsSet und definedVars

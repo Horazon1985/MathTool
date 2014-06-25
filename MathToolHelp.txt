@@ -1,0 +1,51 @@
+Mathematische Ausdrücke:
+
+TO DO.
+
+
+
+Mathematische Operatoren:
+
+MathTool kennt die folgenden Operatoren:
+
+"diff(FUNCTION, VAR)": Berechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
+
+"diff(FUNCTION, VAR, k)": Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
+
+"div(FUNCTION)": Berechnet die Divergenz der Funktion FUNCTION.
+
+"gcd(a_1, ..., a_k)": Berechnet den größten gemeinsamen Teiler der ganzen Zahlen a_1, ..., a_k.
+
+"int(FUNCTION, x_1, x_2)": Berechnet das bestimmte Integral über die Funktion FUNCTION von x_1 bis x_2.
+
+"laplace(FUNCTION)": Berechnet den Laplace-operator der Funktion FUNCTION.
+
+"lcm(a_1, ..., a_k)": Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen a_1, ..., a_k.
+
+"prod(EXPRESSION, VAR, k_1, k_2)": Berechnet das Produkt für den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
+
+"sum(EXPRESSION, VAR, k_1, k_2)": Berechnet die Summe für den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
+
+"taylorFUNCTION VAR, x_0, k)": Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bezüglich der Variablen VAR an der Stelle VAR = x_0.
+
+
+
+Konsolenbefehle:
+
+MathTool kennt die folgenden Befehle:
+
+"def(VAR = VALUE)": Weist einer gültigen Variable VAR den Wert VALUE zu.
+
+"def(FUNCTION = EXPRESSION)": Definiert eine Funktion durch den Ausdruck EXPRESSION.
+
+"defvars()": Gibt alle Variablen aus, denen ein Wert zugewiesen wurde.
+
+"plot(FUNCTION, x_1, x_2)": Zeichnet den Graphen der Funktion FUNCTION im Intervall von x_1 bis x_2.
+  
+"plot(FUNCTION, x_1, x_2, y_1, y_2)": Zeichnet den Graphen der Funktion FUNCTION von zwei Variablen im Rechteck x_1 <= x <= x_2, y_1 <= y <= y_2.
+
+"undef(VAR_1, ..., VAR_n)": Gibt die variablen VAR_1, ..., VAR_k wieder frei.
+
+"undefall()": Gibt alle variablen wieder frei, denen bisher ein Wert zugewiesen wurde.
+
+ENDOFFILE

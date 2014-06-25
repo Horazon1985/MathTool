@@ -8,22 +8,29 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.NumericalMethods;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.HashSet;
 import java.util.Hashtable;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JEditorPane;
 
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
     private boolean bStart;
     private boolean bThreadStarted;
     JTextArea mathToolArea;
+    JEditorPane helpArea;
     
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
@@ -82,6 +89,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         InputButton.setBounds(660, 530, 100, 30);
         RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
+
+        HelpButton.setBounds(660, 570, 100, 30);
         
         /**2D-Grafikobjekte initialisieren
          */
@@ -131,6 +140,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         InputButton = new javax.swing.JButton();
         InputField = new javax.swing.JTextField();
         RotateButton = new javax.swing.JButton();
+        HelpButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,6 +160,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
+        HelpButton.setText("Help");
+        HelpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HelpButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,7 +180,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                         .addComponent(InputButton)
                         .addGap(76, 76, 76))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(RotateButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(HelpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(RotateButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -175,7 +194,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                     .addComponent(InputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(RotateButton)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(HelpButton)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -190,7 +211,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         } catch (Exception e){
         }
         */        
-        MathCommandCompiler mcc = new MathCommandCompiler();
+
         Command c = new Command();
         boolean valid_command = false;
         
@@ -205,7 +226,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         log_position = command_count;
         
         /**
-        Zunächst: es wird geschaut, ob die Zeile einen Befehl bildet.
+        Zunächst: es wird geprüft, ob die Zeile einen Befehl bildet.
         Ja -> Befehl ausführen.
         Nein -> Prüfen, ob dies ein mathematischer ausdruck ist.
          */
@@ -237,7 +258,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
             if (valid_command){
                 mathToolArea.append(s + "\n");
-                mcc.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
+                MathCommandCompiler.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
             }
             
@@ -316,6 +337,34 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         }
     }//GEN-LAST:event_RotateButtonActionPerformed
 
+    private void HelpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HelpButtonActionPerformed
+        helpArea = new JEditorPane();
+        add(helpArea);
+        helpArea.setBounds(770, 20, 500, 500);
+        helpArea.setEditable(false);
+        JScrollPane scrollPaneHelp = new JScrollPane(helpArea, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneHelp.setBounds(770, 20, 500, 500);
+        add(scrollPaneHelp);
+        
+        try{
+            FileReader help = new FileReader("MathToolHelp.txt");
+            BufferedReader br = new BufferedReader(help);
+
+            String line = br.readLine();
+            while(!line.contains("ENDOFFILE")){
+                try{
+                    helpArea.getDocument().insertString(helpArea.getDocument().getLength(), line + "\n", null);
+                } catch (javax.swing.text.BadLocationException e){
+                }
+                line = br.readLine();
+            }
+        } catch (java.io.IOException e){
+            helpArea.setText("FEHLER! Hilfedatei konnte nicht gelesen werden.");
+        }
+        
+    }//GEN-LAST:event_HelpButtonActionPerformed
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -352,6 +401,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton HelpButton;
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
     private javax.swing.JButton RotateButton;
