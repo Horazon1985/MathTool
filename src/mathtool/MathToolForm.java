@@ -181,7 +181,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
-        InputField.setText("def(x=2)");
+        InputField.setText("a+b");
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -307,6 +307,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             return;
         }
 
+        /** Nun wird geprüft, ob es sich bei s um einen gültigen ausdruck handelt.
+         * Ja -> ggfs. vereinfachen und ausgeben.
+         */
         try{
         
             Expression expr = Expression.build(s, new HashSet());
