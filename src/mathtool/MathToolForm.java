@@ -181,7 +181,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
-        InputField.setText("a+b");
+        InputField.setText("sin(x+diff(y^3,3))");
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -230,7 +230,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         } catch (Exception e){
         }
         */        
-
+        
         Command c = new Command();
         boolean valid_command = false;
         
@@ -313,7 +313,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         try{
         
             Expression expr = Expression.build(s, new HashSet());
-            //Falls man den Ausdruck noch vereinfachen kann -> vereinfachen und auch ausgeben.
 
             /**Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
              * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber beim Auswerten einen Fehler.
@@ -323,8 +322,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 expr_simplified = expr_simplified.simplify();
                 if (expr.equals(expr_simplified)){
                     mathToolArea.append(expr.writeFormula() + "\n");
-                //Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                 } else {
+                    /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
+                     */
                     mathToolArea.append(expr.writeFormula() + " = " + expr_simplified.writeFormula() + "\n");
                 }
                 return;
