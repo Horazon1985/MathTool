@@ -181,7 +181,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
-        InputField.setText("latex(a/b+sin(c))");
+        InputField.setText("def(f(u,v)=u+v)");
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -343,7 +343,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
         execute();
-        System.out.println("\\x");
     }//GEN-LAST:event_InputButtonActionPerformed
 
     
