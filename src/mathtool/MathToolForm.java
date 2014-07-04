@@ -181,7 +181,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
 
-        InputField.setText("sin(x+diff(y^3,3))");
+        InputField.setText("latex(a/b+sin(c))");
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -258,14 +258,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             if ((com[0].equals("plot")) && (params.length == 3)){
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
-                helpArea.setVisible(false);
+//                helpArea.setVisible(false);
                 RotateButton.setVisible(false);
                 repaint();
             } else
             if ((com[0].equals("plot")) && (params.length == 5)){
                 graphicMethods2D.setVisible(false);
                 graphicMethods3D.setVisible(true);
-                helpArea.setVisible(false);
+//                helpArea.setVisible(false);
                 RotateButton.setVisible(true);
                 repaint();
             } else {
@@ -343,6 +343,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
         execute();
+        System.out.println("\\x");
     }//GEN-LAST:event_InputButtonActionPerformed
 
     
@@ -429,7 +430,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             showLoggedCommand(log_position);
         }
         if(KeyEvent.VK_H == e.getKeyCode()){
-            showHelpFile();
+//            showHelpFile();
         }
         
     }

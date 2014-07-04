@@ -1,7 +1,17 @@
-Mathematische Ausdrücke:
+&Uuml;BER MATHTOOL:
 
-MathTool versteht mathematische Ausdrücke. Hierbei werden die vier Grundrechenarten mit +, -, * und / angegeben, Potenzen durch ^. Mathematische Funktionen tragen ihre üblichen Namen, z.B. sin(...), exp(...), ln(...), arctan(...) etc. 
-Wichtig: Multiplikationen müssen stets durch ein * angegeben werden. MathTool versteht 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.
+MathTool ist eine Eingabekonsole, die der Verarbeitung und der Auswertung mathematischer Ausdr&uuml;cke dient.
+
+
+Mathematische Ausdr&uuml;cke:
+
+MathTool versteht mathematische Ausdr&uuml;cke. Hierbei werden die vier Grundrechenarten mit +, -, * und / angegeben, Potenzen durch ^. Mathematische Funktionen tragen ihre &uuml;blichen Namen, z.B. sin(...), exp(...), ln(...), arctan(...) etc. <br>
+Wichtig: Multiplikationen m&uuml;ssen stets durch ein * angegeben werden. MathTool versteht den Ausdruck 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.<br>
+G&uuml;ltige AusdrÃ¼cke sehen dann etwa wie folgt aus:
+
+3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...
+
+Ein eingegebener mathematischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies m&ouml;glich ist.
 
 
 
@@ -9,25 +19,33 @@ Mathematische Operatoren:
 
 MathTool kennt die folgenden Operatoren:
 
-OPERATOR diff(FUNCTION, VAR): Berechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
+<b>OPERATOR diff(FUNCTION, VAR):</b> erechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
 
-OPERATOR diff(FUNCTION, VAR, k): Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
+<b>OPERATOR diff(FUNCTION, VAR, k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.
 
-OPERATOR div(FUNCTION): Berechnet die Divergenz der Funktion FUNCTION.
+<b>OPERATOR div(FUNCTION):</b> Berechnet die Divergenz der Funktion FUNCTION.
 
-OPERATOR gcd(a_1, ..., a_k): Berechnet den größten gemeinsamen Teiler der ganzen Zahlen a_1, ..., a_k.
+<b>OPERATOR gcd(a_1, ..., a_k):</b> Berechnet den gr&ouml;&szlig;ten gemeinsamen Teiler der ganzen Zahlen a_1, ..., a_k.
 
-OPERATOR int(FUNCTION, x_1, x_2): Berechnet das bestimmte Integral über die Funktion FUNCTION von x_1 bis x_2.
+<b>OPERATOR int(FUNCTION, x_1, x_2):</b> Berechnet das bestimmte Integral &uuml;ber die Funktion FUNCTION von x_1 bis x_2.
 
-OPERATOR laplace(FUNCTION): Berechnet den Laplace-operator der Funktion FUNCTION.
+<b>OPERATOR laplace(FUNCTION):</b> Berechnet den Laplace-Operator der Funktion FUNCTION.
 
-OPERATOR lcm(a_1, ..., a_k): Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen a_1, ..., a_k.
+<b>OPERATOR lcm(a_1, ..., a_k):</b> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen a_1, ..., a_k.
 
-OPERATOR prod(EXPRESSION, VAR, k_1, k_2): Berechnet das Produkt für den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
+<b>OPERATOR prod(EXPRESSION, VAR, k_1, k_2):</b> Berechnet das Produkt f&uuml;r den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
 
-OPERATOR sum(EXPRESSION, VAR, k_1, k_2): Berechnet die Summe für den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
+<b>OPERATOR sum(EXPRESSION, VAR, k_1, k_2):</b> Berechnet die Summe f&uuml;r den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.
 
-OPERATOR taylorFUNCTION VAR, x_0, k): Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bezüglich der Variablen VAR an der Stelle VAR = x_0.
+<b>OPERATOR taylor(FUNCTION VAR, x_0, k):</b> Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bez&uuml;glich der Variablen VAR an der Stelle VAR = x_0.
+
+Operatoren kÃ¶nnen wiederum in weiteren mathematischen AusdrÃ¼cken vorkommen und somit weiterverarbeitet werden. So wird beispielsweise der Ausdruck
+
+x^2*diff(y^5,y,3) + 6
+
+vereinfacht zu
+
+60*x^2*y^2+6.
 
 
 
@@ -35,19 +53,22 @@ Konsolenbefehle:
 
 MathTool kennt die folgenden Befehle:
 
-BEFEHL def(VAR = VALUE): Weist einer gültigen Variable VAR den Wert VALUE zu.
+BEFEHL <b>def(VAR = VALUE):</b> Weist einer g&uuml;ltigen Variable VAR den Wert VALUE zu.
 
-BEFEHL def(FUNCTION = EXPRESSION): Definiert eine Funktion durch den Ausdruck EXPRESSION.
+BEFEHL <b>def(FUNCTION = EXPRESSION):</b> Definiert eine Funktion durch den Ausdruck EXPRESSION. 
 
-BEFEHL defvars(): Gibt alle Variablen aus, denen ein Wert zugewiesen wurde.
+BEFEHL <b>defvars():</b> Gibt alle Variablen aus, denen ein Wert zugewiesen wurde.
 
-BEFEHL plot(FUNCTION, x_1, x_2): Zeichnet den Graphen der Funktion FUNCTION im Intervall von x_1 bis x_2.
-  
-BEFEHL plot(FUNCTION(VAR_1, VAR_2), x_1, x_2, y_1, y_2): Zeichnet den Graphen der Funktion FUNCTION von zwei Variablen im Rechteck x_1 <= VAR_1 <= x_2, y_1 <= VAR_2 <= y_2.
+BEFEHL <b>latex(EXPRESSION):</b> Generiert den Latex-Code fÃ¼r den mathematischen Ausdruck EXPRESSION.
+
+BEFEHL <b>plot(FUNCTION(VAR), x_1, x_2):</b> Zeichnet den Graphen der Funktion FUNCTION im Intervall von x_1 <= VAR <= x_2.
+  </b>
+BEFEHL <b>plot(FUNCTION(VAR_1, VAR_2), x_1, x_2, y_1, y_2):</b> Zeichnet den Graphen der Funktion FUNCTION von zwei Variablen im Rechteck x_1 <= VAR_1 <= x_2, y_1 <= VAR_2 <= y_2.
 Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass VAR_1, VAR_2 die alphabetische Reihenfolge der Variablen ist.
 
-BEFEHL undef(VAR_1, ..., VAR_n): Gibt die variablen VAR_1, ..., VAR_k wieder frei.
+BEFEHL <b>undef(VAR_1, ..., VAR_n):</b> Gibt die variablen VAR_1, ..., VAR_k wieder frei.
 
-BEFEHL undefall(): Gibt alle variablen wieder frei, denen bisher ein Wert zugewiesen wurde.
+
+Copyright 2014 by Sergei Kovalenko.
 
 ENDOFFILE

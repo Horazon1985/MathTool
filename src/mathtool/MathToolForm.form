@@ -66,7 +66,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="sin(x+diff(y^3,3))"/>
+        <Property name="text" type="java.lang.String" value="latex(a/b+sin(c))"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="RotateButton">
