@@ -7,7 +7,6 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
-import expressionbuilder.NumericalMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,6 +23,8 @@ import javax.swing.JEditorPane;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
@@ -34,7 +35,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
-    NumericalMethods numericalMethods;
     AnalysisMethods analysisMethods;
 
     /** Diese Objekte werden im Laufe des Programms erweitert.
@@ -278,7 +278,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
             if (valid_command){
                 mathToolArea.append(s + "\n");
-                MathCommandCompiler.executeCommand(s, mathToolArea, numericalMethods, graphicMethods2D, graphicMethods3D, 
+                MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
             }
             
@@ -367,8 +367,20 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         DevelopersGUI aboutMathToolGUI = new DevelopersGUI();
         aboutMathToolGUI.setVisible(true);
-        aboutMathToolGUI.setTitle("Über MathTool");
-        aboutMathToolGUI.setBounds(400,200,400,300);
+/**
+        JEditorPane aboutArea = new JEditorPane();
+        aboutArea.setContentType("text/html");
+        aboutMathToolGUI.getContentPane().add(aboutArea);
+        validate();
+        aboutArea.setBounds(420, 220, 350, 200);
+        aboutArea.setEditable(false);
+        JScrollPane scrollPaneAbout = new JScrollPane(helpArea, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPaneAbout.setBounds(770, 20, 500, 500);
+        aboutMathToolGUI.getContentPane().add(scrollPaneAbout);
+        validate();
+*/
+
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     

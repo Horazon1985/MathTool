@@ -348,8 +348,7 @@ public class MathCommandCompiler {
             
     
     //Führt den Befehl aus.
-    public static void executeCommand(String commandLine, JTextArea area,
-            NumericalMethods numericalMethods, GraphicMethods2D graphicMethods2D,
+    public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
         
