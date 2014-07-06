@@ -27,8 +27,7 @@ import java.io.BufferedReader;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
-    private boolean bStart;
-    private boolean bThreadStarted;
+    private boolean startRotate;
     JTextArea mathToolArea;
     JEditorPane helpArea;
     
@@ -56,8 +55,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
-        this.bStart = false;
-        this.bThreadStarted=false;
+        this.startRotate = false;
         InputField.addKeyListener(this);
         addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e){
@@ -116,10 +114,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         repaint();
         graphicPresentationOfFormula.setVisible(false);
         
-        /**Numerische Objekte initialisieren
-         */
-        numericalMethods = new NumericalMethods();
-        
         /**Analytische Objekte initialisieren
          */
         analysisMethods = new AnalysisMethods();
@@ -137,6 +131,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         graphicMethods2D.setVisible(false);
         graphicMethods3D.setVisible(false);
         helpArea = new JEditorPane();
+        helpArea.setContentType("text/html");
         add(helpArea);
         helpArea.setBounds(770, 20, 500, 500);
         helpArea.setEditable(false);
@@ -171,8 +166,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         InputButton = new javax.swing.JButton();
         InputField = new javax.swing.JTextField();
         RotateButton = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         InputButton.setText("Eingabe");
         InputButton.addActionListener(new java.awt.event.ActionListener() {
@@ -180,8 +181,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 InputButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(InputButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(518, 335, -1, -1));
 
-        InputField.setText("def(f(u,v)=u+v)");
+        InputField.setText("plot(x^2+y^2,-1,1,-1,1)");
+        getContentPane().add(InputField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 336, 490, -1));
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -189,34 +192,32 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 RotateButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(RotateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 376, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(InputField, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(InputButton)
-                        .addGap(76, 76, 76))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(RotateButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(335, 335, 335)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(InputButton)
-                    .addComponent(InputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(RotateButton)
-                .addContainerGap(66, Short.MAX_VALUE))
-        );
+        jMenu1.setText("Datei");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("MathTool");
+
+        jMenuItem1.setText("Hilfe");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuItem2.setText("Über MathTool");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -258,14 +259,12 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             if ((com[0].equals("plot")) && (params.length == 3)){
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
-//                helpArea.setVisible(false);
                 RotateButton.setVisible(false);
                 repaint();
             } else
             if ((com[0].equals("plot")) && (params.length == 5)){
                 graphicMethods2D.setVisible(false);
                 graphicMethods3D.setVisible(true);
-//                helpArea.setVisible(false);
                 RotateButton.setVisible(true);
                 repaint();
             } else {
@@ -347,19 +346,30 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     
     private void RotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RotateButtonActionPerformed
-        if(!bStart){
+        if(!startRotate){
             this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
-            bStart = true;
+            startRotate = true;
             graphicMethods3D.setBStart(true);
             threadRotate.start();
             RotateButton.setText("Rotation stoppen");
         } else {
-            bStart = false;
+            startRotate = false;
             graphicMethods3D.setBStart(false);
             threadRotate.interrupt();
             RotateButton.setText("3D-Graphen rotieren lassen");
         }
     }//GEN-LAST:event_RotateButtonActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        showHelpFile();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        DevelopersGUI aboutMathToolGUI = new DevelopersGUI();
+        aboutMathToolGUI.setVisible(true);
+        aboutMathToolGUI.setTitle("Über MathTool");
+        aboutMathToolGUI.setBounds(400,200,400,300);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     
     public static void main(String args[]) {
@@ -400,6 +410,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
     private javax.swing.JButton RotateButton;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -427,9 +442,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 log_position++;
             }
             showLoggedCommand(log_position);
-        }
-        if(KeyEvent.VK_H == e.getKeyCode()){
-//            showHelpFile();
         }
         
     }

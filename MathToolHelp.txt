@@ -1,4 +1,4 @@
-&Uuml;BER MATHTOOL:
+﻿&Uuml;BER MATHTOOL:
 
 MathTool ist eine Eingabekonsole, die der Verarbeitung und der Auswertung mathematischer Ausdr&uuml;cke dient.
 
