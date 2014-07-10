@@ -469,11 +469,18 @@ public class MathCommandCompiler {
             }
         }
         
-        double x_0 = Double.parseDouble(c.getParams()[1]);
-        double x_1 = Double.parseDouble(c.getParams()[2]);
-        double y_0 = Double.parseDouble(c.getParams()[3]);
-        double y_1 = Double.parseDouble(c.getParams()[4]);
+        double x_1 = Double.parseDouble(c.getParams()[1]);
+        double x_2 = Double.parseDouble(c.getParams()[2]);
+        double y_1 = Double.parseDouble(c.getParams()[3]);
+        double y_2 = Double.parseDouble(c.getParams()[4]);
 
+        if (x_1 >= x_2){
+            throw new ExpressionException("Der dritte Parameter muss größer sein als der zweite Parameter.");
+        }
+        if (y_1 >= y_2){
+            throw new ExpressionException("Der fünfte Parameter muss größer sein als der vierte Parameter.");
+        }
+        
         Iterator iter = vars.iterator();
         String var1 = (String) iter.next();
         String var2 = (String) iter.next();
@@ -507,7 +514,7 @@ public class MathCommandCompiler {
         }
         
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
+        graphicMethods3D.expressionToGraph(expr, x_1, x_2, y_1, y_2);
         graphicMethods3D.drawGraph();
 
     }
