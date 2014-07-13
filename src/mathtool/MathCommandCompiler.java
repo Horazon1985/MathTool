@@ -4,11 +4,11 @@ import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
-import expressionbuilder.NumericalMethods;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
+import expressionbuilder.NumericalMethods;
 
 import javax.swing.*;
 
@@ -24,7 +24,7 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"def", "defvars", "latex", "plot", "undef", "undefall"};
+    public static final String[] commands = {"def", "defvars", "latex", "plot", "solvedgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -302,6 +302,60 @@ public class MathCommandCompiler {
             }
         }
 
+        //SOLVEDGL
+        if (command.equals("solvedgl")){
+            if (params.length < 5){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+            }
+            if (params.length > 5){
+                throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
+            }
+            
+            if (params.length == 5){
+
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(params[0], vars);
+                if (vars.size() > 2){
+                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                }
+
+                if (Expression.isValidVariable(params[1])) {
+                    if (vars.size() == 2){
+                        if (!vars.contains(params[1])){
+                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                        }
+                    }
+                    
+                } else {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[2]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+                
+                try{
+                    Double.parseDouble(params[3]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[4]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                result.setName(command);
+                result.setParams(params);
+                result.setLeft(expr);
+                return result;
+            
+            } 
+        }
+        
         //UNDEFINE
         if (command.equals("undef")){
 
@@ -355,16 +409,12 @@ public class MathCommandCompiler {
         int n = commandLine.length();
 
         //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
+        commandLine = commandLine.replaceAll(" ", "");
+
+        //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
         char part;
         for(int i = 0; i < n; i++){
             part = commandLine.charAt(i);
-            //Falls es ein Leerzeichen ist -> beseitigen
-            if ((int)part == 32){
-                commandLine = commandLine.substring(0, i)+commandLine.substring(i + 1, n);
-                n--;
-                i--;
-            }
-            //Falls es ein Großbuchstabe ist -> zu Kleinbuchstaben machen
             if (((int)part >= 65) && ((int)part <= 90)){
                 part = (char)((int)part + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
                 commandLine = commandLine.substring(0, i)+part+commandLine.substring(i + 1, n);
@@ -380,22 +430,25 @@ public class MathCommandCompiler {
         if ((c.getName().equals("def")) && (c.getParams().length >= 1)){
             executeDefine(c, area, definedVars, definedVarsSet);
         } else 
-        if ((c.getName().equals("defvars")) && (c.getParams().length == 0)){
+        if (c.getName().equals("defvars")){
             executeDefVars(c, area, definedVars, definedVarsSet);
         } else 
-		if ((c.getName().equals("latex")) && (c.getParams().length == 1)){
-			executeLatex(c, area);
-		} else 
-		if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
-			executePlot2D(c, graphicMethods2D);
-		} else 
-		if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
-			executePlot3D(c, graphicMethods3D);
-		} else 
-        if ((c.getName().equals("undef")) && (c.getParams().length >= 1)){
+        if (c.getName().equals("latex")){
+            executeLatex(c, area);
+	} else 
+	if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
+	    executePlot2D(c, graphicMethods2D);
+	} else 
+	if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
+	    executePlot3D(c, graphicMethods3D);
+        } else 
+	if (c.getName().equals("solvedgl")){
+	    executeSolveDGL(c, area, graphicMethods2D);
+        } else 
+        if (c.getName().equals("undef")){
             executeUndefine(c, area, definedVars, definedVarsSet);
         } else 
-        if ((c.getName().equals("undefall")) && (c.getParams().length == 0)){
+        if (c.getName().equals("undefall")){
             executeUndefineAll(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
@@ -462,10 +515,10 @@ public class MathCommandCompiler {
          * Dies wirdim Folgenden geregelt.
          */
         if (vars.size() == 1){
-            if (vars.contains("z")) {
-                vars.add("z_1");
-            } else {
+            if (vars.contains("y")) {
                 vars.add("z");
+            } else {
+                vars.add("y");
             }
         }
         
@@ -553,12 +606,74 @@ public class MathCommandCompiler {
     }    
 
     
-	private static void executeLatex(Command c, JTextArea area) 
+    private static void executeLatex(Command c, JTextArea area) 
 	throws ExpressionException {
         area.append("Latex-Code: " + c.getLeft().expressionToLatex() + "\n");
     }    
 	
 	
+    private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
+	throws ExpressionException {
+
+        HashSet vars = new HashSet();
+        Expression expr = Expression.build(c.getParams()[0], vars);
+        String var1 = c.getParams()[1];
+        double x_0 = Double.parseDouble(c.getParams()[2]);
+        double x_1 = Double.parseDouble(c.getParams()[3]);
+        double y_0 = Double.parseDouble(c.getParams()[4]);
+        
+        /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
+        */
+        String var2 = new String();
+
+        if (vars.isEmpty()){
+            if (var1.equals("y")){
+                var2 = "z";
+            } else {
+                var2 = "y";
+            }
+        } else 
+        if (vars.size() == 1){
+            if (vars.contains(var1)){
+                if (var1.equals("y")){
+                    var2 = "z";
+                } else {
+                    var2 = "y";
+                }
+            } else {
+                Iterator iter = vars.iterator();
+                var2 = (String) iter.next();
+            }
+        } else {
+            Iterator iter = vars.iterator();
+            var2 = (String) iter.next();
+            if (var2.equals(var1)){
+                var2 = (String) iter.next();
+            }
+        }
+        
+        double[][] solution = NumericalMethods.solveDGL(expr, var1, var2, x_0, x_1, y_0, 1000);
+        
+        area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
+                + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
+        for (int i = 0; i < 1000; i++){
+            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
+        }
+    
+        boolean critical_line_exists = false;
+        double pos_of_critical_line = 0;
+        
+        try{
+            graphicMethods2D.expressionToGraph(expr, var1, x_0, x_1);
+            graphicMethods2D.setParameters(var1, 0, 0, critical_line_exists, pos_of_critical_line);
+            graphicMethods2D.drawGraph();
+        } catch (EvaluationException e){
+        
+        }
+
+    }    
+
+    
     private static void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
 

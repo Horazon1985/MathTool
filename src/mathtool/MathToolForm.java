@@ -184,7 +184,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("plot(x^2+y^2-1,-2,2,-2,2)");
+        InputField.setText("solvedgl(x^2-1,x,0,1,1)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 

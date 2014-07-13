@@ -15,6 +15,7 @@ public class DevelopersGUI extends javax.swing.JFrame {
         super("Über MathTool");
         initComponents();
         setResizable(false);
+//        setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         JLabel nameLabel = new JLabel("Programm MathTool");
         JLabel systemLabel = new JLabel("System: Windows XP, Windows 7, Windows 8, Linux.");
         JLabel developerLabel = new JLabel("Entwickler: Sergei Kovalenko");
