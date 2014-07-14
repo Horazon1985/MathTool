@@ -613,7 +613,7 @@ public class MathCommandCompiler {
 	
 	
     private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
-	throws ExpressionException {
+	throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
         Expression expr = Expression.build(c.getParams()[0], vars);
@@ -656,20 +656,24 @@ public class MathCommandCompiler {
         
         area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
                 + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < solution.length; i++){
             area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
         }
-    
+
+        /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
+         * 
+         */
         boolean critical_line_exists = false;
         double pos_of_critical_line = 0;
-        
-        try{
-            graphicMethods2D.expressionToGraph(expr, var1, x_0, x_1);
-            graphicMethods2D.setParameters(var1, 0, 0, critical_line_exists, pos_of_critical_line);
-            graphicMethods2D.drawGraph();
-        } catch (EvaluationException e){
-        
+        if (solution.length < 1001){
+            critical_line_exists = true;
+            pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
+            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
+        
+//        graphicMethods2D.setGraphArray(solution);
+//        graphicMethods2D.setParameters(var1, 0, 0, critical_line_exists, pos_of_critical_line);
+//        graphicMethods2D.drawGraph();
 
     }    
 

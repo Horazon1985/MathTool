@@ -159,6 +159,33 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }
     
     
+    private void activatePanelsForGraphs(String command_name, String[] params){
+    
+        if ((command_name.equals("plot")) && (params.length == 3)){
+            graphicMethods2D.setVisible(true);
+            graphicMethods3D.setVisible(false);
+            RotateButton.setVisible(false);
+            repaint();
+        } else
+        if ((command_name.equals("plot")) && (params.length == 5)){
+            graphicMethods2D.setVisible(false);
+            graphicMethods3D.setVisible(true);
+            RotateButton.setVisible(true);
+            repaint();
+        } else
+        if (command_name.equals("solvedgl")){
+            graphicMethods2D.setVisible(true);
+            graphicMethods3D.setVisible(false);
+            RotateButton.setVisible(false);
+            repaint();
+        } else {
+            RotateButton.setVisible(false);
+        }
+    
+    
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -182,11 +209,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
+        InputButton.setBounds(518, 335, 91, 25);
 
-        InputField.setText("solvedgl(x^2-1,x,0,1,1)");
+        InputField.setText("solvedgl(y^y,x,1,2,1)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -195,7 +222,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 376, 231, 25);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -259,7 +286,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              */
             String[] com = Expression.getOperatorAndArguments(s);
             String[] params = Expression.getArguments(com[1]);
-            if ((com[0].equals("plot")) && (params.length == 3)){
+/**            if ((com[0].equals("plot")) && (params.length == 3)){
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
                 RotateButton.setVisible(false);
@@ -273,7 +300,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             } else {
                 RotateButton.setVisible(false);
             }
-
+*/  
+            activatePanelsForGraphs(com[0], params);
+            
             for (int i = 0; i < MathCommandCompiler.commands.length; i++){
                 if (com[0].equals(MathCommandCompiler.commands[i])){
                     valid_command = true;
