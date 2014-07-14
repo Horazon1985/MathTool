@@ -671,9 +671,20 @@ public class MathCommandCompiler {
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
         
-//        graphicMethods2D.setGraphArray(solution);
-//        graphicMethods2D.setParameters(var1, 0, 0, critical_line_exists, pos_of_critical_line);
-//        graphicMethods2D.drawGraph();
+        double max_x = Math.max(Math.abs(solution[0][0]), Math.abs(solution[solution.length - 1][0]));
+        double max_y = Math.abs(solution[0][1]);
+        for (int i = 1; i < solution.length; i++){
+            max_y = Math.max(max_y, Math.abs(solution[i][1]));
+        }
+
+        /** Initialisierung: 20% Rand lassen.
+         */
+        max_x = max_x*1.2;
+        max_y = max_y*1.2;
+        
+        graphicMethods2D.setGraphArray(solution);
+        graphicMethods2D.setParameters(var1, 0, 0, max_x, max_y, critical_line_exists, pos_of_critical_line);
+        graphicMethods2D.drawGraph();
 
     }    
 
