@@ -24,7 +24,7 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"def", "defvars", "latex", "plot", "solvedgl", "undef", "undefall"};
+    public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", "solvedgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -34,6 +34,24 @@ public class MathCommandCompiler {
 
         Command result = new Command();
         
+        //CLEAR
+        if (command.equals("clear")){
+
+            /** Prüft, ob der Befehl keine Parameter besitzt.
+             */
+            if (params.length > 0){
+                throw new ExpressionException("Im Befehl 'clear' dürfen keine Parameter stehen.");
+            }
+            
+            result.setName(command);
+            result.setParams(params);
+            /**Linker Teil ist in diesem Fall völlig irrelevant; muss aber angegeben werden.
+             */
+            result.setLeft(new Constant(0));
+            return result;
+        
+        }
+
         //DEFINE
         if (command.equals("def")){
 
@@ -104,13 +122,13 @@ public class MathCommandCompiler {
 
             /** Nun wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
              */
-            HashSet fv = new HashSet();
+            HashSet function_vars_as_hashset = new HashSet();
             for (int i = 0; i < function_vars.length; i++){
-                if (fv.contains(function_vars[i])){
+                if (function_vars_as_hashset.contains(function_vars[i])){
                     throw new ExpressionException("In der Funktionsdeklaration der Funktion " + function_name + " dürfen"
                             + " nicht mehrmals dieselben Variablen vorkommen.");
                 }
-                fv.add(function_vars[i]);
+                function_vars_as_hashset.add(function_vars[i]);
             }
             
             /** Hier wird den Variablen der Index "_ABSTRACT" angehängt.
@@ -427,6 +445,9 @@ public class MathCommandCompiler {
         
         Command c = getCommand(command, params);
         
+        if (c.getName().equals("clear")){
+            executeClear(c, area);
+        } else 
         if ((c.getName().equals("def")) && (c.getParams().length >= 1)){
             executeDefine(c, area, definedVars, definedVarsSet);
         } else 
@@ -463,6 +484,51 @@ public class MathCommandCompiler {
      * etc.
      */
     
+    private static void executeClear(Command c, JTextArea area) 
+	throws ExpressionException {
+        area.setText("");
+    }    
+
+    
+    private static void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
+
+        /** Falls ein Variablenwert definiert wird.
+         */
+        if (c.getParams().length == 1){
+            Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
+            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
+            definedVarsSet.add(c.getParams()[0]);
+            area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
+        } else {
+        /** Falls eine Funktion definiert wird.
+         */
+            String[] vars = new String[c.getParams().length - 1];
+            Expression[] exprs_for_vars = new Expression[c.getParams().length - 1];
+            for (int i = 0; i < vars.length; i++){
+                vars[i] = c.getParams()[i + 1];
+                exprs_for_vars[i] = new Variable(vars[i]);
+            }
+            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(c.getParams()[0], c.getLeft());
+            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(c.getParams()[0], exprs_for_vars);
+            SelfDefinedFunction.varsForSelfDefinedFunctions.put(c.getParams()[0], vars);
+        }
+        
+    }    
+        
+    
+    private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
+        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars + "\n");
+    }    
+
+    
+    private static void executeLatex(Command c, JTextArea area) 
+	throws ExpressionException {
+        area.append("Latex-Code: " + c.getLeft().expressionToLatex() + "\n");
+    }    
+	
+	
     /** c Enthält genau 3 Parameter 
      * Parameter: Expression, double, double (als Strings)
      */
@@ -571,47 +637,8 @@ public class MathCommandCompiler {
         graphicMethods3D.drawGraph();
 
     }
-        
-
-    private static void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
-            throws ExpressionException, EvaluationException {
-
-        /** Falls ein Variablenwert definiert wird.
-         */
-        if (c.getParams().length == 1){
-            Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
-            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
-            definedVarsSet.add(c.getParams()[0]);
-            area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
-        } else {
-        /** Falls eine Funktion definiert wird.
-         */
-            String[] vars = new String[c.getParams().length - 1];
-            Expression[] exprs_for_vars = new Expression[c.getParams().length - 1];
-            for (int i = 0; i < vars.length; i++){
-                vars[i] = c.getParams()[i + 1];
-                exprs_for_vars[i] = new Variable(vars[i]);
-            }
-            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(c.getParams()[0], c.getLeft());
-            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(c.getParams()[0], exprs_for_vars);
-            SelfDefinedFunction.varsForSelfDefinedFunctions.put(c.getParams()[0], vars);
-        }
-        
-    }    
-        
-    
-    private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
-            throws ExpressionException, EvaluationException {
-        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars + "\n");
-    }    
 
     
-    private static void executeLatex(Command c, JTextArea area) 
-	throws ExpressionException {
-        area.append("Latex-Code: " + c.getLeft().expressionToLatex() + "\n");
-    }    
-	
-	
     private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
 	throws ExpressionException, EvaluationException {
 
