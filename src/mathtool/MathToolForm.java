@@ -24,7 +24,9 @@ import javax.swing.JEditorPane;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
@@ -397,9 +399,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        DevelopersGUI aboutMathToolGUI = new DevelopersGUI();
+        DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI();
         aboutMathToolGUI.setVisible(true);
-/**
+        /**
         JEditorPane aboutArea = new JEditorPane();
         aboutArea.setContentType("text/html");
         aboutMathToolGUI.getContentPane().add(aboutArea);
