@@ -1,5 +1,6 @@
 package mathtool;
 
+import expressionbuilder.AnalysisMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.Constant;
@@ -8,6 +9,7 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
+import expressionbuilder.AnalysisMethods;
 import expressionbuilder.NumericalMethods;
 
 import javax.swing.*;
@@ -24,7 +26,8 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", "solvedgl", "undef", "undefall"};
+    public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", 
+        "solvedgl", "taylordgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -321,6 +324,11 @@ public class MathCommandCompiler {
         }
 
         //SOLVEDGL
+        /** Struktur: taylordgl(expr, var, x_0, x_1, y_0)
+         * var = Variable in der DGL
+         * x_0, x_1 legen den Lösungsbereich fest
+         * y_0 = Funktionswert an der Stelle x_0
+         */
         if (command.equals("solvedgl")){
             if (params.length < 5){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
@@ -374,6 +382,66 @@ public class MathCommandCompiler {
             } 
         }
         
+        //TAYLORDGL
+        /** Struktur: taylordgl(expr, var, ord, x_0, y_0, k)
+         * var = Variable in der DGL
+         * ord = Ordnung der DGL. 
+         * x_0, y_0 legen das AWP fest
+         * k = Ordnung des Taylorpolynoms (an der Stelle x_0)
+         */
+        if (command.equals("taylordgl")){
+            if (params.length < 6){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+            }
+            if (params.length > 6){
+                throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
+            }
+            
+            if (params.length == 6){
+
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(params[0], vars);
+                if (vars.size() > 2){
+                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                }
+
+                if (Expression.isValidVariable(params[1])) {
+                    if (vars.size() == 2){
+                        if (!vars.contains(params[1])){
+                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                        }
+                    }
+                    
+                } else {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[2]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+                
+                try{
+                    Double.parseDouble(params[3]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[4]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                result.setName(command);
+                result.setParams(params);
+                result.setLeft(expr);
+                return result;
+            
+            } 
+        }
+
         //UNDEFINE
         if (command.equals("undef")){
 
@@ -465,6 +533,9 @@ public class MathCommandCompiler {
         } else 
 	if (c.getName().equals("solvedgl")){
 	    executeSolveDGL(c, area, graphicMethods2D);
+        } else 
+	if (c.getName().equals("taylordgl")){
+	    executeTaylorDGL(c, area);
         } else 
         if (c.getName().equals("undef")){
             executeUndefine(c, area, definedVars, definedVarsSet);
@@ -712,6 +783,54 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphArray(solution);
         graphicMethods2D.setParameters(var1, 0, 0, max_x, max_y, critical_line_exists, pos_of_critical_line);
         graphicMethods2D.drawGraph();
+
+    }    
+
+    
+    private static void executeTaylorDGL(Command c, JTextArea area) 
+	throws ExpressionException, EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression expr = Expression.build(c.getParams()[0], vars);
+        String var1 = c.getParams()[1];
+        double x_0 = Double.parseDouble(c.getParams()[3]);
+        double y_0 = Double.parseDouble(c.getParams()[4]);
+        double[] y_0_as_array = new double[1];
+        y_0_as_array[0] = y_0;
+        int k = Integer.parseInt(c.getParams()[5]);
+        
+        /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
+        */
+        String var2 = new String();
+
+        if (vars.isEmpty()){
+            if (var1.equals("y")){
+                var2 = "z";
+            } else {
+                var2 = "y";
+            }
+        } else 
+        if (vars.size() == 1){
+            if (vars.contains(var1)){
+                if (var1.equals("y")){
+                    var2 = "z";
+                } else {
+                    var2 = "y";
+                }
+            } else {
+                Iterator iter = vars.iterator();
+                var2 = (String) iter.next();
+            }
+        } else {
+            Iterator iter = vars.iterator();
+            var2 = (String) iter.next();
+            if (var2.equals(var1)){
+                var2 = (String) iter.next();
+            }
+        }
+        
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var1, 1, x_0, y_0_as_array, k);
+        area.append(result.writeFormula() + "\n");
 
     }    
 

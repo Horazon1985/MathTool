@@ -9,9 +9,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DevelopersDialogGUI extends JDialog {
-
-    public DevelopersDialogGUI() {
+public class HelpDialogGUI extends JDialog {
+ 
+        public HelpDialogGUI() {
         
         setTitle("About MathTool");
         setLayout(null);
@@ -60,6 +60,7 @@ public class DevelopersDialogGUI extends JDialog {
         validate();
         repaint();
     }
+
     
     
 }

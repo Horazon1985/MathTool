@@ -211,11 +211,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 91, 25);
+        InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("plot(x^2-y^2,-2,2,-2,2)");
+        InputField.setText("(30*x)/(12*y)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -224,7 +224,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 231, 25);
+        RotateButton.setBounds(10, 376, 165, 23);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -401,20 +401,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI();
         aboutMathToolGUI.setVisible(true);
-        /**
-        JEditorPane aboutArea = new JEditorPane();
-        aboutArea.setContentType("text/html");
-        aboutMathToolGUI.getContentPane().add(aboutArea);
-        validate();
-        aboutArea.setBounds(420, 220, 350, 200);
-        aboutArea.setEditable(false);
-        JScrollPane scrollPaneAbout = new JScrollPane(helpArea, 
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPaneAbout.setBounds(770, 20, 500, 500);
-        aboutMathToolGUI.getContentPane().add(scrollPaneAbout);
-        validate();
-*/
-
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     
@@ -447,7 +433,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 MyMathToolForm.setVisible(true);
                 MyMathToolForm.setTitle("MathTool for Analysis and Numerical Computation");
                 MyMathToolForm.setBounds(20,50,1300,650);
-                MyMathToolForm.getContentPane().setBackground(new Color(255,200,0));
+                MyMathToolForm.getContentPane().setBackground(new Color(255,150,0));
             }
         });
     }
