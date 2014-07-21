@@ -52,6 +52,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
      */
     public int command_count = 0;
     public int log_position = 0;
+
     
     
     public MathToolForm() {
@@ -211,11 +212,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
+        InputButton.setBounds(518, 335, 91, 25);
 
-        InputField.setText("(30*x)/(12*y)");
+        InputField.setText("taylordgl(0.5*y,x,1,0,1,10)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -224,7 +225,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 376, 231, 25);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -254,6 +255,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void execute(){
+        
         /**       
         GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
         try{

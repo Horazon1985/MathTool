@@ -383,7 +383,8 @@ public class MathCommandCompiler {
         }
         
         //TAYLORDGL
-        /** Struktur: taylordgl(expr, var, ord, x_0, y_0, k)
+        /** Struktur: taylordgl(expr, var, ord, x_0, y_0, y'(0), ..., y^(ord - 1)(0), k)
+         * Anzahl der parameter ist also = ord + 5
          * var = Variable in der DGL
          * ord = Ordnung der DGL. 
          * x_0, y_0 legen das AWP fest
@@ -391,47 +392,79 @@ public class MathCommandCompiler {
          */
         if (command.equals("taylordgl")){
             if (params.length < 6){
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
             }
-            if (params.length > 6){
-                throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
-            }
-            
-            if (params.length == 6){
 
+            if (params.length >= 6){
+
+                //Ermittelt die Ordnung der DGL
+                try{
+                    Integer.parseInt(params[2]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+                }
+                
+                int ord = Integer.parseInt(params[2]);
+
+                if (ord < 1){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+                }
+
+                /** Prüft, ob es sich um eine korrekte DGL handelt:
+                 * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
+                 */ 
                 HashSet vars = new HashSet();
                 Expression expr = Expression.build(params[0], vars);
-                if (vars.size() > 2){
+                
+                HashSet vars_without_primes = new HashSet();
+                Iterator iter = vars.iterator();
+                String var_without_primes;
+                for (int i = 0; i < vars.size(); i++){
+                    var_without_primes = (String) iter.next();
+                    if (!var_without_primes.replaceAll("'", "").equals(params[1])){
+                        if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
+                            throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
+                                    + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                        }
+                        var_without_primes = var_without_primes.replaceAll("'", "");
+                    }
+                    vars_without_primes.add(var_without_primes);
+                }
+                
+                if (vars_without_primes.size() > 2){
                     throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
                 }
 
                 if (Expression.isValidVariable(params[1])) {
-                    if (vars.size() == 2){
+                    if (vars_without_primes.size() == 2){
                         if (!vars.contains(params[1])){
                             throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
                         }
                     }
-                    
                 } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'taylordgl' muss eine gültige Variable sein.");
+                }
+                
+                if (params.length < ord + 5){
+                    throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
+                }
+                if (params.length > ord + 5){
+                    throw new ExpressionException("Zu viele Parameter im Befehl 'taylordgl'");
                 }
 
-                try{
-                    Double.parseDouble(params[2]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                //Prüft, ob die AWP-Daten korrekt sind
+                for (int i = 3; i < ord + 4; i++){
+                    try{
+                        Double.parseDouble(params[i]);
+                    } catch (NumberFormatException e){
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
+                    }
                 }
                 
                 try{
-                    Double.parseDouble(params[3]);
+                    Integer.parseInt(params[ord + 4]);
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
-                }
-
-                try{
-                    Double.parseDouble(params[4]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der letzte Parameter im Befehl 'taylordgl' muss eine nichtnegative ganze Zahl sein.");
                 }
 
                 result.setName(command);
@@ -790,46 +823,65 @@ public class MathCommandCompiler {
     private static void executeTaylorDGL(Command c, JTextArea area) 
 	throws ExpressionException, EvaluationException {
 
+        int ord = Integer.parseInt(c.getParams()[2]);
         HashSet vars = new HashSet();
         Expression expr = Expression.build(c.getParams()[0], vars);
+        
+        HashSet vars_without_primes = new HashSet();
+        Iterator iter = vars.iterator();
+        String var_without_primes;
+        for (int i = 0; i < vars.size(); i++){
+            var_without_primes = (String) iter.next();
+            if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])){
+                if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
+                    throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
+                            + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                }
+                var_without_primes = var_without_primes.replaceAll("'", "");
+            }
+            vars_without_primes.add(var_without_primes);
+        }
+        
         String var1 = c.getParams()[1];
         double x_0 = Double.parseDouble(c.getParams()[3]);
-        double y_0 = Double.parseDouble(c.getParams()[4]);
-        double[] y_0_as_array = new double[1];
-        y_0_as_array[0] = y_0;
-        int k = Integer.parseInt(c.getParams()[5]);
+        double[] y_0 = new double[ord];
+        for (int i = 0; i < y_0.length; i++){
+            y_0[i] = Double.parseDouble(c.getParams()[i + 4]);
+        }
+                
+        int k = Integer.parseInt(c.getParams()[ord + 4]);
         
         /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
         */
         String var2 = new String();
 
-        if (vars.isEmpty()){
+        if (vars_without_primes.isEmpty()){
             if (var1.equals("y")){
                 var2 = "z";
             } else {
                 var2 = "y";
             }
         } else 
-        if (vars.size() == 1){
-            if (vars.contains(var1)){
+        if (vars_without_primes.size() == 1){
+            if (vars_without_primes.contains(var1)){
                 if (var1.equals("y")){
                     var2 = "z";
                 } else {
                     var2 = "y";
                 }
             } else {
-                Iterator iter = vars.iterator();
+                iter = vars_without_primes.iterator();
                 var2 = (String) iter.next();
             }
         } else {
-            Iterator iter = vars.iterator();
+            iter = vars_without_primes.iterator();
             var2 = (String) iter.next();
             if (var2.equals(var1)){
                 var2 = (String) iter.next();
             }
         }
         
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var1, 1, x_0, y_0_as_array, k);
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var1, ord, x_0, y_0, k);
         area.append(result.writeFormula() + "\n");
 
     }    
