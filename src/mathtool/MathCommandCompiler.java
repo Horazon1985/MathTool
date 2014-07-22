@@ -165,7 +165,7 @@ public class MathCommandCompiler {
              */
             command_params = new Object[2 + function_vars.length];
             command_params[0] = function_name; 
-            for (int i = 1; i < function_vars.length; i++){
+            for (int i = 1; i <= function_vars.length; i++){
                 command_params[i] = Variable.create(function_vars[i - 1]);
             }
             command_params[1 + function_vars.length] = expr;
@@ -485,9 +485,9 @@ public class MathCommandCompiler {
 
                 command_params = new Object[ord + 5];
                 command_params[0] = expr;
-                command_params[1] = params[1];
+                command_params[1] = Variable.create(params[1]);
                 command_params[2] = ord;
-                for (int i = 2; i < ord + 4; i++){
+                for (int i = 3; i < ord + 4; i++){
                     command_params[i] = Double.parseDouble(params[i]);                
                 }
                 command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
@@ -871,7 +871,7 @@ public class MathCommandCompiler {
             vars_without_primes.add(var_without_primes);
         }
         
-        String var1 = (String) c.getParams()[1];
+        String var1 = ((Variable) c.getParams()[1]).getName();
         double x_0 = (double) c.getParams()[3];
         double[] y_0 = new double[ord];
         for (int i = 0; i < y_0.length; i++){
