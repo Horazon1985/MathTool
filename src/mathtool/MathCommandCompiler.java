@@ -36,6 +36,7 @@ public class MathCommandCompiler {
     private static Command getCommand(String command, String[] params) throws ExpressionException {
 
         Command result = new Command();
+        Object[] command_params;
         
         //CLEAR
         if (command.equals("clear")){
@@ -46,11 +47,9 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Im Befehl 'clear' dürfen keine Parameter stehen.");
             }
             
+            command_params = new Object[0];
             result.setName(command);
-            result.setParams(params);
-            /**Linker Teil ist in diesem Fall völlig irrelevant; muss aber angegeben werden.
-             */
-            result.setLeft(new Constant(0));
+            result.setParams(command_params);
             return result;
         
         }
@@ -77,11 +76,11 @@ public class MathCommandCompiler {
             if (Expression.isValidVariable(function_name_and_params)){
                 try{
                     double value = Double.parseDouble(function_term);
-                    String[] command_params = new String[1];
-                    command_params[0] = function_name_and_params; 
+                    command_params = new Object[2];
+                    command_params[0] = Variable.create(function_name_and_params);
+                    command_params[1] = value;
                     result.setName(command);
                     result.setParams(command_params);
-                    result.setLeft(new Constant(value));
                     return result;
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Bei einer Variablenzuweisung muss der Variablen ein reeller Wert zugewiesen werden.");
@@ -164,12 +163,12 @@ public class MathCommandCompiler {
             
             /** result.params werden gesetzt.
              */
-            String[] command_params = new String[1 + function_vars.length];
+            command_params = new Object[2 + function_vars.length];
             command_params[0] = function_name; 
-            for (int i = 1; i <= function_vars.length; i++){
-                command_params[i] = function_vars[i - 1];
+            for (int i = 1; i < function_vars.length; i++){
+                command_params[i] = Variable.create(function_vars[i - 1]);
             }
-            
+            command_params[1 + function_vars.length] = expr;
             
             /** Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
              * result.name = "def"
@@ -178,7 +177,6 @@ public class MathCommandCompiler {
              */
             result.setName(command);
             result.setParams(command_params);
-            result.setLeft(expr);
             return result;
         
         }
@@ -192,11 +190,9 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Im Befehl 'defvars' dürfen keine Parameter stehen.");
             }
             
+            command_params = new Object[0];
             result.setName(command);
-            result.setParams(params);
-            /**Linker Teil ist in diesem Fall völlig irrelevant; muss aber angegeben werden.
-             */
-            result.setLeft(new Constant(0));
+            result.setParams(command_params);
             return result;
         
         }
@@ -210,9 +206,10 @@ public class MathCommandCompiler {
 			
             try{
 		Expression expr = Expression.build(params[0], new HashSet());
+                command_params = new Object[1];
+                command_params[0] = expr;
 		result.setName(command);
-		result.setParams(params);
-		result.setLeft(expr);
+		result.setParams(command_params);
 		return result;
             } catch (ExpressionException e){
 		throw new ExpressionException(e.getMessage());
@@ -234,8 +231,6 @@ public class MathCommandCompiler {
             
             if (params.length == 3){
 
-                double x_0, x_1;
-                
                 try{
                     HashSet vars = new HashSet();
                     Expression expr = Expression.build(params[0], vars);
@@ -244,13 +239,13 @@ public class MathCommandCompiler {
                 }
 
                 try{
-                    x_0 = Double.parseDouble(params[1]);
+                    Double.parseDouble(params[1]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der zweite Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
                 
                 try{
-                    x_1 = Double.parseDouble(params[2]);
+                    Double.parseDouble(params[2]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
@@ -262,9 +257,14 @@ public class MathCommandCompiler {
                         throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens eine Variable enthalten. Dieser enthält jedoch " 
                                 + String.valueOf(vars.size()) + " Variablen.");
                     }
+                    double x_0 = Double.parseDouble(params[1]);
+                    double x_1 = Double.parseDouble(params[2]);
+                    command_params = new Object[3];
+                    command_params[0] = expr;
+                    command_params[1] = x_0;
+                    command_params[2] = x_1;
                     result.setName(command);
-                    result.setParams(params);
-                    result.setLeft(expr);
+                    result.setParams(command_params);
                     return result;
                 } catch (ExpressionException e){
                     throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein.");
@@ -272,8 +272,6 @@ public class MathCommandCompiler {
             
             } else {
         
-                double x_0, x_1, y_0, y_1;
-                
                 try{
                     HashSet vars = new HashSet();
                     Expression expr = Expression.build(params[0], vars);
@@ -282,25 +280,25 @@ public class MathCommandCompiler {
                 }
 
                 try{
-                    x_0 = Double.parseDouble(params[1]);
+                    Double.parseDouble(params[1]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der zweite Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
                 
                 try{
-                    x_1 = Double.parseDouble(params[2]);
+                    Double.parseDouble(params[2]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
 
                 try{
-                    y_0 = Double.parseDouble(params[3]);
+                    Double.parseDouble(params[3]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
                 
                 try{
-                    y_1 = Double.parseDouble(params[4]);
+                    Double.parseDouble(params[4]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
                 }
@@ -312,9 +310,18 @@ public class MathCommandCompiler {
                         throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens zwei Variablen enthalten. Dieser enthält jedoch " 
                                 + String.valueOf(vars.size()) + " Variablen.");
                     }
+                    double x_0 = Double.parseDouble(params[1]);
+                    double x_1 = Double.parseDouble(params[2]);
+                    double y_0 = Double.parseDouble(params[3]);
+                    double y_1 = Double.parseDouble(params[4]);
+                    command_params = new Object[5];
+                    command_params[0] = expr;
+                    command_params[1] = x_0;
+                    command_params[2] = x_1;
+                    command_params[3] = y_0;
+                    command_params[4] = y_1;
                     result.setName(command);
-                    result.setParams(params);
-                    result.setLeft(expr);
+                    result.setParams(command_params);
                     return result;
                 } catch (ExpressionException e){
                     throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein.");
@@ -374,9 +381,18 @@ public class MathCommandCompiler {
                     throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
                 }
 
+                double x_0 = Double.parseDouble(params[2]);
+                double x_1 = Double.parseDouble(params[3]);
+                double y_0 = Double.parseDouble(params[4]);
+                command_params = new Object[5];
+                command_params[0] = expr;
+                command_params[1] = params[1];
+                command_params[2] = x_0;
+                command_params[3] = x_1;
+                command_params[4] = y_0;
+                
                 result.setName(command);
-                result.setParams(params);
-                result.setLeft(expr);
+                result.setParams(command_params);
                 return result;
             
             } 
@@ -467,9 +483,17 @@ public class MathCommandCompiler {
                     throw new ExpressionException("Der letzte Parameter im Befehl 'taylordgl' muss eine nichtnegative ganze Zahl sein.");
                 }
 
+                command_params = new Object[ord + 5];
+                command_params[0] = expr;
+                command_params[1] = params[1];
+                command_params[2] = ord;
+                for (int i = 2; i < ord + 4; i++){
+                    command_params[i] = Double.parseDouble(params[i]);                
+                }
+                command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
+                
                 result.setName(command);
-                result.setParams(params);
-                result.setLeft(expr);
+                result.setParams(command_params);
                 return result;
             
             } 
@@ -480,19 +504,19 @@ public class MathCommandCompiler {
 
             /** Prüft, ob alle Parameter gültige Variablen sind.
              */
-            boolean contains_only_valid_variables = true;
             for (int i = 0; i < params.length; i++){
-                if (!Expression.isValidVariable(params[0])){
-                    contains_only_valid_variables = false;
+                if (!Expression.isValidVariable(params[i])){
+                    throw new ExpressionException("Die " + (i + 1) + " im Befehl 'undef' ist keine gültige Variablen.");
                 }
             }
             
-            if (!contains_only_valid_variables){
-                throw new ExpressionException("Im Befehl 'undef' müssen als Parameter gültige Variablen stehen.");
+            command_params = new Object[params.length];
+            for (int i = 0; i < params.length; i++){
+                command_params[i] = Variable.create(params[i]);
             }
+            
             result.setName(command);
-            result.setParams(params);
-            result.setLeft(new Variable(params[0]));
+            result.setParams(command_params);
             return result;
         
         }
@@ -506,11 +530,9 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Im Befehl 'undefall' dürfen keine Parameter stehen.");
             }
             
+            command_params = new Object[0];
             result.setName(command);
-            result.setParams(params);
-            /**Linker Teil ist in diesem Fall völlig irrelevant; muss aber angegeben werden.
-             */
-            result.setLeft(new Constant(0));
+            result.setParams(command_params);
             return result;
         
         }
@@ -599,23 +621,26 @@ public class MathCommandCompiler {
 
         /** Falls ein Variablenwert definiert wird.
          */
-        if (c.getParams().length == 1){
-            Variable.setValue(c.getParams()[0], c.getLeft().evaluate());
-            definedVars.put(c.getParams()[0], c.getLeft().evaluate());
-            definedVarsSet.add(c.getParams()[0]);
-            area.append("Der Wert der Variablen " + c.getParams()[0] + " wurde auf " + String.valueOf(c.getLeft().evaluate()) + " gesetzt. \n");
+        if (c.getParams().length == 2){
+            String var = ((Variable) c.getParams()[0]).getName();
+            double value = (double) c.getParams()[1];
+            Variable.setValue(var, value);
+            definedVars.put(var, value);
+            definedVarsSet.add(var);
+            area.append("Der Wert der Variablen " + var + " wurde auf " + value + " gesetzt. \n");
         } else {
         /** Falls eine Funktion definiert wird.
          */
-            String[] vars = new String[c.getParams().length - 1];
-            Expression[] exprs_for_vars = new Expression[c.getParams().length - 1];
-            for (int i = 0; i < vars.length; i++){
-                vars[i] = c.getParams()[i + 1];
-                exprs_for_vars[i] = new Variable(vars[i]);
+            String function_name = (String)(c.getParams()[0]);
+            String[] vars = new String[c.getParams().length - 2];
+            Expression[] exprs_for_vars = new Expression[c.getParams().length - 2];
+            for (int i = 0; i < c.getParams().length - 2; i++){
+                vars[i] = ((Variable) c.getParams()[i + 1]).getName();
+                exprs_for_vars[i] = (Variable) c.getParams()[i + 1];
             }
-            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(c.getParams()[0], c.getLeft());
-            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(c.getParams()[0], exprs_for_vars);
-            SelfDefinedFunction.varsForSelfDefinedFunctions.put(c.getParams()[0], vars);
+            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(function_name, (Expression) c.getParams()[c.getParams().length - 1]);
+            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(function_name, exprs_for_vars);
+            SelfDefinedFunction.varsForSelfDefinedFunctions.put(function_name, vars);
         }
         
     }    
@@ -629,7 +654,7 @@ public class MathCommandCompiler {
     
     private static void executeLatex(Command c, JTextArea area) 
 	throws ExpressionException {
-        area.append("Latex-Code: " + c.getLeft().expressionToLatex() + "\n");
+        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex() + "\n");
     }    
 	
 	
@@ -640,7 +665,8 @@ public class MathCommandCompiler {
             EvaluationException {
         
         HashSet vars = new HashSet();
-        Expression expr = Expression.build(c.getParams()[0], vars);
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
         expr = expr.simplify();
         
         //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
@@ -648,8 +674,8 @@ public class MathCommandCompiler {
             vars.add("x");
         }
         
-        double x_0 = Double.parseDouble(c.getParams()[1]);
-        double x_1 = Double.parseDouble(c.getParams()[2]);
+        double x_0 = (double) c.getParams()[1];
+        double x_1 = (double) c.getParams()[2];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -671,7 +697,8 @@ public class MathCommandCompiler {
             EvaluationException {
     
         HashSet vars = new HashSet();
-        Expression expr = Expression.build(c.getParams()[0], vars);
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
         expr = expr.simplify();
         
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -692,10 +719,10 @@ public class MathCommandCompiler {
             }
         }
         
-        double x_1 = Double.parseDouble(c.getParams()[1]);
-        double x_2 = Double.parseDouble(c.getParams()[2]);
-        double y_1 = Double.parseDouble(c.getParams()[3]);
-        double y_2 = Double.parseDouble(c.getParams()[4]);
+        double x_1 = (double) c.getParams()[1];
+        double x_2 = (double) c.getParams()[2];
+        double y_1 = (double) c.getParams()[3];
+        double y_2 = (double) c.getParams()[4];
 
         if (x_1 >= x_2){
             throw new ExpressionException("Der dritte Parameter muss größer sein als der zweite Parameter.");
@@ -747,11 +774,12 @@ public class MathCommandCompiler {
 	throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr = Expression.build(c.getParams()[0], vars);
-        String var1 = c.getParams()[1];
-        double x_0 = Double.parseDouble(c.getParams()[2]);
-        double x_1 = Double.parseDouble(c.getParams()[3]);
-        double y_0 = Double.parseDouble(c.getParams()[4]);
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
+        String var1 = (String) c.getParams()[1];
+        double x_0 = (double) c.getParams()[2];
+        double x_1 = (double) c.getParams()[3];
+        double y_0 = (double) c.getParams()[4];
         
         /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
         */
@@ -823,9 +851,10 @@ public class MathCommandCompiler {
     private static void executeTaylorDGL(Command c, JTextArea area) 
 	throws ExpressionException, EvaluationException {
 
-        int ord = Integer.parseInt(c.getParams()[2]);
+        int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();
-        Expression expr = Expression.build(c.getParams()[0], vars);
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
         
         HashSet vars_without_primes = new HashSet();
         Iterator iter = vars.iterator();
@@ -842,14 +871,14 @@ public class MathCommandCompiler {
             vars_without_primes.add(var_without_primes);
         }
         
-        String var1 = c.getParams()[1];
-        double x_0 = Double.parseDouble(c.getParams()[3]);
+        String var1 = (String) c.getParams()[1];
+        double x_0 = (double) c.getParams()[3];
         double[] y_0 = new double[ord];
         for (int i = 0; i < y_0.length; i++){
-            y_0[i] = Double.parseDouble(c.getParams()[i + 4]);
+            y_0[i] = (double) c.getParams()[i + 4];
         }
                 
-        int k = Integer.parseInt(c.getParams()[ord + 4]);
+        int k = (int) c.getParams()[ord + 4];
         
         /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
         */
@@ -892,11 +921,13 @@ public class MathCommandCompiler {
 
         /** Falls ein Variablenwert freigegeben wird.
          */
+        String current_var;
         for (int i = 0; i < c.getParams().length; i++){
-            if (definedVarsSet.contains(c.getParams()[i])){
-                definedVarsSet.remove(c.getParams()[i]);
-                definedVars.remove(c.getParams()[i]);
-                area.append("Die Variable " + c.getParams()[i] + " ist wieder eine Unbestimmte. \n");
+            current_var = ((Variable) c.getParams()[i]).getName();
+            if (definedVarsSet.contains(current_var)){
+                definedVarsSet.remove(current_var);
+                definedVars.remove(current_var);
+                area.append("Die Variable " + current_var + " ist wieder eine Unbestimmte. \n");
             }
         }
         

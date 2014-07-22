@@ -214,7 +214,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("(2*3)/(5*b)");
+        InputField.setText("solvedgl(y,x,0,1,1)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -290,21 +290,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              */
             String[] com = Expression.getOperatorAndArguments(s);
             String[] params = Expression.getArguments(com[1]);
-/**            if ((com[0].equals("plot")) && (params.length == 3)){
-                graphicMethods2D.setVisible(true);
-                graphicMethods3D.setVisible(false);
-                RotateButton.setVisible(false);
-                repaint();
-            } else
-            if ((com[0].equals("plot")) && (params.length == 5)){
-                graphicMethods2D.setVisible(false);
-                graphicMethods3D.setVisible(true);
-                RotateButton.setVisible(true);
-                repaint();
-            } else {
-                RotateButton.setVisible(false);
-            }
-*/  
             activatePanelsForGraphs(com[0], params);
             
             for (int i = 0; i < MathCommandCompiler.commands.length; i++){
@@ -326,9 +311,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;
             }
+        } catch (EvaluationException e){
             /** Analog wie oben.
              */
-        } catch (EvaluationException e){
             if(valid_command){
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;

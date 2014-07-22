@@ -4,12 +4,12 @@ import javax.swing.JTextArea;
 import javax.swing.JOptionPane;
 import expressionbuilder.*;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 public class Command {
 
     private String name;
-    private String[] params;
-    private Expression left = new Constant(0);
+    private Object[] params;
     
     //Getter und Setter
     //Getter
@@ -17,12 +17,8 @@ public class Command {
         return this.name;
     }
     
-    public String[] getParams(){
+    public Object[] getParams(){
         return this.params;
-    }
-    
-    public Expression getLeft(){
-        return this.left;
     }
     
     //Setter
@@ -30,12 +26,8 @@ public class Command {
         this.name = name;
     }
     
-    public void setParams(String[] params){
+    public void setParams(Object[] params){
         this.params = params;
-    }
-            
-    public void setLeft(Expression left){
-        this.left = left;
     }
             
     
