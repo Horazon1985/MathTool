@@ -884,30 +884,15 @@ public class MathCommandCompiler {
         
         Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
         
-        area.append("Lösung der Gleichung: " + expr.writeFormula() + " = 0 \n"); 
+        area.append("Lösungen der Gleichung: " + expr.writeFormula() + " = 0 \n"); 
         for (int i = 0; i < result.size(); i++){
             area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n");
         }
 
-        /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
-         * 
-         */
-/**        
-        double max_x = Math.max(Math.abs(solution[0][0]), Math.abs(solution[solution.length - 1][0]));
-        double max_y = Math.abs(solution[0][1]);
-        for (int i = 1; i < solution.length; i++){
-            max_y = Math.max(max_y, Math.abs(solution[i][1]));
-        }
-*/
-        /** Initialisierung: 20% Rand lassen.
-         */
-/**        max_x = max_x*1.2;
-        max_y = max_y*1.2;
-        
-        graphicMethods2D.setGraphArray(solution);
-        graphicMethods2D.setParameters(var1, 0, 0, max_x, max_y, critical_line_exists, pos_of_critical_line);
+        graphicMethods2D.expressionToGraph(expr, var, x_1, x_2);
+        graphicMethods2D.setParameters(var, 0, 0, false, 0);
         graphicMethods2D.drawGraph();
-*/
+
     }    
 
     
