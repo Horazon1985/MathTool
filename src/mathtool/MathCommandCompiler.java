@@ -1,6 +1,5 @@
 package mathtool;
 
-import expressionbuilder.AnalysisMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.Constant;
@@ -27,7 +26,7 @@ public class MathCommandCompiler {
      * handelt.
      */
     public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", 
-        "solvedgl", "taylordgl", "undef", "undefall"};
+        "solve", "solvedgl", "taylordgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -330,8 +329,76 @@ public class MathCommandCompiler {
             }
         }
 
+        //SOLVE
+        /** Struktur: solve(expr, x_1, x_2, n)
+         * var = Variable in der DGL
+         * x_0, x_1 legen den Lösungsbereich fest
+         * y_0 = Funktionswert an der Stelle x_0
+         */
+        if (command.equals("solve")){
+            if (params.length < 4){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'");
+            }
+            if (params.length > 4){
+                throw new ExpressionException("Zu viele Parameter im Befehl 'solve'");
+            }
+            
+            if (params.length == 4){
+
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(params[0], vars);
+                if (vars.size() > 2){
+                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                }
+
+                if (Expression.isValidVariable(params[1])) {
+                    if (vars.size() == 2){
+                        if (!vars.contains(params[1])){
+                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                        }
+                    }
+                    
+                } else {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[2]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+                
+                try{
+                    Double.parseDouble(params[3]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                try{
+                    Double.parseDouble(params[4]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                }
+
+                double x_0 = Double.parseDouble(params[2]);
+                double x_1 = Double.parseDouble(params[3]);
+                double y_0 = Double.parseDouble(params[4]);
+                command_params = new Object[5];
+                command_params[0] = expr;
+                command_params[1] = params[1];
+                command_params[2] = x_0;
+                command_params[3] = x_1;
+                command_params[4] = y_0;
+                
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
+            
+            } 
+        }
+
         //SOLVEDGL
-        /** Struktur: taylordgl(expr, var, x_0, x_1, y_0)
+        /** Struktur: solvedgl(expr, var, x_0, x_1, y_0)
          * var = Variable in der DGL
          * x_0, x_1 legen den Lösungsbereich fest
          * y_0 = Funktionswert an der Stelle x_0
