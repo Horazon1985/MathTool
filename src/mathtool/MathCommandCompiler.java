@@ -38,6 +38,8 @@ public class MathCommandCompiler {
         Object[] command_params;
         
         //CLEAR
+        /** Struktur: clear()
+         */
         if (command.equals("clear")){
 
             /** Prüft, ob der Befehl keine Parameter besitzt.
@@ -54,6 +56,15 @@ public class MathCommandCompiler {
         }
 
         //DEFINE
+        /** Struktur: def(var = value)
+         * var = Variablenname
+         * reelle Zahl.
+         * ODER:
+         * def(func(var_1, ..., var_k) = EXPRESSION)
+         * func = Funktionsname
+         * var_i: Variablennamen
+         * EXPRESSION: Funktionsterm, durch den func definiert wird.
+         */
         if (command.equals("def")){
 
             String eq = "=";
@@ -152,7 +163,7 @@ public class MathCommandCompiler {
             Iterator iter = vars.iterator();
             String var;
             for (int i = 0; i < vars.size(); i++){
-                var = (String) iter.next();
+                var = (String) iter.next(); 
                 expr = expr.replaceVariable(var, new Variable(var + "_ABSTRACT"));
                 var = var + "_ABSTRACT";
                 if (!function_vars_list.contains(var)){
@@ -181,6 +192,8 @@ public class MathCommandCompiler {
         }
         
         //DEFINEDVARS
+        /** Struktur: defvars()
+         */
         if (command.equals("defvars")){
 
             /** Prüft, ob der Befehl keine Parameter besitzt.
@@ -197,6 +210,9 @@ public class MathCommandCompiler {
         }
 		
 	//LATEX
+        /** Struktur: latex(EXPRESSION)
+         * EXPRESSION: Ausdruck, welcher in einen Latex-Code umgewandelt werden soll.
+         */
 	if (command.equals("latex")){
 		
             if (params.length != 1){
@@ -217,6 +233,15 @@ public class MathCommandCompiler {
 	}
 
         //PLOT
+        /** Struktur: PLOT(EXPRESSION, value_1, value_2)
+         * EXPRESSION: Ausdruck in einer Variablen.
+         * value_1 < value_2: Grenzen des Zeichenbereichs
+         * ODER:
+         * PLOT(EXPRESSION, value_1, value_2, value_3, value_4)
+         * EXPRESSION: Ausdruck in höchstens zwei Variablen.
+         * value_1 < value_2, value_3 < value_4: Grenzen des Zeichenbereichs.
+         * Die beiden Variablen werden dabei alphabetisch geordnet.
+         */
         if (command.equals("plot")){
             if (params.length < 3){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'plot'");
@@ -347,48 +372,41 @@ public class MathCommandCompiler {
 
                 HashSet vars = new HashSet();
                 Expression expr = Expression.build(params[0], vars);
-                if (vars.size() > 2){
-                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
-                }
-
-                if (Expression.isValidVariable(params[1])) {
-                    if (vars.size() == 2){
-                        if (!vars.contains(params[1])){
-                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
-                        }
-                    }
-                    
-                } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                if (vars.size() > 1){
+                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
                 }
 
                 try{
-                    Double.parseDouble(params[2]);
+                    Double.parseDouble(params[1]);
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
                 }
                 
                 try{
-                    Double.parseDouble(params[3]);
+                    Double.parseDouble(params[2]);
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
                 }
 
                 try{
-                    Double.parseDouble(params[4]);
+                    Integer.parseInt(params[3]);
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
                 }
 
-                double x_0 = Double.parseDouble(params[2]);
-                double x_1 = Double.parseDouble(params[3]);
-                double y_0 = Double.parseDouble(params[4]);
-                command_params = new Object[5];
+                double x_1 = Double.parseDouble(params[1]);
+                double x_2 = Double.parseDouble(params[2]);
+                int n = Integer.parseInt(params[3]);
+                
+                if (n < 1) {
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                }
+                
+                command_params = new Object[4];
                 command_params[0] = expr;
-                command_params[1] = params[1];
-                command_params[2] = x_0;
-                command_params[3] = x_1;
-                command_params[4] = y_0;
+                command_params[1] = x_1;
+                command_params[2] = x_2;
+                command_params[3] = n;
                 
                 result.setName(command);
                 result.setParams(command_params);
@@ -398,7 +416,8 @@ public class MathCommandCompiler {
         }
 
         //SOLVEDGL
-        /** Struktur: solvedgl(expr, var, x_0, x_1, y_0)
+        /** Struktur: solvedgl(EXPRESSION, var, x_0, x_1, y_0)
+         * EXPRESSION: Rechte Seite der DGL y' = EXPRESSION.
          * var = Variable in der DGL
          * x_0, x_1 legen den Lösungsbereich fest
          * y_0 = Funktionswert an der Stelle x_0
@@ -416,7 +435,7 @@ public class MathCommandCompiler {
                 HashSet vars = new HashSet();
                 Expression expr = Expression.build(params[0], vars);
                 if (vars.size() > 2){
-                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
                 }
 
                 if (Expression.isValidVariable(params[1])) {
@@ -466,7 +485,8 @@ public class MathCommandCompiler {
         }
         
         //TAYLORDGL
-        /** Struktur: taylordgl(expr, var, ord, x_0, y_0, y'(0), ..., y^(ord - 1)(0), k)
+        /** Struktur: taylordgl(EXPRESSION, var, ord, x_0, y_0, y'(0), ..., y^(ord - 1)(0), k)
+         * EXPRESSION: Rechte Seite der DGL y^{(ord)} = EXPRESSION.
          * Anzahl der parameter ist also = ord + 5
          * var = Variable in der DGL
          * ord = Ordnung der DGL. 
@@ -515,7 +535,7 @@ public class MathCommandCompiler {
                 }
                 
                 if (vars_without_primes.size() > 2){
-                    throw new ExpressionException("Im der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
                 }
 
                 if (Expression.isValidVariable(params[1])) {
@@ -567,6 +587,9 @@ public class MathCommandCompiler {
         }
 
         //UNDEFINE
+        /** Struktur: undef(var_1, ..., var_k)
+         * var_i: Variablenname
+         */
         if (command.equals("undef")){
 
             /** Prüft, ob alle Parameter gültige Variablen sind.
@@ -589,6 +612,8 @@ public class MathCommandCompiler {
         }
 
         //UNDEFINEALL
+        /** Struktur: undefall()
+         */
         if (command.equals("undefall")){
 
             /** Prüft, ob der Befehl keine Parameter besitzt.
@@ -652,6 +677,9 @@ public class MathCommandCompiler {
 	} else 
 	if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
 	    executePlot3D(c, graphicMethods3D);
+        } else 
+	if (c.getName().equals("solve")){
+	    executeSolve(c, area, graphicMethods2D);
         } else 
 	if (c.getName().equals("solvedgl")){
 	    executeSolveDGL(c, area, graphicMethods2D);
@@ -835,6 +863,52 @@ public class MathCommandCompiler {
         graphicMethods3D.drawGraph();
 
     }
+
+    
+    private static void executeSolve(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
+	throws ExpressionException, EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
+        //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+        String var = "x";
+        if (!vars.isEmpty()){
+            Iterator iter = vars.iterator();
+            var = (String) iter.next();
+        }
+        
+        double x_1 = (double) c.getParams()[1];
+        double x_2 = (double) c.getParams()[2];
+        int n = (int) c.getParams()[3];
+        
+        Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
+        
+        area.append("Lösung der Gleichung: " + expr.writeFormula() + " = 0 \n"); 
+        for (int i = 0; i < result.size(); i++){
+            area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n");
+        }
+
+        /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
+         * 
+         */
+/**        
+        double max_x = Math.max(Math.abs(solution[0][0]), Math.abs(solution[solution.length - 1][0]));
+        double max_y = Math.abs(solution[0][1]);
+        for (int i = 1; i < solution.length; i++){
+            max_y = Math.max(max_y, Math.abs(solution[i][1]));
+        }
+*/
+        /** Initialisierung: 20% Rand lassen.
+         */
+/**        max_x = max_x*1.2;
+        max_y = max_y*1.2;
+        
+        graphicMethods2D.setGraphArray(solution);
+        graphicMethods2D.setParameters(var1, 0, 0, max_x, max_y, critical_line_exists, pos_of_critical_line);
+        graphicMethods2D.drawGraph();
+*/
+    }    
 
     
     private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
