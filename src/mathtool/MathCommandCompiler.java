@@ -355,64 +355,69 @@ public class MathCommandCompiler {
         }
 
         //SOLVE
-        /** Struktur: solve(expr, x_1, x_2, n)
+        /** Struktur: solve(expr, x_1, x_2) ODER solve(expr, x_1, x_2, n)
          * var = Variable in der DGL
          * x_0, x_1 legen den Lösungsbereich fest
          * y_0 = Funktionswert an der Stelle x_0
          */
         if (command.equals("solve")){
-            if (params.length < 4){
+            if (params.length < 3){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'");
             }
             if (params.length > 4){
                 throw new ExpressionException("Zu viele Parameter im Befehl 'solve'");
             }
             
-            if (params.length == 4){
+            HashSet vars = new HashSet();
+            Expression expr = Expression.build(params[0], vars);
+            if (vars.size() > 1){
+                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
+            }
 
-                HashSet vars = new HashSet();
-                Expression expr = Expression.build(params[0], vars);
-                if (vars.size() > 1){
-                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
-                }
-
-                try{
-                    Double.parseDouble(params[1]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
-                }
+            try{
+                Double.parseDouble(params[1]);
+            } catch (NumberFormatException e){
+                throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
+            }
                 
-                try{
-                    Double.parseDouble(params[2]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
-                }
+            try{
+                Double.parseDouble(params[2]);
+            } catch (NumberFormatException e){
+                throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
+            }
 
+            if (params.length == 4){
                 try{
                     Integer.parseInt(params[3]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
                 }
+            }
 
-                double x_1 = Double.parseDouble(params[1]);
-                double x_2 = Double.parseDouble(params[2]);
+            double x_1 = Double.parseDouble(params[1]);
+            double x_2 = Double.parseDouble(params[2]);
+
+            if (params.length == 3){
+                command_params = new Object[3];
+                command_params[0] = expr;
+                command_params[1] = x_1;
+                command_params[2] = x_2;
+            } else {
                 int n = Integer.parseInt(params[3]);
-                
                 if (n < 1) {
                     throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
                 }
-                
                 command_params = new Object[4];
                 command_params[0] = expr;
                 command_params[1] = x_1;
                 command_params[2] = x_2;
                 command_params[3] = n;
+            }
                 
-                result.setName(command);
-                result.setParams(command_params);
-                return result;
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
             
-            } 
         }
 
         //SOLVEDGL
@@ -880,7 +885,14 @@ public class MathCommandCompiler {
         
         double x_1 = (double) c.getParams()[1];
         double x_2 = (double) c.getParams()[2];
-        int n = (int) c.getParams()[3];
+        /** Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll das Intervall in 1000000 Teile unterteilt werden.
+         * 
+         */
+        int n = 1000000;
+        
+        if (c.getParams().length == 4){
+            n = (int) c.getParams()[3];
+        }
         
         Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
         
