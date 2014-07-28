@@ -75,7 +75,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="solve((x-1)*(x-2)*(x+3.2108)*(x-4.103),-10,10)"/>
+        <Property name="text" type="java.lang.String" value="plot(x^2,-1,2)"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
