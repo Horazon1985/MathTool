@@ -781,25 +781,10 @@ public class MathCommandCompiler {
         String var = (String) iter.next();
         
         graphicMethods2D.setExpression(expr);
+        graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_0, x_1);
         graphicMethods2D.computeMaxXMaxY();
-        
-        /** Graphen passend ausrichten
-         */
-        double[][] graph = graphicMethods2D.getGraph();
-        double axe_center_x = 0; 
-        double axe_center_y = 0; 
-        
-        if (graph.length > 0){
-            axe_center_x = (graph[0][0] + graph[graph.length - 1][0])/2;
-            for (int i = 0; i < graph.length; i++){
-                if (!(Double.isNaN(graph[i][1])) && !(Double.isInfinite(graph[i][1]))){
-                    axe_center_y = axe_center_y + graph[i][1]/graph.length;
-                }
-            }
-        }
-        
-        graphicMethods2D.setParameters(var, axe_center_x, axe_center_y, false, 0);
+        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), false, 0);
         graphicMethods2D.drawGraph();
         
     }
@@ -917,9 +902,10 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setExpression(expr);
-        graphicMethods2D.computeMaxXMaxY();
+        graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
-        graphicMethods2D.setParameters(var, 0, 0, false, 0);
+        graphicMethods2D.computeMaxXMaxY();
+        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), false, 0);
         graphicMethods2D.drawGraph();
 
     }    
@@ -984,19 +970,11 @@ public class MathCommandCompiler {
             pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
-/**        
-        double max_x = Math.max(Math.abs(solution[0][0]), Math.abs(solution[solution.length - 1][0]));
-        double max_y = Math.abs(solution[0][1]);
-        for (int i = 1; i < solution.length; i++){
-            max_y = Math.max(max_y, Math.abs(solution[i][1]));
-        }
 
-        max_x = max_x*1.2;
-        max_y = max_y*1.2;
-*/        
         graphicMethods2D.setGraphArray(solution);
+        graphicMethods2D.setGraphIsFixed(true);
         graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var1, 0, 0, graphicMethods2D.getMaxX(), graphicMethods2D.getMaxY(), critical_line_exists, pos_of_critical_line);
+        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), critical_line_exists, pos_of_critical_line);
         graphicMethods2D.drawGraph();
 
     }    
