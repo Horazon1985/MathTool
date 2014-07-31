@@ -793,7 +793,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_0, x_1);
         graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), false, 0);
+        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.drawGraph();
         
     }
@@ -914,9 +914,18 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), false, 0);
+        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.drawGraph();
-
+        
+        /** Nullstellen rot markieren
+         */
+        double[][] zeros = new double[result.size()][2];
+        for (int i = 0; i < zeros.length; i++){
+            zeros[i][0] = result.get(i + 1);
+            zeros[i][1] = 0;
+        }
+        
+        graphicMethods2D.drawZeros(zeros);
     }    
 
     
@@ -972,10 +981,8 @@ public class MathCommandCompiler {
         /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
          * 
          */
-        boolean critical_line_exists = false;
         double pos_of_critical_line = 0;
         if (solution.length < 1001){
-            critical_line_exists = true;
             pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
@@ -983,7 +990,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphArray(solution);
         graphicMethods2D.setGraphIsFixed(true);
         graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY(), critical_line_exists, pos_of_critical_line);
+        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.drawGraph();
 
     }    
