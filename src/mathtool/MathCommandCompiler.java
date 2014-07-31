@@ -83,7 +83,7 @@ public class MathCommandCompiler {
              * result.params = {"x"}
              * result.left = 2 (als Expression)
              */
-            if (Expression.isValidVariable(function_name_and_params)){
+            if (Expression.isValidVariable(function_name_and_params) && !Expression.isPI(function_name_and_params)){
                 try{
                     double value = Double.parseDouble(function_term);
                     command_params = new Object[2];
@@ -102,7 +102,7 @@ public class MathCommandCompiler {
              */
             try{
                 HashSet vars = new HashSet();
-                Expression expr = Expression.build(function_term, vars);
+                Expression.build(function_term, vars);
             } catch (ExpressionException e){
                 throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite.");
             }
@@ -121,10 +121,10 @@ public class MathCommandCompiler {
                  * function_name = "f"
                  * function_vars = {"x_ABSTRACT", "y_ABSTRACT"}
                  */
-                String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
-                String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
+                Expression.getOperatorAndArguments(function_name_and_params);
+                Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
             } catch (ExpressionException e){
-                throw new ExpressionException("Ungültige Funktionsdefinition.");
+                throw new ExpressionException("Ungültige Variable- oder Funktionsdefinition.");
             }
             
             /** Funktionsnamen und Variablen auslesen.
@@ -132,6 +132,15 @@ public class MathCommandCompiler {
             String function_name = Expression.getOperatorAndArguments(function_name_and_params)[0];
             String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
 
+            /** Nun wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind
+             */
+            for (int i = 0; i < function_vars.length; i++){
+                if (!Expression.isValidVariable(function_vars[i])){
+                    throw new ExpressionException("'" + function_vars[i] + "' ist keine gültige Variable.");
+                }
+            }
+            
+            
             /** Nun wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
              */
             HashSet function_vars_as_hashset = new HashSet();
@@ -443,7 +452,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
                 }
 
-                if (Expression.isValidVariable(params[1])) {
+                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
                     if (vars.size() == 2){
                         if (!vars.contains(params[1])){
                             throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
@@ -543,7 +552,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
                 }
 
-                if (Expression.isValidVariable(params[1])) {
+                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
                     if (vars_without_primes.size() == 2){
                         if (!vars.contains(params[1])){
                             throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
@@ -600,7 +609,7 @@ public class MathCommandCompiler {
             /** Prüft, ob alle Parameter gültige Variablen sind.
              */
             for (int i = 0; i < params.length; i++){
-                if (!Expression.isValidVariable(params[i])){
+                if (!Expression.isValidVariable(params[i]) && !Expression.isPI(params[i])){
                     throw new ExpressionException("Die " + (i + 1) + " im Befehl 'undef' ist keine gültige Variablen.");
                 }
             }

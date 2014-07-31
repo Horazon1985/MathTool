@@ -1,0 +1,7 @@
+﻿Bugs to be fixed:
+
+- Plot3D: Endloses heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
+- DGL beliebiger Ordnung numerisch lösen können.
+- PI ordentlich definieren und alle Probleme beheben.
+
+Wünschenswert:
