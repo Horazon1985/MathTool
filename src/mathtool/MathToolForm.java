@@ -220,7 +220,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 91, 25);
 
-        InputField.setText("solve(x^2-5,-4,4)");
+        InputField.setText("solvedgl(1,x,1,0,1,0)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 

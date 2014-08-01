@@ -436,7 +436,7 @@ public class MathCommandCompiler {
          * x_0, x_1 legen den Lösungsbereich fest
          * y_0 = Funktionswert an der Stelle x_0
          */
-        if (command.equals("solvedgl")){
+/**        if (command.equals("solvedgl")){
             if (params.length < 5){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
             }
@@ -497,14 +497,112 @@ public class MathCommandCompiler {
             
             } 
         }
+*/        
+
         
+        //SOLVEDGL
+        /** Struktur: solvedgl(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ..., y^(ord - 1)(0))
+         * EXPRESSION: Rechte Seite der DGL y^{(ord)} = EXPRESSION.
+         * Anzahl der parameter ist also = ord + 5
+         * var = Variable in der DGL
+         * ord = Ordnung der DGL. 
+         * x_0, y_0, y'(0), ... legen das AWP fest
+         * x_1 = Obere x-Schranke für die numerische Berechnung
+         */
+        if (command.equals("solvedgl")){
+            if (params.length < 6){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+            }
+
+            if (params.length >= 6){
+
+                //Ermittelt die Ordnung der DGL
+                try{
+                    Integer.parseInt(params[2]);
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine positive ganze Zahl sein.");
+                }
+                
+                int ord = Integer.parseInt(params[2]);
+
+                if (ord < 1){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine positive ganze Zahl sein.");
+                }
+
+                /** Prüft, ob es sich um eine korrekte DGL handelt:
+                 * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
+                 */ 
+                HashSet vars = new HashSet();
+                Expression expr = Expression.build(params[0], vars);
+                
+                HashSet vars_without_primes = new HashSet();
+                Iterator iter = vars.iterator();
+                String var_without_primes;
+                for (int i = 0; i < vars.size(); i++){
+                    var_without_primes = (String) iter.next();
+                    if (!var_without_primes.replaceAll("'", "").equals(params[1])){
+                        if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
+                            throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
+                                    + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                        }
+                        var_without_primes = var_without_primes.replaceAll("'", "");
+                    }
+                    vars_without_primes.add(var_without_primes);
+                }
+                
+                if (vars_without_primes.size() > 2){
+                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                }
+
+                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
+                    if (vars_without_primes.size() == 2){
+                        if (!vars.contains(params[1])){
+                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                        }
+                    }
+                } else {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                }
+                
+                if (params.length < ord + 5){
+                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+                }
+                if (params.length > ord + 5){
+                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
+                }
+
+                //Prüft, ob die AWP-Daten korrekt sind
+                for (int i = 3; i < ord + 5; i++){
+                    try{
+                        Double.parseDouble(params[i]);
+                    } catch (NumberFormatException e){
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                    }
+                }
+
+                command_params = new Object[ord + 5];
+                command_params[0] = expr;
+                command_params[1] = Variable.create(params[1]);
+                command_params[2] = ord;
+                for (int i = 3; i < ord + 5; i++){
+                    command_params[i] = Double.parseDouble(params[i]);                
+                }
+                
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
+            
+            } 
+        }
+
+
         //TAYLORDGL
         /** Struktur: taylordgl(EXPRESSION, var, ord, x_0, y_0, y'(0), ..., y^(ord - 1)(0), k)
          * EXPRESSION: Rechte Seite der DGL y^{(ord)} = EXPRESSION.
          * Anzahl der parameter ist also = ord + 5
          * var = Variable in der DGL
          * ord = Ordnung der DGL. 
-         * x_0, y_0 legen das AWP fest
+         * x_0, y_0, y'(0), ... legen das AWP fest
          * k = Ordnung des Taylorpolynoms (an der Stelle x_0)
          */
         if (command.equals("taylordgl")){
@@ -930,7 +1028,7 @@ public class MathCommandCompiler {
         
     }    
 
-    
+/**    
     private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
 	throws ExpressionException, EvaluationException {
 
@@ -941,10 +1039,10 @@ public class MathCommandCompiler {
         double x_0 = (double) c.getParams()[2];
         double x_1 = (double) c.getParams()[3];
         double y_0 = (double) c.getParams()[4];
-        
+*/        
         /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
         */
-        String var2 = new String();
+/**        String var2 = new String();
 
         if (vars.isEmpty()){
             if (var1.equals("y")){
@@ -974,6 +1072,94 @@ public class MathCommandCompiler {
         
         double[][] solution = NumericalMethods.solveDGL(expr, var1, var2, x_0, x_1, y_0, 1000);
         
+        area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
+                + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
+        for (int i = 0; i < solution.length; i++){
+            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
+        }
+*/
+        /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
+         * 
+         */
+/**        double pos_of_critical_line = 0;
+        if (solution.length < 1001){
+            pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
+            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
+        }
+
+        graphicMethods2D.setGraphArray(solution);
+        graphicMethods2D.setGraphIsFixed(true);
+        graphicMethods2D.computeMaxXMaxY();
+        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+        graphicMethods2D.setDrawSpecialPoints(false);
+        graphicMethods2D.drawGraph();
+
+    }    
+*/
+    
+    
+    private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
+	throws ExpressionException, EvaluationException {
+
+        int ord = (int) c.getParams()[2];
+        HashSet vars = new HashSet();
+        Expression expr = (Expression) c.getParams()[0];
+        expr.getContainedVars(vars);
+        
+        HashSet vars_without_primes = new HashSet();
+        Iterator iter = vars.iterator();
+        String var_without_primes;
+        for (int i = 0; i < vars.size(); i++){
+            var_without_primes = (String) iter.next();
+            if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])){
+                if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
+                    throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
+                            + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                }
+                var_without_primes = var_without_primes.replaceAll("'", "");
+            }
+            vars_without_primes.add(var_without_primes);
+        }
+        
+        String var1 = ((Variable) c.getParams()[1]).getName();
+        double x_0 = (double) c.getParams()[3];
+        double x_1 = (double) c.getParams()[4];
+        double[] y_0 = new double[ord];
+        for (int i = 0; i < y_0.length; i++){
+            y_0[i] = (double) c.getParams()[i + 5];
+        }
+                
+        /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
+        */
+        String var2 = new String();
+
+        if (vars_without_primes.isEmpty()){
+            if (var1.equals("y")){
+                var2 = "z";
+            } else {
+                var2 = "y";
+            }
+        } else 
+        if (vars_without_primes.size() == 1){
+            if (vars_without_primes.contains(var1)){
+                if (var1.equals("y")){
+                    var2 = "z";
+                } else {
+                    var2 = "y";
+                }
+            } else {
+                iter = vars_without_primes.iterator();
+                var2 = (String) iter.next();
+            }
+        } else {
+            iter = vars_without_primes.iterator();
+            var2 = (String) iter.next();
+            if (var2.equals(var1)){
+                var2 = (String) iter.next();
+            }
+        }
+        
+        double[][] solution = NumericalMethods.solveDGLGeneral(expr, var1, var2, ord, x_0, x_1, y_0, 1000);
         area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
                 + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
         for (int i = 0; i < solution.length; i++){
