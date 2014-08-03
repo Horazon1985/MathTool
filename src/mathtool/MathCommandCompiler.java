@@ -26,7 +26,7 @@ public class MathCommandCompiler {
      * handelt.
      */
     public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", 
-        "solve", "solvedgl", "taylordgl", "undef", "undefall"};
+        "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -93,7 +93,7 @@ public class MathCommandCompiler {
                     result.setParams(command_params);
                     return result;
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Variablen ein reeller Wert zugewiesen werden.");
+                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
                 }                
             }
             
@@ -124,7 +124,7 @@ public class MathCommandCompiler {
                 Expression.getOperatorAndArguments(function_name_and_params);
                 Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
             } catch (ExpressionException e){
-                throw new ExpressionException("Ungültige Variable- oder Funktionsdefinition.");
+                throw new ExpressionException("Ungültige Variablen- oder Funktionsdefinition.");
             }
             
             /** Funktionsnamen und Variablen auslesen.
@@ -136,7 +136,7 @@ public class MathCommandCompiler {
              */
             for (int i = 0; i < function_vars.length; i++){
                 if (!Expression.isValidVariable(function_vars[i])){
-                    throw new ExpressionException("'" + function_vars[i] + "' ist keine gültige Variable.");
+                    throw new ExpressionException("'" + function_vars[i] + "' ist keine gültige Veränderliche.");
                 }
             }
             
@@ -147,7 +147,7 @@ public class MathCommandCompiler {
             for (int i = 0; i < function_vars.length; i++){
                 if (function_vars_as_hashset.contains(function_vars[i])){
                     throw new ExpressionException("In der Funktionsdeklaration der Funktion " + function_name + " dürfen"
-                            + " nicht mehrmals dieselben Variablen vorkommen.");
+                            + " nicht mehrmals dieselben Veränderlichen vorkommen.");
                 }
                 function_vars_as_hashset.add(function_vars[i]);
             }
@@ -176,7 +176,7 @@ public class MathCommandCompiler {
                 expr = expr.replaceVariable(var, new Variable(var + "_ABSTRACT"));
                 var = var + "_ABSTRACT";
                 if (!function_vars_list.contains(var)){
-                    throw new ExpressionException("Auf der rechten Seite taucht eine Variable auf, die nicht als Funktionsparameter vorkommt.");
+                    throw new ExpressionException("Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.");
                 }
             }
             
@@ -287,8 +287,8 @@ public class MathCommandCompiler {
                     HashSet vars = new HashSet();
                     Expression expr = Expression.build(params[0], vars);
                     if (vars.size() > 1){
-                        throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens eine Variable enthalten. Dieser enthält jedoch " 
-                                + String.valueOf(vars.size()) + " Variablen.");
+                        throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens eine Veränderliche enthalten. Dieser enthält jedoch " 
+                                + String.valueOf(vars.size()) + " Veränderliche.");
                     }
                     double x_0 = Double.parseDouble(params[1]);
                     double x_1 = Double.parseDouble(params[2]);
@@ -340,8 +340,8 @@ public class MathCommandCompiler {
                     HashSet vars = new HashSet();
                     Expression expr = Expression.build(params[0], vars);
                     if (vars.size() > 2){
-                        throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens zwei Variablen enthalten. Dieser enthält jedoch " 
-                                + String.valueOf(vars.size()) + " Variablen.");
+                        throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens zwei Veränderliche enthalten. Dieser enthält jedoch " 
+                                + String.valueOf(vars.size()) + " Veränderliche.");
                     }
                     double x_0 = Double.parseDouble(params[1]);
                     double x_1 = Double.parseDouble(params[2]);
@@ -429,76 +429,6 @@ public class MathCommandCompiler {
             
         }
 
-        //SOLVEDGL
-        /** Struktur: solvedgl(EXPRESSION, var, x_0, x_1, y_0)
-         * EXPRESSION: Rechte Seite der DGL y' = EXPRESSION.
-         * var = Variable in der DGL
-         * x_0, x_1 legen den Lösungsbereich fest
-         * y_0 = Funktionswert an der Stelle x_0
-         */
-/**        if (command.equals("solvedgl")){
-            if (params.length < 5){
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
-            }
-            if (params.length > 5){
-                throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
-            }
-            
-            if (params.length == 5){
-
-                HashSet vars = new HashSet();
-                Expression expr = Expression.build(params[0], vars);
-                if (vars.size() > 2){
-                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
-                }
-
-                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
-                    if (vars.size() == 2){
-                        if (!vars.contains(params[1])){
-                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
-                        }
-                    }
-                    
-                } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
-                }
-
-                try{
-                    Double.parseDouble(params[2]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
-                }
-                
-                try{
-                    Double.parseDouble(params[3]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
-                }
-
-                try{
-                    Double.parseDouble(params[4]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der fünfte Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
-                }
-
-                double x_0 = Double.parseDouble(params[2]);
-                double x_1 = Double.parseDouble(params[3]);
-                double y_0 = Double.parseDouble(params[4]);
-                command_params = new Object[5];
-                command_params[0] = expr;
-                command_params[1] = params[1];
-                command_params[2] = x_0;
-                command_params[3] = x_1;
-                command_params[4] = y_0;
-                
-                result.setName(command);
-                result.setParams(command_params);
-                return result;
-            
-            } 
-        }
-*/        
-
         
         //SOLVEDGL
         /** Struktur: solvedgl(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ..., y^(ord - 1)(0))
@@ -557,11 +487,11 @@ public class MathCommandCompiler {
                 if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
                     if (vars_without_primes.size() == 2){
                         if (!vars.contains(params[1])){
-                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                            throw new ExpressionException("Die Veränderliche " + params[1] + " muss in der Differentialgleichung vorkommen.");
                         }
                     }
                 } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Variable sein.");
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Veränderliche sein.");
                 }
                 
                 if (params.length < ord + 5){
@@ -596,6 +526,65 @@ public class MathCommandCompiler {
         }
 
 
+        //TANGENT
+        /** Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
+         * EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert.
+         * var_i = Variable
+         * value_i = reelle Zahl. 
+         * Es müssen alle Variablen unter den var_i vorkommen, welche auch in expr vorkommen.
+         */
+        if (command.equals("tangent")){
+            if (params.length < 2){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'tangent'");
+            }
+
+            //Ermittelt die Ordnung der DGL
+            try{
+                Expression.build(params[0], new HashSet());
+            } catch (NumberFormatException e){
+                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein.");
+            }
+
+            HashSet vars = new HashSet();
+            Expression expr = Expression.build(params[0], vars);
+
+            if (params.length != vars.size() + 1){
+                throw new ExpressionException("Die Anzahl der Parameter im Befehl 'tangent' muss um eins größer sein als die Anzahl " 
+                        + "der Veränderlichen, welche im Ausdruck vorkommen.");
+            }
+
+            HashSet vars_contained_in_params = new HashSet();
+            for (int i = 1; i <= vars.size(); i++){
+                if (!params[i].contains("=")){
+                    throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
+                    + "wobei die Veränderliche VARIABLE im Ausdruck vorkommen muss.");
+                }
+                if (!Expression.isValidVariable(params[i].substring(0, params[i].indexOf("=")))){
+                    throw new ExpressionException(params[i].substring(0, params[i].indexOf("=")) + " ist keine gültige Veränderliche.");
+                }
+                
+                
+                
+                
+                
+                
+            }
+            
+            
+            
+            command_params = new Object[2];
+            command_params[0] = expr;
+            command_params[1] = new Hashtable<String, Double>();
+//            for (int i = 3; i < ord + 4; i++){
+//                command_params[i] = Double.parseDouble(params[i]);                
+//            }
+                
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
+            
+        }
+
         //TAYLORDGL
         /** Struktur: taylordgl(EXPRESSION, var, ord, x_0, y_0, y'(0), ..., y^(ord - 1)(0), k)
          * EXPRESSION: Rechte Seite der DGL y^{(ord)} = EXPRESSION.
@@ -610,92 +599,90 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
             }
 
-            if (params.length >= 6){
+            //Ermittelt die Ordnung der DGL
+            try{
+                Integer.parseInt(params[2]);
+            } catch (NumberFormatException e){
+                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+            }
+                
+            int ord = Integer.parseInt(params[2]);
 
-                //Ermittelt die Ordnung der DGL
+            if (ord < 1){
+                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+            }
+
+            /** Prüft, ob es sich um eine korrekte DGL handelt:
+             * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
+             */ 
+            HashSet vars = new HashSet();
+            Expression expr = Expression.build(params[0], vars);
+                
+            HashSet vars_without_primes = new HashSet();
+            Iterator iter = vars.iterator();
+            String var_without_primes;
+            for (int i = 0; i < vars.size(); i++){
+                var_without_primes = (String) iter.next();
+                if (!var_without_primes.replaceAll("'", "").equals(params[1])){
+                    if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
+                        throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
+                                + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                    }
+                    var_without_primes = var_without_primes.replaceAll("'", "");
+                }
+                vars_without_primes.add(var_without_primes);
+            }
+                
+            if (vars_without_primes.size() > 2){
+                throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+            }
+
+            if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
+                if (vars_without_primes.size() == 2){
+                    if (!vars.contains(params[1])){
+                        throw new ExpressionException("Die Veränderliche " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                    }
+                }
+            } else {
+                throw new ExpressionException("Der zweite Parameter im Befehl 'taylordgl' muss eine gültige Veränderliche sein.");
+            }
+                
+            if (params.length < ord + 5){
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
+            }
+
+            if (params.length > ord + 5){
+                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordgl'");
+            }
+
+            //Prüft, ob die AWP-Daten korrekt sind
+            for (int i = 3; i < ord + 4; i++){
                 try{
-                    Integer.parseInt(params[2]);
+                    Double.parseDouble(params[i]);
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+                    throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
                 }
+            }
                 
-                int ord = Integer.parseInt(params[2]);
+            try{
+                Integer.parseInt(params[ord + 4]);
+            } catch (NumberFormatException e){
+                throw new ExpressionException("Der letzte Parameter im Befehl 'taylordgl' muss eine nichtnegative ganze Zahl sein.");
+            }
 
-                if (ord < 1){
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
-                }
-
-                /** Prüft, ob es sich um eine korrekte DGL handelt:
-                 * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
-                 */ 
-                HashSet vars = new HashSet();
-                Expression expr = Expression.build(params[0], vars);
+            command_params = new Object[ord + 5];
+            command_params[0] = expr;
+            command_params[1] = Variable.create(params[1]);
+            command_params[2] = ord;
+            for (int i = 3; i < ord + 4; i++){
+                command_params[i] = Double.parseDouble(params[i]);                
+            }
+            command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
                 
-                HashSet vars_without_primes = new HashSet();
-                Iterator iter = vars.iterator();
-                String var_without_primes;
-                for (int i = 0; i < vars.size(); i++){
-                    var_without_primes = (String) iter.next();
-                    if (!var_without_primes.replaceAll("'", "").equals(params[1])){
-                        if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord){
-                            throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". " 
-                                    + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
-                        }
-                        var_without_primes = var_without_primes.replaceAll("'", "");
-                    }
-                    vars_without_primes.add(var_without_primes);
-                }
-                
-                if (vars_without_primes.size() > 2){
-                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
-                }
-
-                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
-                    if (vars_without_primes.size() == 2){
-                        if (!vars.contains(params[1])){
-                            throw new ExpressionException("Die Variable " + params[1] + " muss in der Differentialgleichung vorkommen.");
-                        }
-                    }
-                } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'taylordgl' muss eine gültige Variable sein.");
-                }
-                
-                if (params.length < ord + 5){
-                    throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
-                }
-                if (params.length > ord + 5){
-                    throw new ExpressionException("Zu viele Parameter im Befehl 'taylordgl'");
-                }
-
-                //Prüft, ob die AWP-Daten korrekt sind
-                for (int i = 3; i < ord + 4; i++){
-                    try{
-                        Double.parseDouble(params[i]);
-                    } catch (NumberFormatException e){
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
-                    }
-                }
-                
-                try{
-                    Integer.parseInt(params[ord + 4]);
-                } catch (NumberFormatException e){
-                    throw new ExpressionException("Der letzte Parameter im Befehl 'taylordgl' muss eine nichtnegative ganze Zahl sein.");
-                }
-
-                command_params = new Object[ord + 5];
-                command_params[0] = expr;
-                command_params[1] = Variable.create(params[1]);
-                command_params[2] = ord;
-                for (int i = 3; i < ord + 4; i++){
-                    command_params[i] = Double.parseDouble(params[i]);                
-                }
-                command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
-                
-                result.setName(command);
-                result.setParams(command_params);
-                return result;
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
             
-            } 
         }
 
         //UNDEFINE
@@ -708,7 +695,7 @@ public class MathCommandCompiler {
              */
             for (int i = 0; i < params.length; i++){
                 if (!Expression.isValidVariable(params[i]) && !Expression.isPI(params[i])){
-                    throw new ExpressionException("Die " + (i + 1) + " im Befehl 'undef' ist keine gültige Variablen.");
+                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'undef' ist keine gültige Veränderliche.");
                 }
             }
             
@@ -796,6 +783,9 @@ public class MathCommandCompiler {
 	if (c.getName().equals("solvedgl")){
 	    executeSolveDGL(c, area, graphicMethods2D);
         } else 
+	if (c.getName().equals("tangent")){
+	    executeTangent(c, area);
+        } else 
 	if (c.getName().equals("taylordgl")){
 	    executeTaylorDGL(c, area);
         } else 
@@ -834,7 +824,7 @@ public class MathCommandCompiler {
             Variable.setValue(var, value);
             definedVars.put(var, value);
             definedVarsSet.add(var);
-            area.append("Der Wert der Variablen " + var + " wurde auf " + value + " gesetzt. \n");
+            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + value + " gesetzt. \n");
         } else {
         /** Falls eine Funktion definiert wird.
          */
@@ -855,7 +845,7 @@ public class MathCommandCompiler {
     
     private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
-        area.append("Liste aller Variablen mit vordefinierten Werten: " + definedVars + "\n");
+        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + definedVars + "\n");
     }    
 
     
@@ -1028,75 +1018,6 @@ public class MathCommandCompiler {
         
     }    
 
-/**    
-    private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
-	throws ExpressionException, EvaluationException {
-
-        HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
-        expr.getContainedVars(vars);
-        String var1 = (String) c.getParams()[1];
-        double x_0 = (double) c.getParams()[2];
-        double x_1 = (double) c.getParams()[3];
-        double y_0 = (double) c.getParams()[4];
-*/        
-        /** zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt werden. 
-        */
-/**        String var2 = new String();
-
-        if (vars.isEmpty()){
-            if (var1.equals("y")){
-                var2 = "z";
-            } else {
-                var2 = "y";
-            }
-        } else 
-        if (vars.size() == 1){
-            if (vars.contains(var1)){
-                if (var1.equals("y")){
-                    var2 = "z";
-                } else {
-                    var2 = "y";
-                }
-            } else {
-                Iterator iter = vars.iterator();
-                var2 = (String) iter.next();
-            }
-        } else {
-            Iterator iter = vars.iterator();
-            var2 = (String) iter.next();
-            if (var2.equals(var1)){
-                var2 = (String) iter.next();
-            }
-        }
-        
-        double[][] solution = NumericalMethods.solveDGL(expr, var1, var2, x_0, x_1, y_0, 1000);
-        
-        area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
-                + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
-        for (int i = 0; i < solution.length; i++){
-            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
-        }
-*/
-        /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
-         * 
-         */
-/**        double pos_of_critical_line = 0;
-        if (solution.length < 1001){
-            pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
-            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
-        }
-
-        graphicMethods2D.setGraphArray(solution);
-        graphicMethods2D.setGraphIsFixed(true);
-        graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
-        graphicMethods2D.setDrawSpecialPoints(false);
-        graphicMethods2D.drawGraph();
-
-    }    
-*/
-    
     
     private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
 	throws ExpressionException, EvaluationException {
@@ -1185,6 +1106,23 @@ public class MathCommandCompiler {
     }    
 
     
+    private static void executeTangent(Command c, JTextArea area) 
+	throws ExpressionException, EvaluationException {
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }    
+
+    
     private static void executeTaylorDGL(Command c, JTextArea area) 
 	throws ExpressionException, EvaluationException {
 
@@ -1264,7 +1202,7 @@ public class MathCommandCompiler {
             if (definedVarsSet.contains(current_var)){
                 definedVarsSet.remove(current_var);
                 definedVars.remove(current_var);
-                area.append("Die Variable " + current_var + " ist wieder eine Unbestimmte. \n");
+                area.append("Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n");
             }
         }
         
@@ -1278,7 +1216,7 @@ public class MathCommandCompiler {
          */
         definedVarsSet.clear();
         definedVars.clear();
-        area.append("Alle Variablen sind wieder Unbestimmte. \n");
+        area.append("Alle Veränderlichen sind wieder Unbestimmte. \n");
         
     }    
     

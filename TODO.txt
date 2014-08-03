@@ -2,5 +2,6 @@
 
 - Plot3D: Endloses heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bessere präzise Vereinfachung von Ausdrücken.
+- Befehl tangent(...) implementieren.
 
 Wünschenswert:
