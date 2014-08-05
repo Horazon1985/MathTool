@@ -75,7 +75,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="solvedgl(-0.5*y&apos;-10*y,x,2,0,10,2,-1)"/>
+        <Property name="text" type="java.lang.String" value="solvedgl(y^y,x,1,1,2,1)"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

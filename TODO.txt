@@ -1,7 +1,12 @@
 ﻿Bugs to be fixed:
 
-- Plot3D: Endloses heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- Bessere präzise Vereinfachung von Ausdrücken.
-- Befehl tangent(...) implementieren.
+- Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
+- Vereinfachen: b/c + a = a + b/c.
+- Vereinfachen: a+b/c = (ac + b)/c.
+- Vereinfachen: a+(-b)/c = (ac - b)/c.
 
 Wünschenswert:
+
+- Bessere präzise Vereinfachung von Ausdrücken.
+- evaluatePrecise() implementieren. Rückgabewert ist Expression.
+- Falls konstante Parameter eingetragen werden, so sollen auch konstante Ausdrücke verstanden werden und nicht nur Double-Werte.

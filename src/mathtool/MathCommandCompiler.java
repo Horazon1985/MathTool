@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Enumeration;
+
 
 public class MathCommandCompiler {
 
@@ -538,7 +540,6 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'tangent'");
             }
 
-            //Ermittelt die Ordnung der DGL
             try{
                 Expression.build(params[0], new HashSet());
             } catch (NumberFormatException e){
@@ -548,13 +549,10 @@ public class MathCommandCompiler {
             HashSet vars = new HashSet();
             Expression expr = Expression.build(params[0], vars);
 
-            if (params.length != vars.size() + 1){
-                throw new ExpressionException("Die Anzahl der Parameter im Befehl 'tangent' muss um eins größer sein als die Anzahl " 
-                        + "der Veränderlichen, welche im Ausdruck vorkommen.");
-            }
-
-            HashSet vars_contained_in_params = new HashSet();
-            for (int i = 1; i <= vars.size(); i++){
+            /** Ermittelt die Anzahl der einzugebenen Parameter.
+             */
+            Hashtable vars_contained_in_params = new Hashtable<String, Double>();
+            for (int i = 1; i < params.length; i++){
                 if (!params[i].contains("=")){
                     throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
                     + "wobei die Veränderliche VARIABLE im Ausdruck vorkommen muss.");
@@ -562,22 +560,30 @@ public class MathCommandCompiler {
                 if (!Expression.isValidVariable(params[i].substring(0, params[i].indexOf("=")))){
                     throw new ExpressionException(params[i].substring(0, params[i].indexOf("=")) + " ist keine gültige Veränderliche.");
                 }
-                
-                
-                
-                
-                
-                
+                try{
+                    Double.parseDouble(params[i].substring(params[i].indexOf("=") + 1, params[i].length()));                
+                } catch (NumberFormatException e){
+                    throw new ExpressionException("Der " + i + ". Parameter im Befehl 'tangent' muss eine reelle Zahl sein.");
+                }
+            }
+
+            for (int i = 1; i < params.length; i++){
+                vars_contained_in_params.put(params[i].substring(0, params[i].indexOf("=")), 
+                        Double.parseDouble(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
             }
             
-            
+            Iterator iter = vars.iterator();
+            String var;
+            for (int i = 0; i < vars.size(); i++){
+                var = (String) iter.next();
+                if (!vars_contained_in_params.containsKey(var)){
+                    throw new ExpressionException("Die Veränderliche " + var + "muss in den Parametern vorkommen.");
+                }
+            }
             
             command_params = new Object[2];
             command_params[0] = expr;
-            command_params[1] = new Hashtable<String, Double>();
-//            for (int i = 3; i < ord + 4; i++){
-//                command_params[i] = Double.parseDouble(params[i]);                
-//            }
+            command_params[1] = vars_contained_in_params;
                 
             result.setName(command);
             result.setParams(command_params);
@@ -1081,8 +1087,46 @@ public class MathCommandCompiler {
         }
         
         double[][] solution = NumericalMethods.solveDGLGeneral(expr, var1, var2, ord, x_0, x_1, y_0, 1000);
-        area.append("Lösung der Differentialgleichung: " + var2 + "'(" + var1 + ") = " + expr.writeFormula() 
-                + ", " + var2 + "(" + String.valueOf(x_0) + ") = " + String.valueOf(y_0) + "\n");
+
+        /** Formulierung und Ausgabe des AWP.
+         */
+        String awp = "Lösung der Differentialgleichung: " + var2;
+        for (int i = 0; i < ord; i++){
+            awp = awp + "'";
+        }
+
+        /** Falls Anfangsdaten ganze Zahlen sind, so sollen diese ohne Nachkommastellen ausgegeben werden.
+         */
+        awp = awp + "(" + var1 + ") = " + expr.writeFormula();
+        for (int i = 0; i < ord; i++){
+            awp = awp +  ", " + var2;
+            for (int j = 0; j < i; j++){
+                awp = awp + "'";
+            }
+            if (x_0 == Math.round(x_0)){
+                awp = awp + "(" + String.valueOf((long) x_0) + ") = ";
+            } else {
+                awp = awp + "(" + String.valueOf(x_0) + ") = ";
+            }
+            if (y_0[i] == Math.round(y_0[i])){
+                awp = awp +  String.valueOf((long) y_0[i]);
+            } else {
+                awp = awp +  String.valueOf(y_0[i]);
+            }
+        }
+        
+        if (x_0 == Math.round(x_0)){
+            awp = awp + ", " + String.valueOf((long) x_0) + " <= " + var1 + " <= ";
+        } else {
+            awp = awp + ", " + String.valueOf(x_0) + " <= " + var1 + " <= ";
+        }
+        if (x_1 == Math.round(x_1)){
+            awp = awp + String.valueOf((long) x_1) + " \n";
+        } else {
+            awp = awp + String.valueOf(x_1) + " \n";
+        }
+        
+        area.append(awp);
         for (int i = 0; i < solution.length; i++){
             area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
         }
@@ -1109,16 +1153,24 @@ public class MathCommandCompiler {
     private static void executeTangent(Command c, JTextArea area) 
 	throws ExpressionException, EvaluationException {
 
+        Expression expr = (Expression) c.getParams()[0];
+        Hashtable<String, Double> vars = (Hashtable<String, Double>) c.getParams()[1];
 
+        String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula() + " im Punkt ";
+        Enumeration keys = vars.keys();
+        String var;
+        for (int i = 0; i < vars.size(); i++){
+            var = (String) keys.nextElement();
+            if (i < vars.size() - 1){
+                tangent_announcement = tangent_announcement + var + " = " + String.valueOf(vars.get(var)) + ", ";
+            } else {
+                tangent_announcement = tangent_announcement + var + " = " + String.valueOf(vars.get(var)) + ": \n";
+            }
+        }
         
-        
-        
-        
-        
-        
-        
-        
-        
+        Expression result = AnalysisMethods.getTangentSpace(expr, vars); 
+        area.append(tangent_announcement);
+        area.append(result.writeFormula() + " = 0 \n");
         
     }    
 
