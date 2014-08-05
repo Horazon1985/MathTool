@@ -870,7 +870,7 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
         expr.getContainedVars(vars);
-        expr = expr.simplify();
+        expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (expr instanceof Constant){
@@ -903,7 +903,7 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
         expr.getContainedVars(vars);
-        expr = expr.simplify();
+        expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (expr instanceof Constant){

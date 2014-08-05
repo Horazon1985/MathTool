@@ -345,7 +345,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              */
             try{
                 Expression expr_simplified = expr.evaluate(definedVarsSet);
-                expr_simplified = expr_simplified.simplify();
+                expr_simplified = expr_simplified.simplify(true);
                 if (expr.equals(expr_simplified)){
                     mathToolArea.append(expr.writeFormula() + "\n");
                 } else {
