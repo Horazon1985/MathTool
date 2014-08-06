@@ -1,9 +1,7 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- Vereinfachen: b/c + a = a + b/c.
-- Vereinfachen: a+b/c = (ac + b)/c.
-- Vereinfachen: a+(-b)/c = (ac - b)/c.
+- In SimplifyTrivial präzise und approximative Vereinfachung einführen.
 
 Wünschenswert:
 
