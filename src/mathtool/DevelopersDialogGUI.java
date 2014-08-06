@@ -16,9 +16,9 @@ public class DevelopersDialogGUI extends JDialog {
         setTitle("About MathTool");
         setLayout(null);
         setResizable(false);
-        JLabel nameLabel = new JLabel("Programm: MathTool");
+        JLabel nameLabel = new JLabel("Programm: MathTool.");
         JLabel systemLabel = new JLabel("System: Jedes System, welches mindestens Java 7 unterstützt.");
-        JLabel developerLabel = new JLabel("Entwickler: Sergei Kovalenko");
+        JLabel developerLabel = new JLabel("Entwickler: Sergei Kovalenko.");
         JLabel thanksLabel = new JLabel("Besonderer Dank gilt Dimitri Krilov und Sven Willner.");
         JLabel copyrightLabel = new JLabel("Copyright 2014 by Sergei Kovalenko.");
 

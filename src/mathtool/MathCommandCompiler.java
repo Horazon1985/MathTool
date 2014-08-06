@@ -27,7 +27,7 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"clear", "def", "defvars", "latex", "plot", 
+    public static final String[] commands = {"approx", "clear", "def", "defvars", "latex", "plot", 
         "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
     
     
@@ -39,6 +39,31 @@ public class MathCommandCompiler {
         Command result = new Command();
         Object[] command_params;
         
+        //APPROX
+        /** Struktur: approx(expr)
+         */
+        if (command.equals("approx")){
+
+            /** Prüft, ob der Befehl genau einen Parameter besitzt.
+             */
+            if (params.length != 1){
+                throw new ExpressionException("Im Befehl 'approx' muss genau ein Parameter stehen, der einen gültigen Ausdruck darstellt.");
+            }
+            
+            try{
+                Expression.build(params[0], new HashSet());
+            } catch (ExpressionException e){
+                throw new ExpressionException("Im Befehl 'approx' muss der Parameter ein gültiger Ausdruck sein.");
+            }
+            
+            command_params = new Object[1];
+            command_params[0] = Expression.build(params[0], new HashSet());
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
+        
+        }
+
         //CLEAR
         /** Struktur: clear()
          */
@@ -765,6 +790,9 @@ public class MathCommandCompiler {
         
         Command c = getCommand(command, params);
         
+        if (c.getName().equals("approx")){
+            executeApprox(c, area);
+        } else 
         if (c.getName().equals("clear")){
             executeClear(c, area);
         } else 
@@ -812,6 +840,16 @@ public class MathCommandCompiler {
      * executePlot3D zeichnet einen 3D-Graphen,
      * etc.
      */
+    
+    private static void executeApprox(Command c, JTextArea area) 
+	throws ExpressionException, EvaluationException {
+        
+        Expression expr = (Expression) c.getParams()[0];
+        expr = expr.simplify(false);
+        area.append(expr.writeFormula() + "\n");
+        
+    }    
+
     
     private static void executeClear(Command c, JTextArea area) 
 	throws ExpressionException {
