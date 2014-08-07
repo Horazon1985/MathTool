@@ -218,11 +218,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
-
-        InputField.setText("456454894456456.564894561561894542312145645645");
+        InputButton.setBounds(518, 335, 91, 25);
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -231,7 +229,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 376, 231, 25);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
