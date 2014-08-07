@@ -220,7 +220,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("int(1E500*x^2,0,1)");
+        InputField.setText("456454894456456.564894561561894542312145645645");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
