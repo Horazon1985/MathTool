@@ -219,6 +219,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 91, 25);
+
+        InputField.setText("(a^64564545642341245)^445744454453464.1");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 
