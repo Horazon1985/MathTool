@@ -191,7 +191,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             RotateButton.setVisible(false);
         }
     
-    
     }
     
     
@@ -259,16 +258,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void execute(){
-        
-        /**       
-        GraphicPresentationOfFormula gr = new GraphicPresentationOfFormula();
-        try{
-            Expression ex = Expression.build("1258", new HashSet());
-            Graphics g = graphicPresentationOfFormula.getGraphics();
-            System.out.println(gr.getHeightOfFormula(g, ex));
-        } catch (Exception e){
-        }
-        */        
         
         Command c = new Command();
         boolean valid_command = false;

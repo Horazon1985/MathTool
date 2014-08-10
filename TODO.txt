@@ -1,10 +1,7 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- In SimplifyTrivial präzise und approximative Vereinfachung einführen.
 
 Wünschenswert:
 
-- Bessere präzise Vereinfachung von Ausdrücken.
-- evaluatePrecise() implementieren. Rückgabewert ist Expression.
-- Falls konstante Parameter eingetragen werden, so sollen auch konstante Ausdrücke verstanden werden und nicht nur Double-Werte.
+- Exaktes Integrieren.
