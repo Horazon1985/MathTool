@@ -1,6 +1,8 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
+- Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
+- (c1/c2 + x) - (c3/c4 + y) = ([c1/c2 - c3/c4] + x) - y bzw. = x - ([c3/c4 - c1/c2] + y).
 
 Wünschenswert:
 
