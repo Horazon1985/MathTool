@@ -219,7 +219,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("taylordgl(-y,x,2,0,1,0,10)");
+        InputField.setText("(x*2*y*sin(1)*z)/(a*b*cos(3)*c*5)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
