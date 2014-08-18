@@ -269,12 +269,18 @@ public class MathCommandCompiler {
 	}
 
         //PLOT
-        /** Struktur: PLOT(EXPRESSION, value_1, value_2)
+        /** Struktur: PLOT(EXPRESSION(var), value_1, value_2)
          * EXPRESSION: Ausdruck in einer Variablen.
          * value_1 < value_2: Grenzen des Zeichenbereichs
          * ODER:
-         * PLOT(EXPRESSION, value_1, value_2, value_3, value_4)
+         * PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3, value_4)
          * EXPRESSION: Ausdruck in höchstens zwei Variablen.
+         * value_1 < value_2, value_3 < value_4: Grenzen des Zeichenbereichs.
+         * Die beiden Variablen werden dabei alphabetisch geordnet.
+         * ODER:
+         * PLOT(EXPRESSION_1(var1, var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2})
+         * EXPRESSION_1, EXPRESSION_2: Ausdrücke in höchstens zwei Variablen.
          * value_1 < value_2, value_3 < value_4: Grenzen des Zeichenbereichs.
          * Die beiden Variablen werden dabei alphabetisch geordnet.
          */
