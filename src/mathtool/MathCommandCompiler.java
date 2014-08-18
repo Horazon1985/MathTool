@@ -928,6 +928,7 @@ public class MathCommandCompiler {
         String var = (String) iter.next();
         
         graphicMethods2D.setExpression(expr);
+        graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_0, x_1);
         graphicMethods2D.computeMaxXMaxY();
@@ -1058,6 +1059,7 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setExpression(expr);
+        graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
@@ -1184,7 +1186,8 @@ public class MathCommandCompiler {
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
 
-        graphicMethods2D.setGraphArray(solution);
+        graphicMethods2D.setGraph(solution);
+        graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(true);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
