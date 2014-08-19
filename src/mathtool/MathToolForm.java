@@ -170,6 +170,12 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             RotateButton.setVisible(false);
             repaint();
         } else
+        if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))){
+            graphicMethods2D.setVisible(true);
+            graphicMethods3D.setVisible(false);
+            RotateButton.setVisible(false);
+            repaint();
+        } else
         if ((command_name.equals("plot")) && (params.length == 5)){
             graphicMethods2D.setVisible(false);
             graphicMethods3D.setVisible(true);
@@ -217,11 +223,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
+        InputButton.setBounds(518, 335, 91, 25);
 
-        InputField.setText("plot(x^2=y,-1,1,-1,1)");
+        InputField.setText("plot(3/y^2+y^3-2*x^4+4*x^2-6=0,-3,3,-3,3)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -230,7 +236,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 376, 231, 25);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);

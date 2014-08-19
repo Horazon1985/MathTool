@@ -983,7 +983,7 @@ public class MathCommandCompiler {
 	
 	
     /** c Enthält genau 3 Parameter 
-     * Parameter: Expression, double, double (als Strings)
+     * Parameter: Expression, double, double
      */
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
@@ -994,7 +994,7 @@ public class MathCommandCompiler {
         expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
-        if (expr instanceof Constant){
+        if (expr.isConstant()){
             vars.add("x");
         }
         
@@ -1017,7 +1017,7 @@ public class MathCommandCompiler {
 
     
     /** c Enthält genau 5 Parameter 
-     * Parameter: Expression, double, double, double, double (als Strings)
+     * Parameter: Expression, double, double, double, double
      */
     private static void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
             EvaluationException {
@@ -1028,7 +1028,7 @@ public class MathCommandCompiler {
         expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
-        if (expr instanceof Constant){
+        if (expr.isConstant()){
             vars.add("x");
             vars.add("y");
         }
@@ -1089,8 +1089,8 @@ public class MathCommandCompiler {
     }
 
     
-    /** c Enthält genau 5 Parameter 
-     * Parameter: Expression, double, double, double, double (als Strings)
+    /** c Enthält genau 6 Parameter 
+     * Parameter: Expression, Expression, double, double, double, double
      */
     private static void executeImplicitPlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
@@ -1106,10 +1106,6 @@ public class MathCommandCompiler {
             vars.add("y");
         }
 
-        /** Falls der Ausdruck expr nur von einer Variablen abhängt, 
-         * sollen die andere Achse eine fest gewählte Bezeichnung tragen.
-         * Dies wirdim Folgenden geregelt.
-         */
         if (vars.size() == 1){
             if (vars.contains("y")) {
                 vars.add("z");
@@ -1126,12 +1122,6 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var1 = (String) iter.next();
         String var2 = (String) iter.next();
-        
-        /** Die Variablen var1 und var2 sind evtl. noch nicht in alphabetischer Reihenfolge.
-         * Dies wird hier nachgeholt.
-         * GRUND: Der Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den Variablen in
-         * ALPHABETISCHER Reihenfolge entsprechen.
-         */
         
         String var1_alphabetical = var1;
         String var2_alphabetical = var2;
@@ -1154,14 +1144,19 @@ public class MathCommandCompiler {
                 }
             }
         }
-        
+
         graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(false);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_0 + x_1)/2, (y_0 + y_1)/2, (x_1 - x_0)/2, (y_1 - y_0)/2);
         graphicMethods2D.setDrawSpecialPoints(false);
-        graphicMethods2D.drawGraph();
 
+        Hashtable<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical, 
+                x_0, x_1, y_0, y_1);
+        graphicMethods2D.setImplicitGraph(implicit_graph);
+        
+        graphicMethods2D.drawGraph();
+        
     }
 
     
