@@ -37,7 +37,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
-    AnalysisMethods analysisMethods;
 
     /** Diese Objekte werden im Laufe des Programms erweitert.
      * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
@@ -54,7 +53,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public int log_position = 0;
 
     
-    
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
@@ -65,14 +63,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 InputField.requestFocus();
             }
         });
-        /**Objekte ausrichten
+        /** Objekte ausrichten
          */
         
-        /**Eingabefelder ausrichten
+        /** Eingabefelder ausrichten
          */
         InputField.setBounds(10, 530, 650, 30);
         
-        /**Ausgabefeld ausrichten
+        /** Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
         add(mathToolArea);
@@ -85,13 +83,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         scrollPane.setBounds(10,20,750,500);
         add(scrollPane);
 
-        /**Buttons ausrichten
+        /** Buttons ausrichten
          */
         InputButton.setBounds(660, 530, 100, 30);
         RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
         
-        /**2D-Grafikobjekte initialisieren
+        /** 2D-Grafikobjekte initialisieren
          */
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
@@ -99,7 +97,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         repaint();
         graphicMethods2D.setVisible(false);
         
-        /**3D-Grafikobjekte initialisieren
+        /** 3D-Grafikobjekte initialisieren
          */
         graphicMethods3D = new GraphicMethods3D();
         add(graphicMethods3D);
@@ -107,17 +105,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         repaint();
         graphicMethods3D.setVisible(false);
 
-        /**Sonstige Grafikobjekte initialisieren
+        /** Sonstige Grafikobjekte initialisieren
          */
         graphicPresentationOfFormula = new GraphicPresentationOfFormula();
         add(graphicPresentationOfFormula);
         graphicPresentationOfFormula.setBounds(770, 20, 500, 500);
         repaint();
         graphicPresentationOfFormula.setVisible(false);
-        
-        /**Analytische Objekte initialisieren
-         */
-        analysisMethods = new AnalysisMethods();
         
     }
 
@@ -164,9 +158,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     
         if ((command_name.equals("plot")) && (params.length == 3)){
             graphicMethods2D.setVisible(true);
-//            graphicMethods3D.setVisible(false);
-//            RotateButton.setVisible(false);
-//            repaint();
+            graphicMethods3D.setVisible(false);
+            RotateButton.setVisible(false);
+            repaint();
         } else
         if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))){
             graphicMethods2D.setVisible(true);
@@ -180,18 +174,18 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             RotateButton.setVisible(true);
             repaint();
         } else
-        if (command_name.equals("solvedgl")){
-            graphicMethods2D.setVisible(true);
-            graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
-            repaint();
-        } else 
         if (command_name.equals("solve")){
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
             repaint();
         } else {
+        if (command_name.equals("solvedgl")){
+            graphicMethods2D.setVisible(true);
+            graphicMethods3D.setVisible(false);
+            RotateButton.setVisible(false);
+            repaint();
+        } else 
             RotateButton.setVisible(false);
         }
     
@@ -221,11 +215,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
-
-        InputField.setText("plot(ln(-2),2,3)");
+        InputButton.setBounds(518, 335, 91, 25);
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -234,7 +226,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 376, 231, 25);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -360,15 +352,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-//        execute();
-        String name = "plot";
-        String[] params = new String[3];
-        params[0] = "";
-        params[1] = "";
-        params[2] = "";
-//        params[3] = "";
-//        params[4] = "";
-        activatePanelsForGraphs(name, params);
+        execute();
     }//GEN-LAST:event_InputButtonActionPerformed
 
     

@@ -991,7 +991,6 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
         expr.getContainedVars(vars);
-        expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (expr.isConstant()){
@@ -1004,6 +1003,7 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
         
+        graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
@@ -1011,7 +1011,7 @@ public class MathCommandCompiler {
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
-        graphicMethods2D.drawGraph();
+        graphicMethods2D.drawGraph2D();
         
     }
 
@@ -1025,7 +1025,6 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
         expr.getContainedVars(vars);
-        expr = expr.simplify(false);
         
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (expr.isConstant()){
@@ -1145,6 +1144,7 @@ public class MathCommandCompiler {
             }
         }
 
+        graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(false);
         graphicMethods2D.setGraphIsFixed(false);
@@ -1155,7 +1155,7 @@ public class MathCommandCompiler {
                 x_0, x_1, y_0, y_1);
         graphicMethods2D.setImplicitGraph(implicit_graph);
         
-        graphicMethods2D.drawGraph();
+        graphicMethods2D.drawGraph2D();
         
     }
 
@@ -1199,6 +1199,7 @@ public class MathCommandCompiler {
             zeros[i][1] = 0;
         }
 
+        graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
@@ -1207,7 +1208,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(true);
         graphicMethods2D.setSpecialPoints(zeros);
-        graphicMethods2D.drawGraph();
+        graphicMethods2D.drawGraph2D();
         
     }    
 
@@ -1327,13 +1328,14 @@ public class MathCommandCompiler {
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
         }
 
+        graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setGraph(solution);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(true);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
-        graphicMethods2D.drawGraph();
+        graphicMethods2D.drawGraph2D();
 
     }    
 
