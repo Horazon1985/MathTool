@@ -102,8 +102,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /**3D-Grafikobjekte initialisieren
          */
         graphicMethods3D = new GraphicMethods3D();
-        
-        
         add(graphicMethods3D);
         graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
@@ -166,9 +164,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     
         if ((command_name.equals("plot")) && (params.length == 3)){
             graphicMethods2D.setVisible(true);
-            graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
-            repaint();
+//            graphicMethods3D.setVisible(false);
+//            RotateButton.setVisible(false);
+//            repaint();
         } else
         if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))){
             graphicMethods2D.setVisible(true);
@@ -223,11 +221,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 91, 25);
+        InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("plot(3/y^2+y^3-2*x^4+4*x^2-6=0,-3,3,-3,3)");
+        InputField.setText("plot(ln(-2),2,3)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +234,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 231, 25);
+        RotateButton.setBounds(10, 376, 165, 23);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -267,7 +265,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }// </editor-fold>//GEN-END:initComponents
     private void execute(){
         
-        Command c = new Command();
         boolean valid_command = false;
         
         /**Leerzeichen werden im Vorfeld beseitigt.
@@ -363,7 +360,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-        execute();
+//        execute();
+        String name = "plot";
+        String[] params = new String[3];
+        params[0] = "";
+        params[1] = "";
+        params[2] = "";
+//        params[3] = "";
+//        params[4] = "";
+        activatePanelsForGraphs(name, params);
     }//GEN-LAST:event_InputButtonActionPerformed
 
     
