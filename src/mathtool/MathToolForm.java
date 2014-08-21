@@ -7,6 +7,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
+import expressionbuilder.SimplifyMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
