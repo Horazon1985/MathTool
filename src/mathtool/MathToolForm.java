@@ -436,7 +436,39 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-            execute();
+//            execute();
+/**
+            try{
+                Expression e1 = Expression.build("a+b+c+d+e", new HashSet());
+                Expression e2 = Expression.build("b+a+c+e+d", new HashSet());
+                System.out.println(e1.equivalent(e2));
+            } catch (Exception ex){
+                System.out.println("Fehler");
+            }
+*/ 
+            HashSet s1 = new HashSet();
+            HashSet s2 = new HashSet();
+            HashSet diff = new HashSet();
+            try{
+                s1.add(Expression.build("a", new HashSet()));
+                s1.add(Expression.build("b", new HashSet()));
+                s1.add(Expression.build("sin(x)", new HashSet()));
+                s1.add(Expression.build("d", new HashSet()));
+                s1.add(Expression.build("f", new HashSet()));
+                s1.add(Expression.build("c", new HashSet()));
+                s2.add(Expression.build("a*b", new HashSet()));
+                s2.add(Expression.build("d", new HashSet()));
+                s2.add(Expression.build("sin(x)", new HashSet()));
+                s2.add(Expression.build("e", new HashSet()));
+                diff = SimplifyMethods.difference(s1, s2);
+            } catch (Exception ex){
+                System.out.println("Fehler");
+            }
+            
+            
+            
+            
+            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
