@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -437,33 +438,25 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
 //            execute();
-/**
+
             try{
-                Expression e1 = Expression.build("a+b+c+d+e", new HashSet());
-                Expression e2 = Expression.build("b+a+c+e+d", new HashSet());
-                System.out.println(e1.equivalent(e2));
+                Expression e1 = Expression.build("(a+sin(x+y))+(b+c*d)", new HashSet());
+//                Expression e2 = Expression.build("(sin(x+y)+b)+(a+c*d)", new HashSet());
+                HashSet summands_1 = new HashSet();
+                SimplifyMethods.getSummands(e1, summands_1);
+                System.out.println("Summanden von e1: ");
+                Iterator iter = summands_1.iterator();
+                Expression summand = (Expression) iter.next();
+                for (int i = 0; i < summands_1.size(); i++){
+                    System.out.println(summand.writeFormula());
+                    if (i < summands_1.size() - 1){
+                        summand = (Expression) iter.next();
+                    }
+                }
             } catch (Exception ex){
                 System.out.println("Fehler");
             }
-*/ 
-            HashSet s1 = new HashSet();
-            HashSet s2 = new HashSet();
-            HashSet diff = new HashSet();
-            try{
-                s1.add(Expression.build("a", new HashSet()));
-                s1.add(Expression.build("b", new HashSet()));
-                s1.add(Expression.build("sin(x)", new HashSet()));
-                s1.add(Expression.build("d", new HashSet()));
-                s1.add(Expression.build("f", new HashSet()));
-                s1.add(Expression.build("c", new HashSet()));
-                s2.add(Expression.build("a*b", new HashSet()));
-                s2.add(Expression.build("d", new HashSet()));
-                s2.add(Expression.build("sin(x)", new HashSet()));
-                s2.add(Expression.build("e", new HashSet()));
-                diff = SimplifyMethods.difference(s1, s2);
-            } catch (Exception ex){
-                System.out.println("Fehler");
-            }
+ 
             
             
             
