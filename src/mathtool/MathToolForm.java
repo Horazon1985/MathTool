@@ -440,29 +440,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 //            execute();
 
             try{
-                Expression e1 = Expression.build("(a+d*c)+b+sin(m^2+n)", new HashSet());
-                Expression e2 = Expression.build("sin(n+m^2)+b+(a+c*d)", new HashSet());
+                Expression e1 = Expression.build("a*d+(b+c)", new HashSet());
+                Expression e2 = Expression.build("(d*a+c)+b", new HashSet());
 
                 boolean eq = e1.equivalent(e2);
-                for (int i = 0; i < 10000; i++){
-                    eq = e1.equivalent(e2);
-                }
                 System.out.println(eq);
                 
                 
-/**
-                HashSet summands_1 = new HashSet();
-                SimplifyMethods.getFactors(e1, summands_1);
-                System.out.println("Summanden von e1: ");
-                Iterator iter = summands_1.iterator();
-                Expression summand = (Expression) iter.next();
-                for (int i = 0; i < summands_1.size(); i++){
-                    System.out.println(summand.writeFormula());
-                    if (i < summands_1.size() - 1){
-                        summand = (Expression) iter.next();
-                    }
-                }
-*/ 
             } catch (Exception ex){
                 System.out.println("Fehler");
             }
