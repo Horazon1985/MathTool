@@ -5,6 +5,7 @@ import expressionbuilder.Expression;
 import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
+import expressionbuilder.GraphicMethods2DNew;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
@@ -682,7 +683,7 @@ public class MathCommandCompiler {
             for (int i = 0; i < vars.size(); i++){
                 var = (String) iter.next();
                 if (!vars_contained_in_params.containsKey(var)){
-                    throw new ExpressionException("Die Veränderliche " + var + "muss in den Parametern vorkommen.");
+                    throw new ExpressionException("Die Veränderliche " + var + " muss in den Parametern vorkommen.");
                 }
             }
             
@@ -846,8 +847,8 @@ public class MathCommandCompiler {
     
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
-            throws ExpressionException, EvaluationException {
+            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet, 
+            GraphicMethods2DNew graphicMethods2DNew) throws ExpressionException, EvaluationException {
         
         int n = commandLine.length();
 
@@ -901,7 +902,7 @@ public class MathCommandCompiler {
 	    executeSolveDGL(c, area, graphicMethods2D);
         } else 
 	if (c.getName().equals("tangent")){
-	    executeTangent(c, area);
+	    executeTangent(c, area, graphicMethods2DNew);
         } else 
 	if (c.getName().equals("taylordgl")){
 	    executeTaylorDGL(c, area);
@@ -1340,7 +1341,7 @@ public class MathCommandCompiler {
     }    
 
     
-    private static void executeTangent(Command c, JTextArea area) 
+    private static void executeTangent(Command c, JTextArea area, GraphicMethods2DNew graphicMethods2DNew) 
 	throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -1360,7 +1361,27 @@ public class MathCommandCompiler {
         
         Expression result = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
-        area.append(result.writeFormula() + " = 0 \n");
+        area.append("Y=" + result.writeFormula() + "\n");
+
+        if (vars.size() == 1){
+            
+            keys = vars.keys();
+            var = (String) keys.nextElement();
+            double x_1 = vars.get(var) - 1;
+            double x_2 = x_1 + 2;
+            
+            graphicMethods2DNew.clearExpressionAndGraph();
+            graphicMethods2DNew.setIsInitialized(true);
+            graphicMethods2DNew.addExpression(expr);
+            graphicMethods2DNew.setGraphIsExplicit(true);
+            graphicMethods2DNew.setGraphIsFixed(false);
+            graphicMethods2DNew.expressionToGraph(var, x_1, x_2);
+            graphicMethods2DNew.computeMaxXMaxY();
+            graphicMethods2DNew.setParameters(var, graphicMethods2DNew.getAxeCenterX(), graphicMethods2DNew.getAxeCenterY());
+            graphicMethods2DNew.setDrawSpecialPoints(true);
+//            graphicMethods2DNew.setSpecialPoints(zeros);
+            graphicMethods2DNew.drawGraph2D();
+        }
         
     }    
 
