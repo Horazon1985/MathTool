@@ -1359,9 +1359,9 @@ public class MathCommandCompiler {
             }
         }
         
-        Expression result = AnalysisMethods.getTangentSpace(expr, vars); 
+        Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
-        area.append("Y=" + result.writeFormula() + "\n");
+        area.append("Y=" + tangent.writeFormula() + "\n");
 
         if (vars.size() == 1){
             
@@ -1369,18 +1369,25 @@ public class MathCommandCompiler {
             var = (String) keys.nextElement();
             double x_1 = vars.get(var) - 1;
             double x_2 = x_1 + 2;
+
+            double[][] tangent_point = new double[1][2];
+            tangent_point[0][0] = vars.get(var);
+            Variable.setValue(var, vars.get(var));
+            tangent_point[0][1] = expr.evaluate();
             
-            graphicMethods2DNew.clearExpressionAndGraph();
             graphicMethods2DNew.setIsInitialized(true);
+            graphicMethods2DNew.clearExpressionAndGraph();
             graphicMethods2DNew.addExpression(expr);
+            graphicMethods2DNew.addExpression(tangent);
             graphicMethods2DNew.setGraphIsExplicit(true);
             graphicMethods2DNew.setGraphIsFixed(false);
             graphicMethods2DNew.expressionToGraph(var, x_1, x_2);
             graphicMethods2DNew.computeMaxXMaxY();
             graphicMethods2DNew.setParameters(var, graphicMethods2DNew.getAxeCenterX(), graphicMethods2DNew.getAxeCenterY());
             graphicMethods2DNew.setDrawSpecialPoints(true);
-//            graphicMethods2DNew.setSpecialPoints(zeros);
+            graphicMethods2DNew.setSpecialPoints(tangent_point);
             graphicMethods2DNew.drawGraph2D();
+             
         }
         
     }    

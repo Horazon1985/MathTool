@@ -240,6 +240,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 91, 25);
+
+        InputField.setText("tangent(x^2,x=3)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 
@@ -459,8 +461,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-//            execute();
-
+            execute();
+/**
             try{
                 Expression e1 = Expression.build("a*d+(b+c)", new HashSet());
                 Expression e2 = Expression.build("(d*a+c)+b", new HashSet());
@@ -472,12 +474,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             } catch (Exception ex){
                 System.out.println("Fehler");
             }
- 
-            
-            
-            
-            
-            
+*/ 
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
