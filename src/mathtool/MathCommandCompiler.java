@@ -56,7 +56,8 @@ public class MathCommandCompiler {
             try{
                 Expression.build(params[0], new HashSet());
             } catch (ExpressionException e){
-                throw new ExpressionException("Im Befehl 'approx' muss der Parameter ein gültiger Ausdruck sein.");
+                throw new ExpressionException("Im Befehl 'approx' muss der Parameter ein gültiger Ausdruck sein. Gemeldeter Fehler: " 
+                        + e.getMessage());
             }
             
             command_params = new Object[1];
@@ -134,7 +135,7 @@ public class MathCommandCompiler {
                 HashSet vars = new HashSet();
                 Expression.build(function_term, vars);
             } catch (ExpressionException e){
-                throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite.");
+                throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite. Gemeldeter Fehler: " + e.getMessage());
             }
 
             /** Falls man hier ankommt, muss das obige try funktioniert haben.
@@ -266,7 +267,7 @@ public class MathCommandCompiler {
 		result.setParams(command_params);
 		return result;
             } catch (ExpressionException e){
-		throw new ExpressionException(e.getMessage());
+		throw new ExpressionException("Fehler im Parameter des Befehls 'latex': " + e.getMessage());
             }
 			
 	}
@@ -305,7 +306,7 @@ public class MathCommandCompiler {
                 try{
                     Expression expr = Expression.build(params[0], vars);
                 } catch (ExpressionException e){
-                    throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein.");
+                    throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                 }
 
                 if (vars.size() > 1){
@@ -350,7 +351,7 @@ public class MathCommandCompiler {
                         Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
                     } catch (ExpressionException e){
                         throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss aus zwei gültigen Ausdrücken bestehen,"
-                        + " welche durch ein '=' verbunden sind.");
+                        + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
                     }
 
                     if (vars.size() > 2){
@@ -413,7 +414,7 @@ public class MathCommandCompiler {
                     try{
                         Expression expr = Expression.build(params[0], vars);
                     } catch (ExpressionException e){
-                        throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein.");
+                        throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                     }
 
                     if (vars.size() > 2){
@@ -486,6 +487,12 @@ public class MathCommandCompiler {
             }
             
             HashSet vars = new HashSet();
+            try{
+                Expression.build(params[0], vars);
+            } catch (ExpressionException e){
+                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+            }
+            
             Expression expr = Expression.build(params[0], vars);
             if (vars.size() > 1){
                 throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
@@ -571,6 +578,11 @@ public class MathCommandCompiler {
                  * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
                  */ 
                 HashSet vars = new HashSet();
+                try{
+                    Expression.build(params[0], vars);
+                } catch (ExpressionException e){
+                    throw new ExpressionException("Der erste Parameter im Befehl 'solvedgl' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                }
                 Expression expr = Expression.build(params[0], vars);
                 
                 HashSet vars_without_primes = new HashSet();
@@ -649,7 +661,7 @@ public class MathCommandCompiler {
             try{
                 Expression.build(params[0], new HashSet());
             } catch (NumberFormatException e){
-                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein.");
+                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
             }
 
             HashSet vars = new HashSet();
@@ -728,6 +740,11 @@ public class MathCommandCompiler {
              * Beispielsweise darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der rechten Seite auftreten.
              */ 
             HashSet vars = new HashSet();
+            try{
+                Expression.build(params[0], vars);
+            } catch (ExpressionException e){
+                throw new ExpressionException("Der erste Parameter im Befehl 'taylordgl' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+            }
             Expression expr = Expression.build(params[0], vars);
                 
             HashSet vars_without_primes = new HashSet();
@@ -1359,6 +1376,11 @@ public class MathCommandCompiler {
             }
         }
         
+        try{
+            Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
+        } catch (ExpressionException|EvaluationException e){
+            throw new ExpressionException(e.getMessage());
+        }
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
         area.append("Y=" + tangent.writeFormula() + "\n");
@@ -1376,12 +1398,13 @@ public class MathCommandCompiler {
             tangent_point[0][1] = expr.evaluate();
             
             graphicMethods2DNew.setIsInitialized(true);
+            graphicMethods2DNew.setGraphIsExplicit(true);
+            graphicMethods2DNew.setGraphIsFixed(false);
             graphicMethods2DNew.clearExpressionAndGraph();
             graphicMethods2DNew.addExpression(expr);
             graphicMethods2DNew.addExpression(tangent);
-            graphicMethods2DNew.setGraphIsExplicit(true);
-            graphicMethods2DNew.setGraphIsFixed(false);
             graphicMethods2DNew.expressionToGraph(var, x_1, x_2);
+            graphicMethods2DNew.setColors();
             graphicMethods2DNew.computeMaxXMaxY();
             graphicMethods2DNew.setParameters(var, graphicMethods2DNew.getAxeCenterX(), graphicMethods2DNew.getAxeCenterY());
             graphicMethods2DNew.setDrawSpecialPoints(true);
