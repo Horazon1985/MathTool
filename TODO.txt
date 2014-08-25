@@ -2,8 +2,6 @@
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
-- Einführen: Variablen bekommen u. a. BigDecimal-Werte.
-	-> Korrktur des konstanten Terms bei getTangentSpace(). 
 - Im befehl 'solve' doch ein "="-Zeichen einführen.
 
 Wünschenswert:

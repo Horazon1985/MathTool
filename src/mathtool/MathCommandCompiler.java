@@ -205,7 +205,7 @@ public class MathCommandCompiler {
             String var;
             for (int i = 0; i < vars.size(); i++){
                 var = (String) iter.next(); 
-                expr = expr.replaceVariable(var, new Variable(var + "_ABSTRACT"));
+                expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
                 var = var + "_ABSTRACT";
                 if (!function_vars_list.contains(var)){
                     throw new ExpressionException("Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.");
@@ -670,7 +670,7 @@ public class MathCommandCompiler {
 
             /** Ermittelt die Anzahl der einzugebenen Parameter.
              */
-            Hashtable<String, BigDecimal> vars_contained_in_params = new Hashtable<String, BigDecimal>();
+            Hashtable<String, Expression> vars_contained_in_params = new Hashtable<String, Expression>();
             for (int i = 1; i < params.length; i++){
                 if (!params[i].contains("=")){
                     throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
@@ -680,15 +680,18 @@ public class MathCommandCompiler {
                     throw new ExpressionException(params[i].substring(0, params[i].indexOf("=")) + " ist keine gültige Veränderliche.");
                 }
                 try{
-                    Double.parseDouble(params[i].substring(params[i].indexOf("=") + 1, params[i].length()));                
+                    Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet());
+                    if (!point.isConstant()){
+                        throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
+                    }
                 } catch (NumberFormatException e){
-                    throw new ExpressionException("Der " + i + ". Parameter im Befehl 'tangent' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
                 }
             }
 
             for (int i = 1; i < params.length; i++){
                 vars_contained_in_params.put(params[i].substring(0, params[i].indexOf("=")), 
-                        new BigDecimal(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
+                        Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet()));
             }
             
             Iterator iter = vars.iterator();
@@ -1367,7 +1370,7 @@ public class MathCommandCompiler {
 	throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
-        Hashtable<String, BigDecimal> vars = (Hashtable<String, BigDecimal>) c.getParams()[1];
+        Hashtable<String, Expression> vars = (Hashtable<String, Expression>) c.getParams()[1];
 
         String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula() + " im Punkt ";
         Enumeration keys = vars.keys();
@@ -1375,9 +1378,9 @@ public class MathCommandCompiler {
         for (int i = 0; i < vars.size(); i++){
             var = (String) keys.nextElement();
             if (i < vars.size() - 1){
-                tangent_announcement = tangent_announcement + var + " = " + String.valueOf(vars.get(var)) + ", ";
+                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula() + ", ";
             } else {
-                tangent_announcement = tangent_announcement + var + " = " + String.valueOf(vars.get(var)) + ": \n";
+                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula() + ": \n";
             }
         }
         
@@ -1394,13 +1397,12 @@ public class MathCommandCompiler {
             
             keys = vars.keys();
             var = (String) keys.nextElement();
-            double x_1 = vars.get(var).doubleValue() - 1;
+            double x_1 = vars.get(var).evaluate() - 1;
             double x_2 = x_1 + 2;
 
             double[][] tangent_point = new double[1][2];
-            tangent_point[0][0] = vars.get(var).doubleValue();
-            Variable.setValue(var, vars.get(var).doubleValue());
-            tangent_point[0][1] = expr.evaluate();
+            tangent_point[0][0] = vars.get(var).evaluate();
+            tangent_point[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
             
             graphicMethods2D.setIsInitialized(true);
             graphicMethods2D.setGraphIsExplicit(true);
