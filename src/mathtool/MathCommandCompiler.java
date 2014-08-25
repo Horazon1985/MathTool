@@ -5,7 +5,7 @@ import expressionbuilder.Expression;
 import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
-import expressionbuilder.GraphicMethods2DNew;
+import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
@@ -13,6 +13,7 @@ import expressionbuilder.AnalysisMethods;
 import expressionbuilder.BinaryOperation;
 import expressionbuilder.NumericalMethods;
 import expressionbuilder.TypeBinary;
+import java.math.BigDecimal;
 
 import javax.swing.*;
 
@@ -669,7 +670,7 @@ public class MathCommandCompiler {
 
             /** Ermittelt die Anzahl der einzugebenen Parameter.
              */
-            Hashtable vars_contained_in_params = new Hashtable<String, Double>();
+            Hashtable<String, BigDecimal> vars_contained_in_params = new Hashtable<String, BigDecimal>();
             for (int i = 1; i < params.length; i++){
                 if (!params[i].contains("=")){
                     throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
@@ -687,7 +688,7 @@ public class MathCommandCompiler {
 
             for (int i = 1; i < params.length; i++){
                 vars_contained_in_params.put(params[i].substring(0, params[i].indexOf("=")), 
-                        Double.parseDouble(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
+                        new BigDecimal(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
             }
             
             Iterator iter = vars.iterator();
@@ -864,8 +865,8 @@ public class MathCommandCompiler {
     
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet, 
-            GraphicMethods2DNew graphicMethods2DNew) throws ExpressionException, EvaluationException {
+            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
+            throws ExpressionException, EvaluationException {
         
         int n = commandLine.length();
 
@@ -919,7 +920,7 @@ public class MathCommandCompiler {
 	    executeSolveDGL(c, area, graphicMethods2D);
         } else 
 	if (c.getName().equals("tangent")){
-	    executeTangent(c, area, graphicMethods2DNew);
+	    executeTangent(c, area, graphicMethods2D);
         } else 
 	if (c.getName().equals("taylordgl")){
 	    executeTaylorDGL(c, area);
@@ -1015,17 +1016,18 @@ public class MathCommandCompiler {
             vars.add("x");
         }
         
-        double x_0 = (double) c.getParams()[1];
-        double x_1 = (double) c.getParams()[2];
+        double x_1 = (double) c.getParams()[1];
+        double x_2 = (double) c.getParams()[2];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
         
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
-        graphicMethods2D.expressionToGraph(var, x_0, x_1);
+        graphicMethods2D.clearExpressionAndGraph();
+        graphicMethods2D.addExpression(expr);
+        graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
@@ -1131,10 +1133,10 @@ public class MathCommandCompiler {
             }
         }
         
-        double x_0 = (double) c.getParams()[2];
-        double x_1 = (double) c.getParams()[3];
-        double y_0 = (double) c.getParams()[4];
-        double y_1 = (double) c.getParams()[5];
+        double x_1 = (double) c.getParams()[2];
+        double x_2 = (double) c.getParams()[3];
+        double y_1 = (double) c.getParams()[4];
+        double y_2 = (double) c.getParams()[5];
 
         Iterator iter = vars.iterator();
         String var1 = (String) iter.next();
@@ -1163,14 +1165,15 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(false);
         graphicMethods2D.setGraphIsFixed(false);
-        graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_0 + x_1)/2, (y_0 + y_1)/2, (x_1 - x_0)/2, (y_1 - y_0)/2);
+        graphicMethods2D.clearExpressionAndGraph();
+        graphicMethods2D.addExpression(expr);
+        graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_1 + x_2)/2, (y_1 + y_2)/2, (x_2 - x_1)/2, (y_2 - y_1)/2);
         graphicMethods2D.setDrawSpecialPoints(false);
 
         Hashtable<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical, 
-                x_0, x_1, y_0, y_1);
+                x_1, x_2, y_1, y_2);
         graphicMethods2D.setImplicitGraph(implicit_graph);
         
         graphicMethods2D.drawGraph2D();
@@ -1218,16 +1221,17 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setExpression(expr);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
+        graphicMethods2D.clearExpressionAndGraph();
+        graphicMethods2D.addExpression(expr);
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(true);
         graphicMethods2D.setSpecialPoints(zeros);
         graphicMethods2D.drawGraph2D();
-        
+
     }    
 
     
@@ -1347,9 +1351,10 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setGraph(solution);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(true);
+        graphicMethods2D.clearExpressionAndGraph();
+        graphicMethods2D.addGraph(solution);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
@@ -1358,11 +1363,11 @@ public class MathCommandCompiler {
     }    
 
     
-    private static void executeTangent(Command c, JTextArea area, GraphicMethods2DNew graphicMethods2DNew) 
+    private static void executeTangent(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
 	throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
-        Hashtable<String, Double> vars = (Hashtable<String, Double>) c.getParams()[1];
+        Hashtable<String, BigDecimal> vars = (Hashtable<String, BigDecimal>) c.getParams()[1];
 
         String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula() + " im Punkt ";
         Enumeration keys = vars.keys();
@@ -1389,27 +1394,26 @@ public class MathCommandCompiler {
             
             keys = vars.keys();
             var = (String) keys.nextElement();
-            double x_1 = vars.get(var) - 1;
+            double x_1 = vars.get(var).doubleValue() - 1;
             double x_2 = x_1 + 2;
 
             double[][] tangent_point = new double[1][2];
-            tangent_point[0][0] = vars.get(var);
-            Variable.setValue(var, vars.get(var));
+            tangent_point[0][0] = vars.get(var).doubleValue();
+            Variable.setValue(var, vars.get(var).doubleValue());
             tangent_point[0][1] = expr.evaluate();
             
-            graphicMethods2DNew.setIsInitialized(true);
-            graphicMethods2DNew.setGraphIsExplicit(true);
-            graphicMethods2DNew.setGraphIsFixed(false);
-            graphicMethods2DNew.clearExpressionAndGraph();
-            graphicMethods2DNew.addExpression(expr);
-            graphicMethods2DNew.addExpression(tangent);
-            graphicMethods2DNew.expressionToGraph(var, x_1, x_2);
-            graphicMethods2DNew.setColors();
-            graphicMethods2DNew.computeMaxXMaxY();
-            graphicMethods2DNew.setParameters(var, graphicMethods2DNew.getAxeCenterX(), graphicMethods2DNew.getAxeCenterY());
-            graphicMethods2DNew.setDrawSpecialPoints(true);
-            graphicMethods2DNew.setSpecialPoints(tangent_point);
-            graphicMethods2DNew.drawGraph2D();
+            graphicMethods2D.setIsInitialized(true);
+            graphicMethods2D.setGraphIsExplicit(true);
+            graphicMethods2D.setGraphIsFixed(false);
+            graphicMethods2D.clearExpressionAndGraph();
+            graphicMethods2D.addExpression(expr);
+            graphicMethods2D.addExpression(tangent);
+            graphicMethods2D.expressionToGraph(var, x_1, x_2);
+            graphicMethods2D.computeMaxXMaxY();
+            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+            graphicMethods2D.setDrawSpecialPoints(true);
+            graphicMethods2D.setSpecialPoints(tangent_point);
+            graphicMethods2D.drawGraph2D();
              
         }
         
