@@ -1050,7 +1050,7 @@ public class MathCommandCompiler {
     
     private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
-        area.append("Eulersche Zahl e auf: " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n");
+        area.append("Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n");
     }    
 
     
@@ -1060,9 +1060,8 @@ public class MathCommandCompiler {
 	
 	
     private static void executePi(Command c, JTextArea area) throws ExpressionException {
-
-    
-    
+        BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
+        area.append("Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n");
     }    
 
     
