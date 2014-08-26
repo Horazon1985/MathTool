@@ -225,6 +225,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
+
+        InputField.setText("(2+x)-3");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 

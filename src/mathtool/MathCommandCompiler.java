@@ -31,8 +31,8 @@ public class MathCommandCompiler {
      * Dies benötigt das Hauptprogramm MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl
      * handelt.
      */
-    public static final String[] commands = {"approx", "clear", "def", "defvars", "latex", "plot", 
-        "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+    public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex", 
+        "pi", "plot", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
     
     
     /** Wichtig: Der String command und die Parameter params entahlten keine Leerzeichen mehr.
@@ -250,7 +250,29 @@ public class MathCommandCompiler {
         
         }
 		
-	//LATEX
+	//EULER
+        /** Struktur: euler(int)
+         * int: nichtnegative ganze Zahl; bestimmt die Anzahl der Stellen, die von e ausgegeben werden sollen.
+         */
+	if (command.equals("euler")){
+		
+            if (params.length != 1){
+                throw new ExpressionException("Im Befehl 'euler' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
+            }
+
+            try{
+                command_params = new Object[1];
+                command_params[0] = Integer.parseInt(params[0]);
+		result.setName(command);
+		result.setParams(command_params);
+		return result;
+            } catch (NumberFormatException e){
+		throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+            }
+			
+	}
+
+        //LATEX
         /** Struktur: latex(EXPRESSION)
          * EXPRESSION: Ausdruck, welcher in einen Latex-Code umgewandelt werden soll.
          */
@@ -269,6 +291,28 @@ public class MathCommandCompiler {
 		return result;
             } catch (ExpressionException e){
 		throw new ExpressionException("Fehler im Parameter des Befehls 'latex': " + e.getMessage());
+            }
+			
+	}
+
+	//PI
+        /** Struktur: pi(int)
+         * int: nichtnegative ganze Zahl; bestimmt die Anzahl der Stellen, die von pi ausgegeben werden sollen.
+         */
+	if (command.equals("pi")){
+		
+            if (params.length != 1){
+                throw new ExpressionException("Im Befehl 'pi' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
+            }
+
+            try{
+                command_params = new Object[1];
+                command_params[0] = Integer.parseInt(params[0]);
+		result.setName(command);
+		result.setParams(command_params);
+		return result;
+            } catch (NumberFormatException e){
+		throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
             }
 			
 	}
@@ -904,9 +948,15 @@ public class MathCommandCompiler {
         if (c.getName().equals("defvars")){
             executeDefVars(c, area, definedVars, definedVarsSet);
         } else 
+        if (c.getName().equals("euler")){
+            executeEuler(c, area);
+        } else 
         if (c.getName().equals("latex")){
             executeLatex(c, area);
 	} else 
+        if (c.getName().equals("pi")){
+            executePi(c, area);
+        } else 
 	if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
 	    executePlot2D(c, graphicMethods2D);
 	} else 
@@ -998,12 +1048,24 @@ public class MathCommandCompiler {
     }    
 
     
-    private static void executeLatex(Command c, JTextArea area) 
-	throws ExpressionException {
+    private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
+        BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
+        area.append("Eulersche Zahl e auf: " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n");
+    }    
+
+    
+    private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
         area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex() + "\n");
     }    
 	
 	
+    private static void executePi(Command c, JTextArea area) throws ExpressionException {
+
+    
+    
+    }    
+
+    
     /** c Enthält genau 3 Parameter 
      * Parameter: Expression, double, double
      */
@@ -1299,7 +1361,7 @@ public class MathCommandCompiler {
             }
         }
         
-        double[][] solution = NumericalMethods.solveDGLGeneral(expr, var1, var2, ord, x_0, x_1, y_0, 1000);
+        double[][] solution = NumericalMethods.solveDGL(expr, var1, var2, ord, x_0, x_1, y_0, 1000);
 
         /** Formulierung und Ausgabe des AWP.
          */
