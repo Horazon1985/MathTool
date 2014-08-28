@@ -225,6 +225,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
+
+        InputField.setText("plot((1-x^2-y^2)^0.5,-2,2,-2,2)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
