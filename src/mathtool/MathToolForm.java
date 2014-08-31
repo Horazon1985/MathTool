@@ -18,7 +18,6 @@ import java.awt.event.WindowEvent;
 
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -26,10 +25,7 @@ import javax.swing.JEditorPane;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
@@ -225,8 +221,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
-
-        InputField.setText("plot((1-x^2-y^2)^0.5,-2,2,-2,2)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -447,19 +441,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
             execute();
-/**
-            try{
-                Expression e1 = Expression.build("a*d+(b+c)", new HashSet());
-                Expression e2 = Expression.build("(d*a+c)+b", new HashSet());
-
-                boolean eq = e1.equivalent(e2);
-                System.out.println(eq);
-                
-                
-            } catch (Exception ex){
-                System.out.println("Fehler");
-            }
-*/ 
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
