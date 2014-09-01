@@ -221,6 +221,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
+
+        InputField.setText("(a+(3*b+f))-(c+(5*b+e))");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -441,6 +443,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
             execute();
+/**            
+            try{
+                Expression expr = Expression.build(InputField.getText(), new HashSet());
+                expr = expr.reduceSub();
+                mathToolArea.append(expr.writeFormula() + "\n");
+            } catch (Exception ex){
+                mathToolArea.append("Fehler! \n");
+            }
+*/            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
