@@ -2,7 +2,7 @@
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
-- Im befehl 'solve' doch ein "="-Zeichen einführen.
+- Plot2D: Plotten mehrer Graphen soll ermöglicht werden.
 
 Wünschenswert:
 

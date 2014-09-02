@@ -40,7 +40,7 @@ public class DevelopersDialogGUI extends JDialog {
         add(thanksLabel);
         add(copyrightLabel);
 
-        this.setBounds(400,200,410,310);
+        this.setBounds(400,200,505,310);
         this.getContentPane().setBackground(Color.white);
         
      
@@ -54,7 +54,7 @@ public class DevelopersDialogGUI extends JDialog {
         catch(java.io.IOException e) {
         }
         panel.add(new JLabel(new ImageIcon(image)));        
-        panel.setBounds(0, -5, 400, 100);
+        panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
         
         validate();

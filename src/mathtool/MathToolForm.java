@@ -222,7 +222,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 71, 23);
 
-        InputField.setText("(a+(3*b+f))-(c+(5*b+e))");
+        InputField.setText("sin((5*pi)/2)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 

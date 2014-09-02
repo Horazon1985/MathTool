@@ -518,7 +518,7 @@ public class MathCommandCompiler {
         }
 
         //SOLVE
-        /** Struktur: solve(expr, x_1, x_2) ODER solve(expr, x_1, x_2, n)
+        /** Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 = expr_2, x_1, x_2, n)
          * var = Variable in der DGL
          * x_0, x_1 legen den Lösungsbereich fest
          * y_0 = Funktionswert an der Stelle x_0
@@ -531,14 +531,20 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Zu viele Parameter im Befehl 'solve'");
             }
             
+            if (!params[0].contains("=")){
+                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'Ausdruck_1 = Ausdruck_2' sein.");
+            }
             HashSet vars = new HashSet();
             try{
-                Expression.build(params[0], vars);
+                Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             } catch (ExpressionException e){
-                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss zwei gültige Ausdrücke enthalten, "
+                        + "welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
             }
             
-            Expression expr = Expression.build(params[0], vars);
+            Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+            Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             if (vars.size() > 1){
                 throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
             }
@@ -568,7 +574,7 @@ public class MathCommandCompiler {
 
             if (params.length == 3){
                 command_params = new Object[3];
-                command_params[0] = expr;
+                command_params[0] = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS);
                 command_params[1] = x_1;
                 command_params[2] = x_2;
             } else {
@@ -577,7 +583,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
                 }
                 command_params = new Object[4];
-                command_params[0] = expr;
+                command_params[0] = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS);
                 command_params[1] = x_1;
                 command_params[2] = x_2;
                 command_params[3] = n;
