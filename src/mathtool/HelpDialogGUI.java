@@ -45,7 +45,7 @@ public class HelpDialogGUI extends JDialog {
         this.getContentPane().setBackground(Color.white);
         
      
-        File imageFile = new File("MathToollogo.png");
+        File imageFile = new File("Helplogo.png");
         JPanel panel = new JPanel();
         add(panel);
         BufferedImage image = null;

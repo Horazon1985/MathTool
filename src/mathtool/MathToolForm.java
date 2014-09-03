@@ -240,11 +240,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 34, 10);
+        InputButton.setBounds(518, 335, 70, 30);
 
-        InputField.setText("sin((5*pi)/2)");
+        InputField.setText("y/((-5)*x)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,7 +253,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -261,7 +261,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(LatexButton);
-        LatexButton.setBounds(180, 370, 150, 10);
+        LatexButton.setBounds(180, 370, 150, 30);
 
         ApproxButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -269,7 +269,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(ApproxButton);
-        ApproxButton.setBounds(10, 370, 150, 10);
+        ApproxButton.setBounds(10, 370, 150, 30);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -374,10 +374,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 Expression expr_simplified = expr.evaluate(definedVarsSet);
                 expr_simplified = expr_simplified.simplify(true);
                 if (expr.equals(expr_simplified)){
-                    mathToolArea.append(expr.writeFormula(true) + "\n");
-                } else {
                     /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                      */
+                    mathToolArea.append(expr.writeFormula(true) + "\n");
+                } else {
                     mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n");
                 }
                 return;
