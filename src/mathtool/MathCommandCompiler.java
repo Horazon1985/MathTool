@@ -1007,7 +1007,7 @@ public class MathCommandCompiler {
         
         Expression expr = (Expression) c.getParams()[0];
         expr = expr.simplify(false);
-        area.append(expr.writeFormula() + "\n");
+        area.append(expr.writeFormula(true) + "\n");
         
     }    
 
@@ -1061,7 +1061,7 @@ public class MathCommandCompiler {
 
     
     private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
-        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex() + "\n");
+        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n");
     }    
 	
 	
@@ -1277,7 +1277,7 @@ public class MathCommandCompiler {
         
         Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
         
-        area.append("Lösungen der Gleichung: " + expr.writeFormula() + " = 0 \n"); 
+        area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n"); 
         for (int i = 0; i < result.size(); i++){
             area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n");
         }
@@ -1377,7 +1377,7 @@ public class MathCommandCompiler {
 
         /** Falls Anfangsdaten ganze Zahlen sind, so sollen diese ohne Nachkommastellen ausgegeben werden.
          */
-        awp = awp + "(" + var1 + ") = " + expr.writeFormula();
+        awp = awp + "(" + var1 + ") = " + expr.writeFormula(true);
         for (int i = 0; i < ord; i++){
             awp = awp +  ", " + var2;
             for (int j = 0; j < i; j++){
@@ -1439,15 +1439,15 @@ public class MathCommandCompiler {
         Expression expr = (Expression) c.getParams()[0];
         Hashtable<String, Expression> vars = (Hashtable<String, Expression>) c.getParams()[1];
 
-        String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula() + " im Punkt ";
+        String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula(true) + " im Punkt ";
         Enumeration keys = vars.keys();
         String var;
         for (int i = 0; i < vars.size(); i++){
             var = (String) keys.nextElement();
             if (i < vars.size() - 1){
-                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula() + ", ";
+                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
             } else {
-                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula() + ": \n";
+                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ": \n";
             }
         }
         
@@ -1458,7 +1458,7 @@ public class MathCommandCompiler {
         }
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
-        area.append("Y=" + tangent.writeFormula() + "\n");
+        area.append("Y=" + tangent.writeFormula(true) + "\n");
 
         if (vars.size() == 1){
             
@@ -1552,7 +1552,7 @@ public class MathCommandCompiler {
         }
         
         Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var1, ord, x_0, y_0, k);
-        area.append(result.writeFormula() + "\n");
+        area.append(result.writeFormula(true) + "\n");
 
     }    
 

@@ -28,11 +28,11 @@ public class DevelopersDialogGUI extends JDialog {
         thanksLabel.setVisible(true);
         copyrightLabel.setVisible(true);
 
-        nameLabel.setBounds(10,100,350,25);
-        systemLabel.setBounds(10,130,350,25);
-        developerLabel.setBounds(10,160,350,25);
-        thanksLabel.setBounds(10,200,350,25);
-        copyrightLabel.setBounds(10,250,350,25);
+        nameLabel.setBounds(10,100,450,25);
+        systemLabel.setBounds(10,130,450,25);
+        developerLabel.setBounds(10,160,450,25);
+        thanksLabel.setBounds(10,200,450,25);
+        copyrightLabel.setBounds(10,250,450,25);
 
         add(nameLabel);
         add(systemLabel);

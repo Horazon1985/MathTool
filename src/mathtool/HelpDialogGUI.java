@@ -13,34 +13,35 @@ public class HelpDialogGUI extends JDialog {
  
         public HelpDialogGUI() {
         
-        setTitle("About MathTool");
+        setTitle("Hilfe");
         setLayout(null);
         setResizable(false);
-        JLabel nameLabel = new JLabel("Programm: MathTool");
-        JLabel systemLabel = new JLabel("System: Jedes System, welches mindestens Java 7 unterstützt.");
-        JLabel developerLabel = new JLabel("Entwickler: Sergei Kovalenko");
-        JLabel thanksLabel = new JLabel("Besonderer Dank gilt Dimitri Krilov und Sven Willner.");
-        JLabel copyrightLabel = new JLabel("Copyright 2014 by Sergei Kovalenko.");
+        JLabel generalities = new JLabel("Allgemeines");
+        JLabel mathFormulas = new JLabel("Mathematische Formeln");
+        JLabel operators = new JLabel("Operatoren");
+        JLabel commands = new JLabel("Befehle");
 
-        nameLabel.setVisible(true);
-        systemLabel.setVisible(true);
-        developerLabel.setVisible(true);
-        thanksLabel.setVisible(true);
-        copyrightLabel.setVisible(true);
+        generalities.setVisible(true);
+        mathFormulas.setVisible(true);
+        operators.setVisible(true);
+        commands.setVisible(true);
 
-        nameLabel.setBounds(10,100,350,25);
-        systemLabel.setBounds(10,130,350,25);
-        developerLabel.setBounds(10,160,350,25);
-        thanksLabel.setBounds(10,200,350,25);
-        copyrightLabel.setBounds(10,250,350,25);
+        generalities.setBounds(30,120,350,25);
+        LabelMouseListener lml_generalities = new LabelMouseListener();
+        generalities.addMouseListener(lml_generalities);
+        mathFormulas.setBounds(30,150,350,25);
+        mathFormulas.addMouseListener(new LabelMouseListener());
+        operators.setBounds(30,180,350,25);
+        operators.addMouseListener(new LabelMouseListener());
+        commands.setBounds(30,210,350,25);
+        commands.addMouseListener(new LabelMouseListener());
 
-        add(nameLabel);
-        add(systemLabel);
-        add(developerLabel);
-        add(thanksLabel);
-        add(copyrightLabel);
+        add(generalities);
+        add(mathFormulas);
+        add(operators);
+        add(commands);
 
-        this.setBounds(400,200,410,310);
+        this.setBounds(400,200,505,310);
         this.getContentPane().setBackground(Color.white);
         
      
@@ -54,13 +55,16 @@ public class HelpDialogGUI extends JDialog {
         catch(java.io.IOException e) {
         }
         panel.add(new JLabel(new ImageIcon(image)));        
-        panel.setBounds(0, -5, 400, 100);
+        panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
         
         validate();
         repaint();
     }
 
+    private void generalitiesActionPerformed(java.awt.event.MouseEvent evt) {                                            
+        System.out.println("d");
+    }
     
     
 }

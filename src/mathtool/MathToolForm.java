@@ -8,13 +8,13 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
-import expressionbuilder.SimplifyMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -22,10 +22,18 @@ import java.util.Hashtable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.File;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
+import java.net.URL;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
@@ -85,6 +93,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /** Buttons ausrichten
          */
         InputButton.setBounds(660, 530, 100, 30);
+        ApproxButton.setBounds(10, 570, 105, 30);
+        LatexButton.setBounds(125, 570, 120, 30);
         RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
         
@@ -111,6 +121,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         graphicPresentationOfFormula.setBounds(770, 20, 500, 500);
         repaint();
         graphicPresentationOfFormula.setVisible(false);
+
+        /** Icons auf die Buttons setzen
+         */
+        Icon icon = new ImageIcon("ApproxButtonImage.png");
+        ApproxButton.setIcon(icon);
+        icon = new ImageIcon("LatexButtonImage.png");
+        LatexButton.setIcon(icon);
+        icon = new ImageIcon("InputButtonImage.png");
+        InputButton.setIcon(icon);
         
     }
 
@@ -204,6 +223,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         InputButton = new javax.swing.JButton();
         InputField = new javax.swing.JTextField();
         RotateButton = new javax.swing.JButton();
+        LatexButton = new javax.swing.JButton();
+        ApproxButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -213,18 +234,17 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        InputButton.setText("Eingabe");
         InputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 InputButtonActionPerformed(evt);
             }
         });
         getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 71, 23);
+        InputButton.setBounds(518, 335, 34, 10);
 
         InputField.setText("sin((5*pi)/2)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -233,7 +253,23 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 376, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
+
+        LatexButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LatexButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(LatexButton);
+        LatexButton.setBounds(180, 370, 150, 10);
+
+        ApproxButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ApproxButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ApproxButton);
+        ApproxButton.setBounds(10, 370, 150, 10);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -338,15 +374,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 Expression expr_simplified = expr.evaluate(definedVarsSet);
                 expr_simplified = expr_simplified.simplify(true);
                 if (expr.equals(expr_simplified)){
-                    mathToolArea.append(expr.writeFormula() + "\n");
+                    mathToolArea.append(expr.writeFormula(true) + "\n");
                 } else {
                     /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                      */
-                    mathToolArea.append(expr.writeFormula() + " = " + expr_simplified.writeFormula() + "\n");
+                    mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n");
                 }
                 return;
             } catch (EvaluationException e){
-                mathToolArea.append(expr.writeFormula() + "\n");
+                mathToolArea.append(expr.writeFormula(true) + "\n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;
             } 
@@ -356,7 +392,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         }
         
     }
-
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
         execute();
@@ -379,13 +414,29 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }//GEN-LAST:event_RotateButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        showHelpFile();
+//        showHelpFile();
+        HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
+        helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI();
         aboutMathToolGUI.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void ApproxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApproxButtonActionPerformed
+        String line = InputField.getText();
+        InputField.setText("approx(" + line + ")");
+        execute();
+        InputField.setText(line);
+    }//GEN-LAST:event_ApproxButtonActionPerformed
+
+    private void LatexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexButtonActionPerformed
+        String line = InputField.getText();
+        InputField.setText("latex(" + line + ")");
+        execute();
+        InputField.setText(line);
+    }//GEN-LAST:event_LatexButtonActionPerformed
 
     
     public static void main(String args[]) {
@@ -416,15 +467,17 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 MathToolForm MyMathToolForm = new MathToolForm();
                 MyMathToolForm.setVisible(true);
                 MyMathToolForm.setTitle("MathTool for Analysis and Numerical Computation");
-                MyMathToolForm.setBounds(20,50,1300,650);
+                MyMathToolForm.setBounds(20,50,1300,670);
                 MyMathToolForm.getContentPane().setBackground(new Color(255,150,0));
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ApproxButton;
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
+    private javax.swing.JButton LatexButton;
     private javax.swing.JButton RotateButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
