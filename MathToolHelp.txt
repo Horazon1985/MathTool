@@ -1,4 +1,4 @@
-﻿&Uuml;BER MATHTOOL:
+﻿<html><head></head><body><b>&Uuml;BER MATHTOOL:</b></body></html>
 
 MathTool ist eine Eingabekonsole, die der Verarbeitung und der Auswertung mathematischer Ausdr&uuml;cke dient.
 

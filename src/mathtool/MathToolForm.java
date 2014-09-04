@@ -6,6 +6,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
+import expressionbuilder.SimplifyMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -410,9 +411,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }//GEN-LAST:event_RotateButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-//        showHelpFile();
-        HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
-        helpDialogGUI.setVisible(true);
+        showHelpFile();
+//        HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
+//        helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -491,16 +492,25 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-            execute();
-/**            
+//            execute();
+            
             try{
-                Expression expr = Expression.build(InputField.getText(), new HashSet());
-                expr = expr.reduceSub();
-                mathToolArea.append(expr.writeFormula() + "\n");
+//                Expression expr = Expression.build("(a*2*b*c)/(d*sin(x))+(2*a*y*c)/sin(x)+(y*2*c)/(z*sin(x)*w^4)", new HashSet());
+                Expression expr = Expression.build("(a*(b*sin(u+v))*x^4)/(x*(w+z))", new HashSet());
+                HashSet[] cfs = new HashSet[2];
+                cfs[0] = new HashSet();
+                cfs[1] = new HashSet();
+                cfs[0].add(Expression.build("sin(u+v)", new HashSet()));
+                cfs[0].add(Expression.build("x^4", new HashSet()));
+                cfs[1].add(Expression.build("w+z", new HashSet()));
+                cfs[1].add(Expression.build("x", new HashSet()));
+                cfs[1].add(Expression.build("s^5", new HashSet()));
+                Expression result = SimplifyMethods.killSetOfEnumeratorsAndDenominatorsInExpression(expr, cfs);
+                System.out.println(result.writeFormula(true));
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
             }
-*/            
+            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){

@@ -5,7 +5,6 @@ import expressionbuilder.Expression;
 import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
-import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
