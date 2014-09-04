@@ -322,6 +322,10 @@ public class MathCommandCompiler {
          * EXPRESSION: Ausdruck in einer Variablen.
          * value_1 < value_2: Grenzen des Zeichenbereichs
          * ODER:
+         * PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var),  value_1, value_2)
+         * EXPRESSION_i(var): Ausdruck in einer Variablen.
+         * value_1 < value_2: Grenzen des Zeichenbereichs
+         * ODER:
          * PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3, value_4)
          * EXPRESSION: Ausdruck in höchstens zwei Variablen.
          * value_1 < value_2, value_3 < value_4: Grenzen des Zeichenbereichs.
@@ -337,13 +341,14 @@ public class MathCommandCompiler {
             if (params.length < 3){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'plot'");
             }
+/**            
             if (params.length == 4){
                 throw new ExpressionException("Falsche Anzahl von Parametern im Befehl 'plot'");
             }
             if (params.length > 5){
                 throw new ExpressionException("Zu viele Parameter im Befehl 'plot'");
             }
-            
+*/            
             if (params.length == 3){
 
                 HashSet vars = new HashSet();
@@ -375,7 +380,7 @@ public class MathCommandCompiler {
                 double x_0 = Double.parseDouble(params[1]);
                 double x_1 = Double.parseDouble(params[2]);
                 if (x_0 >= x_1){
-                    throw new ExpressionException("Der dritte Parameter muss größer sein als der zweite Parameter.");
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
                 }
                 command_params = new Object[3];
                 command_params[0] = expr;
@@ -385,8 +390,104 @@ public class MathCommandCompiler {
                 result.setParams(command_params);
                 return result;
             
+            } else
+            if (params.length != 5) {
+                
+                HashSet vars = new HashSet();
+                for (int i = 0; i < params.length - 2; i++){
+                    try{
+                        Expression.build(params[i], vars);
+                    } catch (ExpressionException e){
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                    }
+                }
+                
+                if (vars.size() > 1){
+                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen von höchstens einer Veränderlichen abhängen.");
+                }
+                
+                try{
+                    Double.parseDouble(params[params.length - 2]);
+                } catch (NumberFormatException e){
+                        throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                }
+                
+                try{
+                    Double.parseDouble(params[params.length - 1]);
+                } catch (NumberFormatException e){
+                        throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                }
+                
+                double x_0 = Double.parseDouble(params[params.length - 2]);
+                double x_1 = Double.parseDouble(params[params.length - 1]);
+                if (x_0 >= x_1){
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot' muss größer sein als der " 
+                            + (params.length) + ". Parameter.");
+                }
+                
+                command_params = new Object[params.length];
+                for (int i = 0; i < params.length - 2; i++){
+                    command_params[i] = Expression.build(params[i], vars);
+                }
+                command_params[params.length - 2] = x_0;
+                command_params[params.length - 1] = x_1;
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
+                
             } else {
-        
+
+                /** Zunächst wird geprüft, ob es sich um einen Plot von drei 2D-Graphen handeln kann.
+                 * Falls nicht -> keine Exception werfen und weitere Möglichkeiten überprüfen.
+                 * Für die Eindeutigkeit reicht es zu testen, on der zweite Parameter ein Ausdruck (in einer Veränderlichen) ist.
+                 */
+                boolean is_plot_of_three_graphs = false;
+                try{
+                    Expression.build(params[1], new HashSet());
+                    /** Falls man hier angekommen ist, so muss es sich um einen Plot von drei 2D-Graphen handeln.
+                     */
+                    is_plot_of_three_graphs = true;
+                } catch (ExpressionException e){
+                }
+                
+                if (is_plot_of_three_graphs){
+                    HashSet vars = new HashSet();
+                    Expression.build(params[0], vars);
+                    Expression.build(params[1], vars);
+                    Expression.build(params[2], vars);
+                    if (vars.size() > 1){
+                        throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen von höchstens einer Veränderlichen abhängen.");
+                    }
+
+                    try{
+                        Double.parseDouble(params[3]);
+                    } catch (NumberFormatException e){
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                    }
+                
+                    try{
+                        Double.parseDouble(params[4]);
+                    } catch (NumberFormatException e){
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                    }
+                
+                    double x_0 = Double.parseDouble(params[3]);
+                    double x_1 = Double.parseDouble(params[4]);
+                    if (x_0 >= x_1){
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss größer sein als der dritte Parameter.");
+                    }
+                    
+                    command_params = new Object[5];
+                    command_params[0] = Expression.build(params[0], vars);
+                    command_params[1] = Expression.build(params[1], vars);
+                    command_params[2] = Expression.build(params[2], vars);
+                    command_params[3] = x_0;
+                    command_params[4] = x_1;
+                    result.setName(command);
+                    result.setParams(command_params);
+                    return result;
+                }                
+                
                 if (params[0].contains("=")){
                 
                     HashSet vars = new HashSet();
@@ -435,10 +536,10 @@ public class MathCommandCompiler {
                     double y_0 = Double.parseDouble(params[3]);
                     double y_1 = Double.parseDouble(params[4]);
                     if (x_0 >= x_1){
-                        throw new ExpressionException("Der dritte Parameter muss größer sein als der zweite Parameter.");
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
                     }
                     if (y_0 >= y_1){
-                        throw new ExpressionException("Der fünfte Parameter muss größer sein als der vierte Parameter.");
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss größer sein als der vierte Parameter.");
                     }
                     
                     command_params = new Object[6];
@@ -963,14 +1064,22 @@ public class MathCommandCompiler {
         if (c.getName().equals("pi")){
             executePi(c, area);
         } else 
-	if ((c.getName().equals("plot")) && (c.getParams().length == 3)){
+	if ((c.getName().equals("plot")) && (c.getParams().length != 5) && (c.getParams().length != 6)){
 	    executePlot2D(c, graphicMethods2D);
 	} else 
 	if ((c.getName().equals("plot")) && (c.getParams().length == 5)){
-	    executePlot3D(c, graphicMethods3D);
+            if (c.getParams()[1] instanceof Expression){
+                executePlot2D(c, graphicMethods2D);
+            } else {
+                executePlot3D(c, graphicMethods3D);
+            }
 	} else 
 	if ((c.getName().equals("plot")) && (c.getParams().length == 6)){
-	    executeImplicitPlot2D(c, graphicMethods2D);
+            if (c.getParams()[2] instanceof Expression){
+                executePlot2D(c, graphicMethods2D);
+            } else {
+        	executeImplicitPlot2D(c, graphicMethods2D);
+            }
         } else 
 	if (c.getName().equals("solve")){
 	    executeSolve(c, area, graphicMethods2D);
@@ -1078,16 +1187,19 @@ public class MathCommandCompiler {
             EvaluationException {
         
         HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
-        expr.getContainedVars(vars);
+        Expression[] exprs = new Expression[c.getParams().length - 2];
+        for (int i = 0; i < c.getParams().length - 2; i++){
+            exprs[i] = (Expression) c.getParams()[i];
+            exprs[i].getContainedVars(vars);
+        }
         
         //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
-        if (expr.isConstant()){
+        if (vars.isEmpty()){
             vars.add("x");
         }
         
-        double x_1 = (double) c.getParams()[1];
-        double x_2 = (double) c.getParams()[2];
+        double x_1 = (double) c.getParams()[c.getParams().length - 2];
+        double x_2 = (double) c.getParams()[c.getParams().length - 1];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -1096,12 +1208,31 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr);
+        for (int i = 0; i < c.getParams().length - 2; i++){
+            graphicMethods2D.addExpression(exprs[i]);
+        }
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
         graphicMethods2D.drawGraph2D();
+        
+/**
+            graphicMethods2D.setIsInitialized(true);
+            graphicMethods2D.setGraphIsExplicit(true);
+            graphicMethods2D.setGraphIsFixed(false);
+            graphicMethods2D.clearExpressionAndGraph();
+            graphicMethods2D.addExpression(expr);
+            graphicMethods2D.addExpression(tangent);
+            graphicMethods2D.expressionToGraph(var, x_1, x_2);
+            graphicMethods2D.computeMaxXMaxY();
+            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+            graphicMethods2D.setDrawSpecialPoints(true);
+            graphicMethods2D.setSpecialPoints(tangent_point);
+            graphicMethods2D.drawGraph2D();
+
+*/        
+        
         
     }
 

@@ -1,10 +1,8 @@
 package mathtool;
 
-import expressionbuilder.AnalysisMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
-import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
@@ -14,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -23,17 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import java.net.URL;
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
@@ -174,7 +165,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     
     private void activatePanelsForGraphs(String command_name, String[] params){
     
-        if ((command_name.equals("plot")) && (params.length == 3)){
+        if ((command_name.equals("plot")) && (params.length > 2) && (params.length != 5)){
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
@@ -187,9 +178,16 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             repaint();
         } else
         if ((command_name.equals("plot")) && (params.length == 5)){
-            graphicMethods2D.setVisible(false);
-            graphicMethods3D.setVisible(true);
-            RotateButton.setVisible(true);
+            try{
+                Expression.build(params[1], new HashSet());
+                graphicMethods2D.setVisible(true);
+                graphicMethods3D.setVisible(false);
+                RotateButton.setVisible(false);
+            } catch (ExpressionException e){
+                graphicMethods2D.setVisible(false);
+                graphicMethods3D.setVisible(true);
+                RotateButton.setVisible(true);
+            }
             repaint();
         } else
         if (command_name.equals("solve")){
@@ -241,10 +239,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("y/((-5)*x)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,7 +249,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
