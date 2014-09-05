@@ -340,14 +340,7 @@ public class MathCommandCompiler {
             if (params.length < 3){
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'plot'");
             }
-/**            
-            if (params.length == 4){
-                throw new ExpressionException("Falsche Anzahl von Parametern im Befehl 'plot'");
-            }
-            if (params.length > 5){
-                throw new ExpressionException("Zu viele Parameter im Befehl 'plot'");
-            }
-*/            
+
             if (params.length == 3){
 
                 HashSet vars = new HashSet();
@@ -440,16 +433,22 @@ public class MathCommandCompiler {
                  * Falls nicht -> keine Exception werfen und weitere Möglichkeiten überprüfen.
                  * Für die Eindeutigkeit reicht es zu testen, on der zweite Parameter ein Ausdruck (in einer Veränderlichen) ist.
                  */
-                boolean is_plot_of_three_graphs = false;
+                boolean is_not_plot_of_three_graphs = params[0].contains("=");
                 try{
-                    Expression.build(params[1], new HashSet());
+                    HashSet vars_in_first_expr = new HashSet();
+                    Expression.build(params[0], vars_in_first_expr);
+                    Double.parseDouble(params[1]);
+                    Double.parseDouble(params[2]);
+                    Double.parseDouble(params[3]);
+                    Double.parseDouble(params[4]);
+                    
                     /** Falls man hier angekommen ist, so muss es sich um einen Plot von drei 2D-Graphen handeln.
                      */
-                    is_plot_of_three_graphs = true;
-                } catch (ExpressionException e){
+                    is_not_plot_of_three_graphs = true;
+                } catch (ExpressionException|NumberFormatException e){
                 }
                 
-                if (is_plot_of_three_graphs){
+                if (!is_not_plot_of_three_graphs){
                     HashSet vars = new HashSet();
                     Expression.build(params[0], vars);
                     Expression.build(params[1], vars);

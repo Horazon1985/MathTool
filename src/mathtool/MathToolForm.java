@@ -180,14 +180,23 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         } else
         if ((command_name.equals("plot")) && (params.length == 5)){
             try{
-                Expression.build(params[1], new HashSet());
+                Double.parseDouble(params[1]);
+                Double.parseDouble(params[2]);
+                Double.parseDouble(params[3]);
+                Double.parseDouble(params[4]);
+                if (params[0].contains("=")){
+                    graphicMethods2D.setVisible(true);
+                    graphicMethods3D.setVisible(false);
+                    RotateButton.setVisible(false);
+                } else {
+                    graphicMethods2D.setVisible(false);
+                    graphicMethods3D.setVisible(true);
+                    RotateButton.setVisible(true);
+                }
+            } catch (NumberFormatException e){
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
                 RotateButton.setVisible(false);
-            } catch (ExpressionException e){
-                graphicMethods2D.setVisible(false);
-                graphicMethods3D.setVisible(true);
-                RotateButton.setVisible(true);
             }
             repaint();
         } else
@@ -240,8 +249,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("plot(x^2+y^2=1,-1,1,-1,1)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -250,7 +261,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -495,9 +506,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 //            execute();
             
             try{
-                Expression expr = Expression.build("2*a+5*a", new HashSet());
-                Expression result = expr.factorize();
-                System.out.println(result.writeFormula(true));
+                Expression e1 = Expression.build("a+c*sin(1)*b+a", new HashSet());
+                Expression e2 = Expression.build("b*c*sin(1)+a", new HashSet());
+                boolean eq = e1.equivalent(e2);
+                System.out.println(eq);
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
             }
