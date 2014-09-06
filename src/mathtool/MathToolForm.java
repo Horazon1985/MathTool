@@ -249,8 +249,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("plot(x^2+y^2=1,-1,1,-1,1)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -506,10 +504,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 //            execute();
             
             try{
-                Expression e1 = Expression.build("a+c*sin(1)*b+a", new HashSet());
-                Expression e2 = Expression.build("b*c*sin(1)+a", new HashSet());
-                boolean eq = e1.equivalent(e2);
-                System.out.println(eq);
+                Expression expr = Expression.build(InputField.getText(), new HashSet());
+                Expression result = expr.factorize();
+                mathToolArea.append(result.writeFormula(true) + "\n");
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
             }
