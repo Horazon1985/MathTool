@@ -1,13 +1,11 @@
 package mathtool;
 
-import expressionbuilder.AnalysisMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
-import expressionbuilder.SimplifyMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -250,8 +248,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("a+(b+(c+(d+b)))");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 

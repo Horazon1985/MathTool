@@ -2,7 +2,9 @@
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
-- Plot2D: Plotten mehrer Graphen soll ermöglicht werden.
+- Approximieren von gcd() und lcm() korrigieren.
+- reduceSub() neu schreiben.
+- collectMult() neu schreiben.
 
 Wünschenswert:
 
