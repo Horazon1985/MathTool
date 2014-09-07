@@ -1,5 +1,6 @@
 package mathtool;
 
+import expressionbuilder.AnalysisMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -249,6 +250,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("a+(b+(c+(d+b)))");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -507,6 +510,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
                 Expression result = expr.factorize();
                 mathToolArea.append(result.writeFormula(true) + "\n");
+                
+                
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
             }
