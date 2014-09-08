@@ -4,8 +4,9 @@
 - Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
 - Approximieren von gcd() und lcm() korrigieren.
 - reduceSub() neu schreiben.
-- collectMult() neu schreiben.
-
-Wünschenswert:
-
-- Exaktes Integrieren.
+- factorize() neu schreiben.
+- Negative Potenzen in den nenner bringen.
+- Faktorisieren in Differenzen neu schreiben.
+- Kürzen von Konstanten in Differenzen neu schreiben.
+- Kürzen von Konstanten in Quotienten neu schreiben.
+- Ordentliche Ausgabe von (-1)*a als (als -a und nicht als -1*a).
