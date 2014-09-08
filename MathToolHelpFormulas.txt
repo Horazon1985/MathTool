@@ -1,0 +1,10 @@
+﻿<html><head></head><body><b>Mathematische Ausdr&uuml;cke:</b><br><br>
+
+MathTool versteht mathematische Ausdr&uuml;cke. Hierbei werden die vier Grundrechenarten mit +, -, * und / angegeben, Potenzen durch ^. Mathematische Funktionen tragen ihre &uuml;blichen Namen, z.B. sin(...), exp(...), ln(...), arctan(...) etc. <br>
+Wichtig: Multiplikationen m&uuml;ssen stets durch ein * angegeben werden. MathTool versteht den Ausdruck 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.<br>
+G&uuml;ltige Ausdrücke sehen dann etwa wie folgt aus:<br><br>
+
+3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...<br><br>
+
+Ein eingegebener mathematischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies m&ouml;glich ist.
+</body></html>

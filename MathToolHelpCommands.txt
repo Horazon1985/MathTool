@@ -1,0 +1,19 @@
+﻿<html><head></head><body><b>Konsolenbefehle:</b><br><br>
+
+MathTool kennt die folgenden Befehle:<br><br>
+
+<b>Befehl def(VAR = VALUE):</b> Weist einer g&uuml;ltigen Variable VAR den Wert VALUE zu.<br><br>
+
+<b>Befehl def(FUNCTION = EXPRESSION):</b> Definiert eine Funktion durch den Ausdruck EXPRESSION.<br><br> 
+
+<b>Befehl defvars():</b> Gibt alle Variablen aus, denen ein Wert zugewiesen wurde.<br><br>
+
+<b>Befehl latex(EXPRESSION):</b> Generiert den Latex-Code für den mathematischen Ausdruck EXPRESSION.<br><br>
+
+<b>Befehl plot(FUNCTION(VAR), x_1, x_2):</b> Zeichnet den Graphen der Funktion FUNCTION im Intervall von x_1 <= VAR <= x_2.<br><br>
+  
+<b>Befehl plot(FUNCTION(VAR_1, VAR_2), x_1, x_2, y_1, y_2):</b> Zeichnet den Graphen der Funktion FUNCTION von zwei Variablen im Rechteck x_1 <= VAR_1 <= x_2, y_1 <= VAR_2 <= y_2.
+Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass VAR_1, VAR_2 die alphabetische Reihenfolge der Variablen ist.<br><br>
+
+<b>Befehl undef(VAR_1, ..., VAR_n):</b> Gibt die variablen VAR_1, ..., VAR_k wieder frei.<br><br>
+</body></html>

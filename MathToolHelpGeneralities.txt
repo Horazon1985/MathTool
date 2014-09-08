@@ -1,0 +1,5 @@
+﻿<html><head></head><body><b>&Uuml;ber MathTool:</b><br><br>
+
+MathTool ist eine Eingabekonsole, die der Verarbeitung und der Auswertung mathematischer Ausdr&uuml;cke dient. Es kann ebenso ebene sowie
+r&auml;umliche Graphen plotten.
+</body></html>

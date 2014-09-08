@@ -24,6 +24,7 @@ import javax.swing.Icon;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 
 
@@ -140,16 +141,25 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         add(helpArea);
         helpArea.setBounds(770, 20, 500, 500);
         helpArea.setEditable(false);
+        try {
+            helpArea.setPage("MathToolHelp.html");
+        } catch (IOException ex) {
+            System.err.println(""+ex.getMessage());
+        }
+
         JScrollPane scrollPaneHelp = new JScrollPane(helpArea, 
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPaneHelp.setBounds(770, 20, 500, 500);
         add(scrollPaneHelp);
+        repaint();
+        validate();
         
         try{
-            FileReader help = new FileReader("MathToolHelp.txt");
+            FileReader help = new FileReader("MathToolHelp.html");
             BufferedReader br = new BufferedReader(help);
 
             String line = br.readLine();
+/**            
             while(!line.contains("ENDOFFILE")){
                 try{
                     helpArea.getDocument().insertString(helpArea.getDocument().getLength(), line + "\n", null);
@@ -157,6 +167,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 }
                 line = br.readLine();
             }
+*/ 
+            
         } catch (java.io.IOException e){
             helpArea.setText("FEHLER! Hilfedatei konnte nicht gelesen werden.");
         }
