@@ -130,50 +130,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private void showLoggedCommand(int i){
         InputField.setText(listOfCommands.get(i));
     }
-
-    
-    private void showHelpFile(){
-    
-        graphicMethods2D.setVisible(false);
-        graphicMethods3D.setVisible(false);
-        helpArea = new JEditorPane();
-        helpArea.setContentType("text/html");
-        add(helpArea);
-        helpArea.setBounds(770, 20, 500, 500);
-        helpArea.setEditable(false);
-        try {
-            helpArea.setPage("MathToolHelp.html");
-        } catch (IOException ex) {
-            System.err.println(""+ex.getMessage());
-        }
-
-        JScrollPane scrollPaneHelp = new JScrollPane(helpArea, 
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPaneHelp.setBounds(770, 20, 500, 500);
-        add(scrollPaneHelp);
-        repaint();
-        validate();
-        
-        try{
-            FileReader help = new FileReader("MathToolHelp.html");
-            BufferedReader br = new BufferedReader(help);
-
-            String line = br.readLine();
-/**            
-            while(!line.contains("ENDOFFILE")){
-                try{
-                    helpArea.getDocument().insertString(helpArea.getDocument().getLength(), line + "\n", null);
-                } catch (javax.swing.text.BadLocationException e){
-                }
-                line = br.readLine();
-            }
-*/ 
-            
-        } catch (java.io.IOException e){
-            helpArea.setText("FEHLER! Hilfedatei konnte nicht gelesen werden.");
-        }
-        
-    }
     
     
     private void activatePanelsForGraphs(String command_name, String[] params){
@@ -261,10 +217,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("b/b^(1/2)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -273,7 +227,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -434,7 +388,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     }//GEN-LAST:event_RotateButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-//        showHelpFile();
         HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
         helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -519,7 +472,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.reduceDiv();
+                Expression result = expr.reduceSub();
                 mathToolArea.append(result.writeFormula(true) + "\n");
 
             } catch (Exception ex){
