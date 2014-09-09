@@ -472,7 +472,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.reduceSub();
+                Expression result = expr.reduceDiv();
                 mathToolArea.append(result.writeFormula(true) + "\n");
 
             } catch (Exception ex){
