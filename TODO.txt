@@ -1,7 +1,7 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- Bessere Vereinfachung von Speziellen Funktionswerten (sin(k*pi) = 0 etc.).
+- Bessere Vereinfachung von speziellen Funktionswerten (sin(k*pi) = 0 etc.).
 - Approximieren von gcd() und lcm() korrigieren.
 - reduceSub() neu schreiben.
 - factorize() neu schreiben.
@@ -9,4 +9,4 @@
 - Faktorisieren in Differenzen neu schreiben.
 - Kürzen von Konstanten in Differenzen neu schreiben.
 - Kürzen von Konstanten in Quotienten neu schreiben.
-- Ordentliche Ausgabe von (-1)*a als (als -a und nicht als -1*a).
+- Bei Variablenzuweisung auch konstante Ausdrücke akzeptieren anstatt nur Dezimalzahlen.

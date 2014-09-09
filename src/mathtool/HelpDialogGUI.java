@@ -11,18 +11,15 @@ import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.font.TextAttribute;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
-import java.util.Map;
 
 public class HelpDialogGUI extends JDialog implements MouseListener{
  
-   private JLabel generalities, mathFormulas, operators, commands;
-   private JEditorPane helpArea;
+    private JLabel generalities, mathFormulas, operators, commands;
+    private JEditorPane helpArea;
+    private JScrollPane scrollPaneHelp;
     
         public HelpDialogGUI() {
         
@@ -54,7 +51,6 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
 
         commands.setBounds(30,240,350,25);
         commands.addMouseListener(this);
-
         
         add(menue);
         add(generalities);
@@ -64,7 +60,6 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
 
         this.setBounds(400,100,505,310);
         this.getContentPane().setBackground(Color.white);
-        
      
         File imageFile = new File("Helplogo.png");
         JPanel panel = new JPanel();
@@ -79,23 +74,27 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
         panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
         
+        helpArea = new JEditorPane();
+        helpArea.setContentType("text/html");
+        add(helpArea);
+        helpArea.setBounds(20, 270, 460, 330);
+        helpArea.setEditable(false);
+        helpArea.setVisible(false);
+        scrollPaneHelp = new JScrollPane(helpArea);
+        scrollPaneHelp.setBounds(20, 270, 460, 330);
+        scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPaneHelp);
+        scrollPaneHelp.setVisible(false);
+
         validate();
         repaint();
     }
 
 
     private void showHelpFileGeneralities(){
-        helpArea = new JEditorPane();
-        helpArea.setContentType("text/html");
-        add(helpArea);
-        helpArea.setBounds(20, 270, 460, 330);
-        helpArea.setEditable(false);
-        JScrollPane scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 270, 460, 330);
-        scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scrollPaneHelp);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("\\.\\MathToolHelpGeneralities.html");
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolHelpGeneralities.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -111,17 +110,9 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
         
         
     private void showHelpFileFormulas(){
-        helpArea = new JEditorPane();
-        helpArea.setContentType("text/html");
-        add(helpArea);
-        helpArea.setBounds(20, 270, 460, 330);
-        helpArea.setEditable(false);
-        JScrollPane scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 270, 460, 330);
-        scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scrollPaneHelp);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("\\.\\MathToolHelpFormulas.html");
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolHelpFormulas.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -137,17 +128,9 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
         
         
     private void showHelpFileOperators(){
-        helpArea = new JEditorPane();
-        helpArea.setContentType("text/html");
-        add(helpArea);
-        helpArea.setBounds(20, 270, 460, 330);
-        helpArea.setEditable(false);
-        JScrollPane scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 270, 460, 330);
-        scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scrollPaneHelp);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("\\.\\MathToolHelpOperators.html");
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolHelpOperators.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -163,17 +146,9 @@ public class HelpDialogGUI extends JDialog implements MouseListener{
 
     
     private void showHelpFileCommands(){
-        helpArea = new JEditorPane();
-        helpArea.setContentType("text/html");
-        add(helpArea);
-        helpArea.setBounds(20, 270, 460, 330);
-        helpArea.setEditable(false);
-        JScrollPane scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 270, 460, 330);
-        scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scrollPaneHelp);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("\\.\\MathToolHelpCommands.html");
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolHelpCommands.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);

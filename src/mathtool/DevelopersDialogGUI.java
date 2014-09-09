@@ -3,47 +3,31 @@ package mathtool;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class DevelopersDialogGUI extends JDialog {
+
+    private JEditorPane developersArea;
+    private JScrollPane scrollPaneDevelopers;
 
     public DevelopersDialogGUI() {
         
         setTitle("About MathTool");
         setLayout(null);
         setResizable(false);
-        JLabel nameLabel = new JLabel("Programm: MathTool.");
-        JLabel systemLabel = new JLabel("System: Jedes System, welches mindestens Java 7 unterstützt.");
-        JLabel developerLabel = new JLabel("Entwickler: Sergei Kovalenko.");
-        JLabel thanksLabel = new JLabel("Besonderer Dank gilt Dimitri Krilov und Sven Willner.");
-        JLabel copyrightLabel = new JLabel("Copyright 2014 by Sergei Kovalenko.");
 
-        nameLabel.setVisible(true);
-        systemLabel.setVisible(true);
-        developerLabel.setVisible(true);
-        thanksLabel.setVisible(true);
-        copyrightLabel.setVisible(true);
-
-        nameLabel.setBounds(10,100,450,25);
-        systemLabel.setBounds(10,130,450,25);
-        developerLabel.setBounds(10,160,450,25);
-        thanksLabel.setBounds(10,200,450,25);
-        copyrightLabel.setBounds(10,250,450,25);
-
-        add(nameLabel);
-        add(systemLabel);
-        add(developerLabel);
-        add(thanksLabel);
-        add(copyrightLabel);
-
-        this.setBounds(400,200,505,310);
+        this.setBounds(400,200,505,420);
         this.getContentPane().setBackground(Color.white);
-        
-     
+
+        /** Logo laden
+         */
         File imageFile = new File("MathToollogo.png");
         JPanel panel = new JPanel();
         add(panel);
@@ -56,6 +40,29 @@ public class DevelopersDialogGUI extends JDialog {
         panel.add(new JLabel(new ImageIcon(image)));        
         panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
+        
+        /** About-Datei laden
+         */
+        developersArea = new JEditorPane();
+        developersArea.setContentType("text/html");
+        add(developersArea);
+        developersArea.setBounds(20, 120, 460, 240);
+        developersArea.setEditable(false);
+        scrollPaneDevelopers = new JScrollPane(developersArea);
+        scrollPaneDevelopers.setBounds(20, 120, 460, 240);
+        scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPaneDevelopers);
+
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolDevelopers.html");
+        if (helpURL != null) {
+            try {
+                developersArea.setPage(helpURL);
+            } catch (IOException e) {
+                System.err.println("Fehler: " + helpURL);
+            }
+        } else {
+            System.err.println("Datei nicht gefunden.");
+        }
         
         validate();
         repaint();

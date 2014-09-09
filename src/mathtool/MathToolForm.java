@@ -521,19 +521,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
                 Expression result = expr.reduceDiv();
                 mathToolArea.append(result.writeFormula(true) + "\n");
-/**                
-                Hashtable<Integer, Expression> h_1 = new Hashtable<Integer, Expression>();
-                Hashtable<Integer, Expression> h_2 = new Hashtable<Integer, Expression>();
-                SimplifyMethods.sortQuotient(expr, h_1, h_2);
-                mathToolArea.append("Minuend: \n");
-                for (int i = 0; i < h_1.size(); i++){
-                    mathToolArea.append(((Expression) h_1.get(i)).writeFormula(true) + "\n");
-                }
-                mathToolArea.append("Sutrahend: \n");
-                for (int i = 0; i < h_2.size(); i++){
-                    mathToolArea.append(((Expression) h_2.get(i)).writeFormula(true) + "\n");
-                }
-*/                
+
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
             }
