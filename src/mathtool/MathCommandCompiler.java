@@ -1018,7 +1018,7 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
-            throws ExpressionException, EvaluationException {
+            throws ExpressionException, EvaluationException, CloneNotSupportedException {
         
         int n = commandLine.length();
 
@@ -1110,7 +1110,7 @@ public class MathCommandCompiler {
      */
     
     private static void executeApprox(Command c, JTextArea area) 
-	throws ExpressionException, EvaluationException {
+	throws ExpressionException, EvaluationException, CloneNotSupportedException {
         
         Expression expr = (Expression) c.getParams()[0];
         expr = expr.simplify(false);
@@ -1311,7 +1311,7 @@ public class MathCommandCompiler {
      * Parameter: Expression, Expression, double, double, double, double
      */
     private static void executeImplicitPlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
-            EvaluationException {
+            EvaluationException, CloneNotSupportedException {
     
         HashSet vars = new HashSet();
         Expression expr = new BinaryOperation((Expression) c.getParams()[0], (Expression) c.getParams()[1], 
@@ -1563,7 +1563,7 @@ public class MathCommandCompiler {
 
     
     private static void executeTangent(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
-	throws ExpressionException, EvaluationException {
+	throws ExpressionException, EvaluationException, CloneNotSupportedException {
 
         Expression expr = (Expression) c.getParams()[0];
         Hashtable<String, Expression> vars = (Hashtable<String, Expression>) c.getParams()[1];
@@ -1619,7 +1619,7 @@ public class MathCommandCompiler {
 
     
     private static void executeTaylorDGL(Command c, JTextArea area) 
-	throws ExpressionException, EvaluationException {
+	throws ExpressionException, EvaluationException, CloneNotSupportedException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();

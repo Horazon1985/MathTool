@@ -217,8 +217,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("x+1E200");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -227,7 +229,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -355,7 +357,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                     mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n");
                 }
                 return;
-            } catch (EvaluationException e){
+            } catch (EvaluationException|CloneNotSupportedException e){
                 mathToolArea.append(expr.writeFormula(true) + "\n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;
@@ -472,7 +474,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.reduceDiv();
+                Expression result = expr.reduceLeadingsCoefficients(startRotate);
                 mathToolArea.append(result.writeFormula(true) + "\n");
 
             } catch (Exception ex){
