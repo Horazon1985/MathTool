@@ -218,9 +218,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
 
-        InputField.setText("x+1E200");
+        InputField.setText("x+2+y+3/5+sin(1)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -229,7 +229,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -348,7 +348,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              */
             try{
                 Expression expr_simplified = expr.evaluate(definedVarsSet);
-                expr_simplified = expr_simplified.simplify(true);
+                expr_simplified = expr_simplified.simplify();
                 if (expr.equals(expr_simplified)){
                     /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                      */
@@ -357,7 +357,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                     mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n");
                 }
                 return;
-            } catch (EvaluationException|CloneNotSupportedException e){
+            } catch (EvaluationException e){
                 mathToolArea.append(expr.writeFormula(true) + "\n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
                 return;
@@ -474,7 +474,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.reduceLeadingsCoefficients(startRotate);
+                Expression result = expr.turnToIrrationals().orderSumsAndProducts();
                 mathToolArea.append(result.writeFormula(true) + "\n");
 
             } catch (Exception ex){

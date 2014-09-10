@@ -1018,7 +1018,7 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet) 
-            throws ExpressionException, EvaluationException, CloneNotSupportedException {
+            throws ExpressionException, EvaluationException {
         
         int n = commandLine.length();
 
@@ -1110,10 +1110,10 @@ public class MathCommandCompiler {
      */
     
     private static void executeApprox(Command c, JTextArea area) 
-	throws ExpressionException, EvaluationException, CloneNotSupportedException {
+	throws ExpressionException, EvaluationException {
         
         Expression expr = (Expression) c.getParams()[0];
-        expr = expr.simplify(false);
+        expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n");
         
     }    
@@ -1311,11 +1311,11 @@ public class MathCommandCompiler {
      * Parameter: Expression, Expression, double, double, double, double
      */
     private static void executeImplicitPlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
-            EvaluationException, CloneNotSupportedException {
+            EvaluationException {
     
         HashSet vars = new HashSet();
         Expression expr = new BinaryOperation((Expression) c.getParams()[0], (Expression) c.getParams()[1], 
-                TypeBinary.MINUS).simplify(false);
+                TypeBinary.MINUS).simplify();
         expr.getContainedVars(vars);
         
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -1563,7 +1563,7 @@ public class MathCommandCompiler {
 
     
     private static void executeTangent(Command c, JTextArea area, GraphicMethods2D graphicMethods2D) 
-	throws ExpressionException, EvaluationException, CloneNotSupportedException {
+	throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
         Hashtable<String, Expression> vars = (Hashtable<String, Expression>) c.getParams()[1];
@@ -1619,7 +1619,7 @@ public class MathCommandCompiler {
 
     
     private static void executeTaylorDGL(Command c, JTextArea area) 
-	throws ExpressionException, EvaluationException, CloneNotSupportedException {
+	throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();
