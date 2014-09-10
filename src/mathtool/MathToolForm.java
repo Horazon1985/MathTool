@@ -218,7 +218,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
 
-        InputField.setText("x+2+y+3/5+sin(1)");
+        InputField.setText("1+(50*x*sin(1))/(80*y)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
