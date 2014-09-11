@@ -1,5 +1,4 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- Bessere Vereinfachung von speziellen Funktionswerten (sin(k*pi) = 0 etc.).
 - Bei Variablenzuweisung auch konstante Ausdrücke akzeptieren anstatt nur Dezimalzahlen.

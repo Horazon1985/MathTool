@@ -1,10 +1,13 @@
-﻿<html><head></head><body><b>Mathematische Operatoren:</b><br><br>
+﻿<html><head></head><body><font size="5"><b>Mathematische Operatoren:</b></font><br><br>
 
 MathTool kennt die folgenden Operatoren:<br><br>
 
 <b>OPERATOR diff(FUNCTION, VAR):</b> erechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
 
 <b>OPERATOR diff(FUNCTION, VAR, k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
+
+<b>OPERATOR diff(FUNCTION, VAR_1, ..., var_k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach den Variablen VAR_1, ..., VAR_k. Die Variablen
+VAR_i m&uuml;ssen nicht alle verschieden sein.<br><br>
 
 <b>OPERATOR div(FUNCTION):</b> Berechnet die Divergenz der Funktion FUNCTION.<br><br>
 
