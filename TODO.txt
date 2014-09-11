@@ -2,7 +2,4 @@
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bessere Vereinfachung von speziellen Funktionswerten (sin(k*pi) = 0 etc.).
-- Approximieren von gcd() und lcm() korrigieren.
-- Negative Potenzen in den nenner bringen.
-- Kürzen von Konstanten in Differenzen neu schreiben.
 - Bei Variablenzuweisung auch konstante Ausdrücke akzeptieren anstatt nur Dezimalzahlen.

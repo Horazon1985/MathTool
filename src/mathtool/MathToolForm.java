@@ -7,6 +7,7 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.SimplifyMethods;
+import expressionbuilder.SimplifyExpLog;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -217,10 +218,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("1+(50*x*sin(1))/(80*y)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -229,7 +228,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -474,8 +473,11 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.turnToIrrationals().orderSumsAndProducts();
+                Expression result = SimplifyExpLog.collectExponentialFunctionsInProduct(expr);
                 mathToolArea.append(result.writeFormula(true) + "\n");
+                
+                
+                
 
             } catch (Exception ex){
                 mathToolArea.append("Fehler! \n");
