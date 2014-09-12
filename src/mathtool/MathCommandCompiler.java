@@ -116,24 +116,29 @@ public class MathCommandCompiler {
              */
             if (Expression.isValidVariable(function_name_and_params) && !Expression.isPI(function_name_and_params)){
                 try{
-                    double value = Double.parseDouble(function_term);
-                    command_params = new Object[2];
-                    command_params[0] = Variable.create(function_name_and_params);
-                    command_params[1] = value;
-                    result.setName(command);
-                    result.setParams(command_params);
-                    return result;
-                } catch (NumberFormatException e){
+                    Expression.build(function_term, new HashSet());
+                } catch (ExpressionException e){
                     throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
-                }                
+                }
+                Expression value = Expression.build(function_term, new HashSet());
+                HashSet vars = new HashSet();
+                value.getContainedVars(vars);
+                if (!vars.isEmpty()) {
+                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
+                }
+                command_params = new Object[2];
+                command_params[0] = Variable.create(function_name_and_params);
+                command_params[1] = value;
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
             }
             
             /** Nun wird geprüft, ob es sich um eine Funktionsdeklaration handelt.
              * Zunächst wird versucht, den rechten Teilstring vom "=" in einen Ausdruck umzuwandeln.
              */
             try{
-                HashSet vars = new HashSet();
-                Expression.build(function_term, vars);
+                Expression.build(function_term, new HashSet());
             } catch (ExpressionException e){
                 throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite. Gemeldeter Fehler: " + e.getMessage());
             }
@@ -341,12 +346,13 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'plot'");
             }
 
+            HashSet vars = new HashSet();
+
             if (params.length == 3){
 
-                HashSet vars = new HashSet();
-                
                 try{
-                    Expression expr = Expression.build(params[0], vars);
+                    Expression expr = Expression.build(params[0], new HashSet());
+                    expr.getContainedVars(vars);
                 } catch (ExpressionException e){
                     throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                 }
@@ -385,17 +391,21 @@ public class MathCommandCompiler {
             } else
             if (params.length != 5) {
                 
-                HashSet vars = new HashSet();
                 for (int i = 0; i < params.length - 2; i++){
                     try{
-                        Expression.build(params[i], vars);
+                        Expression.build(params[i], new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e){
                         throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
                     }
                 }
+
+                for (int i = 0; i < params.length - 2; i++){
+                    Expression.build(params[i], new HashSet()).getContainedVars(vars);
+                }
                 
                 if (vars.size() > 1){
-                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen von höchstens einer Veränderlichen abhängen.");
+                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen höchstens eine Veränderliche enthalten. "
+                            + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
                 }
                 
                 try{
@@ -449,12 +459,12 @@ public class MathCommandCompiler {
                 }
                 
                 if (!is_not_plot_of_three_graphs){
-                    HashSet vars = new HashSet();
-                    Expression.build(params[0], vars);
-                    Expression.build(params[1], vars);
-                    Expression.build(params[2], vars);
+                    Expression.build(params[0], new HashSet()).getContainedVars(vars);
+                    Expression.build(params[1], new HashSet()).getContainedVars(vars);
+                    Expression.build(params[2], new HashSet()).getContainedVars(vars);
                     if (vars.size() > 1){
-                        throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen von höchstens einer Veränderlichen abhängen.");
+                        throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen höchstens eine Veränderliche enthalten. "
+                            + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
                     }
 
                     try{
@@ -488,11 +498,9 @@ public class MathCommandCompiler {
                 
                 if (params[0].contains("=")){
                 
-                    HashSet vars = new HashSet();
-                    
                     try{
-                        Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                        Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+                        Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet()).getContainedVars(vars);
+                        Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e){
                         throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss aus zwei gültigen Ausdrücken bestehen,"
                         + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
@@ -553,10 +561,9 @@ public class MathCommandCompiler {
                 
                 } else {
                 
-                    HashSet vars = new HashSet();
-                    
                     try{
                         Expression expr = Expression.build(params[0], vars);
+                        expr.getContainedVars(vars);
                     } catch (ExpressionException e){
                         throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                     }
@@ -940,7 +947,7 @@ public class MathCommandCompiler {
             //Prüft, ob die AWP-Daten korrekt sind
             for (int i = 3; i < ord + 4; i++){
                 try{
-                    Double.parseDouble(params[i]);
+                    new BigDecimal(params[i]);
                 } catch (NumberFormatException e){
                     throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
                 }
@@ -957,7 +964,7 @@ public class MathCommandCompiler {
             command_params[1] = Variable.create(params[1]);
             command_params[2] = ord;
             for (int i = 3; i < ord + 4; i++){
-                command_params[i] = Double.parseDouble(params[i]);                
+                command_params[i] = new BigDecimal(params[i]);                
             }
             command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
                 
@@ -1133,11 +1140,11 @@ public class MathCommandCompiler {
          */
         if (c.getParams().length == 2){
             String var = ((Variable) c.getParams()[0]).getName();
-            double value = (double) c.getParams()[1];
-            Variable.setValue(var, value);
+            Expression value = (Expression) c.getParams()[1];
+            Variable.setValue(var, value.evaluate());
             definedVars.put(var, value);
             definedVarsSet.add(var);
-            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + value + " gesetzt. \n");
+            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + value.writeFormula(true) + " gesetzt. \n");
         } else {
         /** Falls eine Funktion definiert wird.
          */
@@ -1208,30 +1215,13 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         for (int i = 0; i < c.getParams().length - 2; i++){
-            graphicMethods2D.addExpression(exprs[i]);
+            graphicMethods2D.addExpression(exprs[i].simplify());
         }
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
         graphicMethods2D.drawGraph2D();
-        
-/**
-            graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setGraphIsExplicit(true);
-            graphicMethods2D.setGraphIsFixed(false);
-            graphicMethods2D.clearExpressionAndGraph();
-            graphicMethods2D.addExpression(expr);
-            graphicMethods2D.addExpression(tangent);
-            graphicMethods2D.expressionToGraph(var, x_1, x_2);
-            graphicMethods2D.computeMaxXMaxY();
-            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
-            graphicMethods2D.setDrawSpecialPoints(true);
-            graphicMethods2D.setSpecialPoints(tangent_point);
-            graphicMethods2D.drawGraph2D();
-
-*/        
-        
         
     }
 
@@ -1302,7 +1292,7 @@ public class MathCommandCompiler {
         }
         
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(expr, x_0, x_1, y_0, y_1);
+        graphicMethods3D.expressionToGraph(expr.simplify(), x_0, x_1, y_0, y_1);
         graphicMethods3D.drawGraph();
 
     }
@@ -1368,14 +1358,12 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsExplicit(false);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr);
+        graphicMethods2D.addExpression(expr.simplify());
         graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_1 + x_2)/2, (y_1 + y_2)/2, (x_2 - x_1)/2, (y_2 - y_1)/2);
         graphicMethods2D.setDrawSpecialPoints(false);
-
         Hashtable<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical, 
                 x_1, x_2, y_1, y_2);
         graphicMethods2D.setImplicitGraph(implicit_graph);
-        
         graphicMethods2D.drawGraph2D();
         
     }
@@ -1385,7 +1373,7 @@ public class MathCommandCompiler {
 	throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
+        Expression expr = ((Expression) c.getParams()[0]).simplify();
         expr.getContainedVars(vars);
         //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
         String var = "x";
@@ -1643,10 +1631,10 @@ public class MathCommandCompiler {
         }
         
         String var1 = ((Variable) c.getParams()[1]).getName();
-        double x_0 = (double) c.getParams()[3];
-        double[] y_0 = new double[ord];
+        BigDecimal x_0 = (BigDecimal) c.getParams()[3];
+        BigDecimal[] y_0 = new BigDecimal[ord];
         for (int i = 0; i < y_0.length; i++){
-            y_0[i] = (double) c.getParams()[i + 4];
+            y_0[i] = (BigDecimal) c.getParams()[i + 4];
         }
                 
         int k = (int) c.getParams()[ord + 4];

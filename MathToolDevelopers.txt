@@ -1,4 +1,4 @@
-﻿<html><head></head><body><center><b>&Uuml;ber MathTool:</b></center><br><br>
+﻿<html><head></head><body><center><font size="6"><b>&Uuml;ber MathTool:</b></font></center><br><br>
 
 <b>Programm:</b> MathTool.<br><br>
 

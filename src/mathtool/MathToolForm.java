@@ -22,10 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.Icon;
-
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.IOException;
 import javax.swing.ImageIcon;
 
 
@@ -42,7 +38,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     /** Diese Objekte werden im Laufe des Programms erweitert.
      * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
      */ 
-    static Hashtable<String, Double> definedVars = new Hashtable<String, Double>();
+    static Hashtable<String, Expression> definedVars = new Hashtable<String, Expression>();
     static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
     public Hashtable<Integer, String> listOfCommands = new Hashtable<Integer, String>();
@@ -219,7 +215,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
 
-        InputField.setText("tangent(sin(x),x=1)");
+        InputField.setText("plot(sum(x^k,k,1,2),-5,5)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 
@@ -471,20 +467,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-//            execute();
-            
-            try{
-                Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = expr.simplify();
-                mathToolArea.append(result.writeFormula(true) + "\n");
-                
-                
-                
-
-            } catch (Exception ex){
-                mathToolArea.append("Fehler! \n");
-            }
-            
+            execute();
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){

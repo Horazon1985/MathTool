@@ -1,5 +1,5 @@
 ﻿Bugs to be fixed:
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
-- Bei Variablenzuweisung auch konstante Ausdrücke akzeptieren anstatt nur Dezimalzahlen.
-- Plotten von Operatoren korrigieren (beim evaluate() kommt 0 heraus, dementsprechend bekommt man den 0-Graphen -> korrigieren).
+- approx() korrigieren (Variablen, denen bereits konstante Werte zugewiesen wurden, dürfen nicht mehr als Variablen ausgegeben werden).
+- Attribut variables (in der Klasse Variable) überarbeiten -> es muss auch konstante Ausdrücke verstehen.
