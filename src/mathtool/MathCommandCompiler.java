@@ -833,7 +833,7 @@ public class MathCommandCompiler {
                     if (!point.isConstant()){
                         throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
                     }
-                } catch (NumberFormatException e){
+                } catch (ExpressionException e){
                     throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
                 }
             }
@@ -1113,6 +1113,7 @@ public class MathCommandCompiler {
 	throws ExpressionException, EvaluationException {
         
         Expression expr = (Expression) c.getParams()[0];
+        expr = expr.simplify();
         expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n");
         

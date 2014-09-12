@@ -218,6 +218,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("tangent(sin(x),x=1)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 
@@ -473,7 +475,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = SimplifyExpLog.collectExponentialFunctionsInProduct(expr);
+                Expression result = expr.simplify();
                 mathToolArea.append(result.writeFormula(true) + "\n");
                 
                 

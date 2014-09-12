@@ -2,3 +2,4 @@
 
 - Plot3D: Endloses Heranzoomen sollte nicht zum Absturz/endlosem Rechnen führen. -> Maximalen Zoomfaktor einführen.
 - Bei Variablenzuweisung auch konstante Ausdrücke akzeptieren anstatt nur Dezimalzahlen.
+- Plotten von Operatoren korrigieren (beim evaluate() kommt 0 heraus, dementsprechend bekommt man den 0-Graphen -> korrigieren).
