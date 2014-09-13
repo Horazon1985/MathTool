@@ -71,9 +71,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JTextField" name="InputField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="plot(sum(x^k,k,1,2),-5,5)"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="10" y="336" width="490" height="-1"/>

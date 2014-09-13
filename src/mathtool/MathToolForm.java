@@ -14,6 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -214,10 +216,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("plot(sum(x^k,k,1,2),-5,5)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -226,7 +226,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -375,12 +375,12 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         if(!startRotate){
             this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
             startRotate = true;
-            graphicMethods3D.setBStart(true);
+            graphicMethods3D.setStartRotate(true);
             threadRotate.start();
             RotateButton.setText("Rotation stoppen");
         } else {
             startRotate = false;
-            graphicMethods3D.setBStart(false);
+            graphicMethods3D.setStartRotate(false);
             threadRotate.interrupt();
             RotateButton.setText("3D-Graphen rotieren lassen");
         }
