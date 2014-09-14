@@ -2,6 +2,3 @@
 
 - approx() korrigieren (Variablen, denen bereits konstante Werte zugewiesen wurden, dürfen nicht mehr als Variablen ausgegeben werden).
 - Attribut variables (in der Klasse Variable) überarbeiten -> es muss auch konstante Ausdrücke verstehen.
-- Bei simplifyTrivial hinzufühen:
-	1) c1/c2*x - y = (-1)*(y + (-c1)/c2*x), falls c1/c2 < 0
-	2) ähnliches.

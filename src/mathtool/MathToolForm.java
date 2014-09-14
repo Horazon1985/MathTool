@@ -1,5 +1,7 @@
 package mathtool;
 
+import expressionbuilder.BinaryOperation;
+import expressionbuilder.Constant;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -8,13 +10,13 @@ import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.SimplifyMethods;
 import expressionbuilder.SimplifyExpLog;
+import expressionbuilder.TypeBinary;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.util.HashSet;
