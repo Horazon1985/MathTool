@@ -2,7 +2,7 @@
 
 MathTool kennt die folgenden Operatoren:<br><br>
 
-<b>OPERATOR diff(FUNCTION, VAR):</b> erechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
+<b>OPERATOR diff(FUNCTION, VAR):</b> Berechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
 
 <b>OPERATOR diff(FUNCTION, VAR, k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
 

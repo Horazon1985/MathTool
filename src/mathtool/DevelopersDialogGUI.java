@@ -28,7 +28,7 @@ public class DevelopersDialogGUI extends JDialog {
 
         /** Logo laden
          */
-        File imageFile = new File("MathToollogo.png");
+        File imageFile = new File("MathToolLogo.png");
         JPanel panel = new JPanel();
         add(panel);
         BufferedImage image = null;

@@ -27,6 +27,7 @@ import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import java.net.URL;
 
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
@@ -34,7 +35,8 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private boolean startRotate;
     JTextArea mathToolArea;
     JEditorPane helpArea;
-    
+    JScrollPane scrollPane;
+
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
@@ -69,24 +71,24 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
         /** Eingabefelder ausrichten
          */
-        InputField.setBounds(10, 530, 650, 30);
+        InputField.setBounds(10, 530, 1160, 30);
         
         /** Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
         add(mathToolArea);
-        mathToolArea.setBounds(10, 20, 750, 500);
+        mathToolArea.setBounds(10, 20, 1270, 500);
         mathToolArea.setEditable(false);
         mathToolArea.setLineWrap(true);
         mathToolArea.setWrapStyleWord(true);        
-        JScrollPane scrollPane = new JScrollPane(mathToolArea, 
+        scrollPane = new JScrollPane(mathToolArea, 
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(10,20,750,500);
+        scrollPane.setBounds(10, 20, 1270, 500);
         add(scrollPane);
 
         /** Buttons ausrichten
          */
-        InputButton.setBounds(660, 530, 100, 30);
+        InputButton.setBounds(1180, 530, 100, 30);
         ApproxButton.setBounds(10, 570, 105, 30);
         LatexButton.setBounds(125, 570, 120, 30);
         RotateButton.setBounds(900, 530, 220, 30);
@@ -134,14 +136,26 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     
     
     private void activatePanelsForGraphs(String command_name, String[] params){
-    
+
         if ((command_name.equals("plot")) && (params.length > 2) && (params.length != 5)){
+            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+            mathToolArea.setBounds(10, 20, 750, 500);
+            scrollPane.setBounds(10, 20, 750, 500);
+            InputField.setBounds(10, 530, 640, 30);
+            InputButton.setBounds(660, 530, 100, 30);
+            //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
             repaint();
         } else
         if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))){
+            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+            mathToolArea.setBounds(10, 20, 750, 500);
+            scrollPane.setBounds(10, 20, 750, 500);
+            InputField.setBounds(10, 530, 640, 30);
+            InputButton.setBounds(660, 530, 100, 30);
+            //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
@@ -154,15 +168,33 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 Double.parseDouble(params[3]);
                 Double.parseDouble(params[4]);
                 if (params[0].contains("=")){
+                    //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+                    mathToolArea.setBounds(10, 20, 750, 500);
+                    scrollPane.setBounds(10, 20, 750, 500);
+                    InputField.setBounds(10, 530, 640, 30);
+                    InputButton.setBounds(660, 530, 100, 30);
+                    //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(true);
                     graphicMethods3D.setVisible(false);
                     RotateButton.setVisible(false);
                 } else {
+                    //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+                    mathToolArea.setBounds(10, 20, 750, 500);
+                    scrollPane.setBounds(10, 20, 750, 500);
+                    InputField.setBounds(10, 530, 640, 30);
+                    InputButton.setBounds(660, 530, 100, 30);
+                    //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(false);
                     graphicMethods3D.setVisible(true);
                     RotateButton.setVisible(true);
                 }
             } catch (NumberFormatException e){
+                //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+                mathToolArea.setBounds(10, 20, 750, 500);
+                scrollPane.setBounds(10, 20, 750, 500);
+                InputField.setBounds(10, 530, 640, 30);
+                InputButton.setBounds(660, 530, 100, 30);
+                //Grafik-Panels sichtbar machen
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
                 RotateButton.setVisible(false);
@@ -170,18 +202,36 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             repaint();
         } else
         if (command_name.equals("solve")){
+            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+            mathToolArea.setBounds(10, 20, 750, 500);
+            scrollPane.setBounds(10, 20, 750, 500);
+            InputField.setBounds(10, 530, 640, 30);
+            InputButton.setBounds(660, 530, 100, 30);
+            //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
             repaint();
         } else 
         if (command_name.equals("solvedgl")){
+            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+            mathToolArea.setBounds(10, 20, 750, 500);
+            scrollPane.setBounds(10, 20, 750, 500);
+            InputField.setBounds(10, 530, 640, 30);
+            InputButton.setBounds(660, 530, 100, 30);
+            //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
             repaint();
         } else 
         if (command_name.equals("tangent")){
+            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+            mathToolArea.setBounds(10, 20, 750, 500);
+            scrollPane.setBounds(10, 20, 750, 500);
+            InputField.setBounds(10, 530, 640, 30);
+            InputButton.setBounds(660, 530, 100, 30);
+            //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
             RotateButton.setVisible(false);
@@ -209,6 +259,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(MathToolForm.class.getResource("MathToolIcon.png")));
         getContentPane().setLayout(null);
 
         InputButton.addActionListener(new java.awt.event.ActionListener() {
@@ -462,7 +513,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     @Override
     public void keyTyped(KeyEvent e) {
-      
     }
     
     @Override
@@ -491,6 +541,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-       
     }
+    
 }
