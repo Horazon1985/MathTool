@@ -1,23 +1,17 @@
 package mathtool;
 
-import expressionbuilder.BinaryOperation;
-import expressionbuilder.Constant;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
-import expressionbuilder.SimplifyMethods;
-import expressionbuilder.SimplifyExpLog;
-import expressionbuilder.TypeBinary;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -27,7 +21,6 @@ import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import java.net.URL;
 
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
@@ -269,8 +262,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("def(x=3.7)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -279,7 +274,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -357,7 +352,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 }
             }
             if (valid_command){
-                mathToolArea.append(s + "\n");
+                mathToolArea.append(s + "\n \n");
                 MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
             }
@@ -367,14 +362,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
              */
             if(valid_command){
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 return;
             }
         } catch (EvaluationException e){
             /** Analog wie oben.
              */
             if(valid_command){
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 return;
             }
         }
@@ -402,19 +397,19 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 if (expr.equals(expr_simplified)){
                     /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
                      */
-                    mathToolArea.append(expr.writeFormula(true) + "\n");
+                    mathToolArea.append(expr.writeFormula(true) + "\n \n");
                 } else {
-                    mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n");
+                    mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
                 }
                 return;
             } catch (EvaluationException e){
-                mathToolArea.append(expr.writeFormula(true) + "\n");
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+                mathToolArea.append(expr.writeFormula(true) + "\n \n");
+                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 return;
             } 
         
         } catch (ExpressionException e){
-            mathToolArea.append("FEHLER: " + e.getMessage() + "\n");
+            mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
         }
         
     }

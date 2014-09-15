@@ -25,7 +25,17 @@ VAR_i m&uuml;ssen nicht alle verschieden sein.<br><br>
 
 <b>OPERATOR taylor(FUNCTION VAR, x_0, k):</b> Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bez&uuml;glich der Variablen VAR an der Stelle VAR = x_0.<br><br>
 
-Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden. So wird beispielsweise der Ausdruck<br><br>
+<i>Beispiel:</i> taylor(exp(x*y),x,0,5) erzeugt die Ausgabe<br><br> 
+
+1+y*x+(y^2*x^2)/2+(y^3*x^3)/6+(y^4*x^4)/24+(y^5*x^5)/120<br><br>
+
+In der Tat, die Potenzreihenentwicklung von exp(x*y) lautet<br><br>
+
+1+y*x+(y^2*x^2)/2+(y^3*x^3)/6+(y^4*x^4)/24+(y^5*x^5)/120+(y^6*x^6)/720+(y^7*x^7)/5040+...<br><br>
+
+und die Ausgabe liefert hier genau die ersten f&uuml;nf Glieder dieser Reihenetwicklung.<br><br>
+
+Operatoren d&uuml;rfen wiederum Bestandteile weiterer mathematischer Ausdrücke sein und k&ouml;nnen somit weiterverarbeitet werden. So wird beispielsweise der Ausdruck<br><br>
 
 x^2*diff(y^5,y,3) + 6<br><br>
 

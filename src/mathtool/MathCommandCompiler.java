@@ -120,15 +120,15 @@ public class MathCommandCompiler {
                 } catch (ExpressionException e){
                     throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
                 }
-                Expression value = Expression.build(function_term, new HashSet());
+                Expression preciseExpression = Expression.build(function_term, new HashSet());
                 HashSet vars = new HashSet();
-                value.getContainedVars(vars);
+                preciseExpression.getContainedVars(vars);
                 if (!vars.isEmpty()) {
                     throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
                 }
                 command_params = new Object[2];
                 command_params[0] = Variable.create(function_name_and_params);
-                command_params[1] = value;
+                command_params[1] = preciseExpression;
                 result.setName(command);
                 result.setParams(command_params);
                 return result;
@@ -1049,7 +1049,7 @@ public class MathCommandCompiler {
         Command c = getCommand(command, params);
         
         if (c.getName().equals("approx")){
-            executeApprox(c, area);
+            executeApprox(c, area, definedVars);
         } else 
         if (c.getName().equals("clear")){
             executeClear(c, area);
@@ -1116,13 +1116,23 @@ public class MathCommandCompiler {
      * etc.
      */
     
-    private static void executeApprox(Command c, JTextArea area) 
+    private static void executeApprox(Command c, JTextArea area, Hashtable definedVars) 
 	throws ExpressionException, EvaluationException {
         
         Expression expr = (Expression) c.getParams()[0];
+
+        /** Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
+         */
+        Enumeration keys = definedVars.keys();
+        String var;
+        for (int i = 0; i < definedVars.size(); i++){
+            var = (String) keys.nextElement();
+            expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
+        }
+        
         expr = expr.simplify();
         expr = expr.turnToIrrationals().simplify();
-        area.append(expr.writeFormula(true) + "\n");
+        area.append(expr.writeFormula(true) + "\n \n");
         
     }    
 
@@ -1140,11 +1150,11 @@ public class MathCommandCompiler {
          */
         if (c.getParams().length == 2){
             String var = ((Variable) c.getParams()[0]).getName();
-            Expression value = (Expression) c.getParams()[1];
-            Variable.setValue(var, value.evaluate());
-            definedVars.put(var, value);
+            Expression preciseExpression = (Expression) c.getParams()[1];
+            Variable.setPreciseExpression(var, preciseExpression);
+            definedVars.put(var, preciseExpression);
             definedVarsSet.add(var);
-            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + value.writeFormula(true) + " gesetzt. \n");
+            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
         } else {
         /** Falls eine Funktion definiert wird.
          */
@@ -1165,24 +1175,24 @@ public class MathCommandCompiler {
     
     private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet) 
             throws ExpressionException, EvaluationException {
-        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + definedVars + "\n");
+        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + definedVars + "\n \n");
     }    
 
     
     private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
-        area.append("Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n");
+        area.append("Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n \n");
     }    
 
     
     private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
-        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n");
+        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n \n");
     }    
 	
 	
     private static void executePi(Command c, JTextArea area) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
-        area.append("Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n");
+        area.append("Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n");
     }    
 
     
@@ -1395,9 +1405,9 @@ public class MathCommandCompiler {
         
         Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
         
-        area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n"); 
+        area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n \n"); 
         for (int i = 0; i < result.size(); i++){
-            area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n");
+            area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n \n");
         }
 
         /** Nullstellen als Array (zum Markieren).
@@ -1519,14 +1529,14 @@ public class MathCommandCompiler {
             awp = awp + ", " + String.valueOf(x_0) + " <= " + var1 + " <= ";
         }
         if (x_1 == Math.round(x_1)){
-            awp = awp + String.valueOf((long) x_1) + " \n";
+            awp = awp + String.valueOf((long) x_1) + " \n \n";
         } else {
-            awp = awp + String.valueOf(x_1) + " \n";
+            awp = awp + String.valueOf(x_1) + " \n \n";
         }
         
         area.append(awp);
         for (int i = 0; i < solution.length; i++){
-            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n");
+            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n \n");
         }
 
         /** Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
@@ -1535,7 +1545,7 @@ public class MathCommandCompiler {
         double pos_of_critical_line = 0;
         if (solution.length < 1001){
             pos_of_critical_line = x_0 + (solution.length)*(x_1 - x_0)/1000;
-            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n");
+            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n \n");
         }
 
         graphicMethods2D.setIsInitialized(true);
@@ -1565,7 +1575,7 @@ public class MathCommandCompiler {
             if (i < vars.size() - 1){
                 tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
             } else {
-                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ": \n";
+                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ": \n \n";
             }
         }
         
@@ -1576,7 +1586,7 @@ public class MathCommandCompiler {
         }
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
-        area.append("Y=" + tangent.writeFormula(true) + "\n");
+        area.append("Y=" + tangent.writeFormula(true) + "\n \n");
 
         if (vars.size() == 1){
             
@@ -1670,7 +1680,7 @@ public class MathCommandCompiler {
         }
         
         Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var1, ord, x_0, y_0, k);
-        area.append(result.writeFormula(true) + "\n");
+        area.append(result.writeFormula(true) + "\n \n");
 
     }    
 
@@ -1686,7 +1696,7 @@ public class MathCommandCompiler {
             if (definedVarsSet.contains(current_var)){
                 definedVarsSet.remove(current_var);
                 definedVars.remove(current_var);
-                area.append("Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n");
+                area.append("Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n \n");
             }
         }
         
@@ -1700,7 +1710,7 @@ public class MathCommandCompiler {
          */
         definedVarsSet.clear();
         definedVars.clear();
-        area.append("Alle Veränderlichen sind wieder Unbestimmte. \n");
+        area.append("Alle Veränderlichen sind wieder Unbestimmte. \n \n");
         
     }    
     

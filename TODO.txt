@@ -1,4 +1,6 @@
 ﻿Bugs to be fixed:
 
 - approx() korrigieren (Variablen, denen bereits konstante Werte zugewiesen wurden, dürfen nicht mehr als Variablen ausgegeben werden).
-- Attribut variables (in der Klasse Variable) überarbeiten -> es muss auch konstante Ausdrücke verstehen.
+- Operator ! (Fakultät) implementieren.
+- simplifyTrivial() bei den Operatoren sum() und prod() korrigieren: falls bei den ersten paar Gliedern keine Vereinfachung in Sicht ist -> erst ganz am Ende vereinfachen und nicht nach jedem Schritt.
+- Liste mit Operatoren und Befehlen im Hauptprogramm zur Verfügung stellen.
