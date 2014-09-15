@@ -452,7 +452,7 @@ public class MathCommandCompiler {
                     Double.parseDouble(params[3]);
                     Double.parseDouble(params[4]);
                     
-                    /** Falls man hier angekommen ist, so muss es sich um einen Plot von drei 2D-Graphen handeln.
+                    /** Falls man hier angekommen ist, so kann es sich nicht um einen Plot von drei 2D-Graphen handeln.
                      */
                     is_not_plot_of_three_graphs = true;
                 } catch (ExpressionException|NumberFormatException e){

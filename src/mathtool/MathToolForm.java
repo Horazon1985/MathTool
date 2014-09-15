@@ -486,7 +486,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             public void run() {
                 MathToolForm MyMathToolForm = new MathToolForm();
                 MyMathToolForm.setVisible(true);
-                MyMathToolForm.setTitle("MathTool for Analysis and Numerical Computation");
+                MyMathToolForm.setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
                 MyMathToolForm.setBounds(20,50,1300,670);
                 MyMathToolForm.getContentPane().setBackground(new Color(255,150,0));
             }
