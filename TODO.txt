@@ -2,5 +2,5 @@
 
 - approx() korrigieren (Variablen, denen bereits konstante Werte zugewiesen wurden, dürfen nicht mehr als Variablen ausgegeben werden).
 - Operator ! (Fakultät) implementieren.
-- simplifyTrivial() bei den Operatoren sum() und prod() korrigieren: falls bei den ersten paar Gliedern keine Vereinfachung in Sicht ist -> erst ganz am Ende vereinfachen und nicht nach jedem Schritt.
+- Beim Plot von mehreren Graphen: (ausklappbare) Legende zur Verfügung stellen. 
 - Liste mit Operatoren und Befehlen im Hauptprogramm zur Verfügung stellen.

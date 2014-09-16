@@ -265,7 +265,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
 
-        InputField.setText("cos(x)*tan(x)");
+        InputField.setText("sin(x)+sin(-x)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 19);
 
