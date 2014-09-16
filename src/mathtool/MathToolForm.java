@@ -91,7 +91,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
         /** Auswahlmenüs ausrichten
          */
-        OperatorChoice.setBounds(250, 570, 120, 30);
+        OperatorChoice.setBounds(250, 573, 120, 30);
         OperatorChoice.addItem("Operator");
         OperatorChoice.addItem("diff()");
         OperatorChoice.addItem("div()");
@@ -103,7 +103,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         OperatorChoice.addItem("sum()");
         OperatorChoice.addItem("taylor()");
 
-        CommandChoice.setBounds(375, 570, 120, 30);
+        CommandChoice.setBounds(375, 573, 120, 30);
         CommandChoice.addItem("approx()");
         CommandChoice.addItem("clear()");
         CommandChoice.addItem("def()");
