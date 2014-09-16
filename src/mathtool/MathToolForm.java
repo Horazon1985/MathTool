@@ -88,6 +88,36 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         LatexButton.setBounds(125, 570, 120, 30);
         RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
+
+        /** Auswahlmenüs ausrichten
+         */
+        OperatorChoice.setBounds(250, 570, 120, 30);
+        OperatorChoice.addItem("Operator");
+        OperatorChoice.addItem("diff()");
+        OperatorChoice.addItem("div()");
+        OperatorChoice.addItem("gcd()");
+        OperatorChoice.addItem("int()");
+        OperatorChoice.addItem("laplace()");
+        OperatorChoice.addItem("lcm()");
+        OperatorChoice.addItem("prod()");
+        OperatorChoice.addItem("sum()");
+        OperatorChoice.addItem("taylor()");
+
+        CommandChoice.setBounds(375, 570, 120, 30);
+        CommandChoice.addItem("approx()");
+        CommandChoice.addItem("clear()");
+        CommandChoice.addItem("def()");
+        CommandChoice.addItem("defvars()");
+        CommandChoice.addItem("euler()");
+        CommandChoice.addItem("latex()");
+        CommandChoice.addItem("pi()");
+        CommandChoice.addItem("plot()");
+        CommandChoice.addItem("solve()");
+        CommandChoice.addItem("solvedgl()");
+        CommandChoice.addItem("tangent()");
+        CommandChoice.addItem("taylordgl()");
+        CommandChoice.addItem("undef()");
+        CommandChoice.addItem("undefall()");
         
         /** 2D-Grafikobjekte initialisieren
          */
@@ -247,11 +277,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         RotateButton = new javax.swing.JButton();
         LatexButton = new javax.swing.JButton();
         ApproxButton = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        OperatorChoice = new java.awt.Choice();
+        CommandChoice = new java.awt.Choice();
+        MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        MenuItemQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        MenuItemHelp = new javax.swing.JMenuItem();
+        MenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(MathToolForm.class.getResource("MathToolIcon.png")));
@@ -291,31 +324,49 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(ApproxButton);
         ApproxButton.setBounds(10, 370, 150, 30);
+        getContentPane().add(OperatorChoice);
+        OperatorChoice.setBounds(340, 380, 130, 20);
+        getContentPane().add(CommandChoice);
+        CommandChoice.setBounds(480, 380, 130, 20);
 
         jMenu1.setText("Datei");
-        jMenuBar1.add(jMenu1);
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
+
+        MenuItemQuit.setText("Quit");
+        MenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemQuitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(MenuItemQuit);
+
+        MathToolMenuBar.add(jMenu1);
 
         jMenu2.setText("MathTool");
 
-        jMenuItem1.setText("Hilfe");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemHelp.setText("Hilfe");
+        MenuItemHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                MenuItemHelpActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(MenuItemHelp);
 
-        jMenuItem2.setText("Über MathTool");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemAbout.setText("Über MathTool");
+        MenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                MenuItemAboutActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu2.add(MenuItemAbout);
 
-        jMenuBar1.add(jMenu2);
+        MathToolMenuBar.add(jMenu2);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(MathToolMenuBar);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -434,15 +485,15 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         }
     }//GEN-LAST:event_RotateButtonActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void MenuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpActionPerformed
         HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
         helpDialogGUI.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_MenuItemHelpActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void MenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAboutActionPerformed
         DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI();
         aboutMathToolGUI.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_MenuItemAboutActionPerformed
 
     private void ApproxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApproxButtonActionPerformed
         String line = InputField.getText();
@@ -457,6 +508,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         execute();
         InputField.setText(line);
     }//GEN-LAST:event_LatexButtonActionPerformed
+
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+    }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void MenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemQuitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_MenuItemQuitActionPerformed
 
     
     public static void main(String args[]) {
@@ -495,15 +553,18 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ApproxButton;
+    private java.awt.Choice CommandChoice;
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
     private javax.swing.JButton LatexButton;
+    private javax.swing.JMenuBar MathToolMenuBar;
+    private javax.swing.JMenuItem MenuItemAbout;
+    private javax.swing.JMenuItem MenuItemHelp;
+    private javax.swing.JMenuItem MenuItemQuit;
+    private java.awt.Choice OperatorChoice;
     private javax.swing.JButton RotateButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     // End of variables declaration//GEN-END:variables
 
     @Override
