@@ -7,6 +7,7 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
 import expressionbuilder.SimplifyFunctionalEquations;
+import expressionbuilder.TypeFunction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -263,8 +264,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("cos(x)*tan(x)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -273,7 +276,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -513,14 +516,16 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-//            execute();
+            execute();
+/**            
             try{
                 Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = SimplifyFunctionalEquations.reduceSquaresSineCosine(expr);
+                Expression result = SimplifyFunctionalEquations.productOfTwoTrigonometricalFunctions(expr, TypeFunction.cos,
+                        TypeFunction.tan, TypeFunction.sin);
                 mathToolArea.append(result.writeFormula(true) + "\n \n");
             } catch (ExpressionException|EvaluationException ex){
             }
-            
+*/            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
