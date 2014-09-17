@@ -6,8 +6,6 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicPresentationOfFormula;
-import expressionbuilder.SimplifyFunctionalEquations;
-import expressionbuilder.TypeFunction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,11 +21,16 @@ import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.SwingWorker;
 
 
 public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
     private boolean startRotate;
+    private SwingWorker<Void, Void> swingWorker;
+    private boolean isInfinity;
+    private boolean computing;
+    
     JTextArea mathToolArea;
     JEditorPane helpArea;
     JScrollPane scrollPane;
@@ -54,6 +57,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
+        this.computing = false;
         this.startRotate = false;
         InputField.addKeyListener(this);
         addWindowListener(new WindowAdapter() {
@@ -84,6 +88,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         /** Buttons ausrichten
          */
         InputButton.setBounds(1180, 530, 100, 30);
+        CancelButton.setBounds(1180, 570, 100, 30);
         ApproxButton.setBounds(10, 570, 105, 30);
         LatexButton.setBounds(125, 570, 120, 30);
         RotateButton.setBounds(900, 530, 220, 30);
@@ -104,6 +109,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         OperatorChoice.addItem("taylor()");
 
         CommandChoice.setBounds(375, 573, 120, 30);
+        CommandChoice.addItem("Befehl");
         CommandChoice.addItem("approx()");
         CommandChoice.addItem("clear()");
         CommandChoice.addItem("def()");
@@ -168,6 +174,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             scrollPane.setBounds(10, 20, 750, 500);
             InputField.setBounds(10, 530, 640, 30);
             InputButton.setBounds(660, 530, 100, 30);
+            CancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -180,6 +187,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             scrollPane.setBounds(10, 20, 750, 500);
             InputField.setBounds(10, 530, 640, 30);
             InputButton.setBounds(660, 530, 100, 30);
+            CancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -198,6 +206,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                     scrollPane.setBounds(10, 20, 750, 500);
                     InputField.setBounds(10, 530, 640, 30);
                     InputButton.setBounds(660, 530, 100, 30);
+                    CancelButton.setBounds(660, 570, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(true);
                     graphicMethods3D.setVisible(false);
@@ -208,6 +217,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                     scrollPane.setBounds(10, 20, 750, 500);
                     InputField.setBounds(10, 530, 640, 30);
                     InputButton.setBounds(660, 530, 100, 30);
+                    CancelButton.setBounds(660, 570, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(false);
                     graphicMethods3D.setVisible(true);
@@ -219,6 +229,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 scrollPane.setBounds(10, 20, 750, 500);
                 InputField.setBounds(10, 530, 640, 30);
                 InputButton.setBounds(660, 530, 100, 30);
+                CancelButton.setBounds(660, 570, 100, 30);
                 //Grafik-Panels sichtbar machen
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
@@ -232,6 +243,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             scrollPane.setBounds(10, 20, 750, 500);
             InputField.setBounds(10, 530, 640, 30);
             InputButton.setBounds(660, 530, 100, 30);
+            CancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -244,6 +256,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             scrollPane.setBounds(10, 20, 750, 500);
             InputField.setBounds(10, 530, 640, 30);
             InputButton.setBounds(660, 530, 100, 30);
+            CancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -256,6 +269,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             scrollPane.setBounds(10, 20, 750, 500);
             InputField.setBounds(10, 530, 640, 30);
             InputButton.setBounds(660, 530, 100, 30);
+            CancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -279,6 +293,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         ApproxButton = new javax.swing.JButton();
         OperatorChoice = new java.awt.Choice();
         CommandChoice = new java.awt.Choice();
+        CancelButton = new javax.swing.JButton();
         MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
@@ -297,8 +312,10 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
+
+        InputField.setText("sum(k*x^k,k,1,100)");
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 19);
+        InputField.setBounds(10, 336, 490, 20);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -307,7 +324,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 231, 25);
+        RotateButton.setBounds(10, 410, 165, 23);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,9 +342,18 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(ApproxButton);
         ApproxButton.setBounds(10, 370, 150, 30);
         getContentPane().add(OperatorChoice);
-        OperatorChoice.setBounds(340, 380, 130, 19);
+        OperatorChoice.setBounds(340, 380, 130, 20);
         getContentPane().add(CommandChoice);
-        CommandChoice.setBounds(480, 380, 130, 19);
+        CommandChoice.setBounds(480, 380, 130, 20);
+
+        CancelButton.setText("Abbruch");
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(CancelButton);
+        CancelButton.setBounds(520, 410, 73, 23);
 
         jMenu1.setText("Datei");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -370,7 +396,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void execute(){
+    private void executeCommand(){
         
         boolean valid_command = false;
         
@@ -395,7 +421,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
              */
             String[] com = Expression.getOperatorAndArguments(s);
             String[] params = Expression.getArguments(com[1]);
-            activatePanelsForGraphs(com[0], params);
             
             for (int i = 0; i < MathCommandCompiler.commands.length; i++){
                 if (com[0].equals(MathCommandCompiler.commands[i])){
@@ -406,9 +431,12 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 mathToolArea.append(s + "\n \n");
                 MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D, 
                         definedVars, definedVarsSet);
+                /** Falls es graphische befehle waren -> Grafik sichtbar machen.
+                 */
+                activatePanelsForGraphs(com[0], params);
             }
             
-        } catch(ExpressionException e){
+        } catch(ExpressionException|EvaluationException e){
             /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthielt oder nicht)
              * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
              */
@@ -416,14 +444,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 return;
             }
-        } catch (EvaluationException e){
-            /** Analog wie oben.
-             */
-            if(valid_command){
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
-                return;
-            }
-        }
+        } 
 
         /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthield oder nicht)
          * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
@@ -445,28 +466,21 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             try{
                 Expression expr_simplified = expr.evaluate(definedVarsSet);
                 expr_simplified = expr_simplified.simplify();
-                if (expr.equals(expr_simplified)){
-                    /**Falls man den Ausdruck nicht vereinfachen kann -> Ausdruck ausgeben.
-                     */
-                    mathToolArea.append(expr.writeFormula(true) + "\n \n");
-                } else {
-                    mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
-                }
-                return;
+                mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
             } catch (EvaluationException e){
                 mathToolArea.append(expr.writeFormula(true) + "\n \n");
                 mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
-                return;
             } 
         
         } catch (ExpressionException e){
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
         }
-        
+        computing=false;
+        swingWorker.cancel(true);
     }
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
-        execute();
+        executeCommand();
     }//GEN-LAST:event_InputButtonActionPerformed
 
     
@@ -498,14 +512,14 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private void ApproxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApproxButtonActionPerformed
         String line = InputField.getText();
         InputField.setText("approx(" + line + ")");
-        execute();
+        executeCommand();
         InputField.setText(line);
     }//GEN-LAST:event_ApproxButtonActionPerformed
 
     private void LatexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexButtonActionPerformed
         String line = InputField.getText();
         InputField.setText("latex(" + line + ")");
-        execute();
+        executeCommand();
         InputField.setText(line);
     }//GEN-LAST:event_LatexButtonActionPerformed
 
@@ -515,6 +529,13 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private void MenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemQuitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_MenuItemQuitActionPerformed
+
+    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        this.computing = false;
+        Expression.exit = true;
+        swingWorker.cancel(true);
+        Expression.exit = false;
+    }//GEN-LAST:event_CancelButtonActionPerformed
 
     
     public static void main(String args[]) {
@@ -549,6 +570,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ApproxButton;
+    private javax.swing.JButton CancelButton;
     private java.awt.Choice CommandChoice;
     private javax.swing.JButton InputButton;
     private javax.swing.JTextField InputField;
@@ -567,11 +589,28 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyTyped(KeyEvent e) {
     }
     
+    private void doThreading(){
+        swingWorker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                while (computing) {
+                    executeCommand();
+                }
+                return null;
+            }
+            
+        };
+        swingWorker.execute();
+    }
+    
     @Override
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-            execute();
+            this.computing = true;
+            doThreading();
+            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
