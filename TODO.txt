@@ -1,6 +1,6 @@
 ﻿Bugs to be fixed:
 
-- approx() korrigieren (Variablen, denen bereits konstante Werte zugewiesen wurden, dürfen nicht mehr als Variablen ausgegeben werden).
 - Operator ! (Fakultät) implementieren.
 - Beim Plot von mehreren Graphen: (ausklappbare) Legende zur Verfügung stellen. 
+- Operatoren und Befehle sollen als Parameter konstante Ausdrücke verstehen können (wie etwa 1/3, sin(1) etc., nicht nur reelle Zahlen). 
 - Liste mit Operatoren und Befehlen im Hauptprogramm zur Verfügung stellen.

@@ -298,7 +298,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
         getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        InputField.setBounds(10, 336, 490, 19);
 
         RotateButton.setText("3D-Graphen rotieren lassen");
         RotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -307,7 +307,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             }
         });
         getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        RotateButton.setBounds(10, 410, 231, 25);
 
         LatexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,9 +325,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         getContentPane().add(ApproxButton);
         ApproxButton.setBounds(10, 370, 150, 30);
         getContentPane().add(OperatorChoice);
-        OperatorChoice.setBounds(340, 380, 130, 20);
+        OperatorChoice.setBounds(340, 380, 130, 19);
         getContentPane().add(CommandChoice);
-        CommandChoice.setBounds(480, 380, 130, 20);
+        CommandChoice.setBounds(480, 380, 130, 19);
 
         jMenu1.setText("Datei");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -518,11 +518,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
     
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -576,15 +572,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
             execute();
-/**            
-            try{
-                Expression expr = Expression.build(InputField.getText(), new HashSet());
-                Expression result = SimplifyFunctionalEquations.productOfTwoTrigonometricalFunctions(expr, TypeFunction.cos,
-                        TypeFunction.tan, TypeFunction.sin);
-                mathToolArea.append(result.writeFormula(true) + "\n \n");
-            } catch (ExpressionException|EvaluationException ex){
-            }
-*/            
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){

@@ -1134,6 +1134,11 @@ public class MathCommandCompiler {
         expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n \n");
         
+        /** Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie werden nur dann approximativ ausgegeben, wenn sie
+         * nicht präzise (precise = false) sind.
+         */
+        Variable.setAllPrecise(true);
+        
     }    
 
     
@@ -1579,11 +1584,6 @@ public class MathCommandCompiler {
             }
         }
         
-        try{
-            Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
-        } catch (ExpressionException|EvaluationException e){
-            throw new ExpressionException(e.getMessage());
-        }
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars); 
         area.append(tangent_announcement);
         area.append("Y=" + tangent.writeFormula(true) + "\n \n");
