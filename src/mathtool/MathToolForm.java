@@ -93,6 +93,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         LatexButton.setBounds(125, 570, 120, 30);
         RotateButton.setBounds(900, 530, 220, 30);
         RotateButton.setVisible(false);
+        CancelButton.setVisible(false);
 
         /** Auswahlmenüs ausrichten
          */
@@ -312,8 +313,6 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         });
         getContentPane().add(InputButton);
         InputButton.setBounds(518, 335, 70, 30);
-
-        InputField.setText("sum(k*x^k,k,1,100)");
         getContentPane().add(InputField);
         InputField.setBounds(10, 336, 490, 20);
 
@@ -476,7 +475,7 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
             mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
         }
         computing=false;
-        swingWorker.cancel(true);
+//        swingWorker.cancel(true);
     }
 
     private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
@@ -608,9 +607,9 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     public void keyPressed(KeyEvent e) {
         
         if(KeyEvent.VK_ENTER == e.getKeyCode()){
-            this.computing = true;
-            doThreading();
-            
+//            this.computing = true;
+//            doThreading();
+            executeCommand();
         }
         if(KeyEvent.VK_UP == e.getKeyCode()){
             if (log_position > 0){
