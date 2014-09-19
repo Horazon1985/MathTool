@@ -63,12 +63,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
 
         JPanel panel = new JPanel();
         add(panel);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(HelpDialogGUI.class.getResource("icons/Helplogo.png"));
-        } catch (java.io.IOException e) {
-        }
-        panel.add(new JLabel(new ImageIcon(image)));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/Helplogo.png"))));
         panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
 

@@ -25,6 +25,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
     private Thread threadRotate;
     private boolean startRotate;
+    private boolean computing = false;
     private SwingWorker<Void, Void> swingWorker;
 
     JTextArea mathToolArea;
@@ -89,7 +90,7 @@ public class MathToolForm extends javax.swing.JFrame {
          * Buttons ausrichten
          */
         inputButton.setBounds(1180, 530, 100, 30);
-        cancelButton.setBounds(1180, 570, 100, 30);
+        cancelButton.setBounds(1180, 530, 100, 30);
         approxButton.setBounds(10, 570, 105, 30);
         latexButton.setBounds(125, 570, 120, 30);
         rotateButton.setBounds(900, 530, 220, 30);
@@ -143,7 +144,7 @@ public class MathToolForm extends javax.swing.JFrame {
             scrollPane.setBounds(10, 20, 750, 500);
             inputField.setBounds(10, 530, 640, 30);
             inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 570, 100, 30);
+            cancelButton.setBounds(660, 530, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -155,7 +156,7 @@ public class MathToolForm extends javax.swing.JFrame {
             scrollPane.setBounds(10, 20, 750, 500);
             inputField.setBounds(10, 530, 640, 30);
             inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 570, 100, 30);
+            cancelButton.setBounds(660, 530, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -173,7 +174,7 @@ public class MathToolForm extends javax.swing.JFrame {
                     scrollPane.setBounds(10, 20, 750, 500);
                     inputField.setBounds(10, 530, 640, 30);
                     inputButton.setBounds(660, 530, 100, 30);
-                    cancelButton.setBounds(660, 570, 100, 30);
+                    cancelButton.setBounds(660, 530, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(true);
                     graphicMethods3D.setVisible(false);
@@ -184,7 +185,7 @@ public class MathToolForm extends javax.swing.JFrame {
                     scrollPane.setBounds(10, 20, 750, 500);
                     inputField.setBounds(10, 530, 640, 30);
                     inputButton.setBounds(660, 530, 100, 30);
-                    cancelButton.setBounds(660, 570, 100, 30);
+                    cancelButton.setBounds(660, 530, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(false);
                     graphicMethods3D.setVisible(true);
@@ -196,7 +197,7 @@ public class MathToolForm extends javax.swing.JFrame {
                 scrollPane.setBounds(10, 20, 750, 500);
                 inputField.setBounds(10, 530, 640, 30);
                 inputButton.setBounds(660, 530, 100, 30);
-                cancelButton.setBounds(660, 570, 100, 30);
+                cancelButton.setBounds(660, 530, 100, 30);
                 //Grafik-Panels sichtbar machen
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
@@ -209,7 +210,7 @@ public class MathToolForm extends javax.swing.JFrame {
             scrollPane.setBounds(10, 20, 750, 500);
             inputField.setBounds(10, 530, 640, 30);
             inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 570, 100, 30);
+            cancelButton.setBounds(660, 530, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -221,7 +222,7 @@ public class MathToolForm extends javax.swing.JFrame {
             scrollPane.setBounds(10, 20, 750, 500);
             inputField.setBounds(10, 530, 640, 30);
             inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 570, 100, 30);
+            cancelButton.setBounds(660, 530, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -233,7 +234,7 @@ public class MathToolForm extends javax.swing.JFrame {
             scrollPane.setBounds(10, 20, 750, 500);
             inputField.setBounds(10, 530, 640, 30);
             inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 570, 100, 30);
+            cancelButton.setBounds(660, 530, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
@@ -268,7 +269,7 @@ public class MathToolForm extends javax.swing.JFrame {
         setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
         setBackground(new java.awt.Color(250, 150, 0));
         setBounds(new java.awt.Rectangle(20, 50, 1300, 670));
-        setIconImage(Toolkit.getDefaultToolkit().getImage(MathToolForm.class.getResource("MathToolIcon.png")));
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/MathToolIcon.png")).getImage());
         getContentPane().setLayout(null);
 
         inputButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/InputButtonImage.png"))); // NOI18N
@@ -382,10 +383,13 @@ public class MathToolForm extends javax.swing.JFrame {
 
     private void executeCommand() {
         cancelButton.setVisible(true);
+        inputButton.setVisible(false);
         swingWorker = new SwingWorker<Void, Void>() {
             @Override
             protected void done() {
+                inputButton.setVisible(true);
                 cancelButton.setVisible(false);
+                computing = false;
             }
 
             @Override
@@ -486,6 +490,7 @@ public class MathToolForm extends javax.swing.JFrame {
                 return null;
             }
         };
+        computing = true;
         swingWorker.execute();
     }
 
@@ -562,23 +567,35 @@ public class MathToolForm extends javax.swing.JFrame {
     }//GEN-LAST:event_commandChoiceActionPerformed
 
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
-        if (KeyEvent.VK_ENTER == evt.getKeyCode()) {
-            executeCommand();
-        }
-        if (KeyEvent.VK_UP == evt.getKeyCode()) {
-            if (log_position > 0) {
-                log_position--;
-            }
-            if (log_position == command_count - 1) {
-                log_position--;
-            }
-            showLoggedCommand(log_position);
-        }
-        if (KeyEvent.VK_DOWN == evt.getKeyCode()) {
-            if (log_position < command_count - 1) {
-                log_position++;
-            }
-            showLoggedCommand(log_position);
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                executeCommand();
+                break;
+
+            case KeyEvent.VK_UP:
+                if (log_position > 0) {
+                    log_position--;
+                }
+                if (log_position == command_count - 1) {
+                    log_position--;
+                }
+                showLoggedCommand(log_position);
+                break;
+
+            case KeyEvent.VK_DOWN:
+                if (log_position < command_count - 1) {
+                    log_position++;
+                }
+                showLoggedCommand(log_position);
+                break;
+
+            case KeyEvent.VK_ESCAPE:
+                if (computing) {
+                    swingWorker.cancel(true);
+                } else {
+                    inputField.setText("");
+                }
+                break;
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 

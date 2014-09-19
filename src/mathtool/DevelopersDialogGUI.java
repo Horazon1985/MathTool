@@ -31,12 +31,7 @@ public class DevelopersDialogGUI extends JDialog {
          */
         JPanel panel = new JPanel();
         add(panel);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(HelpDialogGUI.class.getResource("icons/MathToolLogo.png"));
-        } catch (java.io.IOException e) {
-        }
-        panel.add(new JLabel(new ImageIcon(image)));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/MathToolLogo.png"))));
         panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
 
