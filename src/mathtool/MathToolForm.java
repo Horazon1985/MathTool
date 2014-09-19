@@ -9,7 +9,6 @@ import expressionbuilder.GraphicPresentationOfFormula;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -19,18 +18,15 @@ import java.util.Hashtable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 
+public class MathToolForm extends javax.swing.JFrame {
 
-public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     private Thread threadRotate;
     private boolean startRotate;
     private SwingWorker<Void, Void> swingWorker;
-    private boolean isInfinity;
-    private boolean computing;
-    
+
     JTextArea mathToolArea;
     JEditorPane helpArea;
     JScrollPane scrollPane;
@@ -39,102 +35,85 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
     GraphicMethods3D graphicMethods3D;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
 
-    /** Diese Objekte werden im Laufe des Programms erweitert.
-     * Sie enthalten die im Laufe des Programms definierten Variablen und Funktionen.
-     */ 
+    /**
+     * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
+     * im Laufe des Programms definierten Variablen und Funktionen.
+     */
     static Hashtable<String, Expression> definedVars = new Hashtable<String, Expression>();
     static HashSet definedVarsSet = new HashSet();
     static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
     public Hashtable<Integer, String> listOfCommands = new Hashtable<Integer, String>();
-    /** Variablen, die eine Rolle beim Loggen der Befehle spielen.
-     * command_count = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
-     * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
+    /**
+     * Variablen, die eine Rolle beim Loggen der Befehle spielen. command_count
+     * = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
+     * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten
+     * ausgegeben haben möchte.
      */
     public int command_count = 0;
     public int log_position = 0;
 
-    
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
-        this.computing = false;
         this.startRotate = false;
-        InputField.addKeyListener(this);
         addWindowListener(new WindowAdapter() {
-            public void windowOpened(WindowEvent e){
-                InputField.requestFocus();
+            @Override
+            public void windowOpened(WindowEvent e) {
+                inputField.requestFocus();
             }
         });
-        /** Objekte ausrichten
+        /**
+         * Objekte ausrichten
          */
-        
-        /** Eingabefelder ausrichten
+
+        /**
+         * Eingabefelder ausrichten
          */
-        InputField.setBounds(10, 530, 1160, 30);
-        
-        /** Ausgabefeld ausrichten
+        inputField.setBounds(10, 530, 1160, 30);
+
+        /**
+         * Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
         add(mathToolArea);
         mathToolArea.setBounds(10, 20, 1270, 500);
         mathToolArea.setEditable(false);
         mathToolArea.setLineWrap(true);
-        mathToolArea.setWrapStyleWord(true);        
-        scrollPane = new JScrollPane(mathToolArea, 
+        mathToolArea.setWrapStyleWord(true);
+        scrollPane = new JScrollPane(mathToolArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(10, 20, 1270, 500);
         add(scrollPane);
 
-        /** Buttons ausrichten
+        /**
+         * Buttons ausrichten
          */
-        InputButton.setBounds(1180, 530, 100, 30);
-        CancelButton.setBounds(1180, 570, 100, 30);
-        ApproxButton.setBounds(10, 570, 105, 30);
-        LatexButton.setBounds(125, 570, 120, 30);
-        RotateButton.setBounds(900, 530, 220, 30);
-        RotateButton.setVisible(false);
-        CancelButton.setVisible(false);
+        inputButton.setBounds(1180, 530, 100, 30);
+        cancelButton.setBounds(1180, 570, 100, 30);
+        approxButton.setBounds(10, 570, 105, 30);
+        latexButton.setBounds(125, 570, 120, 30);
+        rotateButton.setBounds(900, 530, 220, 30);
+        rotateButton.setVisible(false);
+        cancelButton.setVisible(false);
 
-        /** Auswahlmenüs ausrichten
+        /**
+         * Auswahlmenüs ausrichten
          */
-        OperatorChoice.setBounds(250, 573, 120, 30);
-        OperatorChoice.addItem("Operator");
-        OperatorChoice.addItem("diff()");
-        OperatorChoice.addItem("div()");
-        OperatorChoice.addItem("gcd()");
-        OperatorChoice.addItem("int()");
-        OperatorChoice.addItem("laplace()");
-        OperatorChoice.addItem("lcm()");
-        OperatorChoice.addItem("prod()");
-        OperatorChoice.addItem("sum()");
-        OperatorChoice.addItem("taylor()");
+        operatorChoice.setBounds(250, 573, 120, 30);
 
-        CommandChoice.setBounds(375, 573, 120, 30);
-        CommandChoice.addItem("Befehl");
-        CommandChoice.addItem("approx()");
-        CommandChoice.addItem("clear()");
-        CommandChoice.addItem("def()");
-        CommandChoice.addItem("defvars()");
-        CommandChoice.addItem("euler()");
-        CommandChoice.addItem("latex()");
-        CommandChoice.addItem("pi()");
-        CommandChoice.addItem("plot()");
-        CommandChoice.addItem("solve()");
-        CommandChoice.addItem("solvedgl()");
-        CommandChoice.addItem("tangent()");
-        CommandChoice.addItem("taylordgl()");
-        CommandChoice.addItem("undef()");
-        CommandChoice.addItem("undefall()");
-        
-        /** 2D-Grafikobjekte initialisieren
+        commandChoice.setBounds(375, 573, 120, 30);
+
+        /**
+         * 2D-Grafikobjekte initialisieren
          */
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
         graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethods2D.setVisible(false);
-        
-        /** 3D-Grafikobjekte initialisieren
+
+        /**
+         * 3D-Grafikobjekte initialisieren
          */
         graphicMethods3D = new GraphicMethods3D();
         add(graphicMethods3D);
@@ -142,159 +121,142 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         repaint();
         graphicMethods3D.setVisible(false);
 
-        /** Sonstige Grafikobjekte initialisieren
+        /**
+         * Sonstige Grafikobjekte initialisieren
          */
         graphicPresentationOfFormula = new GraphicPresentationOfFormula();
         add(graphicPresentationOfFormula);
         graphicPresentationOfFormula.setBounds(770, 20, 500, 500);
         repaint();
         graphicPresentationOfFormula.setVisible(false);
-
-        /** Icons auf die Buttons setzen
-         */
-        Icon icon = new ImageIcon("ApproxButtonImage.png");
-        ApproxButton.setIcon(icon);
-        icon = new ImageIcon("LatexButtonImage.png");
-        LatexButton.setIcon(icon);
-        icon = new ImageIcon("InputButtonImage.png");
-        InputButton.setIcon(icon);
-        
     }
 
-    
-    private void showLoggedCommand(int i){
-        InputField.setText(listOfCommands.get(i));
+    private void showLoggedCommand(int i) {
+        inputField.setText(listOfCommands.get(i));
     }
-    
-    
-    private void activatePanelsForGraphs(String command_name, String[] params){
 
-        if ((command_name.equals("plot")) && (params.length > 2) && (params.length != 5)){
+    private void activatePanelsForGraphs(String command_name, String[] params) {
+
+        if ((command_name.equals("plot")) && (params.length > 2) && (params.length != 5)) {
             //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
             mathToolArea.setBounds(10, 20, 750, 500);
             scrollPane.setBounds(10, 20, 750, 500);
-            InputField.setBounds(10, 530, 640, 30);
-            InputButton.setBounds(660, 530, 100, 30);
-            CancelButton.setBounds(660, 570, 100, 30);
+            inputField.setBounds(10, 530, 640, 30);
+            inputButton.setBounds(660, 530, 100, 30);
+            cancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
             repaint();
-        } else
-        if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))){
+        } else if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))) {
             //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
             mathToolArea.setBounds(10, 20, 750, 500);
             scrollPane.setBounds(10, 20, 750, 500);
-            InputField.setBounds(10, 530, 640, 30);
-            InputButton.setBounds(660, 530, 100, 30);
-            CancelButton.setBounds(660, 570, 100, 30);
+            inputField.setBounds(10, 530, 640, 30);
+            inputButton.setBounds(660, 530, 100, 30);
+            cancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
             repaint();
-        } else
-        if ((command_name.equals("plot")) && (params.length == 5)){
-            try{
+        } else if ((command_name.equals("plot")) && (params.length == 5)) {
+            try {
                 Double.parseDouble(params[1]);
                 Double.parseDouble(params[2]);
                 Double.parseDouble(params[3]);
                 Double.parseDouble(params[4]);
-                if (params[0].contains("=")){
+                if (params[0].contains("=")) {
                     //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
                     mathToolArea.setBounds(10, 20, 750, 500);
                     scrollPane.setBounds(10, 20, 750, 500);
-                    InputField.setBounds(10, 530, 640, 30);
-                    InputButton.setBounds(660, 530, 100, 30);
-                    CancelButton.setBounds(660, 570, 100, 30);
+                    inputField.setBounds(10, 530, 640, 30);
+                    inputButton.setBounds(660, 530, 100, 30);
+                    cancelButton.setBounds(660, 570, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(true);
                     graphicMethods3D.setVisible(false);
-                    RotateButton.setVisible(false);
+                    rotateButton.setVisible(false);
                 } else {
                     //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
                     mathToolArea.setBounds(10, 20, 750, 500);
                     scrollPane.setBounds(10, 20, 750, 500);
-                    InputField.setBounds(10, 530, 640, 30);
-                    InputButton.setBounds(660, 530, 100, 30);
-                    CancelButton.setBounds(660, 570, 100, 30);
+                    inputField.setBounds(10, 530, 640, 30);
+                    inputButton.setBounds(660, 530, 100, 30);
+                    cancelButton.setBounds(660, 570, 100, 30);
                     //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(false);
                     graphicMethods3D.setVisible(true);
-                    RotateButton.setVisible(true);
+                    rotateButton.setVisible(true);
                 }
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
                 mathToolArea.setBounds(10, 20, 750, 500);
                 scrollPane.setBounds(10, 20, 750, 500);
-                InputField.setBounds(10, 530, 640, 30);
-                InputButton.setBounds(660, 530, 100, 30);
-                CancelButton.setBounds(660, 570, 100, 30);
+                inputField.setBounds(10, 530, 640, 30);
+                inputButton.setBounds(660, 530, 100, 30);
+                cancelButton.setBounds(660, 570, 100, 30);
                 //Grafik-Panels sichtbar machen
                 graphicMethods2D.setVisible(true);
                 graphicMethods3D.setVisible(false);
-                RotateButton.setVisible(false);
+                rotateButton.setVisible(false);
             }
             repaint();
-        } else
-        if (command_name.equals("solve")){
+        } else if (command_name.equals("solve")) {
             //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
             mathToolArea.setBounds(10, 20, 750, 500);
             scrollPane.setBounds(10, 20, 750, 500);
-            InputField.setBounds(10, 530, 640, 30);
-            InputButton.setBounds(660, 530, 100, 30);
-            CancelButton.setBounds(660, 570, 100, 30);
+            inputField.setBounds(10, 530, 640, 30);
+            inputButton.setBounds(660, 530, 100, 30);
+            cancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
             repaint();
-        } else 
-        if (command_name.equals("solvedgl")){
+        } else if (command_name.equals("solvedgl")) {
             //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
             mathToolArea.setBounds(10, 20, 750, 500);
             scrollPane.setBounds(10, 20, 750, 500);
-            InputField.setBounds(10, 530, 640, 30);
-            InputButton.setBounds(660, 530, 100, 30);
-            CancelButton.setBounds(660, 570, 100, 30);
+            inputField.setBounds(10, 530, 640, 30);
+            inputButton.setBounds(660, 530, 100, 30);
+            cancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
             repaint();
-        } else 
-        if (command_name.equals("tangent")){
+        } else if (command_name.equals("tangent")) {
             //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
             mathToolArea.setBounds(10, 20, 750, 500);
             scrollPane.setBounds(10, 20, 750, 500);
-            InputField.setBounds(10, 530, 640, 30);
-            InputButton.setBounds(660, 530, 100, 30);
-            CancelButton.setBounds(660, 570, 100, 30);
+            inputField.setBounds(10, 530, 640, 30);
+            inputButton.setBounds(660, 530, 100, 30);
+            cancelButton.setBounds(660, 570, 100, 30);
             //Grafik-Panels sichtbar machen
             graphicMethods2D.setVisible(true);
             graphicMethods3D.setVisible(false);
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
             repaint();
         } else {
-            RotateButton.setVisible(false);
+            rotateButton.setVisible(false);
         }
-    
+
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        InputButton = new javax.swing.JButton();
-        InputField = new javax.swing.JTextField();
-        RotateButton = new javax.swing.JButton();
-        LatexButton = new javax.swing.JButton();
-        ApproxButton = new javax.swing.JButton();
-        OperatorChoice = new java.awt.Choice();
-        CommandChoice = new java.awt.Choice();
-        CancelButton = new javax.swing.JButton();
+        inputButton = new javax.swing.JButton();
+        inputField = new javax.swing.JTextField();
+        rotateButton = new javax.swing.JButton();
+        latexButton = new javax.swing.JButton();
+        approxButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        operatorChoice = new javax.swing.JComboBox();
+        commandChoice = new javax.swing.JComboBox();
         MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
@@ -303,63 +265,85 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         MenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
+        setBackground(new java.awt.Color(250, 150, 0));
+        setBounds(new java.awt.Rectangle(20, 50, 1300, 670));
         setIconImage(Toolkit.getDefaultToolkit().getImage(MathToolForm.class.getResource("MathToolIcon.png")));
         getContentPane().setLayout(null);
 
-        InputButton.addActionListener(new java.awt.event.ActionListener() {
+        inputButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/InputButtonImage.png"))); // NOI18N
+        inputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InputButtonActionPerformed(evt);
+                inputButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(InputButton);
-        InputButton.setBounds(518, 335, 70, 30);
-        getContentPane().add(InputField);
-        InputField.setBounds(10, 336, 490, 20);
+        getContentPane().add(inputButton);
+        inputButton.setBounds(518, 335, 70, 30);
 
-        RotateButton.setText("3D-Graphen rotieren lassen");
-        RotateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RotateButtonActionPerformed(evt);
+        inputField.setBackground(new java.awt.Color(255, 255, 255));
+        inputField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputFieldKeyPressed(evt);
             }
         });
-        getContentPane().add(RotateButton);
-        RotateButton.setBounds(10, 410, 165, 23);
+        getContentPane().add(inputField);
+        inputField.setBounds(10, 336, 490, 31);
 
-        LatexButton.addActionListener(new java.awt.event.ActionListener() {
+        rotateButton.setText("3D-Graphen rotieren lassen");
+        rotateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LatexButtonActionPerformed(evt);
+                rotateButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(LatexButton);
-        LatexButton.setBounds(180, 370, 150, 30);
+        getContentPane().add(rotateButton);
+        rotateButton.setBounds(10, 410, 177, 31);
 
-        ApproxButton.addActionListener(new java.awt.event.ActionListener() {
+        latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
+        latexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ApproxButtonActionPerformed(evt);
+                latexButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(ApproxButton);
-        ApproxButton.setBounds(10, 370, 150, 30);
-        getContentPane().add(OperatorChoice);
-        OperatorChoice.setBounds(340, 380, 130, 20);
-        getContentPane().add(CommandChoice);
-        CommandChoice.setBounds(480, 380, 130, 20);
+        getContentPane().add(latexButton);
+        latexButton.setBounds(180, 370, 150, 30);
 
-        CancelButton.setText("Abbruch");
-        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+        approxButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/ApproxButtonImage.png"))); // NOI18N
+        approxButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelButtonActionPerformed(evt);
+                approxButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(CancelButton);
-        CancelButton.setBounds(520, 410, 73, 23);
+        getContentPane().add(approxButton);
+        approxButton.setBounds(10, 370, 150, 30);
+
+        cancelButton.setText("Abbruch");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cancelButton);
+        cancelButton.setBounds(520, 410, 61, 31);
+
+        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "gcd()", "int()", "laplace()", "lcm()", "prod()", "sum()", "taylor()" }));
+        operatorChoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                operatorChoiceActionPerformed(evt);
+            }
+        });
+        getContentPane().add(operatorChoice);
+        operatorChoice.setBounds(340, 370, 130, 31);
+
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
+        commandChoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                commandChoiceActionPerformed(evt);
+            }
+        });
+        getContentPane().add(commandChoice);
+        commandChoice.setBounds(480, 370, 105, 31);
 
         jMenu1.setText("Datei");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
 
         MenuItemQuit.setText("Quit");
         MenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
@@ -395,108 +379,135 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void executeCommand(){
-        
-        boolean valid_command = false;
-        
-        /**Leerzeichen werden im Vorfeld beseitigt.
-         */
-        String s = InputField.getText().replaceAll(" ", "");
 
-        /** Befehl loggen!
-         */
-        listOfCommands.put(command_count, s);
-        command_count++;
-        log_position = command_count;
-        
-        /**
-        Zunächst: es wird geprüft, ob die Zeile einen Befehl bildet.
-        Ja -> Befehl ausführen.
-        Nein -> Prüfen, ob dies ein mathematischer ausdruck ist.
-         */
-        try{
-     
-            /** Falls es ein Grafikbefehl ist -> entsprechendes Panel sichtbar machen und das andere unsichtbar.
-             */
-            String[] com = Expression.getOperatorAndArguments(s);
-            String[] params = Expression.getArguments(com[1]);
-            
-            for (int i = 0; i < MathCommandCompiler.commands.length; i++){
-                if (com[0].equals(MathCommandCompiler.commands[i])){
-                    valid_command = true;
-                }
+    private void executeCommand() {
+        cancelButton.setVisible(true);
+        swingWorker = new SwingWorker<Void, Void>() {
+            @Override
+            protected void done() {
+                cancelButton.setVisible(false);
             }
-            if (valid_command){
-                mathToolArea.append(s + "\n \n");
-                MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D, 
-                        definedVars, definedVarsSet);
-                /** Falls es graphische befehle waren -> Grafik sichtbar machen.
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                boolean valid_command = false;
+
+                /**
+                 * Leerzeichen werden im Vorfeld beseitigt.
                  */
-                activatePanelsForGraphs(com[0], params);
+                String s = inputField.getText().replaceAll(" ", "");
+
+                /**
+                 * Befehl loggen!
+                 */
+                listOfCommands.put(command_count, s);
+                command_count++;
+                log_position = command_count;
+
+                /**
+                 * Zunächst: es wird geprüft, ob die Zeile einen Befehl bildet.
+                 * Ja -> Befehl ausführen. Nein -> Prüfen, ob dies ein
+                 * mathematischer ausdruck ist.
+                 */
+                try {
+
+                    /**
+                     * Falls es ein Grafikbefehl ist -> entsprechendes Panel
+                     * sichtbar machen und das andere unsichtbar.
+                     */
+                    String[] com = Expression.getOperatorAndArguments(s);
+                    String[] params = Expression.getArguments(com[1]);
+
+                    for (int i = 0; i < MathCommandCompiler.commands.length; i++) {
+                        if (com[0].equals(MathCommandCompiler.commands[i])) {
+                            valid_command = true;
+                        }
+                    }
+                    if (valid_command) {
+                        mathToolArea.append(s + "\n \n");
+                        MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D,
+                                definedVars, definedVarsSet);
+                        /**
+                         * Falls es graphische befehle waren -> Grafik sichtbar
+                         * machen.
+                         */
+                        activatePanelsForGraphs(com[0], params);
+                        inputField.setText("");
+                    }
+
+                } catch (ExpressionException | EvaluationException e) {
+                    /**
+                     * Falls es ein gültiger Befehl war (unabhängig davon, ob
+                     * dieser Fehler enthielt oder nicht) -> abbrechen und NICHT
+                     * weiter prüfen, ob es sich um einen Ausdruck handeln
+                     * könnte.
+                     */
+                    if (valid_command) {
+                        mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                        return null;
+                    }
+                }
+
+                /**
+                 * Falls es ein gültiger Befehl war (unabhängig davon, ob dieser
+                 * Fehler enthield oder nicht) -> abbrechen und NICHT weiter
+                 * prüfen, ob es sich um einen Ausdruck handeln könnte.
+                 */
+                if (valid_command) {
+                    return null;
+                }
+
+                /**
+                 * Nun wird geprüft, ob es sich bei s um einen gültigen ausdruck
+                 * handelt. Ja -> ggfs. vereinfachen und ausgeben.
+                 */
+                try {
+
+                    Expression expr = Expression.build(s, new HashSet());
+
+                    /**
+                     * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+                     * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber
+                     * beim Auswerten einen Fehler.
+                     */
+                    try {
+                        Expression expr_simplified = expr.evaluate(definedVarsSet);
+                        expr_simplified = expr_simplified.simplify();
+                        mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
+                        inputField.setText("");
+                    } catch (EvaluationException e) {
+                        mathToolArea.append(expr.writeFormula(true) + "\n \n");
+                        mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                    }
+
+                } catch (ExpressionException e) {
+                    mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                }
+                return null;
             }
-            
-        } catch(ExpressionException|EvaluationException e){
-            /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthielt oder nicht)
-             * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
-             */
-            if(valid_command){
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
-                return;
-            }
-        } 
-
-        /** Falls es ein gültiger Befehl war (unabhängig davon, ob dieser Fehler enthield oder nicht)
-         * -> abbrechen und NICHT weiter prüfen, ob es sich um einen Ausdruck handeln könnte.
-         */
-        if(valid_command){
-            return;
-        }
-
-        /** Nun wird geprüft, ob es sich bei s um einen gültigen ausdruck handelt.
-         * Ja -> ggfs. vereinfachen und ausgeben.
-         */
-        try{
-        
-            Expression expr = Expression.build(s, new HashSet());
-
-            /**Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
-             * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber beim Auswerten einen Fehler.
-             */
-            try{
-                Expression expr_simplified = expr.evaluate(definedVarsSet);
-                expr_simplified = expr_simplified.simplify();
-                mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
-            } catch (EvaluationException e){
-                mathToolArea.append(expr.writeFormula(true) + "\n \n");
-                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
-            } 
-        
-        } catch (ExpressionException e){
-            mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
-        }
-        computing=false;
-//        swingWorker.cancel(true);
+        };
+        swingWorker.execute();
     }
 
-    private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
+    private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
         executeCommand();
-    }//GEN-LAST:event_InputButtonActionPerformed
+    }//GEN-LAST:event_inputButtonActionPerformed
 
-    
-    private void RotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RotateButtonActionPerformed
-        if(!startRotate){
+
+    private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
+        if (!startRotate) {
             this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
             startRotate = true;
             graphicMethods3D.setStartRotate(true);
             threadRotate.start();
-            RotateButton.setText("Rotation stoppen");
+            rotateButton.setText("Rotation stoppen");
         } else {
             startRotate = false;
             graphicMethods3D.setStartRotate(false);
             threadRotate.interrupt();
-            RotateButton.setText("3D-Graphen rotieren lassen");
+            rotateButton.setText("3D-Graphen rotieren lassen");
         }
-    }//GEN-LAST:event_RotateButtonActionPerformed
+    }//GEN-LAST:event_rotateButtonActionPerformed
 
     private void MenuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpActionPerformed
         HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
@@ -508,129 +519,103 @@ public class MathToolForm extends javax.swing.JFrame implements KeyListener{
         aboutMathToolGUI.setVisible(true);
     }//GEN-LAST:event_MenuItemAboutActionPerformed
 
-    private void ApproxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApproxButtonActionPerformed
-        String line = InputField.getText();
-        InputField.setText("approx(" + line + ")");
+    private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
+        String line = inputField.getText();
+        inputField.setText("approx(" + line + ")");
         executeCommand();
-        InputField.setText(line);
-    }//GEN-LAST:event_ApproxButtonActionPerformed
+        inputField.setText(line);
+    }//GEN-LAST:event_approxButtonActionPerformed
 
-    private void LatexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexButtonActionPerformed
-        String line = InputField.getText();
-        InputField.setText("latex(" + line + ")");
+    private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
+        String line = inputField.getText();
+        inputField.setText("latex(" + line + ")");
         executeCommand();
-        InputField.setText(line);
-    }//GEN-LAST:event_LatexButtonActionPerformed
-
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-    }//GEN-LAST:event_jMenu1ActionPerformed
+        inputField.setText(line);
+    }//GEN-LAST:event_latexButtonActionPerformed
 
     private void MenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemQuitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_MenuItemQuitActionPerformed
 
-    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
-        this.computing = false;
-        Expression.exit = true;
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         swingWorker.cancel(true);
-        Expression.exit = false;
-    }//GEN-LAST:event_CancelButtonActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    
+    private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
+        if (operatorChoice.getSelectedIndex() > 0) {
+            inputField.replaceSelection((String) operatorChoice.getSelectedItem());
+            operatorChoice.setSelectedIndex(0);
+            inputField.setSelectionStart(inputField.getSelectionStart() - 1);
+            inputField.setSelectionEnd(inputField.getSelectionStart());
+        }
+        inputField.requestFocus();
+    }//GEN-LAST:event_operatorChoiceActionPerformed
+
+    private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
+        if (commandChoice.getSelectedIndex() > 0) {
+            inputField.replaceSelection((String) commandChoice.getSelectedItem());
+            commandChoice.setSelectedIndex(0);
+            inputField.setSelectionStart(inputField.getSelectionStart() - 1);
+            inputField.setSelectionEnd(inputField.getSelectionStart());
+        }
+        inputField.requestFocus();
+    }//GEN-LAST:event_commandChoiceActionPerformed
+
+    private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
+        if (KeyEvent.VK_ENTER == evt.getKeyCode()) {
+            executeCommand();
+        }
+        if (KeyEvent.VK_UP == evt.getKeyCode()) {
+            if (log_position > 0) {
+                log_position--;
+            }
+            if (log_position == command_count - 1) {
+                log_position--;
+            }
+            showLoggedCommand(log_position);
+        }
+        if (KeyEvent.VK_DOWN == evt.getKeyCode()) {
+            if (log_position < command_count - 1) {
+                log_position++;
+            }
+            showLoggedCommand(log_position);
+        }
+    }//GEN-LAST:event_inputFieldKeyPressed
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MathToolForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MathToolForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MathToolForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MathToolForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                MathToolForm MyMathToolForm = new MathToolForm();
-                MyMathToolForm.setVisible(true);
-                MyMathToolForm.setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
-                MyMathToolForm.setBounds(20,50,1300,670);
-                MyMathToolForm.getContentPane().setBackground(new Color(255,150,0));
+                MathToolForm myMathToolForm = new MathToolForm();
+                myMathToolForm.setVisible(true);
+                myMathToolForm.setBounds(20, 50, 1300, 670);
+                myMathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ApproxButton;
-    private javax.swing.JButton CancelButton;
-    private java.awt.Choice CommandChoice;
-    private javax.swing.JButton InputButton;
-    private javax.swing.JTextField InputField;
-    private javax.swing.JButton LatexButton;
     private javax.swing.JMenuBar MathToolMenuBar;
     private javax.swing.JMenuItem MenuItemAbout;
     private javax.swing.JMenuItem MenuItemHelp;
     private javax.swing.JMenuItem MenuItemQuit;
-    private java.awt.Choice OperatorChoice;
-    private javax.swing.JButton RotateButton;
+    private javax.swing.JButton approxButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox commandChoice;
+    private javax.swing.JButton inputButton;
+    private javax.swing.JTextField inputField;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JButton latexButton;
+    private javax.swing.JComboBox operatorChoice;
+    private javax.swing.JButton rotateButton;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-    
-    private void doThreading(){
-        swingWorker = new SwingWorker<Void, Void>() {
-
-            @Override
-            protected Void doInBackground() throws Exception {
-                while (computing) {
-                    executeCommand();
-                }
-                return null;
-            }
-            
-        };
-        swingWorker.execute();
-    }
-    
-    @Override
-    public void keyPressed(KeyEvent e) {
-        
-        if(KeyEvent.VK_ENTER == e.getKeyCode()){
-//            this.computing = true;
-//            doThreading();
-            executeCommand();
-        }
-        if(KeyEvent.VK_UP == e.getKeyCode()){
-            if (log_position > 0){
-                log_position--;
-            }
-            if (log_position == command_count - 1){
-                log_position--;
-            }
-            showLoggedCommand(log_position);
-        }
-        if(KeyEvent.VK_DOWN == e.getKeyCode()){
-            if (log_position < command_count - 1){
-                log_position++;
-            }
-            showLoggedCommand(log_position);
-        }
-        
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-    
 }

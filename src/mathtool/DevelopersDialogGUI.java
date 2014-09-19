@@ -18,30 +18,30 @@ public class DevelopersDialogGUI extends JDialog {
     private JScrollPane scrollPaneDevelopers;
 
     public DevelopersDialogGUI() {
-        
+
         setTitle("About MathTool");
         setLayout(null);
         setResizable(false);
 
-        this.setBounds(400,200,505,420);
+        this.setBounds(400, 200, 505, 420);
         this.getContentPane().setBackground(Color.white);
 
-        /** Logo laden
+        /**
+         * Logo laden
          */
-        File imageFile = new File("MathToolLogo.png");
         JPanel panel = new JPanel();
         add(panel);
         BufferedImage image = null;
         try {
-            image = ImageIO.read(imageFile);
+            image = ImageIO.read(HelpDialogGUI.class.getResource("icons/MathToolLogo.png"));
+        } catch (java.io.IOException e) {
         }
-        catch(java.io.IOException e) {
-        }
-        panel.add(new JLabel(new ImageIcon(image)));        
+        panel.add(new JLabel(new ImageIcon(image)));
         panel.setBounds(0, -5, 500, 100);
         panel.setVisible(true);
-        
-        /** About-Datei laden
+
+        /**
+         * About-Datei laden
          */
         developersArea = new JEditorPane();
         developersArea.setContentType("text/html");
@@ -53,7 +53,7 @@ public class DevelopersDialogGUI extends JDialog {
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("MathToolDevelopers.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopers.html");
         if (helpURL != null) {
             try {
                 developersArea.setPage(helpURL);
@@ -63,10 +63,9 @@ public class DevelopersDialogGUI extends JDialog {
         } else {
             System.err.println("Datei nicht gefunden.");
         }
-        
+
         validate();
         repaint();
     }
-    
-    
+
 }
