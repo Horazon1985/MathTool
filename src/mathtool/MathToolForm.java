@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -26,7 +28,9 @@ public class MathToolForm extends javax.swing.JFrame {
     private Thread threadRotate;
     private boolean startRotate;
     private boolean computing = false;
-    private SwingWorker<Void, Void> swingWorker;
+    private SwingWorker<Void, Void> computingSwingWorker;
+    private Timer waitingTimer;
+    private DevelopersDialogGUI waitingDialog = new DevelopersDialogGUI();
 
     JTextArea mathToolArea;
     JEditorPane helpArea;
@@ -384,9 +388,11 @@ public class MathToolForm extends javax.swing.JFrame {
     private void executeCommand() {
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
-        swingWorker = new SwingWorker<Void, Void>() {
+        computingSwingWorker = new SwingWorker<Void, Void>() {
             @Override
             protected void done() {
+                waitingTimer.cancel();
+                waitingDialog.setVisible(false);
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
                 computing = false;
@@ -491,7 +497,14 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         };
         computing = true;
-        swingWorker.execute();
+        waitingTimer = new Timer();
+        waitingTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                waitingDialog.setVisible(true);
+            }
+        }, 1000);
+        computingSwingWorker.execute();
     }
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
@@ -543,7 +556,7 @@ public class MathToolForm extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemQuitActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        swingWorker.cancel(true);
+        computingSwingWorker.cancel(true);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
@@ -591,7 +604,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
-                    swingWorker.cancel(true);
+                    computingSwingWorker.cancel(true);
                 } else {
                     inputField.setText("");
                 }

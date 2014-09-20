@@ -1,9 +1,6 @@
 package mathtool;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -26,6 +23,8 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         setTitle("Hilfe");
         setLayout(null);
         setResizable(false);
+        setModal(true);
+
         JLabel menue = new JLabel("Menü");
         menue.setFont(menue.getFont().deriveFont(Font.BOLD));
         generalities = new JLabel("Allgemeines");

@@ -1,10 +1,7 @@
 package mathtool;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -22,6 +19,7 @@ public class DevelopersDialogGUI extends JDialog {
         setTitle("About MathTool");
         setLayout(null);
         setResizable(false);
+        setModal(true);
 
         this.setBounds(400, 200, 505, 420);
         this.getContentPane().setBackground(Color.white);
