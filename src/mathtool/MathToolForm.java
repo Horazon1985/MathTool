@@ -29,8 +29,8 @@ public class MathToolForm extends javax.swing.JFrame {
     private boolean startRotate;
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
-    private Timer waitingTimer;
-    private DevelopersDialogGUI waitingDialog = new DevelopersDialogGUI();
+    private Timer computingTimer;
+    private ComputingDialogGUI computingDialog = new ComputingDialogGUI();
 
     JTextArea mathToolArea;
     JEditorPane helpArea;
@@ -104,9 +104,9 @@ public class MathToolForm extends javax.swing.JFrame {
         /**
          * Auswahlmenüs ausrichten
          */
-        operatorChoice.setBounds(250, 573, 120, 30);
+        operatorChoice.setBounds(250, 570, 120, 30);
 
-        commandChoice.setBounds(375, 573, 120, 30);
+        commandChoice.setBounds(375, 570, 120, 30);
 
         /**
          * 2D-Grafikobjekte initialisieren
@@ -283,16 +283,15 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(inputButton);
-        inputButton.setBounds(518, 335, 70, 30);
+        inputButton.setBounds(518, 335, 100, 30);
 
-        inputField.setBackground(new java.awt.Color(255, 255, 255));
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 31);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setText("3D-Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -301,7 +300,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 177, 31);
+        rotateButton.setBounds(10, 410, 165, 23);
 
         latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
         latexButton.addActionListener(new java.awt.event.ActionListener() {
@@ -321,23 +320,23 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(approxButton);
         approxButton.setBounds(10, 370, 150, 30);
 
-        cancelButton.setText("Abbruch");
+        cancelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/CancelButtonImage.png"))); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(520, 410, 61, 31);
+        cancelButton.setBounds(520, 410, 100, 30);
 
-        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "gcd()", "int()", "laplace()", "lcm()", "prod()", "sum()", "taylor()" }));
+        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 operatorChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 31);
+        operatorChoice.setBounds(340, 370, 130, 20);
 
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
@@ -346,7 +345,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 105, 31);
+        commandChoice.setBounds(480, 370, 75, 20);
 
         jMenu1.setText("Datei");
 
@@ -391,8 +390,8 @@ public class MathToolForm extends javax.swing.JFrame {
         computingSwingWorker = new SwingWorker<Void, Void>() {
             @Override
             protected void done() {
-                waitingTimer.cancel();
-                waitingDialog.setVisible(false);
+                computingTimer.cancel();
+                computingDialog.setVisible(false);
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
                 computing = false;
@@ -497,11 +496,11 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         };
         computing = true;
-        waitingTimer = new Timer();
-        waitingTimer.schedule(new TimerTask() {
+        computingTimer = new Timer();
+        computingTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                waitingDialog.setVisible(true);
+                computingDialog.setVisible(true);
             }
         }, 1000);
         computingSwingWorker.execute();
