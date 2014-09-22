@@ -5,6 +5,7 @@ import expressionbuilder.Expression;
 import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
+import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
@@ -1119,7 +1120,7 @@ public class MathCommandCompiler {
 
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, Hashtable definedVars, HashSet definedVarsSet)
+            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, Hashtable definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
@@ -1147,7 +1148,7 @@ public class MathCommandCompiler {
             executeApprox(c, area, definedVars);
         } else if (c.getName().equals("clear")) {
             executeClear(c, area);
-        } else if ((c.getName().equals("def")) && (c.getParams().length >= 1)) {
+        } else if ((c.getName().equals("def")) && c.getParams().length >= 1) {
             executeDefine(c, area, definedVars, definedVarsSet);
         } else if (c.getName().equals("defvars")) {
             executeDefVars(c, area, definedVars, definedVarsSet);
@@ -1157,20 +1158,22 @@ public class MathCommandCompiler {
             executeLatex(c, area);
         } else if (c.getName().equals("pi")) {
             executePi(c, area);
-        } else if ((c.getName().equals("plot")) && (c.getParams().length != 5) && (c.getParams().length != 6)) {
+        } else if (c.getName().equals("plot") && c.getParams().length != 5 && c.getParams().length != 6) {
             executePlot2D(c, graphicMethods2D);
-        } else if ((c.getName().equals("plot")) && (c.getParams().length == 5)) {
+        } else if (c.getName().equals("plot") && c.getParams().length == 5) {
             if (c.getParams()[1] instanceof Expression) {
                 executePlot2D(c, graphicMethods2D);
             } else {
                 executePlot3D(c, graphicMethods3D);
             }
-        } else if ((c.getName().equals("plot")) && (c.getParams().length == 6)) {
+        } else if (c.getName().equals("plot") && c.getParams().length == 6) {
             if (c.getParams()[2] instanceof Expression) {
                 executePlot2D(c, graphicMethods2D);
             } else {
                 executeImplicitPlot2D(c, graphicMethods2D);
             }
+        } else if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
+            executePlotCurve2D(c, graphicMethodsCurves2D);
         } else if (c.getName().equals("solve")) {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getName().equals("solvedgl")) {
@@ -1286,9 +1289,6 @@ public class MathCommandCompiler {
         area.append("Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n");
     }
 
-    /**
-     * c Enthält genau 3 Parameter Parameter: Expression, double, double
-     */
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
 
@@ -1325,10 +1325,6 @@ public class MathCommandCompiler {
 
     }
 
-    /**
-     * c Enthält genau 5 Parameter Parameter: Expression, double, double,
-     * double, double
-     */
     private static void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
             EvaluationException {
 
@@ -1398,10 +1394,6 @@ public class MathCommandCompiler {
 
     }
 
-    /**
-     * c Enthält genau 6 Parameter Parameter: Expression, Expression, double,
-     * double, double, double
-     */
     private static void executeImplicitPlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
 
@@ -1466,6 +1458,38 @@ public class MathCommandCompiler {
                 x_1, x_2, y_1, y_2);
         graphicMethods2D.setImplicitGraph(implicit_graph);
         graphicMethods2D.drawGraph2D();
+
+    }
+
+    private static void executePlotCurve2D(Command c, GraphicMethodsCurves2D graphicMethodsCurves2D) throws ExpressionException,
+            EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression[] expr = new Expression[2];
+        expr[0] = (Expression) c.getParams()[0];
+        expr[0].getContainedVars(vars);
+        expr[1] = (Expression) c.getParams()[1];
+        expr[1].getContainedVars(vars);
+        expr[0] = expr[0].simplify();
+        expr[1] = expr[1].simplify();
+        
+        //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
+        if (vars.isEmpty()) {
+            vars.add("x");
+        }
+
+        double t_0 = (double) c.getParams()[2];
+        double t_1 = (double) c.getParams()[3];
+
+        Iterator iter = vars.iterator();
+        String var = (String) iter.next();
+
+        graphicMethodsCurves2D.setIsInitialized(true);
+        graphicMethodsCurves2D.setExpression(expr);
+        graphicMethodsCurves2D.expressionToGraph(var, t_0, t_1);
+        graphicMethodsCurves2D.computeMaxXMaxY();
+        graphicMethodsCurves2D.setParameters(var, graphicMethodsCurves2D.getAxeCenterX(), graphicMethodsCurves2D.getAxeCenterY());
+        graphicMethodsCurves2D.drawCurve2D();
 
     }
 
