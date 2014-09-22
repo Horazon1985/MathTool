@@ -30,7 +30,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex",
-        "pi", "plot", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+        "pi", "plot", "plotcurve", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
      * Wichtig: Der String command und die Parameter params entahlten keine
@@ -341,13 +341,17 @@ public class MathCommandCompiler {
         /**
          * Struktur: PLOT(EXPRESSION(var), value_1, value_2) EXPRESSION:
          * Ausdruck in einer Variablen. value_1 < value_2: Grenzen des
-         * Zeichenbereichs ODER: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var),
+         * Zeichenbereichs. 
+         * ODER: 
+         * PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var),
          * value_1, value_2) EXPRESSION_i(var): Ausdruck in einer Variablen.
-         * value_1 < value_2: Grenzen des Zeichenbereichs ODER:
+         * value_1 < value_2: Grenzen des Zeichenbereichs 
+         * ODER:
          * PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3, value_4)
          * EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 < value_2,
          * value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden Variablen
-         * werden dabei alphabetisch geordnet. ODER: PLOT(EXPRESSION_1(var1,
+         * werden dabei alphabetisch geordnet. 
+         * ODER: PLOT(EXPRESSION_1(var1,
          * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
          * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
          * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
@@ -620,10 +624,10 @@ public class MathCommandCompiler {
                     double y_0 = Double.parseDouble(params[3]);
                     double y_1 = Double.parseDouble(params[4]);
                     if (x_0 >= x_1) {
-                        throw new ExpressionException("Der dritte Parameter muss größer sein als der zweite Parameter.");
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
                     }
                     if (y_0 >= y_1) {
-                        throw new ExpressionException("Der fünfte Parameter muss größer sein als der vierte Parameter.");
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss größer sein als der vierte Parameter.");
                     }
                     command_params = new Object[5];
                     command_params[0] = expr;
@@ -638,6 +642,82 @@ public class MathCommandCompiler {
                 }
 
             }
+        }
+
+        //PLOTCURVE
+        /**
+         * Struktur: PLOTCURVE([EXPRESSION_1(var), EXPRESSION_2(var)], value_1, value_2) EXPRESSION:
+         * EXPRESSION_i(var) = Ausdruck in einer Variablen. value_1 < value_2: Parametergrenzen. 
+         * ODER:
+         * Struktur: PLOTCURVE([EXPRESSION_1(var), EXPRESSION_2(var), EXPRESSION_3(var)], value_1, value_2) EXPRESSION:
+         * EXPRESSION_i(var) = Ausdruck in einer Variablen. value_1 < value_2: Parametergrenzen. 
+         */
+        if (command.equals("plotcurve")) {
+            if (params.length != 3) {
+                throw new ExpressionException("Im Befehl 'plotcurve' müssen gnau drei Parameter stehen.");
+            }
+
+            HashSet vars = new HashSet();
+
+            /** Es wird nun geprüft, ob der erste Parameter die Form "[expr_1, expr_2]" oder 
+             * "[expr_1, expr_2, expr_3]" besitzt.
+             */
+
+            if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")){
+                throw new ExpressionException("Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.");
+            }
+
+            String[] curve_components = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
+            if (curve_components.length != 2 && curve_components.length != 3){
+                throw new ExpressionException("Die parametrisierte Kurve im Befehl 'plotcurve' muss aus zwei oder drei Komponenten bestehen.");
+            }
+            
+            for (int i = 0; i < curve_components.length; i++){
+                try {
+                    Expression.build(curve_components[i], vars);
+                } catch (ExpressionException e) {
+                    throw new ExpressionException("Die " + (i + 1) + ". Kompomente in der Kurvendarstellung muss ein gültiger "
+                            + "Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                }
+            }
+            
+            if (vars.size() > 1) {
+                throw new ExpressionException("Die Kurve im Befehl 'plotcurve' darf durch höchstens einen Parameter parametrisiert werden.");
+            }
+
+            try {
+                Double.parseDouble(params[1]);
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der zweite Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+            }
+
+            try {
+                Double.parseDouble(params[2]);
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der dritte Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+            }
+
+            double t_0 = Double.parseDouble(params[1]);
+            double t_1 = Double.parseDouble(params[2]);
+
+            if (curve_components.length == 2){
+                command_params = new Object[4];
+                command_params[0] = Expression.build(curve_components[0], vars);
+                command_params[1] = Expression.build(curve_components[1], vars);
+                command_params[2] = t_0;
+                command_params[3] = t_1;
+            } else {
+                command_params = new Object[5];
+                command_params[0] = Expression.build(curve_components[0], vars);
+                command_params[1] = Expression.build(curve_components[1], vars);
+                command_params[2] = Expression.build(curve_components[2], vars);
+                command_params[3] = t_0;
+                command_params[4] = t_1;
+            }
+            
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
         }
 
         //SOLVE
@@ -696,26 +776,27 @@ public class MathCommandCompiler {
             double x_2 = Double.parseDouble(params[2]);
 
             if (params.length == 3) {
-                command_params = new Object[3];
-                command_params[0] = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS);
-                command_params[1] = x_1;
-                command_params[2] = x_2;
+                command_params = new Object[4];
+                command_params[0] = expr_1;
+                command_params[1] = expr_2;
+                command_params[2] = x_1;
+                command_params[3] = x_2;
             } else {
                 int n = Integer.parseInt(params[3]);
                 if (n < 1) {
                     throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
                 }
-                command_params = new Object[4];
-                command_params[0] = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS);
-                command_params[1] = x_1;
-                command_params[2] = x_2;
-                command_params[3] = n;
+                command_params = new Object[5];
+                command_params[0] = expr_1;
+                command_params[1] = expr_2;
+                command_params[2] = x_1;
+                command_params[3] = x_2;
+                command_params[4] = n;
             }
 
             result.setName(command);
             result.setParams(command_params);
             return result;
-
         }
 
         //SOLVEDGL
@@ -883,7 +964,6 @@ public class MathCommandCompiler {
             result.setName(command);
             result.setParams(command_params);
             return result;
-
         }
 
         //TAYLORDGL
@@ -989,7 +1069,6 @@ public class MathCommandCompiler {
             result.setName(command);
             result.setParams(command_params);
             return result;
-
         }
 
         //UNDEFINE
@@ -997,7 +1076,6 @@ public class MathCommandCompiler {
          * Struktur: undef(var_1, ..., var_k) var_i: Variablenname
          */
         if (command.equals("undef")) {
-
             /**
              * Prüft, ob alle Parameter gültige Variablen sind.
              */
@@ -1015,7 +1093,6 @@ public class MathCommandCompiler {
             result.setName(command);
             result.setParams(command_params);
             return result;
-
         }
 
         //UNDEFINEALL
@@ -1023,7 +1100,6 @@ public class MathCommandCompiler {
          * Struktur: undefall()
          */
         if (command.equals("undefall")) {
-
             /**
              * Prüft, ob der Befehl keine Parameter besitzt.
              */
@@ -1039,7 +1115,6 @@ public class MathCommandCompiler {
         }
 
         return result;
-
     }
 
     //Führt den Befehl aus.
@@ -1398,7 +1473,9 @@ public class MathCommandCompiler {
             throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr = ((Expression) c.getParams()[0]).simplify();
+        Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
+        Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
+        Expression expr = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS).simplify();
         expr.getContainedVars(vars);
         //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
         String var = "x";
@@ -1407,8 +1484,8 @@ public class MathCommandCompiler {
             var = (String) iter.next();
         }
 
-        double x_1 = (double) c.getParams()[1];
-        double x_2 = (double) c.getParams()[2];
+        double x_1 = (double) c.getParams()[2];
+        double x_2 = (double) c.getParams()[3];
         /**
          * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll das
          * Intervall in 1000000 Teile unterteilt werden.
@@ -1416,8 +1493,8 @@ public class MathCommandCompiler {
          */
         int n = 1000000;
 
-        if (c.getParams().length == 4) {
-            n = (int) c.getParams()[3];
+        if (c.getParams().length == 5) {
+            n = (int) c.getParams()[4];
         }
 
         Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
@@ -1433,14 +1510,16 @@ public class MathCommandCompiler {
         double[][] zeros = new double[result.size()][2];
         for (int i = 0; i < zeros.length; i++) {
             zeros[i][0] = result.get(i + 1);
-            zeros[i][1] = 0;
+            Variable.setValue(var, zeros[i][0]);
+            zeros[i][1] = expr_1.evaluate();
         }
 
         graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setGraphIsExplicit(true);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr);
+        graphicMethods2D.addExpression(expr_1);
+        graphicMethods2D.addExpression(expr_2);
         graphicMethods2D.expressionToGraph(var, x_1, x_2);
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());

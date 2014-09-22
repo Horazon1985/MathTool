@@ -5,6 +5,7 @@ import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicPresentationOfFormula;
 
 import java.awt.*;
@@ -38,6 +39,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
+    GraphicMethodsCurves2D graphicMethodsCurves2D;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
 
     /**
