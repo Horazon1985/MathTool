@@ -18,11 +18,11 @@ public class ComputingDialogGUI extends JDialog {
         setResizable(false);
 //        setModal(true);
 
-        this.setBounds(400, 300, 300, 100);
+        this.setBounds(400, 300, 400, 100);
         this.getContentPane().setBackground(Color.white);
 
         JLabel computingLabel = new JLabel("Berechnung wird ausgeführt...");
-        computingLabel.setBounds(20, 25, 200, 25);
+        computingLabel.setBounds(20, 25, 300, 25);
         add(computingLabel);
         validate();
         repaint();

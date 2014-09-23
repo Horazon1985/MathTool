@@ -570,14 +570,12 @@ public class MathToolForm extends javax.swing.JFrame {
         String line = inputField.getText();
         inputField.setText("approx(" + line + ")");
         executeCommand();
-        inputField.setText(line);
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
         String line = inputField.getText();
         inputField.setText("latex(" + line + ")");
         executeCommand();
-        inputField.setText(line);
     }//GEN-LAST:event_latexButtonActionPerformed
 
     private void MenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemQuitActionPerformed
