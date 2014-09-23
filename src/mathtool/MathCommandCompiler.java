@@ -7,6 +7,7 @@ import expressionbuilder.ExpressionException;
 import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethods3D;
+import expressionbuilder.GraphicMethodsCurves3D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
 import expressionbuilder.AnalysisMethods;
@@ -670,7 +671,7 @@ public class MathCommandCompiler {
 
             String[] curve_components = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
             if (curve_components.length != 2 && curve_components.length != 3){
-                throw new ExpressionException("Die parametrisierte Kurve im Befehl 'plotcurve' muss aus zwei oder drei Komponenten bestehen.");
+                throw new ExpressionException("Die parametrisierte Kurve im Befehl 'plotcurve' muss entweder aus zwei oder aus drei Komponenten bestehen.");
             }
             
             for (int i = 0; i < curve_components.length; i++){
@@ -1120,8 +1121,8 @@ public class MathCommandCompiler {
 
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, Hashtable definedVars, HashSet definedVarsSet)
-            throws ExpressionException, EvaluationException {
+            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D, 
+            Hashtable definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
 
@@ -1174,6 +1175,8 @@ public class MathCommandCompiler {
             }
         } else if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
             executePlotCurve2D(c, graphicMethodsCurves2D);
+        } else if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
+            executePlotCurve3D(c, graphicMethodsCurves3D);
         } else if (c.getName().equals("solve")) {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getName().equals("solvedgl")) {
@@ -1390,7 +1393,7 @@ public class MathCommandCompiler {
 
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
         graphicMethods3D.expressionToGraph(expr.simplify(), x_0, x_1, y_0, y_1);
-        graphicMethods3D.drawGraph();
+        graphicMethods3D.drawGraph3D();
 
     }
 
@@ -1473,9 +1476,9 @@ public class MathCommandCompiler {
         expr[0] = expr[0].simplify();
         expr[1] = expr[1].simplify();
         
-        //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
+        //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
-            vars.add("x");
+            vars.add("t");
         }
 
         double t_0 = (double) c.getParams()[2];
@@ -1490,6 +1493,41 @@ public class MathCommandCompiler {
         graphicMethodsCurves2D.computeScreenSizes(t_0, t_1);
         graphicMethodsCurves2D.expressionToGraph(t_0, t_1);
         graphicMethodsCurves2D.drawCurve2D();
+
+    }
+
+    private static void executePlotCurve3D(Command c, GraphicMethodsCurves3D graphicMethodsCurves3D) throws ExpressionException,
+            EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression[] expr = new Expression[3];
+        expr[0] = (Expression) c.getParams()[0];
+        expr[0].getContainedVars(vars);
+        expr[1] = (Expression) c.getParams()[1];
+        expr[1].getContainedVars(vars);
+        expr[2] = (Expression) c.getParams()[2];
+        expr[2].getContainedVars(vars);
+        expr[0] = expr[0].simplify();
+        expr[1] = expr[1].simplify();
+        expr[2] = expr[2].simplify();
+        
+        //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
+        if (vars.isEmpty()) {
+            vars.add("t");
+        }
+
+        double t_0 = (double) c.getParams()[3];
+        double t_1 = (double) c.getParams()[4];
+
+        Iterator iter = vars.iterator();
+        String var = (String) iter.next();
+
+        graphicMethodsCurves3D.setIsInitialized(true);
+        graphicMethodsCurves3D.setExpression(expr);
+        graphicMethodsCurves3D.setVar(var);
+        graphicMethodsCurves3D.computeScreenSizes(t_0, t_1);
+        graphicMethodsCurves3D.expressionToGraph(t_0, t_1);
+        graphicMethodsCurves3D.drawCurve3D();
 
     }
 
