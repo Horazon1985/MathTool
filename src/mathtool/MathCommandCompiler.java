@@ -1473,7 +1473,7 @@ public class MathCommandCompiler {
         expr[0] = expr[0].simplify();
         expr[1] = expr[1].simplify();
         
-        //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
+        //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
         }
@@ -1486,9 +1486,9 @@ public class MathCommandCompiler {
 
         graphicMethodsCurves2D.setIsInitialized(true);
         graphicMethodsCurves2D.setExpression(expr);
-        graphicMethodsCurves2D.expressionToGraph(var, t_0, t_1);
-        graphicMethodsCurves2D.computeMaxXMaxY();
-        graphicMethodsCurves2D.setParameters(var, graphicMethodsCurves2D.getAxeCenterX(), graphicMethodsCurves2D.getAxeCenterY());
+        graphicMethodsCurves2D.setVar(var);
+        graphicMethodsCurves2D.computeScreenSizes(t_0, t_1);
+        graphicMethodsCurves2D.expressionToGraph(t_0, t_1);
         graphicMethodsCurves2D.drawCurve2D();
 
     }

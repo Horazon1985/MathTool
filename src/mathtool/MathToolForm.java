@@ -314,14 +314,14 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(inputButton);
         inputButton.setBounds(518, 335, 100, 30);
 
-        inputField.setText("plotcurve((t,t^2),0,1)");
+        inputField.setText("(-2)^(1/4)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 19);
 
         rotateButton.setText("3D-Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -330,7 +330,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 165, 23);
+        rotateButton.setBounds(10, 410, 231, 25);
 
         latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
         latexButton.addActionListener(new java.awt.event.ActionListener() {
@@ -366,7 +366,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 20);
+        operatorChoice.setBounds(340, 370, 130, 24);
 
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
@@ -375,7 +375,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 75, 20);
+        commandChoice.setBounds(480, 370, 102, 24);
 
         jMenu1.setText("Datei");
 

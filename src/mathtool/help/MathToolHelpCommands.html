@@ -32,10 +32,21 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
 Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
-<b>Befehl plot(FUNCTION_1(VAR), ..., FUNCTION_k(VAR), x_1, x_2):</b> Zeichnet den Graphen der Funktionen FUNCTION_1, ..., FUNCTION_k im Intervall von x_1 <= VAR <= x_2.<br><br>
+<b>Befehl plot(FUNCTION_1(VAR), ..., FUNCTION_k(VAR), x_1, x_2):</b> Zeichnet den Graphen der Funktionen FUNCTION_1, ..., FUNCTION_k im Intervall von x_1 <= VAR <= x_2. Der Zoomfaktor kann hier (fast) beliebig gro&szlig; und 
+beliebig klein werden.<br><br>
   
 <b>Befehl plot(FUNCTION(VAR_1, VAR_2), x_1, x_2, y_1, y_2):</b> Zeichnet den Graphen der Funktion FUNCTION von zwei Variablen im Rechteck x_1 <= VAR_1 <= x_2, y_1 <= VAR_2 <= y_2.
-Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass VAR_1, VAR_2 die alphabetische Reihenfolge der Variablen ist.<br><br>
+Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass VAR_1, VAR_2 die alphabetische Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+
+<b>Befehl plot(FUNCTION_1(VAR_1, VAR_2) = FUNCTION_2(VAR_1, VAR_2), x_1, x_2, y_1, y_2):</b> Zeichnet die L&ouml;sungsmenge der Gleichung FUNCTION_1(VAR_1, VAR_2) = FUNCTION_2(VAR_1, VAR_2) von zwei Variablen 
+im Rechteck x_1 <= VAR_1 <= x_2, y_1 <= VAR_2 <= y_2. Hier kann in den Graphen weder hinein- noch herausgezoomt werden, ebenso kann das Koordinatensystem nicht verschoben werden.<br>
+<i>Wichtig:</i> Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass VAR_1, VAR_2 die alphabetische Reihenfolge der Variablen ist.<br><br>
+
+<b>Befehl plotcurve((FUNCTION_1(VAR), FUNCTION_2(VAR)), t_1, t_2):</b> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen FUNCTION_1 und FUNCTION_2 parametrisiert wird, f&uuml;r t_1 <= VAR <= t_2.
+Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+
+<b>Befehl plotcurve((FUNCTION_1(VAR), FUNCTION_2(VAR), FUNCTION_3(VAR)), t_1, t_2):</b> Zeichnet die r&auml;mliche Kurve, welche durch die Komponentenfunktionen FUNCTION_1, FUNCTION_2 und FUNCTION_3 parametrisiert wird, 
+f&uuml;r t_1 <= VAR <= t_2. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
 <b>Befehl solve(FUNCTION_1(VAR) = FUNCTION_2(VAR, x_1, x_2):</b> Bestimmt die L&ouml;sungen der Gleichung FUNCTION_1(VAR) = FUNCTION_2(VAR) im Bereich x_1 <= VAR <= x_2.<br><br>
 
@@ -67,9 +78,9 @@ y(t) = cos(t) = 1 - t^2/2! + t^4/4! - t^6/6! + ...<br><br>
 
 Dementsprechend lautet die Ausgabe dann<br><br>
 
-1 - t^2/2 + t^4/24 - t^6/720 + t^8/40320 - t^10/3628800.<br><br>
+1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).<br><br>
 
-<b>Befehl undef(VAR_1, ..., VAR_n):</b> Gibt die Variablen VAR_1, ..., VAR_k wieder frei.<br><br>
+<b>Befehl undef(VAR_1, ..., VAR_k):</b> Gibt die Variablen VAR_1, ..., VAR_k wieder frei.<br><br>
 
 <b>Befehl undefall():</b> Gibt alle Variablen wieder frei, denen im Laufe dieser Sitzung ein Wert zugewiesen wurde.<br><br>
 

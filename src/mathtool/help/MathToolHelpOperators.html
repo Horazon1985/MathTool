@@ -11,13 +11,32 @@ VAR_i m&uuml;ssen nicht alle verschieden sein.<br><br>
 
 <b>OPERATOR div(FUNCTION):</b> Berechnet die Divergenz der Funktion FUNCTION.<br><br>
 
-<b>OPERATOR gcd(a_1, ..., a_k):</b> Berechnet den gr&ouml;&szlig;ten gemeinsamen Teiler der ganzen Zahlen a_1, ..., a_k.<br><br>
+<b>OPERATOR fac(n) oder n!:</b> Berechnet die Fakult&auml;t der Zahl n. Fakult&auml;ten negativer ganzer Zahlen liefern einen Fehler. Fakult&auml;ten von nicht-ganzen Zahlen werden im Approximationsmodus
+durch den Wert der <i>Gammafunktion</i> Gamma(n + 1) approximiert. Fakult&auml;ten ganzer Zahlen werden nur bis n <= 10000 ausgeschrieben.<br><br>
+
+<i>Beispiel:</i> Der Ausdruck 5! erzeugt die Ausgabe<br><br> 
+
+120,<br><br>
+
+w&auml;hrend der Ausdruck approx(0.5!) zu<br><br>
+
+????<br><br>
+
+vereinfacht wird.
+
+<b>OPERATOR gcd(n_1, ..., n_k):</b> Berechnet den gr&ouml;&szlig;ten gemeinsamen Teiler der ganzen Zahlen n_1, ..., n_k.<br><br>
 
 <b>OPERATOR int(FUNCTION, x_1, x_2):</b> Berechnet das bestimmte Integral &uuml;ber die Funktion FUNCTION von x_1 bis x_2.<br><br>
 
 <b>OPERATOR laplace(FUNCTION):</b> Berechnet den Laplace-Operator der Funktion FUNCTION.<br><br>
 
-<b>OPERATOR lcm(a_1, ..., a_k):</b> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen a_1, ..., a_k.<br><br>
+<b>OPERATOR lcm(n_1, ..., n_k):</b> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen n_1, ..., n_k.<br><br>
+
+<b>OPERATOR mod(a, b):</b> Sind a und b ganze Zahlen, so berechnet es den Divisionsrest r bei ganzzahliger Division von a durch b.<br><br>
+
+<i>Beispiel:</i> mod(25, 7) erzeugt die Ausgabe<br><br>
+
+4.<br><br>
 
 <b>OPERATOR prod(EXPRESSION, VAR, k_1, k_2):</b> Berechnet das Produkt f&uuml;r den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.<br><br>
 
@@ -25,11 +44,13 @@ VAR_i m&uuml;ssen nicht alle verschieden sein.<br><br>
 
 <b>OPERATOR taylor(FUNCTION VAR, x_0, k):</b> Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bez&uuml;glich der Variablen VAR an der Stelle VAR = x_0.<br><br>
 
-Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden. So wird beispielsweise der Ausdruck<br><br>
+Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden. 
+
+<i>Beispiel:</i> Der Ausdruck<br><br>
 
 x^2*diff(y^5,y,3) + 6<br><br>
 
-vereinfacht zu<br><br>
+erzeugt die Ausgabe<br><br>
 
 60*x^2*y^2+6.
 </body></html>
