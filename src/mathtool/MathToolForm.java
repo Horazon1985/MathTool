@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -156,157 +157,58 @@ public class MathToolForm extends javax.swing.JFrame {
         inputField.setText(listOfCommands.get(i));
     }
 
-    private void activatePanelsForGraphs(String command_name, String[] params) {
+    private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException {
 
-        if ((command_name.equals("plot")) && (params.length > 2) && (params.length != 5)) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
+        Command c = MathCommandCompiler.getCommand(command_name, params);
+        
+        //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+        mathToolArea.setBounds(10, 20, 750, 500);
+        scrollPane.setBounds(10, 20, 750, 500);
+        inputField.setBounds(10, 530, 640, 30);
+        inputButton.setBounds(660, 530, 100, 30);
+        cancelButton.setBounds(660, 530, 100, 30);
+        //Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
+        graphicMethods2D.setVisible(false);
+        graphicMethodsCurves2D.setVisible(false);
+        graphicMethods3D.setVisible(false);
+        graphicMethodsCurves3D.setVisible(false);
+        rotateButton.setVisible(false);
+        
+        if ((command_name.equals("plot")) && (c.getParams().length > 2) && (c.getParams().length != 5)) {
             graphicMethods2D.setVisible(true);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if ((command_name.equals("plot")) && (params.length == 5) && (params[0].contains("="))) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
+        } else if ((command_name.equals("plot")) && (c.getParams().length == 6) && (params[0].contains("="))) {
             graphicMethods2D.setVisible(true);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if ((command_name.equals("plot")) && (params.length == 5)) {
+        } else if ((command_name.equals("plot")) && (c.getParams().length == 5)) {
             try {
                 Double.parseDouble(params[1]);
                 Double.parseDouble(params[2]);
                 Double.parseDouble(params[3]);
                 Double.parseDouble(params[4]);
                 if (params[0].contains("=")) {
-                    //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-                    mathToolArea.setBounds(10, 20, 750, 500);
-                    scrollPane.setBounds(10, 20, 750, 500);
-                    inputField.setBounds(10, 530, 640, 30);
-                    inputButton.setBounds(660, 530, 100, 30);
-                    cancelButton.setBounds(660, 530, 100, 30);
-                    //Grafik-Panels sichtbar machen
                     graphicMethods2D.setVisible(true);
-                    graphicMethodsCurves2D.setVisible(false);
-                    graphicMethods3D.setVisible(false);
-                    graphicMethodsCurves3D.setVisible(false);
-                    rotateButton.setVisible(false);
                 } else {
-                    //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-                    mathToolArea.setBounds(10, 20, 750, 500);
-                    scrollPane.setBounds(10, 20, 750, 500);
-                    inputField.setBounds(10, 530, 640, 30);
-                    inputButton.setBounds(660, 530, 100, 30);
-                    cancelButton.setBounds(660, 530, 100, 30);
-                    //Grafik-Panels sichtbar machen
-                    graphicMethods2D.setVisible(false);
-                    graphicMethodsCurves2D.setVisible(false);
                     graphicMethods3D.setVisible(true);
-                    graphicMethodsCurves3D.setVisible(false);
                     rotateButton.setVisible(true);
                 }
             } catch (NumberFormatException e) {
-                //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-                mathToolArea.setBounds(10, 20, 750, 500);
-                scrollPane.setBounds(10, 20, 750, 500);
-                inputField.setBounds(10, 530, 640, 30);
-                inputButton.setBounds(660, 530, 100, 30);
-                cancelButton.setBounds(660, 530, 100, 30);
-                //Grafik-Panels sichtbar machen
                 graphicMethods2D.setVisible(true);
-                graphicMethodsCurves2D.setVisible(false);
-                graphicMethods3D.setVisible(false);
-                graphicMethodsCurves3D.setVisible(false);
-                rotateButton.setVisible(false);
             }
-            repaint();
-        } else if (command_name.equals("plotcurve") && params.length == 4) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
-            graphicMethods2D.setVisible(false);
+        } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
             graphicMethodsCurves2D.setVisible(true);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if (command_name.equals("plotcurve") && params.length == 5) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
-            graphicMethods2D.setVisible(false);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
+        } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if (command_name.equals("solve")) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
+        } else if (command_name.equals("solve") || command_name.equals("solvedgl") || command_name.equals("tangent")) {
             graphicMethods2D.setVisible(true);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if (command_name.equals("solvedgl")) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
-            graphicMethods2D.setVisible(true);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
-        } else if (command_name.equals("tangent")) {
-            //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-            mathToolArea.setBounds(10, 20, 750, 500);
-            scrollPane.setBounds(10, 20, 750, 500);
-            inputField.setBounds(10, 530, 640, 30);
-            inputButton.setBounds(660, 530, 100, 30);
-            cancelButton.setBounds(660, 530, 100, 30);
-            //Grafik-Panels sichtbar machen
-            graphicMethods2D.setVisible(true);
-            graphicMethodsCurves2D.setVisible(false);
-            graphicMethods3D.setVisible(false);
-            graphicMethodsCurves3D.setVisible(false);
-            rotateButton.setVisible(false);
-            repaint();
         } else {
+            mathToolArea.setBounds(10, 20, 1270, 500);
+            scrollPane.setBounds(10, 20, 1270, 500);
+            inputField.setBounds(10, 530, 1160, 30);
+            inputButton.setBounds(1180, 530, 100, 30);
+            cancelButton.setBounds(1180, 530, 100, 30);
             rotateButton.setVisible(false);
         }
+
+        repaint();
 
     }
 
@@ -345,14 +247,13 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(inputButton);
         inputButton.setBounds(518, 335, 100, 30);
 
-        inputField.setText("plotcurve((t^2,t^3),-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 19);
 
         rotateButton.setText("3D-Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -361,7 +262,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 165, 23);
+        rotateButton.setBounds(10, 410, 231, 25);
 
         latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
         latexButton.addActionListener(new java.awt.event.ActionListener() {
@@ -397,7 +298,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 20);
+        operatorChoice.setBounds(340, 370, 130, 24);
 
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
@@ -406,7 +307,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 75, 20);
+        commandChoice.setBounds(480, 370, 102, 24);
 
         jMenu1.setText("Datei");
 

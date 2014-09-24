@@ -38,7 +38,7 @@ public class MathCommandCompiler {
      * Wichtig: Der String command und die Parameter params entahlten keine
      * Leerzeichen mehr. Diese wurden bereits im Vorfeld beseitigt.
      */
-    private static Command getCommand(String command, String[] params) throws ExpressionException {
+    public static Command getCommand(String command, String[] params) throws ExpressionException {
 
         Command result = new Command();
         Object[] command_params;
@@ -648,11 +648,11 @@ public class MathCommandCompiler {
 
         //PLOTCURVE
         /**
-         * Struktur: PLOTCURVE([EXPRESSION_1(var), EXPRESSION_2(var)], value_1, value_2) EXPRESSION:
-         * EXPRESSION_i(var) = Ausdruck in einer Variablen. value_1 < value_2: Parametergrenzen. 
+         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1, value_2).
+         * FUNCTION_i(var) = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen. 
          * ODER:
-         * Struktur: PLOTCURVE([EXPRESSION_1(var), EXPRESSION_2(var), EXPRESSION_3(var)], value_1, value_2) EXPRESSION:
-         * EXPRESSION_i(var) = Ausdruck in einer Variablen. value_1 < value_2: Parametergrenzen. 
+         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2).
+         * FUNCTION_i(var) = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen. 
          */
         if (command.equals("plotcurve")) {
             if (params.length != 3) {
@@ -1525,6 +1525,7 @@ public class MathCommandCompiler {
         graphicMethodsCurves3D.setIsInitialized(true);
         graphicMethodsCurves3D.setExpression(expr);
         graphicMethodsCurves3D.setVar(var);
+        graphicMethodsCurves3D.setParameters(150, 200, 30, 30);
         graphicMethodsCurves3D.computeScreenSizes(t_0, t_1);
         graphicMethodsCurves3D.expressionToGraph(t_0, t_1);
         graphicMethodsCurves3D.drawCurve3D();
