@@ -542,6 +542,16 @@ public class MathToolForm extends javax.swing.JFrame {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
+/**                
+                HashMap<Integer, String> h = new HashMap<>();
+                h.put(0, "x");
+                h.put(1, "y");
+                h.put(2, "z");
+                h.put(15, "u");
+                for(HashMap.Entry entry : h.entrySet()){
+                    System.out.println(entry.getKey() + " = " + entry.getValue());
+                }                
+*/                
                 break;
 
             case KeyEvent.VK_UP:
