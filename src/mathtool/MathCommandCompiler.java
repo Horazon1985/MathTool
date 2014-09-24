@@ -21,6 +21,7 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Enumeration;
@@ -926,7 +927,7 @@ public class MathCommandCompiler {
             /**
              * Ermittelt die Anzahl der einzugebenen Parameter.
              */
-            Hashtable<String, Expression> vars_contained_in_params = new Hashtable<String, Expression>();
+            HashMap<String, Expression> vars_contained_in_params = new HashMap<String, Expression>();
             for (int i = 1; i < params.length; i++) {
                 if (!params[i].contains("=")) {
                     throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
@@ -1122,7 +1123,7 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D, 
-            Hashtable definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
+            HashMap<String, Expression> definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
 
@@ -1199,7 +1200,7 @@ public class MathCommandCompiler {
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
-    private static void executeApprox(Command c, JTextArea area, Hashtable definedVars)
+    private static void executeApprox(Command c, JTextArea area, HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -1208,13 +1209,16 @@ public class MathCommandCompiler {
          * Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck
          * ersetzt werden.
          */
+        for (String var : definedVars.keySet()) {
+            expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
+        }
+/**        
         Enumeration keys = definedVars.keys();
-        String var;
         for (int i = 0; i < definedVars.size(); i++) {
             var = (String) keys.nextElement();
             expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
         }
-
+*/
         expr = expr.simplify();
         expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n \n");
@@ -1233,7 +1237,7 @@ public class MathCommandCompiler {
         area.setText("");
     }
 
-    private static void executeDefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet)
+    private static void executeDefine(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         /**
@@ -1264,17 +1268,13 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefVars(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet)
+    private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
         String result = "";
-        Enumeration keys = definedVars.keys();
-        for (int i = 0; i < definedVars.size(); i++) {
-            String var = (String) keys.nextElement();
-            result += var + " = " + ((Expression) definedVars.get(var)).writeFormula(true);
-            if (i < definedVars.size() - 1) {
-                result += ", ";
-            }
+        for (String var : definedVars.keySet()) {
+            result += var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + ", ";
         }
+        result = result.substring(0, result.length() - 2);
         area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + result + "\n \n");
     }
 
@@ -1729,19 +1729,14 @@ public class MathCommandCompiler {
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
-        Hashtable<String, Expression> vars = (Hashtable<String, Expression>) c.getParams()[1];
+        HashMap<String, Expression> vars = (HashMap<String, Expression>) c.getParams()[1];
 
         String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula(true) + " im Punkt ";
-        Enumeration keys = vars.keys();
-        String var;
-        for (int i = 0; i < vars.size(); i++) {
-            var = (String) keys.nextElement();
-            if (i < vars.size() - 1) {
-                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
-            } else {
-                tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ": \n \n";
-            }
-        }
+
+        for(String var : vars.keySet()){
+            tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
+        }                
+        tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars);
         area.append(tangent_announcement);
@@ -1749,8 +1744,10 @@ public class MathCommandCompiler {
 
         if (vars.size() == 1) {
 
-            keys = vars.keys();
-            var = (String) keys.nextElement();
+            String var = "";
+            for(String unique_var : vars.keySet()){
+                var = unique_var;
+            }                
             double x_1 = vars.get(var).evaluate() - 1;
             double x_2 = x_1 + 2;
 
@@ -1843,7 +1840,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeUndefine(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet)
+    private static void executeUndefine(Command c, JTextArea area, HashMap definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         /**
@@ -1861,7 +1858,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeUndefineAll(Command c, JTextArea area, Hashtable definedVars, HashSet definedVarsSet)
+    private static void executeUndefineAll(Command c, JTextArea area, HashMap definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         /**

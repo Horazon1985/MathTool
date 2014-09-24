@@ -49,10 +49,10 @@ public class MathToolForm extends javax.swing.JFrame {
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
      * im Laufe des Programms definierten Variablen und Funktionen.
      */
-    static Hashtable<String, Expression> definedVars = new Hashtable<String, Expression>();
+    static HashMap<String, Expression> definedVars = new HashMap<String, Expression>();
     static HashSet definedVarsSet = new HashSet();
-    static Hashtable<String, Expression> definedFunctions = new Hashtable<String, Expression>();
-    public Hashtable<Integer, String> listOfCommands = new Hashtable<Integer, String>();
+    static HashMap<String, Expression> definedFunctions = new HashMap<String, Expression>();
+    public HashMap<Integer, String> listOfCommands = new HashMap<Integer, String>();
     /**
      * Variablen, die eine Rolle beim Loggen der Befehle spielen. command_count
      * = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
@@ -197,7 +197,8 @@ public class MathToolForm extends javax.swing.JFrame {
             graphicMethodsCurves2D.setVisible(true);
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
-        } else if (command_name.equals("solve") || command_name.equals("solvedgl") || command_name.equals("tangent")) {
+        } else if (command_name.equals("solve") || command_name.equals("solvedgl") 
+                || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
         } else {
             mathToolArea.setBounds(10, 20, 1270, 500);
@@ -247,13 +248,14 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(inputButton);
         inputButton.setBounds(518, 335, 100, 30);
 
+        inputField.setText("diff(int(x,0,1),x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 19);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setText("3D-Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -262,7 +264,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 231, 25);
+        rotateButton.setBounds(10, 410, 165, 23);
 
         latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
         latexButton.addActionListener(new java.awt.event.ActionListener() {
@@ -289,7 +291,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(520, 410, 100, 30);
+        cancelButton.setBounds(520, 300, 100, 30);
 
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
@@ -298,16 +300,16 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 24);
+        operatorChoice.setBounds(340, 370, 130, 20);
 
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 102, 24);
+        commandChoice.setBounds(480, 370, 78, 20);
 
         jMenu1.setText("Datei");
 
@@ -542,16 +544,6 @@ public class MathToolForm extends javax.swing.JFrame {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-/**                
-                HashMap<Integer, String> h = new HashMap<>();
-                h.put(0, "x");
-                h.put(1, "y");
-                h.put(2, "z");
-                h.put(15, "u");
-                for(HashMap.Entry entry : h.entrySet()){
-                    System.out.println(entry.getKey() + " = " + entry.getValue());
-                }                
-*/                
                 break;
 
             case KeyEvent.VK_UP:
