@@ -15,7 +15,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -250,13 +249,14 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(inputButton);
         inputButton.setBounds(518, 335, 100, 30);
 
+        inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 19);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
