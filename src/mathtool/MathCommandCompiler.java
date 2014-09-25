@@ -24,7 +24,6 @@ import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Enumeration;
 
 public class MathCommandCompiler {
 
@@ -1457,7 +1456,7 @@ public class MathCommandCompiler {
         graphicMethods2D.addExpression(expr.simplify());
         graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_1 + x_2) / 2, (y_1 + y_2) / 2, (x_2 - x_1) / 2, (y_2 - y_1) / 2);
         graphicMethods2D.setDrawSpecialPoints(false);
-        Hashtable<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
+        HashMap<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
                 x_1, x_2, y_1, y_2);
         graphicMethods2D.setImplicitGraph(implicit_graph);
         graphicMethods2D.drawGraph2D();
@@ -1522,7 +1521,7 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethodsCurves3D.setIsInitialized(true);
+        graphicMethodsCurves3D.setZoomfactorToOne();
         graphicMethodsCurves3D.setExpression(expr);
         graphicMethodsCurves3D.setVar(var);
         graphicMethodsCurves3D.setParameters(150, 200, 30, 30);
@@ -1560,11 +1559,11 @@ public class MathCommandCompiler {
             n = (int) c.getParams()[4];
         }
 
-        Hashtable<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
+        HashMap<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
 
         area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n \n");
         for (int i = 0; i < result.size(); i++) {
-            area.append(var + "_" + (i + 1) + " = " + result.get(i + 1) + "\n \n");
+            area.append(var + "_" + (i + 1) + " = " + result.get(i) + "\n \n");
         }
 
         /**
@@ -1572,7 +1571,7 @@ public class MathCommandCompiler {
          */
         double[][] zeros = new double[result.size()][2];
         for (int i = 0; i < zeros.length; i++) {
-            zeros[i][0] = result.get(i + 1);
+            zeros[i][0] = result.get(i);
             Variable.setValue(var, zeros[i][0]);
             zeros[i][1] = expr_1.evaluate();
         }

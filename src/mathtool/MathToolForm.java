@@ -7,7 +7,6 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
-import expressionbuilder.GraphicPresentationOfFormula;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -29,6 +28,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
     private Thread threadRotate;
     private boolean startRotate;
+    private boolean is3DGraphicASurface;
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
@@ -42,7 +42,6 @@ public class MathToolForm extends javax.swing.JFrame {
     GraphicMethods3D graphicMethods3D;
     GraphicMethodsCurves2D graphicMethodsCurves2D;
     GraphicMethodsCurves3D graphicMethodsCurves3D;
-    GraphicPresentationOfFormula graphicPresentationOfFormula;
 
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
@@ -141,15 +140,6 @@ public class MathToolForm extends javax.swing.JFrame {
         graphicMethodsCurves3D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethodsCurves3D.setVisible(false);
-
-        /**
-         * Sonstige Grafikobjekte initialisieren
-         */
-        graphicPresentationOfFormula = new GraphicPresentationOfFormula();
-        add(graphicPresentationOfFormula);
-        graphicPresentationOfFormula.setBounds(770, 20, 500, 500);
-        repaint();
-        graphicPresentationOfFormula.setVisible(false);
     }
 
     private void showLoggedCommand(int i) {
@@ -172,6 +162,7 @@ public class MathToolForm extends javax.swing.JFrame {
         graphicMethods3D.setVisible(false);
         graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
+        is3DGraphicASurface = true;
         
         if ((command_name.equals("plot")) && (c.getParams().length > 2) && (c.getParams().length != 5)) {
             graphicMethods2D.setVisible(true);
@@ -188,6 +179,7 @@ public class MathToolForm extends javax.swing.JFrame {
                 } else {
                     graphicMethods3D.setVisible(true);
                     rotateButton.setVisible(true);
+                    is3DGraphicASurface = true;
                 }
             } catch (NumberFormatException e) {
                 graphicMethods2D.setVisible(true);
@@ -196,6 +188,7 @@ public class MathToolForm extends javax.swing.JFrame {
             graphicMethodsCurves2D.setVisible(true);
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
+            is3DGraphicASurface = false;
             rotateButton.setVisible(true);
         } else if (command_name.equals("solve") || command_name.equals("solvedgl") 
                 || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
@@ -484,14 +477,24 @@ public class MathToolForm extends javax.swing.JFrame {
 
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!startRotate) {
-            this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
-            startRotate = true;
-            graphicMethods3D.setStartRotate(true);
+            if (is3DGraphicASurface){
+                this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
+                startRotate = true;
+                graphicMethods3D.setStartRotate(true);
+            } else {
+                this.threadRotate = new Thread(graphicMethodsCurves3D, "rotateGraph");
+                startRotate = true;
+                graphicMethodsCurves3D.setStartRotate(true);
+            }
             threadRotate.start();
             rotateButton.setText("Rotation stoppen");
         } else {
             startRotate = false;
-            graphicMethods3D.setStartRotate(false);
+            if (is3DGraphicASurface){
+                graphicMethods3D.setStartRotate(false);
+            } else {
+                graphicMethodsCurves3D.setStartRotate(false);
+            }
             threadRotate.interrupt();
             rotateButton.setText("Graphen rotieren lassen");
         }
