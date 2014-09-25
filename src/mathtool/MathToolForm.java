@@ -101,7 +101,7 @@ public class MathToolForm extends javax.swing.JFrame {
         inputButton.setBounds(1180, 530, 100, 30);
         cancelButton.setBounds(1180, 530, 100, 30);
         approxButton.setBounds(10, 570, 105, 30);
-        latexButton.setBounds(125, 570, 120, 30);
+        latexButton.setBounds(125, 570, 140, 30);
         rotateButton.setBounds(900, 530, 220, 30);
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
@@ -109,9 +109,9 @@ public class MathToolForm extends javax.swing.JFrame {
         /**
          * Auswahlmenüs ausrichten
          */
-        operatorChoice.setBounds(250, 570, 120, 30);
+        operatorChoice.setBounds(270, 570, 120, 30);
 
-        commandChoice.setBounds(375, 570, 120, 30);
+        commandChoice.setBounds(395, 570, 120, 30);
 
         /**
          * 2D-Grafikobjekte initialisieren
@@ -197,6 +197,7 @@ public class MathToolForm extends javax.swing.JFrame {
             graphicMethodsCurves2D.setVisible(true);
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
+            rotateButton.setVisible(true);
         } else if (command_name.equals("solve") || command_name.equals("solvedgl") 
                 || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
@@ -239,7 +240,8 @@ public class MathToolForm extends javax.swing.JFrame {
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/MathToolIcon.png")).getImage());
         getContentPane().setLayout(null);
 
-        inputButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/InputButtonImage.png"))); // NOI18N
+        inputButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        inputButton.setText("Eingabe");
         inputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inputButtonActionPerformed(evt);
@@ -254,18 +256,20 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 19);
 
-        rotateButton.setText("3D-Graphen rotieren lassen");
+        rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
+        rotateButton.setText("Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rotateButtonActionPerformed(evt);
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 165, 23);
+        rotateButton.setBounds(10, 410, 206, 25);
 
-        latexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/LatexButtonImage.png"))); // NOI18N
+        latexButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        latexButton.setText("LaTex-Code");
         latexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 latexButtonActionPerformed(evt);
@@ -274,7 +278,8 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(latexButton);
         latexButton.setBounds(180, 370, 150, 30);
 
-        approxButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/ApproxButtonImage.png"))); // NOI18N
+        approxButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        approxButton.setText("Approx");
         approxButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 approxButtonActionPerformed(evt);
@@ -283,7 +288,8 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(approxButton);
         approxButton.setBounds(10, 370, 150, 30);
 
-        cancelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/CancelButtonImage.png"))); // NOI18N
+        cancelButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        cancelButton.setText("Abbruch");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -292,6 +298,7 @@ public class MathToolForm extends javax.swing.JFrame {
         getContentPane().add(cancelButton);
         cancelButton.setBounds(520, 300, 100, 30);
 
+        operatorChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,8 +306,9 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 20);
+        operatorChoice.setBounds(340, 370, 130, 22);
 
+        commandChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -308,7 +316,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 78, 20);
+        commandChoice.setBounds(480, 370, 96, 22);
 
         jMenu1.setText("Datei");
 
@@ -485,7 +493,7 @@ public class MathToolForm extends javax.swing.JFrame {
             startRotate = false;
             graphicMethods3D.setStartRotate(false);
             threadRotate.interrupt();
-            rotateButton.setText("3D-Graphen rotieren lassen");
+            rotateButton.setText("Graphen rotieren lassen");
         }
     }//GEN-LAST:event_rotateButtonActionPerformed
 

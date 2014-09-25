@@ -82,9 +82,10 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="inputButton">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/mathtool/icons/InputButtonImage.png"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="16" style="1"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="Eingabe"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputButtonActionPerformed"/>
@@ -107,7 +108,10 @@
     </Component>
     <Component class="javax.swing.JButton" name="rotateButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="3D-Graphen rotieren lassen"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="14" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Graphen rotieren lassen"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rotateButtonActionPerformed"/>
@@ -120,9 +124,10 @@
     </Component>
     <Component class="javax.swing.JButton" name="latexButton">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/mathtool/icons/LatexButtonImage.png"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="16" style="1"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="LaTex-Code"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="latexButtonActionPerformed"/>
@@ -135,9 +140,10 @@
     </Component>
     <Component class="javax.swing.JButton" name="approxButton">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/mathtool/icons/ApproxButtonImage.png"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="16" style="1"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="Approx"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="approxButtonActionPerformed"/>
@@ -150,9 +156,10 @@
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/mathtool/icons/CancelButtonImage.png"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="16" style="1"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="Abbruch"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
@@ -165,6 +172,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="operatorChoice">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="12" style="1"/>
+        </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="12">
             <StringItem index="0" value="Operator"/>
@@ -193,6 +203,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="commandChoice">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Blippo" size="12" style="1"/>
+        </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="16">
             <StringItem index="0" value="Befehl"/>
