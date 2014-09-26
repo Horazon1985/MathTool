@@ -20,7 +20,6 @@ import javax.swing.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -343,17 +342,13 @@ public class MathCommandCompiler {
         /**
          * Struktur: PLOT(EXPRESSION(var), value_1, value_2) EXPRESSION:
          * Ausdruck in einer Variablen. value_1 < value_2: Grenzen des
-         * Zeichenbereichs. 
-         * ODER: 
-         * PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var),
-         * value_1, value_2) EXPRESSION_i(var): Ausdruck in einer Variablen.
-         * value_1 < value_2: Grenzen des Zeichenbereichs 
-         * ODER:
+         * Zeichenbereichs. ODER: PLOT(EXPRESSION_1(var), ...,
+         * EXPRESSION_n(var), value_1, value_2) EXPRESSION_i(var): Ausdruck in
+         * einer Variablen. value_1 < value_2: Grenzen des Zeichenbereichs ODER:
          * PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3, value_4)
          * EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 < value_2,
          * value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden Variablen
-         * werden dabei alphabetisch geordnet. 
-         * ODER: PLOT(EXPRESSION_1(var1,
+         * werden dabei alphabetisch geordnet. ODER: PLOT(EXPRESSION_1(var1,
          * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
          * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
          * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
@@ -648,11 +643,12 @@ public class MathCommandCompiler {
 
         //PLOTCURVE
         /**
-         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1, value_2).
-         * FUNCTION_i(var) = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen. 
-         * ODER:
-         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2).
-         * FUNCTION_i(var) = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen. 
+         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1,
+         * value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
+         * value_2: Parametergrenzen. ODER: Struktur:
+         * PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var), FUNCTION_3(var)],
+         * value_1, value_2). FUNCTION_i(var) = Funktion in einer Variablen.
+         * value_1 < value_2: Parametergrenzen.
          */
         if (command.equals("plotcurve")) {
             if (params.length != 3) {
@@ -661,20 +657,20 @@ public class MathCommandCompiler {
 
             HashSet vars = new HashSet();
 
-            /** Es wird nun geprüft, ob der erste Parameter die Form "[expr_1, expr_2]" oder 
-             * "[expr_1, expr_2, expr_3]" besitzt.
+            /**
+             * Es wird nun geprüft, ob der erste Parameter die Form "[expr_1,
+             * expr_2]" oder "[expr_1, expr_2, expr_3]" besitzt.
              */
-
-            if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")){
+            if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
                 throw new ExpressionException("Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.");
             }
 
             String[] curve_components = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
-            if (curve_components.length != 2 && curve_components.length != 3){
+            if (curve_components.length != 2 && curve_components.length != 3) {
                 throw new ExpressionException("Die parametrisierte Kurve im Befehl 'plotcurve' muss entweder aus zwei oder aus drei Komponenten bestehen.");
             }
-            
-            for (int i = 0; i < curve_components.length; i++){
+
+            for (int i = 0; i < curve_components.length; i++) {
                 try {
                     Expression.build(curve_components[i], vars);
                 } catch (ExpressionException e) {
@@ -682,7 +678,7 @@ public class MathCommandCompiler {
                             + "Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                 }
             }
-            
+
             if (vars.size() > 1) {
                 throw new ExpressionException("Die Kurve im Befehl 'plotcurve' darf durch höchstens einen Parameter parametrisiert werden.");
             }
@@ -702,7 +698,7 @@ public class MathCommandCompiler {
             double t_0 = Double.parseDouble(params[1]);
             double t_1 = Double.parseDouble(params[2]);
 
-            if (curve_components.length == 2){
+            if (curve_components.length == 2) {
                 command_params = new Object[4];
                 command_params[0] = Expression.build(curve_components[0], vars);
                 command_params[1] = Expression.build(curve_components[1], vars);
@@ -716,7 +712,7 @@ public class MathCommandCompiler {
                 command_params[3] = t_0;
                 command_params[4] = t_1;
             }
-            
+
             result.setName(command);
             result.setParams(command_params);
             return result;
@@ -725,8 +721,8 @@ public class MathCommandCompiler {
         //SOLVE
         /**
          * Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
-         * expr_2, x_1, x_2, n) var = Variable in der DGL x_0, x_1 legen den
-         * Lösungsbereich fest y_0 = Funktionswert an der Stelle x_0
+         * expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2 legen den
+         * Lösungsbereich fest; n = Anzahl der Unterteilungen des Intervalls [x_1, x_2]
          */
         if (command.equals("solve")) {
             if (params.length < 3) {
@@ -754,16 +750,25 @@ public class MathCommandCompiler {
                 throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
             }
 
+            HashSet vars_in_limit = new HashSet();
             try {
-                Double.parseDouble(params[1]);
-            } catch (NumberFormatException e) {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
+                Expression expr = Expression.build(params[1], vars_in_limit);
+                if (!vars_in_limit.isEmpty()){
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                }
+                expr.evaluate();
+            } catch (ExpressionException | EvaluationException e) {
+                throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
             }
-
+            
             try {
-                Double.parseDouble(params[2]);
-            } catch (NumberFormatException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine reelle Zahl sein.");
+                Expression expr = Expression.build(params[2], vars_in_limit);
+                if (!vars_in_limit.isEmpty()){
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                }
+                expr.evaluate();
+            } catch (ExpressionException | EvaluationException e) {
+                throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
             }
 
             if (params.length == 4) {
@@ -774,8 +779,8 @@ public class MathCommandCompiler {
                 }
             }
 
-            double x_1 = Double.parseDouble(params[1]);
-            double x_2 = Double.parseDouble(params[2]);
+            Expression x_1 = Expression.build(params[1], vars);
+            Expression x_2 = Expression.build(params[2], vars);
 
             if (params.length == 3) {
                 command_params = new Object[4];
@@ -1121,7 +1126,7 @@ public class MathCommandCompiler {
 
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D, 
+            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
             HashMap<String, Expression> definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
@@ -1211,13 +1216,7 @@ public class MathCommandCompiler {
         for (String var : definedVars.keySet()) {
             expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
         }
-/**        
-        Enumeration keys = definedVars.keys();
-        for (int i = 0; i < definedVars.size(); i++) {
-            var = (String) keys.nextElement();
-            expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
-        }
-*/
+
         expr = expr.simplify();
         expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n \n");
@@ -1474,7 +1473,7 @@ public class MathCommandCompiler {
         expr[1].getContainedVars(vars);
         expr[0] = expr[0].simplify();
         expr[1] = expr[1].simplify();
-        
+
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
             vars.add("t");
@@ -1509,7 +1508,7 @@ public class MathCommandCompiler {
         expr[0] = expr[0].simplify();
         expr[1] = expr[1].simplify();
         expr[2] = expr[2].simplify();
-        
+
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("t");
@@ -1546,12 +1545,11 @@ public class MathCommandCompiler {
             var = (String) iter.next();
         }
 
-        double x_1 = (double) c.getParams()[2];
-        double x_2 = (double) c.getParams()[3];
+        Expression x_1 = (Expression) c.getParams()[2];
+        Expression x_2 = (Expression) c.getParams()[3];
         /**
          * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll das
          * Intervall in 1000000 Teile unterteilt werden.
-         *
          */
         int n = 1000000;
 
@@ -1559,7 +1557,7 @@ public class MathCommandCompiler {
             n = (int) c.getParams()[4];
         }
 
-        HashMap<Integer, Double> result = NumericalMethods.solve(expr, x_1, x_2, n);
+        HashMap<Integer, Double> result = NumericalMethods.solve(expr, x_1.evaluate(), x_2.evaluate(), n);
 
         area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n \n");
         for (int i = 0; i < result.size(); i++) {
@@ -1582,7 +1580,7 @@ public class MathCommandCompiler {
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr_1);
         graphicMethods2D.addExpression(expr_2);
-        graphicMethods2D.expressionToGraph(var, x_1, x_2);
+        graphicMethods2D.expressionToGraph(var, x_1.evaluate(), x_2.evaluate());
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(true);
@@ -1732,9 +1730,9 @@ public class MathCommandCompiler {
 
         String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula(true) + " im Punkt ";
 
-        for(String var : vars.keySet()){
+        for (String var : vars.keySet()) {
             tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
-        }                
+        }
         tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr, vars);
@@ -1744,9 +1742,9 @@ public class MathCommandCompiler {
         if (vars.size() == 1) {
 
             String var = "";
-            for(String unique_var : vars.keySet()){
+            for (String unique_var : vars.keySet()) {
                 var = unique_var;
-            }                
+            }
             double x_1 = vars.get(var).evaluate() - 1;
             double x_2 = x_1 + 2;
 

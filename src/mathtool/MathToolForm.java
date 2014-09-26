@@ -104,6 +104,10 @@ public class MathToolForm extends javax.swing.JFrame {
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
 
+        legendButton.setBounds(770, 530, 100, 30);
+        legendButton.setVisible(false);
+        
+        
         /**
          * Auswahlmenüs ausrichten
          */
@@ -162,12 +166,15 @@ public class MathToolForm extends javax.swing.JFrame {
         graphicMethods3D.setVisible(false);
         graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
+        legendButton.setVisible(false);
         is3DGraphicASurface = true;
         
         if ((command_name.equals("plot")) && (c.getParams().length > 2) && (c.getParams().length != 5)) {
             graphicMethods2D.setVisible(true);
+            legendButton.setVisible(true);
         } else if ((command_name.equals("plot")) && (c.getParams().length == 6) && (params[0].contains("="))) {
             graphicMethods2D.setVisible(true);
+            legendButton.setVisible(true);
         } else if ((command_name.equals("plot")) && (c.getParams().length == 5)) {
             try {
                 Double.parseDouble(params[1]);
@@ -183,6 +190,7 @@ public class MathToolForm extends javax.swing.JFrame {
                 }
             } catch (NumberFormatException e) {
                 graphicMethods2D.setVisible(true);
+                legendButton.setVisible(true);
             }
         } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
             graphicMethodsCurves2D.setVisible(true);
@@ -218,6 +226,7 @@ public class MathToolForm extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
         operatorChoice = new javax.swing.JComboBox();
         commandChoice = new javax.swing.JComboBox();
+        legendButton = new javax.swing.JButton();
         MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
@@ -259,7 +268,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 206, 25);
+        rotateButton.setBounds(10, 410, 206, 30);
 
         latexButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -310,6 +319,16 @@ public class MathToolForm extends javax.swing.JFrame {
         });
         getContentPane().add(commandChoice);
         commandChoice.setBounds(480, 370, 96, 22);
+
+        legendButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        legendButton.setText("Legende");
+        legendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                legendButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(legendButton);
+        legendButton.setBounds(230, 410, 130, 30);
 
         jMenu1.setText("Datei");
 
@@ -583,6 +602,11 @@ public class MathToolForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 
+    private void legendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legendButtonActionPerformed
+        LegendGUI legendGUI = new LegendGUI(graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+        legendGUI.setVisible(true);
+    }//GEN-LAST:event_legendButtonActionPerformed
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
@@ -615,6 +639,7 @@ public class MathToolForm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JButton latexButton;
+    private javax.swing.JButton legendButton;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;
     // End of variables declaration//GEN-END:variables
