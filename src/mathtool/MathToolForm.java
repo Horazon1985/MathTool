@@ -1,5 +1,7 @@
 package mathtool;
 
+import expressionbuilder.AnalysisMethods;
+import expressionbuilder.ArithmeticMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -12,6 +14,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.HashMap;
@@ -106,8 +109,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
         legendButton.setBounds(770, 530, 100, 30);
         legendButton.setVisible(false);
-        
-        
+
         /**
          * Auswahlmenüs ausrichten
          */
@@ -153,7 +155,7 @@ public class MathToolForm extends javax.swing.JFrame {
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException {
 
         Command c = MathCommandCompiler.getCommand(command_name, params);
-        
+
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         mathToolArea.setBounds(10, 20, 750, 500);
         scrollPane.setBounds(10, 20, 750, 500);
@@ -168,37 +170,21 @@ public class MathToolForm extends javax.swing.JFrame {
         rotateButton.setVisible(false);
         legendButton.setVisible(false);
         is3DGraphicASurface = true;
-        
-        if ((command_name.equals("plot")) && (c.getParams().length > 2) && (c.getParams().length != 5)) {
+
+        if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
             legendButton.setVisible(true);
-        } else if ((command_name.equals("plot")) && (c.getParams().length == 6) && (params[0].contains("="))) {
-            graphicMethods2D.setVisible(true);
-            legendButton.setVisible(true);
-        } else if ((command_name.equals("plot")) && (c.getParams().length == 5)) {
-            try {
-                Double.parseDouble(params[1]);
-                Double.parseDouble(params[2]);
-                Double.parseDouble(params[3]);
-                Double.parseDouble(params[4]);
-                if (params[0].contains("=")) {
-                    graphicMethods2D.setVisible(true);
-                } else {
-                    graphicMethods3D.setVisible(true);
-                    rotateButton.setVisible(true);
-                    is3DGraphicASurface = true;
-                }
-            } catch (NumberFormatException e) {
-                graphicMethods2D.setVisible(true);
-                legendButton.setVisible(true);
-            }
+        } else if (command_name.equals("plot3d")) {
+            graphicMethods3D.setVisible(true);
+            rotateButton.setVisible(true);
+            is3DGraphicASurface = true;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
             graphicMethodsCurves2D.setVisible(true);
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
             is3DGraphicASurface = false;
             rotateButton.setVisible(true);
-        } else if (command_name.equals("solve") || command_name.equals("solvedgl") 
+        } else if (command_name.equals("solve") || command_name.equals("solvedgl")
                 || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
         } else {
@@ -252,13 +238,14 @@ public class MathToolForm extends javax.swing.JFrame {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("plot3d(x^2+y^2,-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 22);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -268,7 +255,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 206, 30);
+        rotateButton.setBounds(10, 410, 205, 30);
 
         latexButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -318,7 +305,7 @@ public class MathToolForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 96, 22);
+        commandChoice.setBounds(480, 370, 88, 22);
 
         legendButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
         legendButton.setText("Legende");
@@ -496,7 +483,7 @@ public class MathToolForm extends javax.swing.JFrame {
 
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!startRotate) {
-            if (is3DGraphicASurface){
+            if (is3DGraphicASurface) {
                 this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
                 startRotate = true;
                 graphicMethods3D.setStartRotate(true);
@@ -509,7 +496,7 @@ public class MathToolForm extends javax.swing.JFrame {
             rotateButton.setText("Rotation stoppen");
         } else {
             startRotate = false;
-            if (is3DGraphicASurface){
+            if (is3DGraphicASurface) {
                 graphicMethods3D.setStartRotate(false);
             } else {
                 graphicMethodsCurves3D.setStartRotate(false);

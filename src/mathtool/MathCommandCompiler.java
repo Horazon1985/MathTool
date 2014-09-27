@@ -31,13 +31,13 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex",
-        "pi", "plot", "plotcurve", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
      * Wichtig: Der String command und die Parameter params entahlten keine
      * Leerzeichen mehr. Diese wurden bereits im Vorfeld beseitigt.
      */
-    public static Command getCommand(String command, String[] params) throws ExpressionException {
+    public static Command getCommand(String command, String[] params) throws ExpressionException, EvaluationException {
 
         Command result = new Command();
         Object[] command_params;
@@ -338,77 +338,31 @@ public class MathCommandCompiler {
 
         }
 
-        //PLOT
+        //PLOT2D
         /**
-         * Struktur: PLOT(EXPRESSION(var), value_1, value_2) EXPRESSION:
-         * Ausdruck in einer Variablen. value_1 < value_2: Grenzen des
-         * Zeichenbereichs. ODER: PLOT(EXPRESSION_1(var), ...,
-         * EXPRESSION_n(var), value_1, value_2) EXPRESSION_i(var): Ausdruck in
-         * einer Variablen. value_1 < value_2: Grenzen des Zeichenbereichs ODER:
-         * PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3, value_4)
-         * EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 < value_2,
-         * value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden Variablen
-         * werden dabei alphabetisch geordnet. ODER: PLOT(EXPRESSION_1(var1,
+         * Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         * value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         * value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
          * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
          * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
          * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
          * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
          * Variablen werden dabei alphabetisch geordnet.
          */
-        if (command.equals("plot")) {
+        if (command.equals("plot2d")) {
             if (params.length < 3) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot2d'");
             }
 
             HashSet vars = new HashSet();
 
-            if (params.length == 3) {
-
-                try {
-                    Expression expr = Expression.build(params[0], new HashSet());
-                    expr.getContainedVars(vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
-                }
-
-                if (vars.size() > 1) {
-                    throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens eine Veränderliche enthalten. Dieser enthält jedoch "
-                            + String.valueOf(vars.size()) + " Veränderliche.");
-                }
-
-                try {
-                    Double.parseDouble(params[1]);
-                } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                }
-
-                try {
-                    Double.parseDouble(params[2]);
-                } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                }
-
-                Expression expr = Expression.build(params[0], vars);
-                double x_0 = Double.parseDouble(params[1]);
-                double x_1 = Double.parseDouble(params[2]);
-                if (x_0 >= x_1) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
-                }
-                command_params = new Object[3];
-                command_params[0] = expr;
-                command_params[1] = x_0;
-                command_params[2] = x_1;
-                result.setName(command);
-                result.setParams(command_params);
-                return result;
-
-            } else if (params.length != 5) {
+            if (params.length != 5 || !params[0].contains("=")) {
 
                 for (int i = 0; i < params.length - 2; i++) {
                     try {
                         Expression.build(params[i], new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
                     }
                 }
 
@@ -417,26 +371,33 @@ public class MathCommandCompiler {
                 }
 
                 if (vars.size() > 1) {
-                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen höchstens eine Veränderliche enthalten. "
+                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot2d' dürfen höchstens eine Veränderliche enthalten. "
                             + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
                 }
 
+                HashSet vars_in_limits = new HashSet();
                 try {
-                    Double.parseDouble(params[params.length - 2]);
+                    Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                    }
                 } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                 }
 
                 try {
-                    Double.parseDouble(params[params.length - 1]);
+                    Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                    }
                 } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                 }
 
-                double x_0 = Double.parseDouble(params[params.length - 2]);
-                double x_1 = Double.parseDouble(params[params.length - 1]);
-                if (x_0 >= x_1) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot' muss größer sein als der "
+                Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
+                Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
+                if (x_0.evaluate() >= x_1.evaluate()) {
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss größer sein als der "
                             + (params.length) + ". Parameter.");
                 }
 
@@ -452,118 +413,74 @@ public class MathCommandCompiler {
 
             } else {
 
-                /**
-                 * Zunächst wird geprüft, ob es sich um einen Plot von drei
-                 * 2D-Graphen handeln kann. Falls nicht -> keine Exception
-                 * werfen und weitere Möglichkeiten überprüfen. Für die
-                 * Eindeutigkeit reicht es zu testen, on der zweite Parameter
-                 * ein Ausdruck (in einer Veränderlichen) ist.
-                 */
-                boolean is_not_plot_of_three_graphs = params[0].contains("=");
-                try {
-                    HashSet vars_in_first_expr = new HashSet();
-                    Expression.build(params[0], vars_in_first_expr);
-                    Double.parseDouble(params[1]);
-                    Double.parseDouble(params[2]);
-                    Double.parseDouble(params[3]);
-                    Double.parseDouble(params[4]);
-
-                    /**
-                     * Falls man hier angekommen ist, so kann es sich nicht um
-                     * einen Plot von drei 2D-Graphen handeln.
-                     */
-                    is_not_plot_of_three_graphs = true;
-                } catch (ExpressionException | NumberFormatException e) {
-                }
-
-                if (!is_not_plot_of_three_graphs) {
-                    Expression.build(params[0], new HashSet()).getContainedVars(vars);
-                    Expression.build(params[1], new HashSet()).getContainedVars(vars);
-                    Expression.build(params[2], new HashSet()).getContainedVars(vars);
-                    if (vars.size() > 1) {
-                        throw new ExpressionException("Die Ausdrücke im Befehl 'plot' dürfen höchstens eine Veränderliche enthalten. "
-                                + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[3]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[4]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    double x_0 = Double.parseDouble(params[3]);
-                    double x_1 = Double.parseDouble(params[4]);
-                    if (x_0 >= x_1) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss größer sein als der dritte Parameter.");
-                    }
-
-                    command_params = new Object[5];
-                    command_params[0] = Expression.build(params[0], vars);
-                    command_params[1] = Expression.build(params[1], vars);
-                    command_params[2] = Expression.build(params[2], vars);
-                    command_params[3] = x_0;
-                    command_params[4] = x_1;
-                    result.setName(command);
-                    result.setParams(command_params);
-                    return result;
-                }
-
                 if (params[0].contains("=")) {
+
+                    if (params.length != 5) {
+                        throw new ExpressionException("Beim Plotten impliziter Funktionen muss der Befehl 'plot2d' genau 5 Parameter enthalten: der erste ist die Gleichung, "
+                                + "die anderen vier sind die Grenzen, innerhalb derer der Graph geplottet wird.");
+                    }
 
                     try {
                         Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet()).getContainedVars(vars);
                         Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e) {
-                        throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss aus zwei gültigen Ausdrücken bestehen,"
+                        throw new ExpressionException("Der erste Parameter im Befehl 'plot2d' muss aus zwei gültigen Ausdrücken bestehen,"
                                 + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
                     }
 
                     if (vars.size() > 2) {
-                        throw new ExpressionException("Die beiden Ausdrücke im Befehl 'plot' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch "
+                        throw new ExpressionException("Die beiden Ausdrücke im Befehl 'plot2d' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch "
                                 + String.valueOf(vars.size()) + " Veränderliche.");
                     }
 
+                    HashSet vars_in_limits = new HashSet();
                     try {
-                        Double.parseDouble(params[1]);
+                        Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        }
                     } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                     }
 
                     try {
-                        Double.parseDouble(params[2]);
+                        Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        }
                     } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                     }
 
                     try {
-                        Double.parseDouble(params[3]);
+                        Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        }
                     } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                     }
 
                     try {
-                        Double.parseDouble(params[4]);
+                        Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        }
                     } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                     }
 
                     Expression expr_left = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
                     Expression expr_right = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-                    double x_0 = Double.parseDouble(params[1]);
-                    double x_1 = Double.parseDouble(params[2]);
-                    double y_0 = Double.parseDouble(params[3]);
-                    double y_1 = Double.parseDouble(params[4]);
-                    if (x_0 >= x_1) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
+                    Expression x_0 = Expression.build(params[1], vars);
+                    Expression x_1 = Expression.build(params[2], vars);
+                    Expression y_0 = Expression.build(params[3], vars);
+                    Expression y_1 = Expression.build(params[4], vars);
+                    if (x_0.evaluate() >= x_1.evaluate()) {
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss größer sein als der zweite Parameter.");
                     }
-                    if (y_0 >= y_1) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss größer sein als der vierte Parameter.");
+                    if (y_0.evaluate() >= y_1.evaluate()) {
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss größer sein als der vierte Parameter.");
                     }
 
                     command_params = new Object[6];
@@ -577,68 +494,97 @@ public class MathCommandCompiler {
                     result.setParams(command_params);
                     return result;
 
-                } else {
-
-                    try {
-                        Expression expr = Expression.build(params[0], vars);
-                        expr.getContainedVars(vars);
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der erste Parameter im Befehl 'plot' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
-                    }
-
-                    if (vars.size() > 2) {
-                        throw new ExpressionException("Der Ausdruck im Befehl 'plot' darf höchstens zwei Veränderliche enthalten. Dieser enthält jedoch "
-                                + String.valueOf(vars.size()) + " Veränderliche.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[1]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[2]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[3]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Double.parseDouble(params[4]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot' muss eine reelle Zahl sein.");
-                    }
-
-                    Expression expr = Expression.build(params[0], vars);
-                    double x_0 = Double.parseDouble(params[1]);
-                    double x_1 = Double.parseDouble(params[2]);
-                    double y_0 = Double.parseDouble(params[3]);
-                    double y_1 = Double.parseDouble(params[4]);
-                    if (x_0 >= x_1) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot' muss größer sein als der zweite Parameter.");
-                    }
-                    if (y_0 >= y_1) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot' muss größer sein als der vierte Parameter.");
-                    }
-                    command_params = new Object[5];
-                    command_params[0] = expr;
-                    command_params[1] = x_0;
-                    command_params[2] = x_1;
-                    command_params[3] = y_0;
-                    command_params[4] = y_1;
-                    result.setName(command);
-                    result.setParams(command_params);
-                    return result;
-
                 }
 
             }
+        }
+
+        //PLOT3D
+        /**
+         * Struktur: PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3,
+         * value_4) EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 <
+         * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         * Variablen werden dabei alphabetisch geordnet.
+         */
+        if (command.equals("plot3d")) {
+            if (params.length < 5) {
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot3d'");
+            } else if (params.length > 5) {
+                throw new ExpressionException("Zu viele Parameter im Befehl 'plot3d'");
+            }
+
+            HashSet vars = new HashSet();
+
+            try {
+                Expression expr = Expression.build(params[0], new HashSet());
+                expr.getContainedVars(vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der erste Parameter im Befehl 'plot3d' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+            }
+
+            if (vars.size() > 2) {
+                throw new ExpressionException("Der Ausdruck im Befehl 'plot3d' darf höchstens zwei Veränderliche enthalten. Dieser enthält jedoch "
+                        + String.valueOf(vars.size()) + " Veränderliche.");
+            }
+
+            HashSet vars_in_limits = new HashSet();
+            try {
+                Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+            }
+
+            try {
+                Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+            }
+
+            try {
+                Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
+                    throw new ExpressionException("Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+            }
+
+            try {
+                Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
+                    throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+            }
+
+            Expression expr = Expression.build(params[0], vars);
+            Expression x_0 = Expression.build(params[1], vars);
+            Expression x_1 = Expression.build(params[2], vars);
+            Expression y_0 = Expression.build(params[3], vars);
+            Expression y_1 = Expression.build(params[4], vars);
+            if (x_0.evaluate() >= x_1.evaluate()) {
+                throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss größer sein als der zweite Parameter.");
+            }
+            if (y_0.evaluate() >= y_1.evaluate()) {
+                throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss größer sein als der vierte Parameter.");
+            }
+            command_params = new Object[5];
+            command_params[0] = expr;
+            command_params[1] = x_0;
+            command_params[2] = x_1;
+            command_params[3] = y_0;
+            command_params[4] = y_1;
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
+
         }
 
         //PLOTCURVE
@@ -721,8 +667,9 @@ public class MathCommandCompiler {
         //SOLVE
         /**
          * Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
-         * expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2 legen den
-         * Lösungsbereich fest; n = Anzahl der Unterteilungen des Intervalls [x_1, x_2]
+         * expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
+         * legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
+         * Intervalls [x_1, x_2]
          */
         if (command.equals("solve")) {
             if (params.length < 3) {
@@ -753,17 +700,17 @@ public class MathCommandCompiler {
             HashSet vars_in_limit = new HashSet();
             try {
                 Expression expr = Expression.build(params[1], vars_in_limit);
-                if (!vars_in_limit.isEmpty()){
+                if (!vars_in_limit.isEmpty()) {
                     throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                 }
                 expr.evaluate();
             } catch (ExpressionException | EvaluationException e) {
                 throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
             }
-            
+
             try {
                 Expression expr = Expression.build(params[2], vars_in_limit);
-                if (!vars_in_limit.isEmpty()){
+                if (!vars_in_limit.isEmpty()) {
                     throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                 }
                 expr.evaluate();
@@ -1164,20 +1111,14 @@ public class MathCommandCompiler {
             executeLatex(c, area);
         } else if (c.getName().equals("pi")) {
             executePi(c, area);
-        } else if (c.getName().equals("plot") && c.getParams().length != 5 && c.getParams().length != 6) {
-            executePlot2D(c, graphicMethods2D);
-        } else if (c.getName().equals("plot") && c.getParams().length == 5) {
-            if (c.getParams()[1] instanceof Expression) {
-                executePlot2D(c, graphicMethods2D);
-            } else {
-                executePlot3D(c, graphicMethods3D);
-            }
-        } else if (c.getName().equals("plot") && c.getParams().length == 6) {
-            if (c.getParams()[2] instanceof Expression) {
-                executePlot2D(c, graphicMethods2D);
-            } else {
+        } else if (c.getName().equals("plot2d")) {
+            if (params[0].contains("=")) {
                 executeImplicitPlot2D(c, graphicMethods2D);
+            } else {
+                executePlot2D(c, graphicMethods2D);
             }
+        } else if (c.getName().equals("plot3d")) {
+            executePlot3D(c, graphicMethods3D);
         } else if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
             executePlotCurve2D(c, graphicMethodsCurves2D);
         } else if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
@@ -1305,8 +1246,8 @@ public class MathCommandCompiler {
             vars.add("x");
         }
 
-        double x_1 = (double) c.getParams()[c.getParams().length - 2];
-        double x_2 = (double) c.getParams()[c.getParams().length - 1];
+        Expression x_0 = (Expression) c.getParams()[c.getParams().length - 2];
+        Expression x_1 = (Expression) c.getParams()[c.getParams().length - 1];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -1318,7 +1259,7 @@ public class MathCommandCompiler {
         for (int i = 0; i < c.getParams().length - 2; i++) {
             graphicMethods2D.addExpression(exprs[i].simplify());
         }
-        graphicMethods2D.expressionToGraph(var, x_1, x_2);
+        graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
@@ -1352,14 +1293,14 @@ public class MathCommandCompiler {
             }
         }
 
-        double x_0 = (double) c.getParams()[1];
-        double x_1 = (double) c.getParams()[2];
-        double y_0 = (double) c.getParams()[3];
-        double y_1 = (double) c.getParams()[4];
+        Expression x_0 = (Expression) c.getParams()[1];
+        Expression x_1 = (Expression) c.getParams()[2];
+        Expression y_0 = (Expression) c.getParams()[3];
+        Expression y_1 = (Expression) c.getParams()[4];
 
         Iterator iter = vars.iterator();
-        String var1 = (String) iter.next();
-        String var2 = (String) iter.next();
+        String var_1 = (String) iter.next();
+        String var_2 = (String) iter.next();
 
         /**
          * Die Variablen var1 und var2 sind evtl. noch nicht in alphabetischer
@@ -1367,30 +1308,30 @@ public class MathCommandCompiler {
          * wird durch vier Zahlen eingegrenzt, welche den Variablen in
          * ALPHABETISCHER Reihenfolge entsprechen.
          */
-        String var1_alphabetical = var1;
-        String var2_alphabetical = var2;
+        String var1_alphabetical = var_1;
+        String var2_alphabetical = var_2;
 
-        if ((int) var1.charAt(0) > (int) var2.charAt(0)) {
-            var1_alphabetical = var2;
-            var2_alphabetical = var1;
+        if ((int) var_1.charAt(0) > (int) var_2.charAt(0)) {
+            var1_alphabetical = var_2;
+            var2_alphabetical = var_1;
         }
-        if ((int) var1.charAt(0) == (int) var2.charAt(0)) {
-            if ((var1.length() > 1) && (var2.length() == 1)) {
-                var1_alphabetical = var2;
-                var2_alphabetical = var1;
+        if ((int) var_1.charAt(0) == (int) var_2.charAt(0)) {
+            if ((var_1.length() > 1) && (var_2.length() == 1)) {
+                var1_alphabetical = var_2;
+                var2_alphabetical = var_1;
             }
-            if ((var1.length() > 1) && (var2.length() > 1)) {
-                int index_var1 = Integer.parseInt(var1.substring(2));
-                int index_var2 = Integer.parseInt(var2.substring(2));
+            if ((var_1.length() > 1) && (var_2.length() > 1)) {
+                int index_var1 = Integer.parseInt(var_1.substring(2));
+                int index_var2 = Integer.parseInt(var_2.substring(2));
                 if (index_var1 > index_var2) {
-                    var1_alphabetical = var2;
-                    var2_alphabetical = var1;
+                    var1_alphabetical = var_2;
+                    var2_alphabetical = var_1;
                 }
             }
         }
 
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(expr.simplify(), x_0, x_1, y_0, y_1);
+        graphicMethods3D.expressionToGraph(expr.simplify(), x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods3D.drawGraph3D();
 
     }
@@ -1417,33 +1358,33 @@ public class MathCommandCompiler {
             }
         }
 
-        double x_1 = (double) c.getParams()[2];
-        double x_2 = (double) c.getParams()[3];
-        double y_1 = (double) c.getParams()[4];
-        double y_2 = (double) c.getParams()[5];
+        Expression x_0 = (Expression) c.getParams()[2];
+        Expression x_1 = (Expression) c.getParams()[3];
+        Expression y_0 = (Expression) c.getParams()[4];
+        Expression y_1 = (Expression) c.getParams()[5];
 
         Iterator iter = vars.iterator();
-        String var1 = (String) iter.next();
-        String var2 = (String) iter.next();
+        String var_1 = (String) iter.next();
+        String var_2 = (String) iter.next();
 
-        String var1_alphabetical = var1;
-        String var2_alphabetical = var2;
+        String var1_alphabetical = var_1;
+        String var2_alphabetical = var_2;
 
-        if ((int) var1.charAt(0) > (int) var2.charAt(0)) {
-            var1_alphabetical = var2;
-            var2_alphabetical = var1;
+        if ((int) var_1.charAt(0) > (int) var_2.charAt(0)) {
+            var1_alphabetical = var_2;
+            var2_alphabetical = var_1;
         }
-        if ((int) var1.charAt(0) == (int) var2.charAt(0)) {
-            if ((var1.length() > 1) && (var2.length() == 1)) {
-                var1_alphabetical = var2;
-                var2_alphabetical = var1;
+        if ((int) var_1.charAt(0) == (int) var_2.charAt(0)) {
+            if ((var_1.length() > 1) && (var_2.length() == 1)) {
+                var1_alphabetical = var_2;
+                var2_alphabetical = var_1;
             }
-            if ((var1.length() > 1) && (var2.length() > 1)) {
-                int index_var1 = Integer.parseInt(var1.substring(2));
-                int index_var2 = Integer.parseInt(var2.substring(2));
+            if ((var_1.length() > 1) && (var_2.length() > 1)) {
+                int index_var1 = Integer.parseInt(var_1.substring(2));
+                int index_var2 = Integer.parseInt(var_2.substring(2));
                 if (index_var1 > index_var2) {
-                    var1_alphabetical = var2;
-                    var2_alphabetical = var1;
+                    var1_alphabetical = var_2;
+                    var2_alphabetical = var_1;
                 }
             }
         }
@@ -1453,10 +1394,11 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr.simplify());
-        graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_1 + x_2) / 2, (y_1 + y_2) / 2, (x_2 - x_1) / 2, (y_2 - y_1) / 2);
+        graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_0.evaluate() + x_1.evaluate()) / 2, (y_0.evaluate() + y_1.evaluate()) / 2,
+                (x_1.evaluate() - x_0.evaluate()) / 2, (y_1.evaluate() - y_0.evaluate()) / 2);
         graphicMethods2D.setDrawSpecialPoints(false);
         HashMap<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
-                x_1, x_2, y_1, y_2);
+                x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setImplicitGraph(implicit_graph);
         graphicMethods2D.drawGraph2D();
 
