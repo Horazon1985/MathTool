@@ -60,6 +60,9 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         this.setBounds(400, 100, 505, 310);
         this.getContentPane().setBackground(Color.white);
 
+        /**
+         * Logo laden
+         */
         JPanel panel = new JPanel();
         add(panel);
         panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/Helplogo.png"))));

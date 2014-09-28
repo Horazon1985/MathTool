@@ -12,9 +12,10 @@ import expressionbuilder.GraphicMethodsCurves3D;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.HashMap;
@@ -24,10 +25,11 @@ import java.util.TimerTask;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
-public class MathToolForm extends javax.swing.JFrame {
+public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private Thread threadRotate;
     private boolean startRotate;
@@ -36,6 +38,7 @@ public class MathToolForm extends javax.swing.JFrame {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
     private ComputingDialogGUI computingDialog = new ComputingDialogGUI();
+    private JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
 
     JTextArea mathToolArea;
     JEditorPane helpArea;
@@ -78,6 +81,14 @@ public class MathToolForm extends javax.swing.JFrame {
          */
 
         /**
+         * Labels ausrichten
+         */
+        legendLabel.setBounds(770, 530, 100, 25);
+        legendLabel.setVisible(false);
+        add(legendLabel);
+        legendLabel.addMouseListener(this);
+        
+        /**
          * Eingabefelder ausrichten
          */
         inputField.setBounds(10, 530, 1160, 30);
@@ -107,14 +118,10 @@ public class MathToolForm extends javax.swing.JFrame {
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
 
-        legendButton.setBounds(770, 530, 100, 30);
-        legendButton.setVisible(false);
-
         /**
          * Auswahlmenüs ausrichten
          */
         operatorChoice.setBounds(270, 570, 120, 30);
-
         commandChoice.setBounds(395, 570, 120, 30);
 
         /**
@@ -152,7 +159,7 @@ public class MathToolForm extends javax.swing.JFrame {
         inputField.setText(listOfCommands.get(i));
     }
 
-    private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException {
+    private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
 
         Command c = MathCommandCompiler.getCommand(command_name, params);
 
@@ -168,12 +175,12 @@ public class MathToolForm extends javax.swing.JFrame {
         graphicMethods3D.setVisible(false);
         graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
-        legendButton.setVisible(false);
+        legendLabel.setVisible(false);
         is3DGraphicASurface = true;
 
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
-            legendButton.setVisible(true);
+            legendLabel.setVisible(true);
         } else if (command_name.equals("plot3d")) {
             graphicMethods3D.setVisible(true);
             rotateButton.setVisible(true);
@@ -212,7 +219,6 @@ public class MathToolForm extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
         operatorChoice = new javax.swing.JComboBox();
         commandChoice = new javax.swing.JComboBox();
-        legendButton = new javax.swing.JButton();
         MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
@@ -238,7 +244,7 @@ public class MathToolForm extends javax.swing.JFrame {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plot3d(x^2+y^2,-1,1)");
+        inputField.setText("plot2d(x^2,x^3,-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -306,16 +312,6 @@ public class MathToolForm extends javax.swing.JFrame {
         });
         getContentPane().add(commandChoice);
         commandChoice.setBounds(480, 370, 88, 22);
-
-        legendButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
-        legendButton.setText("Legende");
-        legendButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                legendButtonActionPerformed(evt);
-            }
-        });
-        getContentPane().add(legendButton);
-        legendButton.setBounds(230, 410, 130, 30);
 
         jMenu1.setText("Datei");
 
@@ -589,11 +585,42 @@ public class MathToolForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 
-    private void legendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legendButtonActionPerformed
-        LegendGUI legendGUI = new LegendGUI(graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
-        legendGUI.setVisible(true);
-    }//GEN-LAST:event_legendButtonActionPerformed
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == legendLabel) {
+            LegendGUI legendGUI = new LegendGUI(graphicMethods2D.getInstructions() , graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+            legendGUI.setVisible(true);
+        }
+    }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        if (e.getSource() == legendLabel) {
+            legendLabel.setText("<html><b><u>Legende</u></b></<html>");
+            validate();
+            repaint();
+        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        if (e.getSource() == legendLabel) {
+            legendLabel.setText("<html><b>Legende</b></<html>");
+            validate();
+            repaint();
+        }
+    }
+    
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
@@ -626,7 +653,6 @@ public class MathToolForm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JButton latexButton;
-    private javax.swing.JButton legendButton;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;
     // End of variables declaration//GEN-END:variables
