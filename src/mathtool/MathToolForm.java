@@ -1,7 +1,5 @@
 package mathtool;
 
-import expressionbuilder.AnalysisMethods;
-import expressionbuilder.ArithmeticMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -9,6 +7,7 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
+import expressionbuilder.TypeGraphic;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,7 +32,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private Thread threadRotate;
     private boolean startRotate;
-    private boolean is3DGraphicASurface;
+    private TypeGraphic typeGraphic;
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
@@ -81,6 +80,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
 
         /**
+         * Es wird noch keine Grafik angezeigt
+         */
+        typeGraphic = TypeGraphic.NONE;
+        
+        /**
          * Labels ausrichten
          */
         legendLabel.setBounds(770, 530, 100, 25);
@@ -112,8 +116,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         inputButton.setBounds(1180, 530, 100, 30);
         cancelButton.setBounds(1180, 530, 100, 30);
-        approxButton.setBounds(10, 570, 105, 30);
-        latexButton.setBounds(125, 570, 140, 30);
+        approxButton.setBounds(10, 570, 130, 30);
+        latexButton.setBounds(145, 570, 130, 30);
+        clearButton.setBounds(280, 570, 130, 30);
         rotateButton.setBounds(900, 530, 220, 30);
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
@@ -121,8 +126,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Auswahlmenüs ausrichten
          */
-        operatorChoice.setBounds(270, 570, 120, 30);
-        commandChoice.setBounds(395, 570, 120, 30);
+        operatorChoice.setBounds(415, 570, 120, 30);
+        commandChoice.setBounds(540, 570, 120, 30);
 
         /**
          * 2D-Grafikobjekte initialisieren
@@ -175,25 +180,29 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         graphicMethods3D.setVisible(false);
         graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
-        legendLabel.setVisible(false);
-        is3DGraphicASurface = true;
+        legendLabel.setVisible(true);
 
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
-            legendLabel.setVisible(true);
+            typeGraphic = TypeGraphic.GRAPH2D;
         } else if (command_name.equals("plot3d")) {
             graphicMethods3D.setVisible(true);
             rotateButton.setVisible(true);
-            is3DGraphicASurface = true;
+            typeGraphic = TypeGraphic.GRAPH3D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
             graphicMethodsCurves2D.setVisible(true);
+            typeGraphic = TypeGraphic.CURVE2D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
             graphicMethodsCurves3D.setVisible(true);
-            is3DGraphicASurface = false;
             rotateButton.setVisible(true);
-        } else if (command_name.equals("solve") || command_name.equals("solvedgl")
-                || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
+            typeGraphic = TypeGraphic.CURVE3D;
+        } else if (command_name.equals("solve") || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
+            typeGraphic = TypeGraphic.GRAPH2D;
+        } else if (command_name.equals("solvedgl")) {
+            graphicMethods2D.setVisible(true);
+            legendLabel.setVisible(false);
+            typeGraphic = TypeGraphic.GRAPH2D;
         } else {
             mathToolArea.setBounds(10, 20, 1270, 500);
             scrollPane.setBounds(10, 20, 1270, 500);
@@ -201,6 +210,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             inputButton.setBounds(1180, 530, 100, 30);
             cancelButton.setBounds(1180, 530, 100, 30);
             rotateButton.setVisible(false);
+            legendLabel.setVisible(false);
+            typeGraphic = TypeGraphic.NONE;
         }
 
         repaint();
@@ -219,6 +230,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         cancelButton = new javax.swing.JButton();
         operatorChoice = new javax.swing.JComboBox();
         commandChoice = new javax.swing.JComboBox();
+        clearButton = new javax.swing.JButton();
         MathToolMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
@@ -244,7 +256,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plot2d(x^2,x^3,-1,1)");
+        inputField.setText("plot2d(1/x^10,-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -263,7 +275,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(rotateButton);
         rotateButton.setBounds(10, 410, 205, 30);
 
-        latexButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
         latexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,9 +283,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(latexButton);
-        latexButton.setBounds(180, 370, 150, 30);
+        latexButton.setBounds(140, 370, 140, 30);
 
-        approxButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        approxButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         approxButton.setText("Approx");
         approxButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -281,7 +293,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(approxButton);
-        approxButton.setBounds(10, 370, 150, 30);
+        approxButton.setBounds(10, 370, 130, 30);
 
         cancelButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
         cancelButton.setText("Abbruch");
@@ -301,7 +313,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(340, 370, 130, 22);
+        operatorChoice.setBounds(420, 370, 130, 22);
 
         commandChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
@@ -311,7 +323,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(480, 370, 88, 22);
+        commandChoice.setBounds(560, 370, 88, 22);
+
+        clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(clearButton);
+        clearButton.setBounds(280, 370, 130, 30);
 
         jMenu1.setText("Datei");
 
@@ -479,7 +501,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!startRotate) {
-            if (is3DGraphicASurface) {
+            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
                 startRotate = true;
                 graphicMethods3D.setStartRotate(true);
@@ -492,7 +514,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             rotateButton.setText("Rotation stoppen");
         } else {
             startRotate = false;
-            if (is3DGraphicASurface) {
+            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicMethods3D.setStartRotate(false);
             } else {
                 graphicMethodsCurves3D.setStartRotate(false);
@@ -585,11 +607,30 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        inputField.setText("clear()");
+        executeCommand();
+    }//GEN-LAST:event_clearButtonActionPerformed
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            LegendGUI legendGUI = new LegendGUI(graphicMethods2D.getInstructions() , graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
-            legendGUI.setVisible(true);
+            if (typeGraphic.equals(typeGraphic.GRAPH2D)){
+                LegendGUI legendGUI = new LegendGUI(GraphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                legendGUI.setVisible(true);
+            } else 
+            if (typeGraphic.equals(typeGraphic.GRAPH3D)){
+                LegendGUI legendGUI = new LegendGUI(GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
+                legendGUI.setVisible(true);
+            } else 
+            if (typeGraphic.equals(typeGraphic.CURVE2D)){
+//                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+//                legendGUI.setVisible(true);
+            } else 
+            if (typeGraphic.equals(typeGraphic.CURVE3D)){
+//                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+//                legendGUI.setVisible(true);
+            }
         }
     }
 
@@ -647,6 +688,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JMenuItem MenuItemQuit;
     private javax.swing.JButton approxButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton clearButton;
     private javax.swing.JComboBox commandChoice;
     private javax.swing.JButton inputButton;
     private javax.swing.JTextField inputField;

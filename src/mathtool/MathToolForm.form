@@ -101,7 +101,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="plot2d(x^2,x^3,-1,1)"/>
+        <Property name="text" type="java.lang.String" value="plot2d(1/x^10,-1,1)"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
@@ -131,7 +131,7 @@
     <Component class="javax.swing.JButton" name="latexButton">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="16" style="1"/>
+          <Font name="Bauhaus 93" size="16" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="LaTex-Code"/>
       </Properties>
@@ -140,14 +140,14 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="180" y="370" width="150" height="30"/>
+          <AbsoluteConstraints x="140" y="370" width="140" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
     <Component class="javax.swing.JButton" name="approxButton">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="16" style="1"/>
+          <Font name="Bauhaus 93" size="16" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Approx"/>
       </Properties>
@@ -156,7 +156,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="10" y="370" width="150" height="30"/>
+          <AbsoluteConstraints x="10" y="370" width="130" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -203,7 +203,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="340" y="370" width="130" height="-1"/>
+          <AbsoluteConstraints x="420" y="370" width="130" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -238,7 +238,23 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="480" y="370" width="-1" height="-1"/>
+          <AbsoluteConstraints x="560" y="370" width="-1" height="-1"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JButton" name="clearButton">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Bauhaus 93" size="16" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Clear"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearButtonActionPerformed"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="280" y="370" width="130" height="30"/>
         </Constraint>
       </Constraints>
     </Component>

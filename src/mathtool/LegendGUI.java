@@ -55,4 +55,46 @@ public class LegendGUI extends JDialog {
         validate();
         repaint();
     }
+    
+    public LegendGUI(String[] instructions, Expression expr) {
+
+        setTitle("Legende");
+        setLayout(null);
+        setResizable(false);
+        setModal(true);
+
+        this.setBounds(400, 200, 400, 165 + 20*instructions.length);
+        this.getContentPane().setBackground(Color.white);
+
+        JLabel instruction = new JLabel("<html><b>Bedienung:</b></<html>");
+        instruction.setBounds(10, 70, 350, 25);
+        add(instruction);
+
+        JLabel[] instr = new JLabel[instructions.length];
+        for (int i = 0; i < instr.length; i++) {
+            instr[i] = new JLabel();
+            instr[i].setText(instructions[i]);
+            instr[i].setBounds(10, 90 + 20*i, 350, 25);
+            add(instr[i]);
+        }
+
+        JLabel graph = new JLabel("<html><b>Graph:</b></<html>");
+        graph.setBounds(10, 90 + 20*instructions.length, 350, 25);
+        add(graph);
+
+        JLabel exprLabel = new JLabel(expr.writeFormula(true));
+        exprLabel.setBounds(10, 110 + 20*instructions.length, 350, 25);
+        add(exprLabel);
+
+        /**
+         * Logo laden
+         */
+        JPanel panel = new JPanel(); 
+        add(panel); 
+        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/LegendLogo.png"))));
+        panel.setBounds(0, -5, 400, 60); panel.setVisible(true);
+        validate();
+        repaint();
+    }
+    
 }

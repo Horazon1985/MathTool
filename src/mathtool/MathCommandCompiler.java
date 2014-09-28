@@ -831,10 +831,15 @@ public class MathCommandCompiler {
                 }
 
                 //Prüft, ob die AWP-Daten korrekt sind
+                HashSet vars_in_limit = new HashSet();
                 for (int i = 3; i < ord + 5; i++) {
                     try {
-                        Double.parseDouble(params[i]);
-                    } catch (NumberFormatException e) {
+                        Expression start_value = Expression.build(params[i], vars_in_limit);
+                        if (!vars_in_limit.isEmpty()) {
+                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                        }
+                        expr.evaluate();
+                    } catch (ExpressionException | EvaluationException e) {
                         throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
                     }
                 }
@@ -844,7 +849,7 @@ public class MathCommandCompiler {
                 command_params[1] = Variable.create(params[1]);
                 command_params[2] = ord;
                 for (int i = 3; i < ord + 5; i++) {
-                    command_params[i] = Double.parseDouble(params[i]);
+                    command_params[i] = Expression.build(params[i], vars);
                 }
 
                 result.setName(command);
@@ -1330,8 +1335,9 @@ public class MathCommandCompiler {
             }
         }
 
+        graphicMethods3D.setExpression(expr.simplify());
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(expr.simplify(), x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
+        graphicMethods3D.expressionToGraph(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods3D.drawGraph3D();
 
     }
@@ -1554,91 +1560,74 @@ public class MathCommandCompiler {
             vars_without_primes.add(var_without_primes);
         }
 
-        String var1 = ((Variable) c.getParams()[1]).getName();
-        double x_0 = (double) c.getParams()[3];
-        double x_1 = (double) c.getParams()[4];
-        double[] y_0 = new double[ord];
+        String var_1 = ((Variable) c.getParams()[1]).getName();
+        Expression x_0 = (Expression) c.getParams()[3];
+        Expression x_1 = (Expression) c.getParams()[4];
+        Expression[] y_0 = new Expression[ord];
         for (int i = 0; i < y_0.length; i++) {
-            y_0[i] = (double) c.getParams()[i + 5];
+            y_0[i] = (Expression) c.getParams()[i + 5];
+        }
+        double[] y_0_as_double = new double[ord];
+        for (int i = 0; i < y_0.length; i++) {
+            y_0_as_double[i] = y_0[i].evaluate();
         }
 
         /**
          * zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
          * werden.
          */
-        String var2 = new String();
+        String var_2 = new String();
 
         if (vars_without_primes.isEmpty()) {
-            if (var1.equals("y")) {
-                var2 = "z";
+            if (var_1.equals("y")) {
+                var_2 = "z";
             } else {
-                var2 = "y";
+                var_2 = "y";
             }
         } else if (vars_without_primes.size() == 1) {
-            if (vars_without_primes.contains(var1)) {
-                if (var1.equals("y")) {
-                    var2 = "z";
+            if (vars_without_primes.contains(var_1)) {
+                if (var_1.equals("y")) {
+                    var_2 = "z";
                 } else {
-                    var2 = "y";
+                    var_2 = "y";
                 }
             } else {
                 iter = vars_without_primes.iterator();
-                var2 = (String) iter.next();
+                var_2 = (String) iter.next();
             }
         } else {
             iter = vars_without_primes.iterator();
-            var2 = (String) iter.next();
-            if (var2.equals(var1)) {
-                var2 = (String) iter.next();
+            var_2 = (String) iter.next();
+            if (var_2.equals(var_1)) {
+                var_2 = (String) iter.next();
             }
         }
 
-        double[][] solution = NumericalMethods.solveDGL(expr, var1, var2, ord, x_0, x_1, y_0, 1000);
+        double[][] solution = NumericalMethods.solveDGL(expr, var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
 
         /**
          * Formulierung und Ausgabe des AWP.
          */
-        String awp = "Lösung der Differentialgleichung: " + var2;
+        String awp = "Lösung der Differentialgleichung: " + var_2;
         for (int i = 0; i < ord; i++) {
             awp = awp + "'";
         }
 
-        /**
-         * Falls Anfangsdaten ganze Zahlen sind, so sollen diese ohne
-         * Nachkommastellen ausgegeben werden.
-         */
-        awp = awp + "(" + var1 + ") = " + expr.writeFormula(true);
+        awp = awp + "(" + var_1 + ") = " + expr.writeFormula(true);
         for (int i = 0; i < ord; i++) {
-            awp = awp + ", " + var2;
+            awp = awp + ", " + var_2;
             for (int j = 0; j < i; j++) {
                 awp = awp + "'";
             }
-            if (x_0 == Math.round(x_0)) {
-                awp = awp + "(" + String.valueOf((long) x_0) + ") = ";
-            } else {
-                awp = awp + "(" + String.valueOf(x_0) + ") = ";
-            }
-            if (y_0[i] == Math.round(y_0[i])) {
-                awp = awp + String.valueOf((long) y_0[i]);
-            } else {
-                awp = awp + String.valueOf(y_0[i]);
-            }
+            awp = awp + "(" + x_0.writeFormula(true) + ") = ";
+            awp = awp + y_0[i].writeFormula(true);
         }
 
-        if (x_0 == Math.round(x_0)) {
-            awp = awp + ", " + String.valueOf((long) x_0) + " <= " + var1 + " <= ";
-        } else {
-            awp = awp + ", " + String.valueOf(x_0) + " <= " + var1 + " <= ";
-        }
-        if (x_1 == Math.round(x_1)) {
-            awp = awp + String.valueOf((long) x_1) + " \n \n";
-        } else {
-            awp = awp + String.valueOf(x_1) + " \n \n";
-        }
+        awp = awp + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + " \n \n";
 
         area.append(awp);
         for (int i = 0; i < solution.length; i++) {
-            area.append(var1 + " = " + solution[i][0] + "; " + var2 + " = " + solution[i][1] + "\n \n");
+            area.append(var_1 + " = " + solution[i][0] + "; " + var_2 + " = " + solution[i][1] + "\n \n");
         }
 
         /**
@@ -1648,7 +1637,7 @@ public class MathCommandCompiler {
          */
         double pos_of_critical_line = 0;
         if (solution.length < 1001) {
-            pos_of_critical_line = x_0 + (solution.length) * (x_1 - x_0) / 1000;
+            pos_of_critical_line = x_0.evaluate() + (solution.length)*(x_1.evaluate() - x_0.evaluate())/1000;
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n \n");
         }
 
@@ -1658,7 +1647,7 @@ public class MathCommandCompiler {
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addGraph(solution);
         graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+        graphicMethods2D.setParameters(var_1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
         graphicMethods2D.drawGraph2D();
 
