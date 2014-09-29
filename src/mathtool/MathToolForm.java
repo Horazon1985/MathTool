@@ -256,14 +256,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plot2d(1/x^10,-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 22);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -273,7 +272,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 205, 30);
+        rotateButton.setBounds(10, 410, 206, 30);
 
         latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -323,7 +322,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 88, 22);
+        commandChoice.setBounds(560, 370, 96, 22);
 
         clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
         clearButton.setText("Clear");
@@ -404,13 +403,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 /**
                  * Zunächst: es wird geprüft, ob die Zeile einen Befehl bildet.
                  * Ja -> Befehl ausführen. Nein -> Prüfen, ob dies ein
-                 * mathematischer ausdruck ist.
+                 * mathematischer Ausdruck ist.
                  */
                 try {
 
                     /**
                      * Falls es ein Grafikbefehl ist -> entsprechendes Panel
-                     * sichtbar machen und das andere unsichtbar.
+                     * sichtbar machen und alle anderen unsichtbar.
                      */
                     String[] com = Expression.getOperatorAndArguments(s);
                     String[] params = Expression.getArguments(com[1]);
@@ -425,8 +424,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, definedVars, definedVarsSet);
                         /**
-                         * Falls es graphische befehle waren -> Grafik sichtbar
-                         * machen.
+                         * Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                          */
                         activatePanelsForGraphs(com[0], params);
                         inputField.setText("");
