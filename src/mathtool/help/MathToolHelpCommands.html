@@ -32,21 +32,15 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
 Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
-<b>Befehl plot(F_1(x), ..., F_k(x), x_1, x_2):</b> Zeichnet den Graphen der Funktionen F_1, ..., F_k im Intervall x_1 <= x <= x_2. Der Zoomfaktor kann hier (fast) beliebig gro&szlig; und 
+<b>Befehl plot2d(F_1(x), ..., F_k(x), x_1, x_2):</b> Zeichnet den Graphen der Funktionen F_1, ..., F_k im Intervall x_1 <= x <= x_2. Der Zoomfaktor kann hier (fast) beliebig gro&szlig; und 
 beliebig klein werden.<br><br>
   
-<b>Befehl plot(F(x, y), x_1, x_2, y_1, y_2):</b> Zeichnet den Graphen der Funktion F von zwei Variablen im Rechteck x_1 <= x <= x_2, y_1 <= y <= y_2.
-Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass x, y die <i>alphabetische</i> Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
-
-<i>Beispiel:</i> Die Eingabe <i>plot(x^2-y^2,-1,1,-1,1)</i> erzeugt als Ausgabe die Grafik:<br><br>
-
-<left>
-<img width="600px" height="600px" src="ExamplePlot3D.png"><br><br>
-</left>
-
-<b>Befehl plot(F_1(x, y) = F_2(x, y), x_1, x_2, y_1, y_2):</b> Zeichnet die L&ouml;sungsmenge der Gleichung F_1(x, y) = F_2(x, y) von zwei Variablen 
+<b>Befehl plot2d(F_1(x, y) = F_2(x, y), x_1, x_2, y_1, y_2):</b> Zeichnet die L&ouml;sungsmenge der Gleichung F_1(x, y) = F_2(x, y) von zwei Variablen 
 im Rechteck x_1 <= x <= x_2, y_1 <= y <= y_2. Hier kann in den Graphen weder hinein- noch herausgezoomt werden, ebenso kann das Koordinatensystem nicht verschoben werden.<br>
 <i>Wichtig:</i> Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass x, y die <i>alphabetische</i> Reihenfolge der Variablen ist.<br><br>
+
+<b>Befehl plot3d(F(x, y), x_1, x_2, y_1, y_2):</b> Zeichnet den Graphen der Funktion F von zwei Variablen im Rechteck x_1 <= x <= x_2, y_1 <= y <= y_2.
+Wichtig: Die Grenzen x_1, x_2, y_1, y_2 sollen so angegeben werden, dass x, y die <i>alphabetische</i> Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
 <b>Befehl plotcurve((F_1(t), F_2(t)), t_1, t_2):</b> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen F_1 und F_2 parametrisiert wird, f&uuml;r t_1 <= t <= t_2.
 Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>

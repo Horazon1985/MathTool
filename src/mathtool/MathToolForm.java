@@ -7,7 +7,9 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
+import expressionbuilder.SolveMethods;
 import expressionbuilder.TypeGraphic;
+import java.math.BigInteger;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -315,7 +317,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 22);
 
         commandChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
@@ -622,12 +624,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 legendGUI.setVisible(true);
             } else 
             if (typeGraphic.equals(typeGraphic.CURVE2D)){
-//                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
-//                legendGUI.setVisible(true);
+                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
+                legendGUI.setVisible(true);
             } else 
             if (typeGraphic.equals(typeGraphic.CURVE3D)){
-//                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
-//                legendGUI.setVisible(true);
+                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
+                legendGUI.setVisible(true);
             }
         }
     }
