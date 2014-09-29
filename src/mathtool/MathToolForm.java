@@ -8,8 +8,8 @@ import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
 import expressionbuilder.SolveMethods;
+//import expressionbuilder.SolveMethods;
 import expressionbuilder.TypeGraphic;
-import java.math.BigInteger;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.HashMap;
@@ -104,7 +105,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         mathToolArea = new JTextArea();
         add(mathToolArea);
-        mathToolArea.setBounds(10, 20, 1270, 500);
+        mathToolArea.setBounds(0, 0, 1270, 500);
         mathToolArea.setEditable(false);
         mathToolArea.setLineWrap(true);
         mathToolArea.setWrapStyleWord(true);
@@ -171,7 +172,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         Command c = MathCommandCompiler.getCommand(command_name, params);
 
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-        mathToolArea.setBounds(10, 20, 750, 500);
+        mathToolArea.setBounds(0, 0, 750, 500);
         scrollPane.setBounds(10, 20, 750, 500);
         inputField.setBounds(10, 530, 640, 30);
         inputButton.setBounds(660, 530, 100, 30);
@@ -184,6 +185,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
 
+        System.out.println("mTA: " + mathToolArea.getBounds());
+        System.out.println("cP: " + mathToolArea.getBounds());
+        
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
@@ -206,7 +210,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             legendLabel.setVisible(false);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else {
-            mathToolArea.setBounds(10, 20, 1270, 500);
+            mathToolArea.setBounds(0, 0, 1270, 500);
             scrollPane.setBounds(10, 20, 1270, 500);
             inputField.setBounds(10, 530, 1160, 30);
             inputButton.setBounds(1180, 530, 100, 30);
@@ -247,7 +251,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/MathToolIcon.png")).getImage());
         getContentPane().setLayout(null);
 
-        inputButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        inputButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         inputButton.setText("Eingabe");
         inputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,7 +268,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 22);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -274,7 +278,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 206, 30);
+        rotateButton.setBounds(10, 410, 205, 30);
 
         latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -296,7 +300,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(approxButton);
         approxButton.setBounds(10, 370, 130, 30);
 
-        cancelButton.setFont(new java.awt.Font("Blippo", 1, 16)); // NOI18N
+        cancelButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         cancelButton.setText("Abbruch");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -306,7 +310,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(cancelButton);
         cancelButton.setBounds(520, 300, 100, 30);
 
-        operatorChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
+        operatorChoice.setFont(new java.awt.Font("Bauhaus 93", 1, 12)); // NOI18N
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,9 +318,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(420, 370, 130, 22);
+        operatorChoice.setBounds(420, 370, 130, 24);
 
-        commandChoice.setFont(new java.awt.Font("Blippo", 1, 12)); // NOI18N
+        commandChoice.setFont(new java.awt.Font("Bauhaus 93", 1, 12)); // NOI18N
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -324,7 +328,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 96, 22);
+        commandChoice.setBounds(560, 370, 98, 24);
 
         clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
         clearButton.setText("Clear");

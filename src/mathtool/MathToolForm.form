@@ -83,7 +83,7 @@
     <Component class="javax.swing.JButton" name="inputButton">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="16" style="1"/>
+          <Font name="Bauhaus 93" size="16" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Eingabe"/>
       </Properties>
@@ -162,7 +162,7 @@
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="16" style="1"/>
+          <Font name="Bauhaus 93" size="16" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Abbruch"/>
       </Properties>
@@ -178,7 +178,7 @@
     <Component class="javax.swing.JComboBox" name="operatorChoice">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="12" style="1"/>
+          <Font name="Bauhaus 93" size="12" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="12">
@@ -209,7 +209,7 @@
     <Component class="javax.swing.JComboBox" name="commandChoice">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Blippo" size="12" style="1"/>
+          <Font name="Bauhaus 93" size="12" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="17">
