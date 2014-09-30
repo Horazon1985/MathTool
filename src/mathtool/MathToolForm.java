@@ -65,7 +65,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
      * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten
      * ausgegeben haben möchte.
      */
-    public int command_count = 0;
     public int log_position = 0;
 
     public MathToolForm() {
@@ -400,9 +399,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 /**
                  * Befehl loggen!
                  */
-                listOfCommands.put(command_count, s);
-                command_count++;
-                log_position = command_count;
+                listOfCommands.put(listOfCommands.size(), s);
+                log_position = listOfCommands.size();
 
                 /**
                  * Zunächst: es wird geprüft, ob die Zeile einen Befehl bildet.
@@ -587,14 +585,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 if (log_position > 0) {
                     log_position--;
                 }
-                if (log_position == command_count - 1) {
+                if (log_position == listOfCommands.size()) {
                     log_position--;
                 }
                 showLoggedCommand(log_position);
                 break;
 
             case KeyEvent.VK_DOWN:
-                if (log_position < command_count - 1) {
+                if (log_position < listOfCommands.size() - 1) {
                     log_position++;
                 }
                 showLoggedCommand(log_position);

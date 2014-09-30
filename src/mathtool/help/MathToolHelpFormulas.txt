@@ -2,19 +2,19 @@
 
 MathTool versteht mathematische Ausdr&uuml;cke. Hierbei werden die vier Grundrechenarten mit +, -, * und / angegeben, Potenzen durch ^. Mathematische Funktionen tragen ihre &uuml;blichen Namen, z.B. sin(...), exp(...), ln(...), arctan(...) etc. Eine 
 Liste mit allen Funktionen finden Sie weiter unten.<br>
-Beachten Sie, dass Multiplikationen <i>stets</i> durch ein * angegeben werden m&uuml;ssen. MathTool versteht den Ausdruck 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.<br>
+Wichtig: Multiplikationen m&uuml;ssen stets durch ein * angegeben werden. MathTool versteht den Ausdruck 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.<br>
 G&uuml;ltige Ausdrücke sehen dann etwa wie folgt aus:<br><br>
 
 3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...<br><br>
 
 Ein eingegebener mathematischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies m&ouml;glich ist.<br><br>
 
-In MathTool k&ouml;nnen Ver&auml;nderliche mit einem einfachen Kleinbuchstaben oder mit einem Kleinbuchstaben mit Index bezeichnet werden. G&uuml;ltige Ver&auml;nderliche sind demnach etwa<br><br>
+In MathTool k&ouml;nnen Ver&auml;nderliche mit einem einfachen Kleinbuchstaben oder mit einem Kleinbuchstaben mit Index bezeichnet werden. G&uuml;ltige Variablen sind demnach etwa<br><br>
 
 a, b, c, ..., x, y, ..., a_1, x_18, ..., <br><br>
 
 nicht aber etwa xy oder abc. Die Konstante pi bezeichnet die Kreiszahl Pi und kann selbstverst&auml;ndlich nicht mittels Befehl def() (s. Abschnitt Befehle) umdefiniert werden. Beachten Sie, dass MathTool beim Kompilieren eines 
-mathematischen Ausdrucks Leerzeichen beseitigt und Gro&szlig;buchstaben zu Kleinbuchstaben macht. Insofern ist beispielsweise die Ver&auml;nderliche A_3 dasselbe wie die Ver&auml;nderliche a_3.<br><br>
+mathematischen Ausdrucks Leerzeichen beseitigt und Gro&szlig;buchstaben zu Kleinbuchstaben macht. Insofern ist beispielsweise die Ver&auml;nderliche A_3 dasselbe wie a_3.
 
 <b>Liste aller Funktionen:</b><br><br>
 <b>arccos(x):</b> Berechnet den Arkuskosinus von x (in Bogenma&szlig;).<br><br>
