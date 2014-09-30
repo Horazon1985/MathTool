@@ -99,14 +99,12 @@ public class MathCommandCompiler {
          */
         if (command.equals("def")) {
 
-            String eq = "=";
-
-            if (!params[0].contains(eq)) {
+            if (!params[0].contains("=")) {
                 throw new ExpressionException("Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
             }
 
-            String function_name_and_params = params[0].substring(0, params[0].indexOf(eq));
-            String function_term = params[0].substring(params[0].indexOf(eq) + 1, params[0].length());
+            String function_name_and_params = params[0].substring(0, params[0].indexOf("="));
+            String function_term = params[0].substring(params[0].indexOf("=") + 1, params[0].length());
 
             /**
              * Falls der linke Teil eine Variable ist, dann ist es eine
@@ -225,7 +223,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException("Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.");
                 }
             }
-
+            
             /**
              * result.params werden gesetzt.
              */
