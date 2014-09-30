@@ -591,11 +591,9 @@ public class MathCommandCompiler {
         /**
          * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1,
          * value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
-         * value_2: Parametergrenzen. 
-         * ODER: 
-         * PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var), FUNCTION_3(var)],
-         * value_1, value_2). FUNCTION_i(var) = Funktion in einer Variablen.
-         * value_1 < value_2: Parametergrenzen.
+         * value_2: Parametergrenzen. ODER: PLOTCURVE([FUNCTION_1(var),
+         * FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
+         * = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
          */
         if (command.equals("plotcurve")) {
             if (params.length != 3) {
@@ -605,8 +603,8 @@ public class MathCommandCompiler {
             HashSet vars = new HashSet();
 
             /**
-             * Es wird nun geprüft, ob der erste Parameter die Form "(expr_1, expr_2)" 
-             * oder "(expr_1, expr_2, expr_3)" besitzt.
+             * Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
+             * expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
              */
             if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
                 throw new ExpressionException("Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.");
@@ -639,7 +637,7 @@ public class MathCommandCompiler {
             } catch (ExpressionException e) {
                 throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
             }
-            
+
             try {
                 Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
                 if (!vars_in_limits.isEmpty()) {
@@ -1511,9 +1509,25 @@ public class MathCommandCompiler {
             n = (int) c.getParams()[4];
         }
 
-        HashMap<Integer, Double> result = NumericalMethods.solve(expr, x_1.evaluate(), x_2.evaluate(), n);
+        if (expr instanceof Constant && ((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
+            area.append("Lösungen der Gleichung: " + expr_1.writeFormula(true) + " = " + expr_2.writeFormula(true) + "\n \n");
+            area.append("Alle reellen Zahlen. \n \n");
+            graphicMethods2D.setIsInitialized(true);
+            graphicMethods2D.setGraphIsExplicit(true);
+            graphicMethods2D.setGraphIsFixed(false);
+            graphicMethods2D.clearExpressionAndGraph();
+            graphicMethods2D.addExpression(expr_1);
+            graphicMethods2D.expressionToGraph(var, x_1.evaluate(), x_2.evaluate());
+            graphicMethods2D.computeMaxXMaxY();
+            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+            graphicMethods2D.setDrawSpecialPoints(false);
+            graphicMethods2D.drawGraph2D();
+            return;
+        }
 
-        area.append("Lösungen der Gleichung: " + expr.writeFormula(true) + " = 0 \n \n");
+        HashMap<Integer, Double> result = NumericalMethods.solve(expr, var, x_1.evaluate(), x_2.evaluate(), n);
+
+        area.append("Lösungen der Gleichung: " + expr_1.writeFormula(true) + " = " + expr_2.writeFormula(true) + "\n \n");
         for (int i = 0; i < result.size(); i++) {
             area.append(var + "_" + (i + 1) + " = " + result.get(i) + "\n \n");
         }
@@ -1643,7 +1657,7 @@ public class MathCommandCompiler {
          */
         double pos_of_critical_line = 0;
         if (solution.length < 1001) {
-            pos_of_critical_line = x_0.evaluate() + (solution.length)*(x_1.evaluate() - x_0.evaluate())/1000;
+            pos_of_critical_line = x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000;
             area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n \n");
         }
 

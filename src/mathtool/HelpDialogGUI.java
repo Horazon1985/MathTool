@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 
 public class HelpDialogGUI extends JDialog implements MouseListener {
 
-    private JLabel generalities, mathFormulas, operators, commands;
+    private JLabel generalities, mathFormulas, operators, commands, contact;
     private final JEditorPane helpArea;
     private final JScrollPane scrollPaneHelp;
 
@@ -31,12 +31,14 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         mathFormulas = new JLabel("Mathematische Formeln");
         operators = new JLabel("Operatoren");
         commands = new JLabel("Befehle");
+        contact = new JLabel("Kontakt/Bugs melden");
 
         menue.setVisible(true);
         generalities.setVisible(true);
         mathFormulas.setVisible(true);
         operators.setVisible(true);
         commands.setVisible(true);
+        contact.setVisible(true);
 
         menue.setBounds(30, 120, 350, 25);
         generalities.setBounds(30, 150, 350, 25);
@@ -51,13 +53,17 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         commands.setBounds(30, 240, 350, 25);
         commands.addMouseListener(this);
 
+        contact.setBounds(30, 270, 350, 25);
+        contact.addMouseListener(this);
+
         add(menue);
         add(generalities);
         add(mathFormulas);
         add(operators);
         add(commands);
+        add(contact);
 
-        this.setBounds(400, 100, 505, 310);
+        this.setBounds(400, 100, 505, 340);
         this.getContentPane().setBackground(Color.white);
 
         /**
@@ -72,11 +78,11 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         helpArea = new JEditorPane();
         helpArea.setContentType("text/html");
         add(helpArea);
-        helpArea.setBounds(20, 270, 460, 330);
+        helpArea.setBounds(20, 300, 460, 300);
         helpArea.setEditable(false);
         helpArea.setVisible(false);
         scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 270, 460, 330);
+        scrollPaneHelp.setBounds(20, 300, 460, 300);
         scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneHelp);
         scrollPaneHelp.setVisible(false);
@@ -153,6 +159,23 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         validate();
     }
 
+    private void showHelpFileContact() {
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpContact.html");
+        if (helpURL != null) {
+            try {
+                helpArea.setPage(helpURL);
+            } catch (IOException e) {
+                System.err.println("Fehler: " + helpURL);
+            }
+        } else {
+            System.err.println("Datei nicht gefunden.");
+        }
+        repaint();
+        validate();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == generalities) {
@@ -176,6 +199,12 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         if (e.getSource() == commands) {
             this.setBounds(400, 50, 505, 650);
             showHelpFileCommands();
+            validate();
+            repaint();
+        }
+        if (e.getSource() == contact) {
+            this.setBounds(400, 50, 505, 650);
+            showHelpFileContact();
             validate();
             repaint();
         }
@@ -213,6 +242,11 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             validate();
             repaint();
         }
+        if (e.getSource() == contact) {
+            contact.setText("<html><u>Kontakt/Bugs melden</u></<html>");
+            validate();
+            repaint();
+        }
     }
 
     @Override
@@ -234,6 +268,11 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         }
         if (e.getSource() == commands) {
             commands.setText("<html>Befehle</<html>");
+            validate();
+            repaint();
+        }
+        if (e.getSource() == contact) {
+            contact.setText("<html>Kontakt/Bugs melden</<html>");
             validate();
             repaint();
         }

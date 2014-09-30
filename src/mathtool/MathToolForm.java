@@ -86,7 +86,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Es wird noch keine Grafik angezeigt
          */
         typeGraphic = TypeGraphic.NONE;
-        
+
         /**
          * Labels ausrichten
          */
@@ -94,7 +94,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
-        
+
         /**
          * Eingabefelder ausrichten
          */
@@ -185,9 +185,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
 
-        System.out.println("mTA: " + mathToolArea.getBounds());
-        System.out.println("cP: " + mathToolArea.getBounds());
-        
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
@@ -268,7 +265,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 22);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -278,7 +275,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 205, 30);
+        rotateButton.setBounds(10, 410, 206, 30);
 
         latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -328,7 +325,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 98, 24);
+        commandChoice.setBounds(560, 370, 104, 24);
 
         clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
         clearButton.setText("Clear");
@@ -430,7 +427,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, definedVars, definedVarsSet);
                         /**
-                         * Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
+                         * Falls es ein Grafikbefehle war -> Grafik sichtbar
+                         * machen.
                          */
                         activatePanelsForGraphs(com[0], params);
                         inputField.setText("");
@@ -619,19 +617,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            if (typeGraphic.equals(typeGraphic.GRAPH2D)){
+            if (typeGraphic.equals(typeGraphic.GRAPH2D)) {
                 LegendGUI legendGUI = new LegendGUI(GraphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
                 legendGUI.setVisible(true);
-            } else 
-            if (typeGraphic.equals(typeGraphic.GRAPH3D)){
+            } else if (typeGraphic.equals(typeGraphic.GRAPH3D)) {
                 LegendGUI legendGUI = new LegendGUI(GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
                 legendGUI.setVisible(true);
-            } else 
-            if (typeGraphic.equals(typeGraphic.CURVE2D)){
+            } else if (typeGraphic.equals(typeGraphic.CURVE2D)) {
                 LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
                 legendGUI.setVisible(true);
-            } else 
-            if (typeGraphic.equals(typeGraphic.CURVE3D)){
+            } else if (typeGraphic.equals(typeGraphic.CURVE3D)) {
                 LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
                 legendGUI.setVisible(true);
             }
@@ -665,7 +660,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             repaint();
         }
     }
-    
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
