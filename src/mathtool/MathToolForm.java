@@ -258,14 +258,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("def(f(x)=x^2)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 490, 22);
 
         rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -275,7 +274,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 206, 30);
+        rotateButton.setBounds(10, 410, 205, 30);
 
         latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -325,7 +324,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 104, 24);
+        commandChoice.setBounds(560, 370, 98, 24);
 
         clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
         clearButton.setText("Clear");

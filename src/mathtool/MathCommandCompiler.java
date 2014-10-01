@@ -149,7 +149,16 @@ public class MathCommandCompiler {
              * der linken Seite von "=" definiert wird).
              */
             HashSet vars = new HashSet();
-            Expression expr = Expression.build(function_term, vars);
+            Expression expr = Expression.build(function_term, new HashSet());
+            
+            /**
+             * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen enthält (der Benutzer kann beispielsweise
+             * eine weitere Funktion mit Hilfe bereits definierter Funktionen definieren), dann werden hier alle neu definierten
+             * Funktionen durch vordefinierte Funktionen ersetzt.
+             */
+            expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
+            
+            expr.getContainedVars(vars);
 
             try {
                 /**
@@ -223,7 +232,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException("Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.");
                 }
             }
-            
+
             /**
              * result.params werden gesetzt.
              */
@@ -1111,7 +1120,7 @@ public class MathCommandCompiler {
         } else if ((c.getName().equals("def")) && c.getParams().length >= 1) {
             executeDefine(c, area, definedVars, definedVarsSet);
         } else if (c.getName().equals("defvars")) {
-            executeDefVars(c, area, definedVars, definedVarsSet);
+            executeDefVars(c, area, definedVars);
         } else if (c.getName().equals("euler")) {
             executeEuler(c, area);
         } else if (c.getName().equals("latex")) {
@@ -1214,13 +1223,15 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet)
+    private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
         String result = "";
-        for (String var : definedVars.keySet()) {
-            result += var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + ", ";
+        if (!definedVars.isEmpty()) {
+            for (String var : definedVars.keySet()) {
+                result += var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + ", ";
+            }
+            result = result.substring(0, result.length() - 2);
         }
-        result = result.substring(0, result.length() - 2);
         area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + result + "\n \n");
     }
 
