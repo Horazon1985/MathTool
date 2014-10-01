@@ -150,14 +150,16 @@ public class MathCommandCompiler {
              */
             HashSet vars = new HashSet();
             Expression expr = Expression.build(function_term, new HashSet());
-            
+
             /**
-             * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen enthält (der Benutzer kann beispielsweise
-             * eine weitere Funktion mit Hilfe bereits definierter Funktionen definieren), dann werden hier alle neu definierten
-             * Funktionen durch vordefinierte Funktionen ersetzt.
+             * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
+             * enthält (der Benutzer kann beispielsweise eine weitere Funktion
+             * mit Hilfe bereits definierter Funktionen definieren), dann werden
+             * hier alle neu definierten Funktionen durch vordefinierte
+             * Funktionen ersetzt.
              */
             expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
-            
+
             expr.getContainedVars(vars);
 
             try {
@@ -856,7 +858,7 @@ public class MathCommandCompiler {
 
                 command_params = new Object[ord + 5];
                 command_params[0] = expr;
-                command_params[1] = Variable.create(params[1]);
+                command_params[1] = params[1];
                 command_params[2] = ord;
                 for (int i = 3; i < ord + 5; i++) {
                     command_params[i] = Expression.build(params[i], vars);
@@ -1518,14 +1520,19 @@ public class MathCommandCompiler {
             n = (int) c.getParams()[4];
         }
 
-        if (expr instanceof Constant && ((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
+        if (expr instanceof Constant) {
             area.append("Lösungen der Gleichung: " + expr_1.writeFormula(true) + " = " + expr_2.writeFormula(true) + "\n \n");
-            area.append("Alle reellen Zahlen. \n \n");
+            if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
+                area.append("Alle reellen Zahlen. \n \n");
+            } else {
+                area.append("Die gegebene Gleichung besitzt keine Lösungen. \n \n");
+            }
             graphicMethods2D.setIsInitialized(true);
             graphicMethods2D.setGraphIsExplicit(true);
             graphicMethods2D.setGraphIsFixed(false);
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr_1);
+            graphicMethods2D.addExpression(expr_2);
             graphicMethods2D.expressionToGraph(var, x_1.evaluate(), x_2.evaluate());
             graphicMethods2D.computeMaxXMaxY();
             graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
@@ -1589,7 +1596,7 @@ public class MathCommandCompiler {
             vars_without_primes.add(var_without_primes);
         }
 
-        String var_1 = ((Variable) c.getParams()[1]).getName();
+        String var_1 = (String) c.getParams()[1];
         Expression x_0 = (Expression) c.getParams()[3];
         Expression x_1 = (Expression) c.getParams()[4];
         Expression[] y_0 = new Expression[ord];
