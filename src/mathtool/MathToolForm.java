@@ -576,8 +576,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-//                executeCommand();
-                
+                executeCommand();
+/**                
                 try{
                     Expression expr = Expression.build(inputField.getText(), new HashSet());
                     System.out.println(SolveMethods.isPolynomial(expr, "x"));
@@ -587,7 +587,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 } catch (Exception e){
                     System.out.println("Fehler");
                 }
-                
+*/                
                 break;
 
             case KeyEvent.VK_UP:
