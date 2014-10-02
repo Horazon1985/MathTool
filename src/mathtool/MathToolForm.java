@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.math.BigInteger;
 
 import java.util.HashSet;
@@ -54,10 +55,10 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
      * im Laufe des Programms definierten Variablen und Funktionen.
      */
-    static HashMap<String, Expression> definedVars = new HashMap<String, Expression>();
+    static HashMap<String, Expression> definedVars = new HashMap<>();
     static HashSet definedVarsSet = new HashSet();
-    static HashMap<String, Expression> definedFunctions = new HashMap<String, Expression>();
-    public HashMap<Integer, String> listOfCommands = new HashMap<Integer, String>();
+    static HashMap<String, Expression> definedFunctions = new HashMap<>();
+    public HashMap<Integer, String> listOfCommands = new HashMap<>();
     /**
      * Variablen, die eine Rolle beim Loggen der Befehle spielen. command_count
      * = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
@@ -102,6 +103,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
+        Font mathToolAreaFont = new Font("Verdana", Font.PLAIN, 12);
+        mathToolArea.setFont(mathToolAreaFont);
         add(mathToolArea);
         mathToolArea.setBounds(0, 0, 1270, 500);
         mathToolArea.setEditable(false);
@@ -110,6 +113,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         scrollPane = new JScrollPane(mathToolArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(10, 20, 1270, 500);
+        mathToolArea.setCaretPosition(mathToolArea.getDocument().getLength());
         add(scrollPane);
 
         /**
@@ -246,7 +250,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/MathToolIcon.png")).getImage());
         getContentPane().setLayout(null);
 
-        inputButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
+        inputButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         inputButton.setText("Eingabe");
         inputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -265,7 +269,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(inputField);
         inputField.setBounds(10, 336, 490, 22);
 
-        rotateButton.setFont(new java.awt.Font("Blippo", 1, 14)); // NOI18N
+        rotateButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
         rotateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,7 +279,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(rotateButton);
         rotateButton.setBounds(10, 410, 205, 30);
 
-        latexButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
+        latexButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         latexButton.setText("LaTex-Code");
         latexButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,7 +289,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(latexButton);
         latexButton.setBounds(140, 370, 140, 30);
 
-        approxButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
+        approxButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         approxButton.setText("Approx");
         approxButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -295,7 +299,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(approxButton);
         approxButton.setBounds(10, 370, 130, 30);
 
-        cancelButton.setFont(new java.awt.Font("Bauhaus 93", 1, 16)); // NOI18N
+        cancelButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         cancelButton.setText("Abbruch");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -305,7 +309,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(cancelButton);
         cancelButton.setBounds(520, 300, 100, 30);
 
-        operatorChoice.setFont(new java.awt.Font("Bauhaus 93", 1, 12)); // NOI18N
+        operatorChoice.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -313,9 +317,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(420, 370, 130, 24);
+        operatorChoice.setBounds(420, 370, 130, 21);
 
-        commandChoice.setFont(new java.awt.Font("Bauhaus 93", 1, 12)); // NOI18N
+        commandChoice.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "solve()", "solvedgl()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -323,9 +327,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 98, 24);
+        commandChoice.setBounds(560, 370, 87, 21);
 
-        clearButton.setFont(new java.awt.Font("Bauhaus 93", 0, 16)); // NOI18N
+        clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Clear");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -392,12 +396,26 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 /**
                  * Leerzeichen werden im Vorfeld beseitigt.
                  */
-                String s = inputField.getText().replaceAll(" ", "");
+                String command = inputField.getText().replaceAll(" ", "");
+
+                /**
+                 * Alles zu Kleinbuchstaben machen.
+                 */
+                char part;
+                int n = command.length();
+                for (int i = 0; i < n; i++) {
+                    part = command.charAt(i);
+                    //Falls es ein Großbuchstabe ist -> zu Kleinbuchstaben machen
+                    if (((int) part >= 65) && ((int) part <= 90)) {
+                        part = (char) ((int) part + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
+                        command = command.substring(0, i) + part + command.substring(i + 1, n);
+                    }
+                }
 
                 /**
                  * Befehl loggen!
                  */
-                listOfCommands.put(listOfCommands.size(), s);
+                listOfCommands.put(listOfCommands.size(), command);
                 log_position = listOfCommands.size();
 
                 /**
@@ -411,7 +429,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                      * Falls es ein Grafikbefehl ist -> entsprechendes Panel
                      * sichtbar machen und alle anderen unsichtbar.
                      */
-                    String[] com = Expression.getOperatorAndArguments(s);
+                    String[] com = Expression.getOperatorAndArguments(command);
                     String[] params = Expression.getArguments(com[1]);
 
                     for (int i = 0; i < MathCommandCompiler.commands.length; i++) {
@@ -420,8 +438,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         }
                     }
                     if (valid_command) {
-                        mathToolArea.append(s + "\n \n");
-                        MathCommandCompiler.executeCommand(s, mathToolArea, graphicMethods2D, graphicMethods3D,
+                        mathToolArea.append(command + "\n \n");
+                        MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, definedVars, definedVarsSet);
                         /**
                          * Falls es ein Grafikbefehle war -> Grafik sichtbar
@@ -459,7 +477,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  */
                 try {
 
-                    Expression expr = Expression.build(s, new HashSet());
+                    Expression expr = Expression.build(command, new HashSet());
 
                     /**
                      * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -473,7 +491,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         inputField.setText("");
                     } catch (EvaluationException e) {
                         mathToolArea.append(expr.writeFormula(true) + "\n \n");
-                        mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                        if (e.getMessage().equals("Berechnung abgebrochen.")) {
+                            mathToolArea.append(e.getMessage() + "\n \n");
+                        } else {
+                            mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                        }
                     }
 
                 } catch (ExpressionException e) {
@@ -577,17 +599,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-/**                
-                try{
-                    Expression expr = Expression.build(inputField.getText(), new HashSet());
-                    System.out.println(SolveMethods.isPolynomial(expr, "x"));
-                    if (SolveMethods.isPolynomial(expr, "x")){
-                        System.out.println("Grad = " + SolveMethods.degreeOfPolynomial(expr));
-                    }
-                } catch (Exception e){
-                    System.out.println("Fehler");
-                }
-*/                
+                /**
+                 * try{ Expression expr = Expression.build(inputField.getText(),
+                 * new HashSet());
+                 * System.out.println(SolveMethods.isPolynomial(expr, "x")); if
+                 * (SolveMethods.isPolynomial(expr, "x")){
+                 * System.out.println("Grad = " +
+                 * SolveMethods.degreeOfPolynomial(expr)); } } catch (Exception
+                 * e){ System.out.println("Fehler"); }
+                 */
                 break;
 
             case KeyEvent.VK_UP:

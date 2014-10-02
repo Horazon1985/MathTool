@@ -1169,6 +1169,11 @@ public class MathCommandCompiler {
         Expression expr = (Expression) c.getParams()[0];
 
         /**
+         * Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so darstellen, dass
+         * es nur vordefinierte Funktionen beinhaltet.
+         */
+        expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
+        /**
          * Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck
          * ersetzt werden.
          */
@@ -1639,7 +1644,7 @@ public class MathCommandCompiler {
             }
         }
 
-        double[][] solution = NumericalMethods.solveDGL(expr, var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
+        double[][] solution = NumericalMethods.solveDGL(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
 
         /**
          * Formulierung und Ausgabe des AWP.
@@ -1702,7 +1707,7 @@ public class MathCommandCompiler {
         }
         tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
 
-        Expression tangent = AnalysisMethods.getTangentSpace(expr, vars);
+        Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
         area.append(tangent_announcement);
         area.append("Y=" + tangent.writeFormula(true) + "\n \n");
 
@@ -1736,12 +1741,12 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTaylorDGL(Command c, JTextArea area)
-            throws ExpressionException, EvaluationException {
+    private static void executeTaylorDGL(Command c, JTextArea area) throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
+        expr = expr.simplify();
         expr.getContainedVars(vars);
 
         HashSet vars_without_primes = new HashSet();
@@ -1772,7 +1777,7 @@ public class MathCommandCompiler {
          * zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
          * werden.
          */
-        String var_2 = new String();
+        String var_2;
 
         if (vars_without_primes.isEmpty()) {
             if (var_1.equals("y")) {
@@ -1800,7 +1805,7 @@ public class MathCommandCompiler {
         }
 
         Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var_1, ord, x_0, y_0, k);
-        area.append(result.writeFormula(true) + "\n \n");
+        area.append(var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n");
 
     }
 
