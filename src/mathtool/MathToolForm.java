@@ -1,5 +1,6 @@
 package mathtool;
 
+import expressionbuilder.BinaryOperation;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -8,7 +9,10 @@ import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
 import expressionbuilder.SolveMethods;
+import expressionbuilder.TypeBinary;
 import expressionbuilder.TypeGraphic;
+import expressionbuilder.Variable;
+import expressionbuilder.Constant;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -599,15 +603,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-                /**
-                 * try{ Expression expr = Expression.build(inputField.getText(),
-                 * new HashSet());
-                 * System.out.println(SolveMethods.isPolynomial(expr, "x")); if
-                 * (SolveMethods.isPolynomial(expr, "x")){
-                 * System.out.println("Grad = " +
-                 * SolveMethods.degreeOfPolynomial(expr)); } } catch (Exception
-                 * e){ System.out.println("Fehler"); }
-                 */
                 break;
 
             case KeyEvent.VK_UP:
