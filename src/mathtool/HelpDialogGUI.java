@@ -179,31 +179,56 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == generalities) {
-            this.setBounds(400, 50, 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 650);
+            generalities.setForeground(Color.blue);
+            mathFormulas.setForeground(Color.black);
+            operators.setForeground(Color.black);
+            commands.setForeground(Color.black);
+            contact.setForeground(Color.black);
             showHelpFileGeneralities();
             validate();
             repaint();
         }
         if (e.getSource() == mathFormulas) {
-            this.setBounds(400, 50, 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 650);
+            generalities.setForeground(Color.black);
+            mathFormulas.setForeground(Color.blue);
+            operators.setForeground(Color.black);
+            commands.setForeground(Color.black);
+            contact.setForeground(Color.black);
             showHelpFileFormulas();
             validate();
             repaint();
         }
         if (e.getSource() == operators) {
-            this.setBounds(400, 50, 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 650);
+            generalities.setForeground(Color.black);
+            mathFormulas.setForeground(Color.black);
+            operators.setForeground(Color.blue);
+            commands.setForeground(Color.black);
+            contact.setForeground(Color.black);
             showHelpFileOperators();
             validate();
             repaint();
         }
         if (e.getSource() == commands) {
-            this.setBounds(400, 50, 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 650);
+            generalities.setForeground(Color.black);
+            mathFormulas.setForeground(Color.black);
+            operators.setForeground(Color.black);
+            commands.setForeground(Color.blue);
+            contact.setForeground(Color.black);
             showHelpFileCommands();
             validate();
             repaint();
         }
         if (e.getSource() == contact) {
-            this.setBounds(400, 50, 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 650);
+            generalities.setForeground(Color.black);
+            mathFormulas.setForeground(Color.black);
+            operators.setForeground(Color.black);
+            commands.setForeground(Color.black);
+            contact.setForeground(Color.blue);
             showHelpFileContact();
             validate();
             repaint();
