@@ -44,7 +44,7 @@ vereinfacht wird.<br><br>
 
 <b>taylor(FUNCTION VAR, x_0, k):</b> Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bez&uuml;glich der Variablen VAR an der Stelle VAR = x_0.<br><br>
 
-Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden. 
+Operatoren k&ouml;nnen wiederum in weiteren mathematischen Ausdr&uuml;cken vorkommen und somit weiterverarbeitet werden. 
 
 <i>Beispiel:</i> Der Ausdruck<br><br>
 
