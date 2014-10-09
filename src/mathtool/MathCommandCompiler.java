@@ -216,6 +216,16 @@ public class MathCommandCompiler {
             }
 
             /**
+             * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
+             * überschrieben werden.
+             */
+            for (String protected_function : Expression.functions){
+                if (protected_function.equals(function_name)){
+                    throw new ExpressionException("Die Funktion '" + function_name + "' ist eine geschützte Funktion und darf nicht überschrieben werden.");
+                }
+            }
+            
+            /**
              * Prüfen, ob alle Variablen, die in expr auftreten, auch als
              * Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
              *
