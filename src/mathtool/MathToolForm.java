@@ -599,22 +599,20 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-/**  
-                try{
-                    Expression[] a = new Expression[4];
-                    a[3] = Expression.build("1", new HashSet());
-                    a[2] = Expression.build("0", new HashSet());
-                    a[1] = Expression.build("-5", new HashSet());
-                    a[0] = Expression.build("-4", new HashSet());
-                    Expression[] result = SolveMethods.solveCubicEquation(a);
-                    for (int i = 0; i < result.length; i++){
-                        System.out.println(result[i].writeFormula(true));
-                    }
-                    
-                } catch(ExpressionException | EvaluationException e){
-            
-                }
-*/                
+                /**
+                 * try{ Expression[] a = new Expression[4]; a[3] =
+                 * Expression.build("1", new HashSet()); a[2] =
+                 * Expression.build("0", new HashSet()); a[1] =
+                 * Expression.build("-5", new HashSet()); a[0] =
+                 * Expression.build("-4", new HashSet()); Expression[] result =
+                 * SolveMethods.solveCubicEquation(a); for (int i = 0; i <
+                 * result.length; i++){
+                 * System.out.println(result[i].writeFormula(true)); }
+                 *
+                 * } catch(ExpressionException | EvaluationException e){
+                 *
+                 * }
+                 */
                 break;
 
             case KeyEvent.VK_UP:
