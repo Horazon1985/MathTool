@@ -2,51 +2,49 @@
 
 MathTool kennt die folgenden Operatoren:<br><br>
 
-<b>diff(FUNCTION, VAR):</b> Berechnet die partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Berechnet die partielle Ableitung ∂F/∂x<sub>i</sub> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
 
-<b>diff(FUNCTION, VAR, k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach der Variablen VAR.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Berechnet die k-te partielle Ableitung ∂<sup>k</sup>F/∂x<sub>i</sub><sup>k</sup> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
 
-<b>diff(FUNCTION, VAR_1, ..., var_k):</b> Berechnet die k-te partielle Ableitung der Funktion FUNCTION nach den Variablen VAR_1, ..., VAR_k. Die Variablen
-VAR_i m&uuml;ssen nicht alle verschieden sein.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Berechnet die iterierte partielle Ableitung ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> der Funktion F nach den Variablen x<sub>i</sub>, ..., x<sub>j</sub>. Die Variablen x<sub>i</sub>, ..., x<sub>j</sub> müssen nicht alle verschieden sein.<br><br>
 
-<b> div(FUNCTION):</b> Berechnet die Divergenz der Funktion FUNCTION.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet die Divergenz div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> der Funktion F.<br><br>
 
-<b>fac(n) oder n!:</b> Berechnet die Fakult&auml;t der Zahl n. Fakult&auml;ten negativer ganzer Zahlen liefern einen Fehler. Fakult&auml;ten von nicht-ganzen Zahlen werden im Approximationsmodus
-durch den Wert der <i>Gammafunktion</i> Gamma(n + 1) approximiert. Fakult&auml;ten ganzer Zahlen werden nur bis n <= 10000 ausgeschrieben.<br><br>
+<strong>fac(n) oder n!:</strong> Berechnet die Fakultät der Zahl n. Für nicht-negative ganze Zahlen n liefert es die gewöhnliche Fakultät n! = 1·2· ··· ·n. Fakultäten negativer ganzer Zahlen liefern einen Fehler und Fakultäten von nicht-ganzen Zahlen werden im Approximationsmodus durch den Wert der <em>Gammafunktion</em> Gamma(n + 1) approximiert. Fakultäten ganzer Zahlen werden nur bis n &lt;= 10000 ausgeschrieben.<br><br>
 
-<i>Beispiel:</i> Der Ausdruck 5! erzeugt die Ausgabe<br><br> 
+<em>Beispiel:</em> Der Ausdruck 5! erzeugt die Ausgabe<br><br> 
 
 120,<br><br>
 
-w&auml;hrend der Ausdruck approx(0.5!) zu<br><br>
+während der Ausdruck approx(0.5!) zu<br><br>
 
 0.8862266958197873<br><br>
 
 vereinfacht wird.<br><br>
 
-<b>gcd(n_1, ..., n_k):</b> Berechnet den gr&ouml;&szlig;ten gemeinsamen Teiler der ganzen Zahlen n_1, ..., n_k.<br><br>
+<strong>gcd(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Berechnet den größten gemeinsamen Teiler der ganzen Zahlen n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
-<b>int(FUNCTION, x_1, x_2):</b> Berechnet das bestimmte Integral &uuml;ber die Funktion FUNCTION von x_1 bis x_2.<br><br>
+<strong>int(F(x), a, b):</strong> Berechnet das bestimmte Integral ∫<sub>a</sub><sup>b</sup>F(x)dx über die Funktion F von a bis b.<br><br>
 
-<b>laplace(FUNCTION):</b> Berechnet den Laplace-Operator der Funktion FUNCTION.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet den Laplace-Operator ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> der Funktion F.<br><br>
 
-<b>lcm(n_1, ..., n_k):</b> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen n_1, ..., n_k.<br><br>
+<strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
-<b>mod(a, b):</b> Sind a und b ganze Zahlen, so berechnet es den Divisionsrest r bei ganzzahliger Division von a durch b.<br><br>
+<strong>mod(a, b):</strong> Sind a und b ganze Zahlen, so berechnet es den Divisionsrest r bei ganzzahliger Division von a durch b.<br><br>
 
-<i>Beispiel:</i> mod(25, 7) erzeugt die Ausgabe<br><br>
+<em>Beispiel:</em> mod(25, 7) erzeugt die Ausgabe<br><br>
 
 4.<br><br>
 
-<b>prod(EXPRESSION, VAR, k_1, k_2):</b> Berechnet das Produkt f&uuml;r den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.<br><br>
+<strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Berechnet das Produkt F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Falls k<sub>1</sub> &gt; k<sub>2</sub> ist, so ist das Ergebnis 1.<br><br>
 
-<b>sum(EXPRESSION, VAR, k_1, k_2):</b> Berechnet die Summe f&uuml;r den Ausdruck EXPRESSION von VAR = k_1 bis VAR = k_2.<br><br>
+<strong>sum(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Berechnet die Summe F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>) + F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>) + ··· + F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Falls k<sub>1</sub> &gt; k<sub>2</sub> ist, so ist das Ergebnis 0.<br><br>
 
-<b>taylor(FUNCTION VAR, x_0, k):</b> Berechnet das Taylorpolynom k-ten Grades von der Funktion FUNCTION bez&uuml;glich der Variablen VAR an der Stelle VAR = x_0.<br><br>
+<strong>taylor(F(x, y<sub>1</sub>, ..., y<sub>n</sub>), x<sub>0</sub>, k):</strong> Berechnet das Taylorpolynom k-ten Grades von der Funktion F(x, y<sub>1</sub>, ..., y<sub>n</sub>) bezüglich der Variablen x an der Stelle x = x<sub>0</sub>.<br><br>
 
-Operatoren k&ouml;nnen wiederum in weiteren mathematischen Ausdr&uuml;cken vorkommen und somit weiterverarbeitet werden. 
+Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden.<br><br>
 
-<i>Beispiel:</i> Der Ausdruck<br><br>
+<em>Beispiel:</em> Der Ausdruck<br><br>
 
 x^2*diff(y^5,y,3) + 6<br><br>
 
