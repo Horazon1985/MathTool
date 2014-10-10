@@ -17,8 +17,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.math.BigInteger;
-
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Timer;
@@ -261,6 +259,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("def(t(u,v)=diff(u^2*tan(v),u,v))");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -472,8 +471,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 }
 
                 /**
-                 * Nun wird geprüft, ob es sich bei s um einen gültigen ausdruck
-                 * handelt. Ja -> ggfs. vereinfachen und ausgeben.
+                 * Nun wird geprüft, ob es sich bei s um einen gültigen Ausdruck
+                 * handelt. Ja -> vereinfachen und ausgeben.
                  */
                 try {
 

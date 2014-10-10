@@ -34,6 +34,53 @@ public class MathCommandCompiler {
         "pi", "plot2d", "plot3d", "plotcurve", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
+     * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
+     * benötigt. Sie prüft nach, ob name keine bereits definierte Funktion,
+     * Operator oder Befehl ist. Ferner dürfen die Zeichen + - * / ^ nicht
+     * enthalten sein.
+     */
+    private static boolean checkForbiddenNames(String name) {
+
+        /**
+         * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
+         * überschrieben werden.
+         */
+        for (String protected_function : Expression.functions) {
+            if (protected_function.equals(name)) {
+                return false;
+            }
+        }
+        /**
+         * Prüfen, ob nicht geschützte Operatoren (wie z.B. taylor, int etc.)
+         * überschrieben werden.
+         */
+        for (String protected_operator : Expression.operators) {
+            if (protected_operator.equals(name)) {
+                return false;
+            }
+        }
+        /**
+         * Prüfen, ob nicht geschützte Befehle (wie z.B. approx etc.)
+         * überschrieben werden.
+         */
+        for (String protected_command : commands) {
+            if (protected_command.equals(name)) {
+                return false;
+            }
+        }
+        /**
+         * Prüfen, ob name nicht + - * / oder ^ enthält.
+         */
+        if (name.contains("+") || name.contains("-") || name.contains("*") 
+                || name.contains("/") || name.contains("^") || name.contains("!")) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
      * Wichtig: Der String command und die Parameter params entahlten keine
      * Leerzeichen mehr. Diese wurden bereits im Vorfeld beseitigt.
      */
@@ -219,10 +266,9 @@ public class MathCommandCompiler {
              * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
              * überschrieben werden.
              */
-            for (String protected_function : Expression.functions){
-                if (protected_function.equals(function_name)){
-                    throw new ExpressionException("Die Funktion '" + function_name + "' ist eine geschützte Funktion und darf nicht überschrieben werden.");
-                }
+            if (!checkForbiddenNames(function_name)){
+                throw new ExpressionException("Der Funktionsname '" + function_name + "' ist der Name einer geschützten Funktion, eines geschützten Operators "
+                        + "oder eines geschützten Befehls. Bitte wählen Sie einen anderen Namen.");
             }
             
             /**
@@ -1179,8 +1225,8 @@ public class MathCommandCompiler {
         Expression expr = (Expression) c.getParams()[0];
 
         /**
-         * Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so darstellen, dass
-         * es nur vordefinierte Funktionen beinhaltet.
+         * Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so
+         * darstellen, dass es nur vordefinierte Funktionen beinhaltet.
          */
         expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
         /**

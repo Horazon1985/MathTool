@@ -1,4 +1,4 @@
-﻿<html><head></head><body><font size="6"><b>Mathematische Operatoren:</b></font><br><br>
+﻿<font size="6"><b>Mathematische Operatoren:</b></font><br><br>
 
 MathTool kennt die folgenden Operatoren:<br><br>
 
@@ -12,13 +12,13 @@ MathTool kennt die folgenden Operatoren:<br><br>
 
 <strong>fac(n) oder n!:</strong> Berechnet die Fakultät der Zahl n. Für nicht-negative ganze Zahlen n liefert es die gewöhnliche Fakultät n! = 1·2· ··· ·n. Fakultäten negativer ganzer Zahlen liefern einen Fehler und Fakultäten von nicht-ganzen Zahlen werden im Approximationsmodus durch den Wert der <em>Gammafunktion</em> Gamma(n + 1) approximiert. Fakultäten ganzer Zahlen werden nur bis n &lt;= 10000 ausgeschrieben.<br><br>
 
-<em>Beispiel:</em> Der Ausdruck 5! erzeugt die Ausgabe<br><br> 
+<em>Beispiel:</em> Der Ausdruck 5! erzeugt die Ausgabe<br>
 
-120,<br><br>
+<p style="text-align: center;">120,</p><br>
 
-während der Ausdruck approx(0.5!) zu<br><br>
+während der Ausdruck approx(0.5!) zu<br>
 
-0.8862266958197873<br><br>
+<p style="text-align: center;">0.8862266958197873</p><br>
 
 vereinfacht wird.<br><br>
 
@@ -32,23 +32,22 @@ vereinfacht wird.<br><br>
 
 <strong>mod(a, b):</strong> Sind a und b ganze Zahlen, so berechnet es den Divisionsrest r bei ganzzahliger Division von a durch b.<br><br>
 
-<em>Beispiel:</em> mod(25, 7) erzeugt die Ausgabe<br><br>
+<em>Beispiel:</em> mod(25, 7) erzeugt die Ausgabe<br>
 
-4.<br><br>
+<p style="text-align: center;">4</p><br>
 
 <strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Berechnet das Produkt F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Falls k<sub>1</sub> &gt; k<sub>2</sub> ist, so ist das Ergebnis 1.<br><br>
 
 <strong>sum(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Berechnet die Summe F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>) + F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>) + ··· + F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Falls k<sub>1</sub> &gt; k<sub>2</sub> ist, so ist das Ergebnis 0.<br><br>
 
-<strong>taylor(F(x, y<sub>1</sub>, ..., y<sub>n</sub>), x<sub>0</sub>, k):</strong> Berechnet das Taylorpolynom k-ten Grades von der Funktion F(x, y<sub>1</sub>, ..., y<sub>n</sub>) bezüglich der Variablen x an der Stelle x = x<sub>0</sub>.<br><br>
+<strong>taylor(F(x, y<sub>1</sub>, ..., y<sub>n</sub>), x, x<sub>0</sub>, k):</strong> Berechnet das Taylorpolynom k-ten Grades von der Funktion F(x, y<sub>1</sub>, ..., y<sub>n</sub>) bezüglich der Variablen x an der Stelle x = x<sub>0</sub>.<br><br>
 
 Operatoren können wiederum in weiteren mathematischen Ausdrücken vorkommen und somit weiterverarbeitet werden.<br><br>
 
-<em>Beispiel:</em> Der Ausdruck<br><br>
+<em>Beispiel:</em> Der Ausdruck<br>
 
-x^2*diff(y^5,y,3) + 6<br><br>
+<p style="text-align: center;">x^2*diff(y^5,y,3) + 6</p><br>
 
-erzeugt die Ausgabe<br><br>
+erzeugt die Ausgabe<br>
 
-60*x^2*y^2+6.
-</body></html>
+<p style="text-align: center;">60*x^2*y^2+6.</p>
