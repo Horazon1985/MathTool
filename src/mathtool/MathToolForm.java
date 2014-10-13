@@ -7,7 +7,6 @@ import expressionbuilder.GraphicMethods2D;
 import expressionbuilder.GraphicMethods3D;
 import expressionbuilder.GraphicMethodsCurves2D;
 import expressionbuilder.GraphicMethodsCurves3D;
-import expressionbuilder.SolveMethods;
 import expressionbuilder.TypeGraphic;
 
 import java.awt.*;
@@ -259,6 +258,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("solveexact(x^3-x^2-x+1=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -385,6 +385,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
                 computing = false;
+                /**
+                 * mathToolArea nach unten scrollen lassen.
+                 */
+                scrollPane.getVerticalScrollBar().setValue(
+                        scrollPane.getVerticalScrollBar().getMaximum());
             }
 
             @Override
@@ -597,17 +602,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-                try{
-                    Expression f = Expression.build("sin(16*(x-2)^2+1)", new HashSet());
-                    Expression g = Expression.build("sin(pi/5)", new HashSet());
-                    HashMap<Integer, Expression> result = SolveMethods.solveGeneralEquation(f, g, "x", mathToolArea);
-                    for (int i = 0; i < result.size(); i++){
-                        System.out.println("x_" + i + " = " + result.get(i).writeFormula(true));
-                    }
-                } catch (ExpressionException | EvaluationException e){
-                    System.out.println("FEHLER!");
-                }
-
                 break;
 
             case KeyEvent.VK_UP:

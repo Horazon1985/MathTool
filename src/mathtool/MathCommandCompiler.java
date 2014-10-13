@@ -13,6 +13,7 @@ import expressionbuilder.Variable;
 import expressionbuilder.AnalysisMethods;
 import expressionbuilder.BinaryOperation;
 import expressionbuilder.NumericalMethods;
+import expressionbuilder.SolveMethods;
 import expressionbuilder.TypeBinary;
 import java.math.BigDecimal;
 
@@ -31,7 +32,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "solve", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
@@ -71,7 +72,7 @@ public class MathCommandCompiler {
         /**
          * Prüfen, ob name nicht + - * / oder ^ enthält.
          */
-        if (name.contains("+") || name.contains("-") || name.contains("*") 
+        if (name.contains("+") || name.contains("-") || name.contains("*")
                 || name.contains("/") || name.contains("^") || name.contains("!")) {
             return false;
         }
@@ -266,11 +267,11 @@ public class MathCommandCompiler {
              * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
              * überschrieben werden.
              */
-            if (!checkForbiddenNames(function_name)){
+            if (!checkForbiddenNames(function_name)) {
                 throw new ExpressionException("Der Funktionsname '" + function_name + "' ist der Name einer geschützten Funktion, eines geschützten Operators "
                         + "oder eines geschützten Befehls. Bitte wählen Sie einen anderen Namen.");
             }
-            
+
             /**
              * Prüfen, ob alle Variablen, die in expr auftreten, auch als
              * Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
@@ -748,7 +749,8 @@ public class MathCommandCompiler {
             }
 
             if (!params[0].contains("=")) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'Ausdruck_1 = Ausdruck_2' sein.");
+                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
+                        + "wobei f und g Funktionen und x eine gültiger Veränderliche sind.");
             }
             HashSet vars = new HashSet();
             try {
@@ -816,6 +818,45 @@ public class MathCommandCompiler {
                 command_params[4] = n;
             }
 
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
+        }
+
+        //SOLVEEXACT
+        /**
+         * Struktur: solveexact(expr_1 = expr_2).
+         */
+        if (command.equals("solveexact")) {
+            if (params.length < 1) {
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solveexact'");
+            }
+            if (params.length > 1) {
+                throw new ExpressionException("Zu viele Parameter im Befehl 'solveexact'");
+            }
+
+            if (!params[0].contains("=")) {
+                throw new ExpressionException("Der erste Parameter im Befehl 'solveexact' muss von der Form 'f(x) = g(x)' sein, "
+                        + "wobei f und g Funktionen und x eine gültiger Veränderliche sind.");
+            }
+            HashSet vars = new HashSet();
+            try {
+                Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der erste Parameter im Befehl 'solveexact' muss zwei gültige Ausdrücke enthalten, "
+                        + "welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
+            }
+
+            Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+            Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+            if (vars.size() > 1) {
+                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
+            }
+
+            command_params = new Object[2];
+            command_params[0] = expr_1;
+            command_params[1] = expr_2;
             result.setName(command);
             result.setParams(command_params);
             return result;
@@ -1199,6 +1240,8 @@ public class MathCommandCompiler {
             executePlotCurve3D(c, graphicMethodsCurves3D);
         } else if (c.getName().equals("solve")) {
             executeSolve(c, area, graphicMethods2D);
+        } else if (c.getName().equals("solveexact")) {
+            executeSolveExact(c, area);
         } else if (c.getName().equals("solvedgl")) {
             executeSolveDGL(c, area, graphicMethods2D);
         } else if (c.getName().equals("tangent")) {
@@ -1560,7 +1603,7 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
         Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
-        Expression expr = new BinaryOperation(expr_1, expr_2, TypeBinary.MINUS).simplify();
+        Expression expr = expr_1.sub(expr_2).simplify();
         expr.getContainedVars(vars);
         //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
         String var = "x";
@@ -1582,7 +1625,8 @@ public class MathCommandCompiler {
         }
 
         if (expr instanceof Constant) {
-            area.append("Lösungen der Gleichung: " + expr_1.writeFormula(true) + " = " + expr_2.writeFormula(true) + "\n \n");
+            area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
             if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
                 area.append("Alle reellen Zahlen. \n \n");
             } else {
@@ -1602,21 +1646,22 @@ public class MathCommandCompiler {
             return;
         }
 
-        HashMap<Integer, Double> result = NumericalMethods.solve(expr, var, x_1.evaluate(), x_2.evaluate(), n);
+        HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_1.evaluate(), x_2.evaluate(), n);
 
-        area.append("Lösungen der Gleichung: " + expr_1.writeFormula(true) + " = " + expr_2.writeFormula(true) + "\n \n");
-        for (int i = 0; i < result.size(); i++) {
-            area.append(var + "_" + (i + 1) + " = " + result.get(i) + "\n \n");
+        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+        for (int i = 0; i < zeros.size(); i++) {
+            area.append(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
         }
 
         /**
          * Nullstellen als Array (zum Markieren).
          */
-        double[][] zeros = new double[result.size()][2];
-        for (int i = 0; i < zeros.length; i++) {
-            zeros[i][0] = result.get(i);
-            Variable.setValue(var, zeros[i][0]);
-            zeros[i][1] = expr_1.evaluate();
+        double[][] zeros_as_array = new double[zeros.size()][2];
+        for (int i = 0; i < zeros_as_array.length; i++) {
+            zeros_as_array[i][0] = zeros.get(i);
+            Variable.setValue(var, zeros_as_array[i][0]);
+            zeros_as_array[i][1] = expr_1.evaluate();
         }
 
         graphicMethods2D.setIsInitialized(true);
@@ -1629,8 +1674,33 @@ public class MathCommandCompiler {
         graphicMethods2D.computeMaxXMaxY();
         graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(true);
-        graphicMethods2D.setSpecialPoints(zeros);
+        graphicMethods2D.setSpecialPoints(zeros_as_array);
         graphicMethods2D.drawGraph2D();
+
+    }
+
+    private static void executeSolveExact(Command c, JTextArea area)
+            throws ExpressionException, EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
+        Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
+        expr_1.getContainedVars(vars);
+        expr_2.getContainedVars(vars);
+        //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+        String var = "x";
+        if (!vars.isEmpty()) {
+            Iterator iter = vars.iterator();
+            var = (String) iter.next();
+        }
+
+        HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
+        
+        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+        for (int i = 0; i < zeros.size(); i++) {
+            area.append(var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n");
+        }
 
     }
 
