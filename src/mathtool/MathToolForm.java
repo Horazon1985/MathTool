@@ -597,14 +597,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-                
                 try{
-                    Expression f = Expression.build("(x+4)^4", new HashSet());
-                    Expression g = Expression.build("10000", new HashSet());
-                    HashMap result = SolveMethods.solveGeneralEquation(f, g, "x", mathToolArea);
+                    Expression f = Expression.build("sin(16*(x-2)^2+1)", new HashSet());
+                    Expression g = Expression.build("sin(pi/5)", new HashSet());
+                    HashMap<Integer, Expression> result = SolveMethods.solveGeneralEquation(f, g, "x", mathToolArea);
+                    for (int i = 0; i < result.size(); i++){
+                        System.out.println("x_" + i + " = " + result.get(i).writeFormula(true));
+                    }
                 } catch (ExpressionException | EvaluationException e){
                     System.out.println("FEHLER!");
                 }
+
                 break;
 
             case KeyEvent.VK_UP:
