@@ -599,8 +599,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 executeCommand();
                 
                 try{
-                    Expression f = Expression.build("x^(2/5)", new HashSet());
-                    Expression g = Expression.build("(sin(x))^(4/15)", new HashSet());
+                    Expression f = Expression.build("(x+4)^4", new HashSet());
+                    Expression g = Expression.build("10000", new HashSet());
                     HashMap result = SolveMethods.solveGeneralEquation(f, g, "x", mathToolArea);
                 } catch (ExpressionException | EvaluationException e){
                     System.out.println("FEHLER!");
