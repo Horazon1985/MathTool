@@ -1381,7 +1381,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         for (int i = 0; i < c.getParams().length - 2; i++) {
-            graphicMethods2D.addExpression(exprs[i].simplify());
+            graphicMethods2D.addExpression(exprs[i]);
         }
         graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.computeMaxXMaxY();
@@ -1454,7 +1454,7 @@ public class MathCommandCompiler {
             }
         }
 
-        graphicMethods3D.setExpression(expr.simplify());
+        graphicMethods3D.setExpression(expr);
         graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
         graphicMethods3D.expressionToGraph(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods3D.drawGraph3D();
@@ -1518,7 +1518,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsExplicit(false);
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr.simplify());
+        graphicMethods2D.addExpression(expr);
         graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_0.evaluate() + x_1.evaluate()) / 2, (y_0.evaluate() + y_1.evaluate()) / 2,
                 (x_1.evaluate() - x_0.evaluate()) / 2, (y_1.evaluate() - y_0.evaluate()) / 2);
         graphicMethods2D.setDrawSpecialPoints(false);
@@ -1538,8 +1538,6 @@ public class MathCommandCompiler {
         expr[0].getContainedVars(vars);
         expr[1] = (Expression) c.getParams()[1];
         expr[1].getContainedVars(vars);
-        expr[0] = expr[0].simplify();
-        expr[1] = expr[1].simplify();
 
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -1572,9 +1570,6 @@ public class MathCommandCompiler {
         expr[1].getContainedVars(vars);
         expr[2] = (Expression) c.getParams()[2];
         expr[2].getContainedVars(vars);
-        expr[0] = expr[0].simplify();
-        expr[1] = expr[1].simplify();
-        expr[2] = expr[2].simplify();
 
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
