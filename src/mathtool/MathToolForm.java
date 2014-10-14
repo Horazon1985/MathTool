@@ -3,10 +3,10 @@ package mathtool;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
-import expressionbuilder.GraphicMethods2D;
-import expressionbuilder.GraphicMethods3D;
-import expressionbuilder.GraphicMethodsCurves2D;
-import expressionbuilder.GraphicMethodsCurves3D;
+import graphic.GraphicMethods2D;
+import graphic.GraphicMethods3D;
+import graphic.GraphicMethodsCurves2D;
+import graphic.GraphicMethodsCurves3D;
 import expressionbuilder.TypeGraphic;
 
 import java.awt.*;
@@ -258,6 +258,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("solveexact((x-2)*(sin(x)-sin(pi/5))=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
