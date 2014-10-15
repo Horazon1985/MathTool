@@ -831,7 +831,7 @@ public class MathCommandCompiler {
             if (params.length < 1) {
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'solveexact'");
             }
-            if (params.length > 1) {
+            if (params.length > 2) {
                 throw new ExpressionException("Zu viele Parameter im Befehl 'solveexact'");
             }
 
@@ -850,13 +850,28 @@ public class MathCommandCompiler {
 
             Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
             Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            if (vars.size() > 1) {
-                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
+            if (vars.size() > 1 && params.length == 1) {
+                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben "
+                + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
             }
 
-            command_params = new Object[2];
-            command_params[0] = expr_1;
-            command_params[1] = expr_2;
+            if (params.length == 2) {
+                if (!Expression.isValidVariable(params[1])) {
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solveexact' muss eine gültige Veränderliche sein.");
+                }
+            }
+
+            if (params.length == 1) {
+                command_params = new Object[2];
+                command_params[0] = expr_1;
+                command_params[1] = expr_2;
+            } else {
+                command_params = new Object[3];
+                command_params[0] = expr_1;
+                command_params[1] = expr_2;
+                command_params[2] = params[1];
+            }
+
             result.setName(command);
             result.setParams(command_params);
             return result;
@@ -1620,7 +1635,7 @@ public class MathCommandCompiler {
         }
 
         if (expr instanceof Constant) {
-            area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+            area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                     + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
             if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
                 area.append("Alle reellen Zahlen. \n \n");
@@ -1643,7 +1658,7 @@ public class MathCommandCompiler {
 
         HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_1.evaluate(), x_2.evaluate(), n);
 
-        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                 + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
         for (int i = 0; i < zeros.size(); i++) {
             area.append(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
@@ -1683,15 +1698,20 @@ public class MathCommandCompiler {
         expr_1.getContainedVars(vars);
         expr_2.getContainedVars(vars);
         //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
-        String var = "x";
-        if (!vars.isEmpty()) {
-            Iterator iter = vars.iterator();
-            var = (String) iter.next();
+        String var;
+        if (c.getParams().length == 3) {
+            var = (String) c.getParams()[2];
+        } else {
+            var = "x";
+            if (!vars.isEmpty()) {
+                Iterator iter = vars.iterator();
+                var = (String) iter.next();
+            }
         }
 
         HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
-        
-        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true) 
+
+        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                 + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
         for (int i = 0; i < zeros.size(); i++) {
             area.append(var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n");
