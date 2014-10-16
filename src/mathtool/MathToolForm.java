@@ -258,7 +258,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("(((2767/108)^(1/2)-11/2))^(1/3)");
+        inputField.setText("solveexact(x^5-5*x^4-6*x^3+30*x^2+8*x-40=0,x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
