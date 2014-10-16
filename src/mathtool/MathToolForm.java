@@ -7,6 +7,7 @@ import graphic.GraphicMethods2D;
 import graphic.GraphicMethods3D;
 import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
+import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
 
 import java.awt.*;
@@ -47,6 +48,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     GraphicMethods3D graphicMethods3D;
     GraphicMethodsCurves2D graphicMethodsCurves2D;
     GraphicMethodsCurves3D graphicMethodsCurves3D;
+    GraphicMethodsPolar2D graphicMethodsPolar2D;
 
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
@@ -146,6 +148,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         repaint();
         graphicMethodsCurves2D.setVisible(false);
 
+        graphicMethodsPolar2D = new GraphicMethodsPolar2D();
+        add(graphicMethodsPolar2D);
+        graphicMethodsPolar2D.setBounds(770, 20, 500, 500);
+        repaint();
+        graphicMethodsPolar2D.setVisible(false);
+
         /**
          * 3D-Grafikobjekte initialisieren
          */
@@ -181,6 +189,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         graphicMethodsCurves2D.setVisible(false);
         graphicMethods3D.setVisible(false);
         graphicMethodsCurves3D.setVisible(false);
+        graphicMethodsPolar2D.setVisible(false);
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
 
@@ -198,6 +207,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             graphicMethodsCurves3D.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
+        } else if (command_name.equals("plotpolar")) {
+            graphicMethodsPolar2D.setVisible(true);
+            typeGraphic = TypeGraphic.POLARGRAPH2D;
         } else if (command_name.equals("solve") || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
@@ -258,7 +270,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solveexact(x^3+3*x^2+3*x+1=0,x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -443,7 +454,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     if (valid_command) {
                         mathToolArea.append(command + "\n \n");
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
-                                graphicMethodsCurves2D, graphicMethodsCurves3D, definedVars, definedVarsSet);
+                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars, definedVarsSet);
                         /**
                          * Falls es ein Grafikbefehle war -> Grafik sichtbar
                          * machen.
@@ -650,6 +661,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.CURVE3D)) {
                 LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
+                legendGUI.setVisible(true);
+            } else if (typeGraphic.equals(typeGraphic.POLARGRAPH2D)) {
+                LegendGUI legendGUI = new LegendGUI(GraphicMethodsPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
                 legendGUI.setVisible(true);
             }
         }

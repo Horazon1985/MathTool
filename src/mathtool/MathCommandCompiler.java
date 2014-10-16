@@ -8,6 +8,7 @@ import graphic.GraphicMethods2D;
 import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethods3D;
 import graphic.GraphicMethodsCurves3D;
+import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
 import expressionbuilder.AnalysisMethods;
@@ -432,10 +433,6 @@ public class MathCommandCompiler {
                     }
                 }
 
-                for (int i = 0; i < params.length - 2; i++) {
-                    Expression.build(params[i], new HashSet()).getContainedVars(vars);
-                }
-
                 if (vars.size() > 1) {
                     throw new ExpressionException("Die Ausdrücke im Befehl 'plot2d' dürfen höchstens eine Veränderliche enthalten. "
                             + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
@@ -751,147 +748,54 @@ public class MathCommandCompiler {
 
             HashSet vars = new HashSet();
 
-            if (params.length != 5 || !params[0].contains("=")) {
-
-                for (int i = 0; i < params.length - 2; i++) {
-                    try {
-                        Expression.build(params[i], new HashSet()).getContainedVars(vars);
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotpolar' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
-                    }
-                }
-
-                for (int i = 0; i < params.length - 2; i++) {
-                    Expression.build(params[i], new HashSet()).getContainedVars(vars);
-                }
-
-                if (vars.size() > 1) {
-                    throw new ExpressionException("Die Ausdrücke im Befehl 'plotpolar' dürfen höchstens eine Veränderliche enthalten. "
-                            + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
-                }
-
-                HashSet vars_in_limits = new HashSet();
+            for (int i = 0; i < params.length - 2; i++) {
                 try {
-                    Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
-                    if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
+                    Expression.build(params[i], new HashSet()).getContainedVars(vars);
                 } catch (ExpressionException e) {
+                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotpolar' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                }
+            }
+
+            if (vars.size() > 1) {
+                throw new ExpressionException("Die Ausdrücke im Befehl 'plotpolar' dürfen höchstens eine Veränderliche enthalten. "
+                        + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
+            }
+
+            HashSet vars_in_limits = new HashSet();
+            try {
+                Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
                     throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
                 }
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+            }
 
-                try {
-                    Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
-                    if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
-                } catch (ExpressionException e) {
+            try {
+                Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
+                if (!vars_in_limits.isEmpty()) {
                     throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
                 }
-
-                Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
-                Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
-                if (x_0.evaluate() >= x_1.evaluate()) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss größer sein als der "
-                            + (params.length) + ". Parameter.");
-                }
-
-                command_params = new Object[params.length];
-                for (int i = 0; i < params.length - 2; i++) {
-                    command_params[i] = Expression.build(params[i], vars);
-                }
-                command_params[params.length - 2] = x_0;
-                command_params[params.length - 1] = x_1;
-                result.setName(command);
-                result.setParams(command_params);
-                return result;
-
-            } else {
-
-                if (params[0].contains("=")) {
-
-                    if (params.length != 5) {
-                        throw new ExpressionException("Beim Plotten impliziter Funktionen muss der Befehl 'plotpolar' genau 5 Parameter enthalten: der erste ist die Gleichung, "
-                                + "die anderen vier sind die Grenzen, innerhalb derer der Graph geplottet wird.");
-                    }
-
-                    try {
-                        Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet()).getContainedVars(vars);
-                        Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet()).getContainedVars(vars);
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der erste Parameter im Befehl 'plotpolar' muss aus zwei gültigen Ausdrücken bestehen,"
-                                + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
-                    }
-
-                    if (vars.size() > 2) {
-                        throw new ExpressionException("Die beiden Ausdrücke im Befehl 'plotpolar' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch "
-                                + String.valueOf(vars.size()) + " Veränderliche.");
-                    }
-
-                    HashSet vars_in_limits = new HashSet();
-                    try {
-                        Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der zweite Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der vierte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
-                    }
-
-                    Expression expr_left = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                    Expression expr_right = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-                    Expression x_0 = Expression.build(params[1], vars);
-                    Expression x_1 = Expression.build(params[2], vars);
-                    Expression y_0 = Expression.build(params[3], vars);
-                    Expression y_1 = Expression.build(params[4], vars);
-                    if (x_0.evaluate() >= x_1.evaluate()) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss größer sein als der zweite Parameter.");
-                    }
-                    if (y_0.evaluate() >= y_1.evaluate()) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss größer sein als der vierte Parameter.");
-                    }
-
-                    command_params = new Object[6];
-                    command_params[0] = expr_left;
-                    command_params[1] = expr_right;
-                    command_params[2] = x_0;
-                    command_params[3] = x_1;
-                    command_params[4] = y_0;
-                    command_params[5] = y_1;
-                    result.setName(command);
-                    result.setParams(command_params);
-                    return result;
-
-                }
-
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
             }
+
+            Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
+            Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
+            if (x_0.evaluate() >= x_1.evaluate()) {
+                throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss größer sein als der "
+                        + (params.length) + ". Parameter.");
+            }
+
+            command_params = new Object[params.length];
+            for (int i = 0; i < params.length - 2; i++) {
+                command_params[i] = Expression.build(params[i], vars);
+            }
+            command_params[params.length - 2] = x_0;
+            command_params[params.length - 1] = x_1;
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
         }
 
         //SOLVE
@@ -1013,7 +917,7 @@ public class MathCommandCompiler {
             Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             if (vars.size() > 1 && params.length == 1) {
                 throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben "
-                + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
+                        + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
             }
 
             if (params.length == 2) {
@@ -1365,7 +1269,7 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
-            HashMap<String, Expression> definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
+            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
 
@@ -1414,6 +1318,8 @@ public class MathCommandCompiler {
             executePlotCurve2D(c, graphicMethodsCurves2D);
         } else if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
             executePlotCurve3D(c, graphicMethodsCurves3D);
+        } else if (c.getName().equals("plotpolar")) {
+            executePlotPolar2D(c, graphicMethodsPolar2D);
         } else if (c.getName().equals("solve")) {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getName().equals("solveexact")) {
@@ -1559,9 +1465,9 @@ public class MathCommandCompiler {
         for (int i = 0; i < c.getParams().length - 2; i++) {
             graphicMethods2D.addExpression(exprs[i]);
         }
+        graphicMethods2D.setVar(var);
+        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-        graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
         graphicMethods2D.setDrawSpecialPoints(false);
         graphicMethods2D.drawGraph2D();
 
@@ -1695,8 +1601,8 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr);
-        graphicMethods2D.setParameters(var1_alphabetical, var2_alphabetical, (x_0.evaluate() + x_1.evaluate()) / 2, (y_0.evaluate() + y_1.evaluate()) / 2,
-                (x_1.evaluate() - x_0.evaluate()) / 2, (y_1.evaluate() - y_0.evaluate()) / 2);
+        graphicMethods2D.setVars(var1_alphabetical, var2_alphabetical);
+        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setDrawSpecialPoints(false);
         HashMap<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
@@ -1768,6 +1674,39 @@ public class MathCommandCompiler {
 
     }
 
+    private static void executePlotPolar2D(Command c, GraphicMethodsPolar2D graphicMethodsPolar2D) throws ExpressionException,
+            EvaluationException {
+
+        HashSet vars = new HashSet();
+        Expression[] exprs = new Expression[c.getParams().length - 2];
+        for (int i = 0; i < c.getParams().length - 2; i++) {
+            exprs[i] = (Expression) c.getParams()[i];
+            exprs[i].getContainedVars(vars);
+        }
+
+        //Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
+        if (vars.isEmpty()) {
+            vars.add("x");
+        }
+
+        Expression phi_0 = (Expression) c.getParams()[c.getParams().length - 2];
+        Expression phi_1 = (Expression) c.getParams()[c.getParams().length - 1];
+
+        Iterator iter = vars.iterator();
+        String var = (String) iter.next();
+
+        graphicMethodsPolar2D.setIsInitialized(true);
+        graphicMethodsPolar2D.clearExpressionAndGraph();
+        for (int i = 0; i < c.getParams().length - 2; i++) {
+            graphicMethodsPolar2D.addExpression(exprs[i]);
+        }
+        graphicMethodsPolar2D.setVar(var);
+        graphicMethodsPolar2D.computeScreenSizes(phi_0.evaluate(), phi_1.evaluate());
+        graphicMethodsPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
+        graphicMethodsPolar2D.drawPolarGraph2D();
+
+    }
+
     private static void executeSolve(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
@@ -1783,8 +1722,8 @@ public class MathCommandCompiler {
             var = (String) iter.next();
         }
 
-        Expression x_1 = (Expression) c.getParams()[2];
-        Expression x_2 = (Expression) c.getParams()[3];
+        Expression x_0 = (Expression) c.getParams()[2];
+        Expression x_1 = (Expression) c.getParams()[3];
         /**
          * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll das
          * Intervall in 1000000 Teile unterteilt werden.
@@ -1803,21 +1742,23 @@ public class MathCommandCompiler {
             } else {
                 area.append("Die gegebene Gleichung besitzt keine Lösungen. \n \n");
             }
+
             graphicMethods2D.setIsInitialized(true);
             graphicMethods2D.setGraphIsExplicit(true);
             graphicMethods2D.setGraphIsFixed(false);
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr_1);
             graphicMethods2D.addExpression(expr_2);
-            graphicMethods2D.expressionToGraph(var, x_1.evaluate(), x_2.evaluate());
-            graphicMethods2D.computeMaxXMaxY();
-            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+            graphicMethods2D.setVar(var);
+            graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
+            graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
             graphicMethods2D.setDrawSpecialPoints(false);
             graphicMethods2D.drawGraph2D();
             return;
+
         }
 
-        HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_1.evaluate(), x_2.evaluate(), n);
+        HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
 
         area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                 + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
@@ -1841,9 +1782,9 @@ public class MathCommandCompiler {
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr_1);
         graphicMethods2D.addExpression(expr_2);
-        graphicMethods2D.expressionToGraph(var, x_1.evaluate(), x_2.evaluate());
-        graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+        graphicMethods2D.setVar(var);
+        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
+        graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.setDrawSpecialPoints(true);
         graphicMethods2D.setSpecialPoints(zeros_as_array);
         graphicMethods2D.drawGraph2D();
@@ -1989,8 +1930,8 @@ public class MathCommandCompiler {
         graphicMethods2D.setGraphIsFixed(true);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addGraph(solution);
-        graphicMethods2D.computeMaxXMaxY();
-        graphicMethods2D.setParameters(var_1, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+        graphicMethods2D.setVars(var_1, var_2);
+        graphicMethods2D.computeScreenSizes();
         graphicMethods2D.setDrawSpecialPoints(false);
         graphicMethods2D.drawGraph2D();
 
@@ -2019,8 +1960,8 @@ public class MathCommandCompiler {
             for (String unique_var : vars.keySet()) {
                 var = unique_var;
             }
-            double x_1 = vars.get(var).evaluate() - 1;
-            double x_2 = x_1 + 2;
+            double x_0 = vars.get(var).evaluate() - 1;
+            double x_1 = x_0 + 2;
 
             double[][] tangent_point = new double[1][2];
             tangent_point[0][0] = vars.get(var).evaluate();
@@ -2032,13 +1973,13 @@ public class MathCommandCompiler {
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr);
             graphicMethods2D.addExpression(tangent);
-            graphicMethods2D.expressionToGraph(var, x_1, x_2);
-            graphicMethods2D.computeMaxXMaxY();
-            graphicMethods2D.setParameters(var, graphicMethods2D.getAxeCenterX(), graphicMethods2D.getAxeCenterY());
+            graphicMethods2D.setVar(var);
+            graphicMethods2D.computeScreenSizes(x_0, x_1);
+            graphicMethods2D.expressionToGraph(var, x_0, x_1);
             graphicMethods2D.setDrawSpecialPoints(true);
             graphicMethods2D.setSpecialPoints(tangent_point);
             graphicMethods2D.drawGraph2D();
-
+            
         }
 
     }
