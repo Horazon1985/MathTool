@@ -32,7 +32,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
@@ -731,6 +731,167 @@ public class MathCommandCompiler {
             result.setName(command);
             result.setParams(command_params);
             return result;
+        }
+
+        //PLOTPOLAR
+        /**
+         * Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         * value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         * value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
+         * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
+         * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
+         * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         * Variablen werden dabei alphabetisch geordnet.
+         */
+        if (command.equals("plotpolar")) {
+            if (params.length < 3) {
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plotpolar'");
+            }
+
+            HashSet vars = new HashSet();
+
+            if (params.length != 5 || !params[0].contains("=")) {
+
+                for (int i = 0; i < params.length - 2; i++) {
+                    try {
+                        Expression.build(params[i], new HashSet()).getContainedVars(vars);
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotpolar' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                    }
+                }
+
+                for (int i = 0; i < params.length - 2; i++) {
+                    Expression.build(params[i], new HashSet()).getContainedVars(vars);
+                }
+
+                if (vars.size() > 1) {
+                    throw new ExpressionException("Die Ausdrücke im Befehl 'plotpolar' dürfen höchstens eine Veränderliche enthalten. "
+                            + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
+                }
+
+                HashSet vars_in_limits = new HashSet();
+                try {
+                    Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                }
+
+                try {
+                    Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                }
+
+                Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
+                Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
+                if (x_0.evaluate() >= x_1.evaluate()) {
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss größer sein als der "
+                            + (params.length) + ". Parameter.");
+                }
+
+                command_params = new Object[params.length];
+                for (int i = 0; i < params.length - 2; i++) {
+                    command_params[i] = Expression.build(params[i], vars);
+                }
+                command_params[params.length - 2] = x_0;
+                command_params[params.length - 1] = x_1;
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
+
+            } else {
+
+                if (params[0].contains("=")) {
+
+                    if (params.length != 5) {
+                        throw new ExpressionException("Beim Plotten impliziter Funktionen muss der Befehl 'plotpolar' genau 5 Parameter enthalten: der erste ist die Gleichung, "
+                                + "die anderen vier sind die Grenzen, innerhalb derer der Graph geplottet wird.");
+                    }
+
+                    try {
+                        Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet()).getContainedVars(vars);
+                        Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet()).getContainedVars(vars);
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der erste Parameter im Befehl 'plotpolar' muss aus zwei gültigen Ausdrücken bestehen,"
+                                + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
+                    }
+
+                    if (vars.size() > 2) {
+                        throw new ExpressionException("Die beiden Ausdrücke im Befehl 'plotpolar' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch "
+                                + String.valueOf(vars.size()) + " Veränderliche.");
+                    }
+
+                    HashSet vars_in_limits = new HashSet();
+                    try {
+                        Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der zweite Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                        }
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der zweite Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+
+                    try {
+                        Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                        }
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+
+                    try {
+                        Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der vierte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                        }
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+
+                    try {
+                        Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                        }
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    }
+
+                    Expression expr_left = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+                    Expression expr_right = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+                    Expression x_0 = Expression.build(params[1], vars);
+                    Expression x_1 = Expression.build(params[2], vars);
+                    Expression y_0 = Expression.build(params[3], vars);
+                    Expression y_1 = Expression.build(params[4], vars);
+                    if (x_0.evaluate() >= x_1.evaluate()) {
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'plotpolar' muss größer sein als der zweite Parameter.");
+                    }
+                    if (y_0.evaluate() >= y_1.evaluate()) {
+                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plotpolar' muss größer sein als der vierte Parameter.");
+                    }
+
+                    command_params = new Object[6];
+                    command_params[0] = expr_left;
+                    command_params[1] = expr_right;
+                    command_params[2] = x_0;
+                    command_params[3] = x_1;
+                    command_params[4] = y_0;
+                    command_params[5] = y_1;
+                    result.setName(command);
+                    result.setParams(command_params);
+                    return result;
+
+                }
+
+            }
         }
 
         //SOLVE
