@@ -1362,7 +1362,6 @@ public class MathCommandCompiler {
             expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
         }
 
-        expr = expr.simplify();
         expr = expr.turnToIrrationals().simplify();
         area.append(expr.writeFormula(true) + "\n \n");
 
