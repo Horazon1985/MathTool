@@ -14,11 +14,11 @@ import javax.swing.JScrollPane;
 
 public class HelpDialogGUI extends JDialog implements MouseListener {
 
-    private JLabel generalities, mathFormulas, operators, commands, contact;
+    private final JLabel generalities, mathFormulas, operators, commands, contact;
     private final JEditorPane helpArea;
     private final JScrollPane scrollPaneHelp;
 
-    public HelpDialogGUI() {
+    public HelpDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
         setTitle("Hilfe");
         setLayout(null);
@@ -63,7 +63,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         add(commands);
         add(contact);
 
-        this.setBounds(400, 100, 505, 340);
+        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 650)/2 + y_mathtoolform, 505, 340);
         this.getContentPane().setBackground(Color.white);
 
         /**

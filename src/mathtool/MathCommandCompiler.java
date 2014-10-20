@@ -32,7 +32,7 @@ public class MathCommandCompiler {
      * Liste aller gültiger Befehle. Dies benötigt das Hauptprogramm
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
-    public static final String[] commands = {"approx", "clear", "def", "defvars", "euler", "latex",
+    public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "latex",
         "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
@@ -213,10 +213,7 @@ public class MathCommandCompiler {
 
             try {
                 /**
-                 * function_name = Funktionsname function_vars =
-                 * Funktionsvariablen Beispiel: def(f(x, y) = x^2+y) Dann:
-                 * function_name = "f" function_vars = {"x_ABSTRACT",
-                 * "y_ABSTRACT"}
+                 * Funktionsname und Funktionsvariablen werden ermittelt.
                  */
                 Expression.getOperatorAndArguments(function_name_and_params);
                 Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
@@ -309,6 +306,26 @@ public class MathCommandCompiler {
              * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
              * Expression).
              */
+            result.setName(command);
+            result.setParams(command_params);
+            return result;
+
+        }
+
+        //DEFINEDFUNCS
+        /**
+         * Struktur: defvars()
+         */
+        if (command.equals("deffuncs")) {
+
+            /**
+             * Prüft, ob der Befehl keine Parameter besitzt.
+             */
+            if (params.length > 0) {
+                throw new ExpressionException("Im Befehl 'deffuncs' dürfen keine Parameter stehen.");
+            }
+
+            command_params = new Object[0];
             result.setName(command);
             result.setParams(command_params);
             return result;
@@ -1269,7 +1286,8 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
-            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet) throws ExpressionException, EvaluationException {
+            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet, 
+            HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         int n = commandLine.length();
 
@@ -1297,7 +1315,9 @@ public class MathCommandCompiler {
         } else if (c.getName().equals("clear")) {
             executeClear(c, area);
         } else if ((c.getName().equals("def")) && c.getParams().length >= 1) {
-            executeDefine(c, area, definedVars, definedVarsSet);
+            executeDefine(c, area, definedVars, definedVarsSet, definedFunctions);
+        } else if (c.getName().equals("deffuncs")) {
+            executeDefFuncs(c, area, definedFunctions);
         } else if (c.getName().equals("defvars")) {
             executeDefVars(c, area, definedVars);
         } else if (c.getName().equals("euler")) {
@@ -1379,19 +1399,23 @@ public class MathCommandCompiler {
         area.setText("");
     }
 
-    private static void executeDefine(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet)
-            throws ExpressionException, EvaluationException {
+    private static void executeDefine(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
+            HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         /**
          * Falls ein Variablenwert definiert wird.
          */
         if (c.getParams().length == 2) {
             String var = ((Variable) c.getParams()[0]).getName();
-            Expression preciseExpression = (Expression) c.getParams()[1];
+            Expression preciseExpression = ((Expression) c.getParams()[1]).simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             definedVars.put(var, preciseExpression);
             definedVarsSet.add(var);
-            area.append("Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
+            if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
+                area.append("Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
+            } else {
+                area.append("Der Wert der Veränderlichen " + var + " wurde auf " + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
+            }
         } else {
             /**
              * Falls eine Funktion definiert wird.
@@ -1406,12 +1430,46 @@ public class MathCommandCompiler {
             SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(function_name, (Expression) c.getParams()[c.getParams().length - 1]);
             SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(function_name, exprs_for_vars);
             SelfDefinedFunction.varsForSelfDefinedFunctions.put(function_name, vars);
+            definedFunctions.put(function_name, new SelfDefinedFunction(function_name, vars, (Expression) c.getParams()[c.getParams().length - 1], exprs_for_vars));
+            
+        }
+
+    }
+
+    private static void executeDefFuncs(Command c, JTextArea area, HashMap<String, Expression> definedFunctions)
+            throws ExpressionException, EvaluationException {
+        
+        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + "\n \n");
+        String function = "";
+        SelfDefinedFunction f;
+        Expression[] vars_for_output;
+        Expression f_for_output;
+        if (!definedFunctions.isEmpty()) {
+            for (String function_name : definedFunctions.keySet()) {
+                
+                f = (SelfDefinedFunction) definedFunctions.get(function_name);
+                function = f.getName() + "(";
+                for (int i = 0; i < f.getArguments().length; i++){
+                    function = function + "X_" + (i + 1) + ",";
+                }
+                function = function.substring(0, function.length() - 1) + ") = ";
+
+                vars_for_output = new Expression[f.getArguments().length];
+                for (int i = 0; i < f.getArguments().length; i++){
+                    vars_for_output[i] = Variable.create("X_" + (i + 1));
+                }
+                f_for_output = f.replaceAllVariables(vars_for_output);
+                function = function + f_for_output.writeFormula(true);
+                area.append(function + "\n \n");
+                
+            }
         }
 
     }
 
     private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
+        
         String result = "";
         if (!definedVars.isEmpty()) {
             for (String var : definedVars.keySet()) {
@@ -1419,7 +1477,8 @@ public class MathCommandCompiler {
             }
             result = result.substring(0, result.length() - 2);
         }
-        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + result + "\n \n");
+        area.append("Liste aller selbstdefinierten Funktionen: " + result + "\n \n");
+        
     }
 
     private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
@@ -1978,7 +2037,7 @@ public class MathCommandCompiler {
             graphicMethods2D.setDrawSpecialPoints(true);
             graphicMethods2D.setSpecialPoints(tangent_point);
             graphicMethods2D.drawGraph2D();
-            
+
         }
 
     }

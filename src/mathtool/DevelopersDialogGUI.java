@@ -14,14 +14,14 @@ public class DevelopersDialogGUI extends JDialog {
     private JEditorPane developersArea;
     private JScrollPane scrollPaneDevelopers;
 
-    public DevelopersDialogGUI() {
+    public DevelopersDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
         setTitle("About MathTool");
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds(400, 200, 505, 440);
+        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 440)/2 + y_mathtoolform, 505, 440);
         this.getContentPane().setBackground(Color.white);
 
         /**

@@ -101,6 +101,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="def(f(x, y) = x^2+y^5)"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
@@ -212,26 +213,27 @@
           <Font name="Arial" size="12" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="19">
+          <StringArray count="20">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx()"/>
             <StringItem index="2" value="clear()"/>
             <StringItem index="3" value="def()"/>
-            <StringItem index="4" value="defvars()"/>
-            <StringItem index="5" value="euler()"/>
-            <StringItem index="6" value="latex()"/>
-            <StringItem index="7" value="pi()"/>
-            <StringItem index="8" value="plot2d()"/>
-            <StringItem index="9" value="plot3d()"/>
-            <StringItem index="10" value="plotcurve()"/>
-            <StringItem index="11" value="plotpolar()"/>
-            <StringItem index="12" value="solve()"/>
-            <StringItem index="13" value="solvedgl()"/>
-            <StringItem index="14" value="solveexact()"/>
-            <StringItem index="15" value="tangent()"/>
-            <StringItem index="16" value="taylordgl()"/>
-            <StringItem index="17" value="undef()"/>
-            <StringItem index="18" value="undefall()"/>
+            <StringItem index="4" value="deffuncs()"/>
+            <StringItem index="5" value="defvars()"/>
+            <StringItem index="6" value="euler()"/>
+            <StringItem index="7" value="latex()"/>
+            <StringItem index="8" value="pi()"/>
+            <StringItem index="9" value="plot2d()"/>
+            <StringItem index="10" value="plot3d()"/>
+            <StringItem index="11" value="plotcurve()"/>
+            <StringItem index="12" value="plotpolar()"/>
+            <StringItem index="13" value="solve()"/>
+            <StringItem index="14" value="solvedgl()"/>
+            <StringItem index="15" value="solveexact()"/>
+            <StringItem index="16" value="tangent()"/>
+            <StringItem index="17" value="taylordgl()"/>
+            <StringItem index="18" value="undef()"/>
+            <StringItem index="19" value="undefall()"/>
           </StringArray>
         </Property>
       </Properties>

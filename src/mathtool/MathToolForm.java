@@ -37,8 +37,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
-    private ComputingDialogGUI computingDialog = new ComputingDialogGUI();
-    private JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
+    private final ComputingDialogGUI computingDialog = new ComputingDialogGUI();
+    private final JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
 
     JTextArea mathToolArea;
     JEditorPane helpArea;
@@ -266,6 +266,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("def(f(x, y) = x^2+y^5)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -325,7 +326,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 21);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "plotpolar()", "solve()", "solvedgl()", "solveexact()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "deffuncs()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "plotpolar()", "solve()", "solvedgl()", "solveexact()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
@@ -450,7 +451,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     if (valid_command) {
                         mathToolArea.append(command + "\n \n");
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
-                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars, definedVarsSet);
+                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars, 
+                                definedVarsSet, definedFunctions);
                         /**
                          * Falls es ein Grafikbefehle war -> Grafik sichtbar
                          * machen.
@@ -556,12 +558,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }//GEN-LAST:event_rotateButtonActionPerformed
 
     private void MenuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpActionPerformed
-        HelpDialogGUI helpDialogGUI = new HelpDialogGUI();
+        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_MenuItemHelpActionPerformed
 
     private void MenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAboutActionPerformed
-        DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI();
+        DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         aboutMathToolGUI.setVisible(true);
     }//GEN-LAST:event_MenuItemAboutActionPerformed
 
