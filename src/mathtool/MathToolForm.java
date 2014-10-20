@@ -266,7 +266,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("def(f(x, y) = x^2+y^5)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -709,6 +708,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 MathToolForm myMathToolForm = new MathToolForm();
                 myMathToolForm.setVisible(true);
                 myMathToolForm.setBounds(20, 50, 1300, 670);
+//                myMathToolForm.setExtendedState(MAXIMIZED_BOTH);
                 myMathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
             }
         });
