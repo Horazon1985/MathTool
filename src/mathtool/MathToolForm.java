@@ -314,7 +314,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(cancelButton);
         cancelButton.setBounds(520, 300, 100, 30);
 
-        operatorChoice.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -322,9 +322,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(operatorChoice);
-        operatorChoice.setBounds(420, 370, 130, 21);
+        operatorChoice.setBounds(420, 370, 130, 23);
 
-        commandChoice.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "deffuncs()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "plotpolar()", "solve()", "solvedgl()", "solveexact()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -332,7 +332,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 96, 21);
+        commandChoice.setBounds(560, 370, 115, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Clear");
