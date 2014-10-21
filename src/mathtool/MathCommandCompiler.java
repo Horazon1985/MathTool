@@ -36,6 +36,12 @@ public class MathCommandCompiler {
         "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
 
     /**
+     * Hier werden zusätzliche Hinweise/Meldungen/Warnungen etc. gespeichert,
+     * die dem Benutzer nach Beenden der Befehlsausführung mitgeteilt werden.
+     */
+    private static String[] output = new String[0];
+
+    /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
      * benötigt. Sie prüft nach, ob name keine bereits definierte Funktion,
      * Operator oder Befehl ist. Ferner dürfen die Zeichen + - * / ^ nicht
@@ -1040,11 +1046,11 @@ public class MathCommandCompiler {
                 HashSet vars_in_limits = new HashSet();
                 for (int i = 3; i < ord + 5; i++) {
                     try {
-                        Expression.build(params[i], vars_in_limits);
+                        Expression limit = Expression.build(params[i], vars_in_limits);
                         if (!vars_in_limits.isEmpty()) {
                             throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
                         }
-                        expr.evaluate();
+                        limit.evaluate();
                     } catch (ExpressionException | EvaluationException e) {
                         throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
                     }
@@ -1211,7 +1217,10 @@ public class MathCommandCompiler {
             HashSet vars_in_limits = new HashSet();
             for (int i = 3; i < ord + 4; i++) {
                 try {
-                    Expression.build(params[i], vars_in_limits).simplify();
+                    Expression limit = Expression.build(params[i], vars_in_limits).simplify();
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
+                    }
                 } catch (ExpressionException | EvaluationException e) {
                     throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
                 }
@@ -1286,9 +1295,10 @@ public class MathCommandCompiler {
     //Führt den Befehl aus.
     public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
             GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
-            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet, 
+            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
+        output = new String[0];
         int n = commandLine.length();
 
         //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
@@ -1358,6 +1368,15 @@ public class MathCommandCompiler {
             throw new ExpressionException("Ungültiger Befehl.");
         }
 
+        /**
+         * Zusätzliche Hinweise/Meldungen ausgeben.
+         */
+        if (output.length > 0) {
+            for (int i = 0; i < output.length; i++) {
+                area.append(output[i]);
+            }
+        }
+
     }
 
     /**
@@ -1411,10 +1430,11 @@ public class MathCommandCompiler {
             Variable.setPreciseExpression(var, preciseExpression);
             definedVars.put(var, preciseExpression);
             definedVarsSet.add(var);
+            output = new String[1];
             if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
-                area.append("Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
+                output[0] = "Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n";
             } else {
-                area.append("Der Wert der Veränderlichen " + var + " wurde auf " + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true) + " gesetzt. \n \n");
+                output[0] = "Der Wert der Veränderlichen " + var + " wurde auf " + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true) + " gesetzt. \n \n";
             }
         } else {
             /**
@@ -1431,45 +1451,46 @@ public class MathCommandCompiler {
             SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(function_name, exprs_for_vars);
             SelfDefinedFunction.varsForSelfDefinedFunctions.put(function_name, vars);
             definedFunctions.put(function_name, new SelfDefinedFunction(function_name, vars, (Expression) c.getParams()[c.getParams().length - 1], exprs_for_vars));
-            
+
         }
 
     }
 
     private static void executeDefFuncs(Command c, JTextArea area, HashMap<String, Expression> definedFunctions)
             throws ExpressionException, EvaluationException {
-        
-        area.append("Liste aller Veränderlichen mit vordefinierten Werten: " + "\n \n");
+
         String function = "";
         SelfDefinedFunction f;
         Expression[] vars_for_output;
         Expression f_for_output;
         if (!definedFunctions.isEmpty()) {
             for (String function_name : definedFunctions.keySet()) {
-                
+
                 f = (SelfDefinedFunction) definedFunctions.get(function_name);
                 function = f.getName() + "(";
-                for (int i = 0; i < f.getArguments().length; i++){
+                for (int i = 0; i < f.getArguments().length; i++) {
                     function = function + "X_" + (i + 1) + ",";
                 }
                 function = function.substring(0, function.length() - 1) + ") = ";
 
                 vars_for_output = new Expression[f.getArguments().length];
-                for (int i = 0; i < f.getArguments().length; i++){
+                for (int i = 0; i < f.getArguments().length; i++) {
                     vars_for_output[i] = Variable.create("X_" + (i + 1));
                 }
                 f_for_output = f.replaceAllVariables(vars_for_output);
                 function = function + f_for_output.writeFormula(true);
                 area.append(function + "\n \n");
-                
+
             }
         }
+        output = new String[1];
+        output[0] = "Liste aller selbstdefinierten Funktionen: " + function + "\n \n";
 
     }
 
     private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
-        
+
         String result = "";
         if (!definedVars.isEmpty()) {
             for (String var : definedVars.keySet()) {
@@ -1477,22 +1498,26 @@ public class MathCommandCompiler {
             }
             result = result.substring(0, result.length() - 2);
         }
-        area.append("Liste aller selbstdefinierten Funktionen: " + result + "\n \n");
-        
+        output = new String[1];
+        output[0] = "Liste aller Veränderlichen mit vordefinierten Werten: " + result + "\n \n";
+
     }
 
     private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
-        area.append("Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n \n");
+        output = new String[1];
+        output[0] = "Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n \n";
     }
 
     private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
-        area.append("Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n \n");
+        output = new String[1];
+        output[0] = "Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n \n";
     }
 
     private static void executePi(Command c, JTextArea area) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
-        area.append("Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n");
+        output = new String[1];
+        output[0] = "Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n";
     }
 
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
@@ -1793,12 +1818,13 @@ public class MathCommandCompiler {
         }
 
         if (expr instanceof Constant) {
-            area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+            output = new String[2];
+            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
             if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
-                area.append("Alle reellen Zahlen. \n \n");
+                output[1] = "Alle reellen Zahlen. \n \n";
             } else {
-                area.append("Die gegebene Gleichung besitzt keine Lösungen. \n \n");
+                output[1] = "Die gegebene Gleichung besitzt keine Lösungen. \n \n";
             }
 
             graphicMethods2D.setIsInitialized(true);
@@ -1818,10 +1844,11 @@ public class MathCommandCompiler {
 
         HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
 
-        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+        output = new String[zeros.size() + 1];
+        output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
         for (int i = 0; i < zeros.size(); i++) {
-            area.append(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
+            output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n";
         }
 
         /**
@@ -1871,10 +1898,56 @@ public class MathCommandCompiler {
 
         HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
 
-        area.append("Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+        /**
+         * Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+         * ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+         */
+        boolean contains_free_parameter = false;
+        String message_about_free_parameters = "";
         for (int i = 0; i < zeros.size(); i++) {
-            area.append(var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n");
+            contains_free_parameter = contains_free_parameter || zeros.get(i).contains("K_1");
+        }
+        if (contains_free_parameter) {
+            boolean contains_free_parameter_of_given_index = true;
+            int max_index = 1;
+            while (contains_free_parameter_of_given_index) {
+                max_index++;
+                contains_free_parameter_of_given_index = false;
+                for (int i = 0; i < zeros.size(); i++) {
+                    contains_free_parameter_of_given_index = contains_free_parameter_of_given_index
+                            || zeros.get(i).contains("K_" + max_index);
+                }
+            }
+            max_index--;
+
+            message_about_free_parameters = "K_1, ";
+            for (int i = 2; i <= max_index; i++) {
+                message_about_free_parameters = message_about_free_parameters + "K_" + i + ", ";
+            }
+            message_about_free_parameters = message_about_free_parameters.substring(0, message_about_free_parameters.length() - 2);
+            if (max_index == 1) {
+                message_about_free_parameters = message_about_free_parameters + " ist eine beliebige ganze Zahl. \n \n";
+            } else {
+                message_about_free_parameters = message_about_free_parameters + " sind beliebige ganze Zahlen. \n \n";
+            }
+
+        }
+
+        if (contains_free_parameter) {
+            output = new String[zeros.size() + 2];
+            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+            for (int i = 0; i < zeros.size(); i++) {
+                output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
+            }
+            output[output.length - 1] = message_about_free_parameters;
+        } else {
+            output = new String[zeros.size() + 1];
+            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+            for (int i = 0; i < zeros.size(); i++) {
+                output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
+            }
         }
 
     }
@@ -1918,7 +1991,7 @@ public class MathCommandCompiler {
          * zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
          * werden.
          */
-        String var_2 = new String();
+        String var_2 = "";
 
         if (vars_without_primes.isEmpty()) {
             if (var_1.equals("y")) {
@@ -1948,39 +2021,43 @@ public class MathCommandCompiler {
         double[][] solution = NumericalMethods.solveDGL(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
 
         /**
-         * Formulierung und Ausgabe des AWP.
-         */
-        String awp = "Lösung der Differentialgleichung: " + var_2;
-        for (int i = 0; i < ord; i++) {
-            awp = awp + "'";
-        }
-
-        awp = awp + "(" + var_1 + ") = " + expr.writeFormula(true);
-        for (int i = 0; i < ord; i++) {
-            awp = awp + ", " + var_2;
-            for (int j = 0; j < i; j++) {
-                awp = awp + "'";
-            }
-            awp = awp + "(" + x_0.writeFormula(true) + ") = ";
-            awp = awp + y_0[i].writeFormula(true);
-        }
-
-        awp = awp + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + " \n \n";
-
-        area.append(awp);
-        for (int i = 0; i < solution.length; i++) {
-            area.append(var_1 + " = " + solution[i][0] + "; " + var_2 + " = " + solution[i][1] + "\n \n");
-        }
-
-        /**
          * Falls die Lösung innerhalb des Berechnungsbereichs
          * unendlich/undefiniert ist.
          *
          */
-        double pos_of_critical_line = 0;
         if (solution.length < 1001) {
-            pos_of_critical_line = x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000;
-            area.append("Die Lösung der Differentialgleichung ist an der Stelle " + pos_of_critical_line + " nicht definiert. \n \n");
+            output = new String[2 + solution.length];
+            output[output.length - 1] = "Die Lösung der Differentialgleichung ist an der Stelle "
+                    + (x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000) + " nicht definiert. \n \n";
+        } else {
+            output = new String[1 + solution.length];
+        }
+
+        /**
+         * Formulierung und Ausgabe des AWP.
+         */
+        output[0] = "Lösung der Differentialgleichung: " + var_2;
+        for (int i = 0; i < ord; i++) {
+            output[0] = output[0] + "'";
+        }
+
+        output[0] = output[0] + "(" + var_1 + ") = " + expr.writeFormula(true);
+        for (int i = 0; i < ord; i++) {
+            output[0] = output[0] + ", " + var_2;
+            for (int j = 0; j < i; j++) {
+                output[0] = output[0] + "'";
+            }
+            output[0] = output[0] + "(" + x_0.writeFormula(true) + ") = ";
+            output[0] = output[0] + y_0[i].writeFormula(true);
+        }
+
+        output[0] = output[0] + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + " \n \n";
+
+        /**
+         * Lösungen ausgeben.
+         */
+        for (int i = 0; i < solution.length; i++) {
+            output[i + 1] = var_1 + " = " + solution[i][0] + "; " + var_2 + " = " + solution[i][1] + "\n \n";
         }
 
         graphicMethods2D.setIsInitialized(true);
@@ -2105,8 +2182,9 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var_1, ord, x_0, y_0, k);
-        area.append(var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n");
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var_1, var_2, ord, x_0, y_0, k);
+        output = new String[1];
+        output[0] = var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n";
 
     }
 
@@ -2117,12 +2195,20 @@ public class MathCommandCompiler {
          * Falls ein Variablenwert freigegeben wird.
          */
         String current_var;
+        int vars_count = 0;
+        for (int i = 0; i < c.getParams().length; i++) {
+            current_var = ((Variable) c.getParams()[i]).getName();
+            if (definedVarsSet.contains(current_var)) {
+                vars_count++;
+            }
+        }
+        output = new String[vars_count];
         for (int i = 0; i < c.getParams().length; i++) {
             current_var = ((Variable) c.getParams()[i]).getName();
             if (definedVarsSet.contains(current_var)) {
                 definedVarsSet.remove(current_var);
                 definedVars.remove(current_var);
-                area.append("Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n \n");
+                output[i] = "Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n \n";
             }
         }
 
@@ -2136,7 +2222,8 @@ public class MathCommandCompiler {
          */
         definedVarsSet.clear();
         definedVars.clear();
-        area.append("Alle Veränderlichen sind wieder Unbestimmte. \n \n");
+        output = new String[1];
+        output[0] = "Alle Veränderlichen sind wieder Unbestimmte. \n \n";
 
     }
 
