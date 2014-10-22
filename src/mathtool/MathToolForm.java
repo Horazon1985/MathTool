@@ -94,11 +94,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         legendLabel.addMouseListener(this);
 
         /**
-         * Eingabefelder ausrichten
-         */
-        inputField.setBounds(10, 530, 1160, 30);
-
-        /**
          * Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
@@ -116,20 +111,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Buttons ausrichten
          */
-        inputButton.setBounds(1180, 530, 100, 30);
-        cancelButton.setBounds(1180, 530, 100, 30);
-        approxButton.setBounds(10, 570, 130, 30);
-        latexButton.setBounds(145, 570, 130, 30);
-        clearButton.setBounds(280, 570, 130, 30);
         rotateButton.setBounds(900, 530, 220, 30);
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
-
-        /**
-         * Auswahlmenüs ausrichten
-         */
-        operatorChoice.setBounds(415, 570, 120, 30);
-        commandChoice.setBounds(540, 570, 120, 30);
 
         /**
          * 2D-Grafikobjekte initialisieren
@@ -168,14 +152,25 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         graphicMethodsCurves3D.setVisible(false);
 
         /**
-         * Alle ComponentListeners
+         * ComponentListener für das Ausrichten von Komponenten
          */
         this.addComponentListener(new ComponentAdapter() {
             
             @Override
             public void componentResized(ComponentEvent e) {
+                
                 scrollPane.setBounds(10, 10, getWidth() - 30, getHeight() - 170);
                 mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+                
+                inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
+                inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+                cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+                approxButton.setBounds(10, scrollPane.getHeight() + 60, 130, 30);
+                latexButton.setBounds(145, scrollPane.getHeight() + 60, 130, 30);
+                clearButton.setBounds(280, scrollPane.getHeight() + 60, 130, 30);
+                operatorChoice.setBounds(415, scrollPane.getHeight() + 60, 130, 30);
+                commandChoice.setBounds(550, scrollPane.getHeight() + 60, 130, 30);
+                
                 validate();
                 repaint();
             }
@@ -726,7 +721,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 MathToolForm myMathToolForm = new MathToolForm();
                 myMathToolForm.setVisible(true);
                 myMathToolForm.setBounds(20, 50, 1300, 670);
-//                myMathToolForm.setExtendedState(MAXIMIZED_BOTH);
+                myMathToolForm.setExtendedState(MAXIMIZED_BOTH);
                 myMathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
             }
         });
