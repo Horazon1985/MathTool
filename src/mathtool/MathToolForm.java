@@ -72,14 +72,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         initComponents();
         this.setLayout(new BorderLayout());
         this.startRotate = false;
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
                 inputField.requestFocus();
             }
         });
-        
+
         /**
          * Es wird noch keine Grafik angezeigt
          */
@@ -111,7 +111,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Buttons ausrichten
          */
-        rotateButton.setBounds(900, 530, 220, 30);
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
 
@@ -120,19 +119,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
-        graphicMethods2D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethods2D.setVisible(false);
 
         graphicMethodsCurves2D = new GraphicMethodsCurves2D();
         add(graphicMethodsCurves2D);
-        graphicMethodsCurves2D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethodsCurves2D.setVisible(false);
 
         graphicMethodsPolar2D = new GraphicMethodsPolar2D();
         add(graphicMethodsPolar2D);
-        graphicMethodsPolar2D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethodsPolar2D.setVisible(false);
 
@@ -141,13 +137,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         graphicMethods3D = new GraphicMethods3D();
         add(graphicMethods3D);
-        graphicMethods3D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethods3D.setVisible(false);
 
         graphicMethodsCurves3D = new GraphicMethodsCurves3D();
         add(graphicMethodsCurves3D);
-        graphicMethodsCurves3D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethodsCurves3D.setVisible(false);
 
@@ -155,13 +149,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * ComponentListener für das Ausrichten von Komponenten
          */
         this.addComponentListener(new ComponentAdapter() {
-            
+
             @Override
             public void componentResized(ComponentEvent e) {
-                
-                scrollPane.setBounds(10, 10, getWidth() - 30, getHeight() - 170);
+
+                scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
                 mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
-                
+
                 inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
                 inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
                 cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
@@ -170,11 +164,29 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 clearButton.setBounds(280, scrollPane.getHeight() + 60, 130, 30);
                 operatorChoice.setBounds(415, scrollPane.getHeight() + 60, 130, 30);
                 commandChoice.setBounds(550, scrollPane.getHeight() + 60, 130, 30);
-                
+
+                graphicMethods2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
+                graphicMethods3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
+                graphicMethodsCurves2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
+                graphicMethodsCurves3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
+//        graphicMethodsCurves3D.setBounds(1300, 200, 500, 500);
+                graphicMethodsPolar2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
+
+                legendLabel.setBounds(graphicMethods3D.getX(), scrollPane.getHeight() + 25, 100, 25);
+                rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPane.getHeight() + 20, 220, 30);
+
+                if (!typeGraphic.equals(typeGraphic.NONE)) {
+                    scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
+                    mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+                    inputField.setBounds(inputField.getX(), inputField.getY(), inputField.getWidth() - 510, 30);
+                    inputButton.setBounds(inputButton.getX() - 510, inputButton.getY(), 100, 30);
+                    cancelButton.setBounds(cancelButton.getX() - 510, cancelButton.getY(), 100, 30);
+                }
+
                 validate();
                 repaint();
             }
-            
+
         });
 
     }
@@ -188,19 +200,27 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         Command c = MathCommandCompiler.getCommand(command_name, params);
 
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-        mathToolArea.setBounds(0, 0, 750, 500);
-        scrollPane.setBounds(10, 20, 750, 500);
-        inputField.setBounds(10, 530, 640, 30);
-        inputButton.setBounds(660, 530, 100, 30);
-        cancelButton.setBounds(660, 530, 100, 30);
+        scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
+        mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+        inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
+        inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+        cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+
         //Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
         graphicMethods2D.setVisible(false);
-        graphicMethodsCurves2D.setVisible(false);
         graphicMethods3D.setVisible(false);
-        graphicMethodsCurves3D.setVisible(false);
         graphicMethodsPolar2D.setVisible(false);
+        graphicMethodsCurves2D.setVisible(false);
+        graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
+
+        graphicMethods2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsPolar2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethods3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+//        graphicMethodsCurves3D.setBounds(1300, 200, 500, 500);
 
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
@@ -227,16 +247,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             legendLabel.setVisible(false);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else {
-            mathToolArea.setBounds(0, 0, 1270, 500);
-            scrollPane.setBounds(10, 20, 1270, 500);
-            inputField.setBounds(10, 530, 1160, 30);
-            inputButton.setBounds(1180, 530, 100, 30);
-            cancelButton.setBounds(1180, 530, 100, 30);
-            rotateButton.setVisible(false);
-            legendLabel.setVisible(false);
+            scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
+            mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+            inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
+            inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+            cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
             typeGraphic = TypeGraphic.NONE;
         }
 
+//        System.out.println("Gr2D: " + graphicMethods2D.getX() + ", " + graphicMethods2D.getY() + ", " + graphicMethods2D.getWidth() + ", " + graphicMethods2D.getHeight());
+
+        validate();
         repaint();
 
     }
@@ -279,6 +300,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("plotcurve((t^2,t^3,t^4),-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
