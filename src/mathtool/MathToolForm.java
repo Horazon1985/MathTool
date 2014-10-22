@@ -16,6 +16,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import java.util.HashSet;
 import java.util.HashMap;
@@ -68,14 +70,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     public MathToolForm() {
         initComponents();
-        this.setLayout(null);
+        this.setLayout(new BorderLayout());
         this.startRotate = false;
+        
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
                 inputField.requestFocus();
             }
         });
+        
         /**
          * Es wird noch keine Grafik angezeigt
          */
@@ -101,13 +105,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         Font mathToolAreaFont = new Font("Verdana", Font.PLAIN, 12);
         mathToolArea.setFont(mathToolAreaFont);
         add(mathToolArea);
-        mathToolArea.setBounds(0, 0, 1270, 500);
         mathToolArea.setEditable(false);
         mathToolArea.setLineWrap(true);
         mathToolArea.setWrapStyleWord(true);
         scrollPane = new JScrollPane(mathToolArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(10, 20, 1270, 500);
         mathToolArea.setCaretPosition(mathToolArea.getDocument().getLength());
         add(scrollPane);
 
@@ -164,6 +166,22 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         graphicMethodsCurves3D.setBounds(770, 20, 500, 500);
         repaint();
         graphicMethodsCurves3D.setVisible(false);
+
+        /**
+         * Alle ComponentListeners
+         */
+        this.addComponentListener(new ComponentAdapter() {
+            
+            @Override
+            public void componentResized(ComponentEvent e) {
+                scrollPane.setBounds(10, 10, getWidth() - 30, getHeight() - 170);
+                mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+                validate();
+                repaint();
+            }
+            
+        });
+
     }
 
     private void showLoggedCommand(int i) {
@@ -450,7 +468,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     if (valid_command) {
                         mathToolArea.append(command + "\n \n");
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
-                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars, 
+                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars,
                                 definedVarsSet, definedFunctions);
                         /**
                          * Falls es ein Grafikbefehle war -> Grafik sichtbar
