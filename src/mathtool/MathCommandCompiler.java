@@ -1452,6 +1452,31 @@ public class MathCommandCompiler {
             SelfDefinedFunction.varsForSelfDefinedFunctions.put(function_name, vars);
             definedFunctions.put(function_name, new SelfDefinedFunction(function_name, vars, (Expression) c.getParams()[c.getParams().length - 1], exprs_for_vars));
 
+            /**
+             * Ausgabe an den Benutzer.
+             */
+            String function = "";
+            SelfDefinedFunction f;
+            Expression[] vars_for_output;
+            Expression f_for_output;
+
+            f = (SelfDefinedFunction) definedFunctions.get(function_name);
+            function = f.getName() + "(";
+            for (int i = 0; i < f.getArguments().length; i++) {
+                function = function + "X_" + (i + 1) + ",";
+            }
+            function = function.substring(0, function.length() - 1) + ") = ";
+
+            vars_for_output = new Expression[f.getArguments().length];
+            for (int i = 0; i < f.getArguments().length; i++) {
+                vars_for_output[i] = Variable.create("X_" + (i + 1));
+            }
+            f_for_output = f.replaceAllVariables(vars_for_output);
+            function = function + f_for_output.writeFormula(true);
+
+            output = new String[1];
+            output[0] = "Es wurde die folgende Funktion definiert: " + function + "\n \n";
+
         }
 
     }
