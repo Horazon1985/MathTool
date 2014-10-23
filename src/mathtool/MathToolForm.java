@@ -147,7 +147,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
         /**
          * ComponentListener für das Ausrichten von Komponenten
-         */
+         */        
         this.addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -231,9 +231,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             graphicMethodsCurves2D.setVisible(true);
             typeGraphic = TypeGraphic.CURVE2D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
-            System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
             graphicMethodsCurves3D.setVisible(true);
-            System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
         } else if (command_name.equals("plotpolar")) {
