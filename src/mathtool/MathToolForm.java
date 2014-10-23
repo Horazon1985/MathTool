@@ -169,7 +169,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 graphicMethods3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethodsCurves2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethodsCurves3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
-//        graphicMethodsCurves3D.setBounds(1300, 200, 500, 500);
                 graphicMethodsPolar2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
 
                 legendLabel.setBounds(graphicMethods3D.getX(), scrollPane.getHeight() + 25, 100, 25);
@@ -217,10 +216,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
         graphicMethods2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethods3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-        graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-//        graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-        graphicMethodsCurves3D.setBounds(graphicMethods2D.getX(), graphicMethods2D.getY(), graphicMethods2D.getWidth(), graphicMethods2D.getHeight());
         graphicMethodsPolar2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
 
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
@@ -233,7 +231,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             graphicMethodsCurves2D.setVisible(true);
             typeGraphic = TypeGraphic.CURVE2D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
+            System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
             graphicMethodsCurves3D.setVisible(true);
+            System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
         } else if (command_name.equals("plotpolar")) {
@@ -491,6 +491,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                          */
                         activatePanelsForGraphs(com[0], params);
                         inputField.setText("");
+
                     }
 
                 } catch (ExpressionException | EvaluationException e) {
@@ -643,11 +644,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
-                break;
-
-            case KeyEvent.VK_X:
-                System.out.println("Gr2D: " + graphicMethods2D.getX() + ", " + graphicMethods2D.getY() + ", " + graphicMethods2D.getWidth() + ", " + graphicMethods2D.getHeight());
-                System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
                 break;
 
             case KeyEvent.VK_UP:

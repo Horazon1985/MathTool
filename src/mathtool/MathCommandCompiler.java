@@ -1772,7 +1772,7 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethodsCurves3D.setZoomfactorToOne();
+        graphicMethodsCurves3D.setIsInitialized(true);
         graphicMethodsCurves3D.setExpression(expr);
         graphicMethodsCurves3D.setVar(var);
         graphicMethodsCurves3D.setParameters(150, 200, 30, 30);
