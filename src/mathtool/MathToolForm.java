@@ -70,7 +70,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     public MathToolForm() {
         initComponents();
-        this.setLayout(new BorderLayout());
+        this.setLayout(null);
         this.startRotate = false;
 
         addWindowListener(new WindowAdapter() {
@@ -88,7 +88,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Labels ausrichten
          */
-        legendLabel.setBounds(770, 530, 100, 25);
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
@@ -296,7 +295,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plotcurve((t^2,t^3,t^4),-1,1)");
+        inputField.setText("approx(((-3)^(1/3)+1)^(1/5))");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
