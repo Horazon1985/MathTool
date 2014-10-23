@@ -216,11 +216,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         legendLabel.setVisible(true);
 
         graphicMethods2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-        graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-        graphicMethodsPolar2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethods3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-        graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-//        graphicMethodsCurves3D.setBounds(1300, 200, 500, 500);
+        graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+//        graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
+        graphicMethodsCurves3D.setBounds(graphicMethods2D.getX(), graphicMethods2D.getY(), graphicMethods2D.getWidth(), graphicMethods2D.getHeight());
+        graphicMethodsPolar2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
 
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
@@ -254,8 +254,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
             typeGraphic = TypeGraphic.NONE;
         }
-
-//        System.out.println("Gr2D: " + graphicMethods2D.getX() + ", " + graphicMethods2D.getY() + ", " + graphicMethods2D.getWidth() + ", " + graphicMethods2D.getHeight());
 
         validate();
         repaint();
@@ -645,6 +643,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 executeCommand();
+                break;
+
+            case KeyEvent.VK_X:
+                System.out.println("Gr2D: " + graphicMethods2D.getX() + ", " + graphicMethods2D.getY() + ", " + graphicMethods2D.getWidth() + ", " + graphicMethods2D.getHeight());
+                System.out.println("GrC3D: " + graphicMethodsCurves3D.getX() + ", " + graphicMethodsCurves3D.getY() + ", " + graphicMethodsCurves3D.getWidth() + ", " + graphicMethodsCurves3D.getHeight());
                 break;
 
             case KeyEvent.VK_UP:
