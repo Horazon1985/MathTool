@@ -389,15 +389,35 @@ public class MathCommandCompiler {
         if (command.equals("latex")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'latex' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.");
+                throw new ExpressionException("Im Befehl 'latex' muss genau ein Parameter stehen. Dieser muss aus gültigen Ausdrücken bestehen, die allesamt durch Gleichheitszeichen verbunden sind.");
             }
 
             try {
-                Expression expr = Expression.build(params[0], new HashSet());
-                command_params = new Object[1];
-                command_params[0] = expr;
+                int n = 0;
+                String expressions = params[0];
+                while (expressions.contains("=")) {
+                    expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
+                    n++;
+                }
+                expressions = params[0];
+                Expression[] exprs = new Expression[n + 1];
+                HashSet vars = new HashSet();
+                for (int i = 0; i < n; i++) {
+                    if (expressions.indexOf("=") == 0) {
+                        exprs[i] = null;
+                        expressions = expressions.substring(1, expressions.length());
+                    } else {
+                        exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), vars);
+                        expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
+                    }
+                }
+                if (expressions.length() == 0) {
+                    exprs[n] = null;
+                } else {
+                    exprs[n] = Expression.build(expressions, vars);
+                }
                 result.setName(command);
-                result.setParams(command_params);
+                result.setParams(exprs);
                 return result;
             } catch (ExpressionException e) {
                 throw new ExpressionException("Fehler im Parameter des Befehls 'latex': " + e.getMessage());
@@ -1536,7 +1556,19 @@ public class MathCommandCompiler {
 
     private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
         output = new String[1];
-        output[0] = "Latex-Code: " + ((Expression) c.getParams()[0]).expressionToLatex(true) + "\n \n";
+        output[0] = "Latex-Code: ";
+        for (int i = 0; i < c.getParams().length - 1; i++) {
+            if (c.getParams()[i] == null) {
+                output[0] = output[0] + " = ";
+            } else {
+                output[0] = output[0] + ((Expression) c.getParams()[i]).expressionToLatex(true) + " = ";
+            }
+        }
+        if (c.getParams()[c.getParams().length - 1] == null) {
+            output[0] = output[0] + "\n \n";
+        } else {
+            output[0] = output[0] + ((Expression) c.getParams()[c.getParams().length - 1]).expressionToLatex(true) + "\n \n";
+        }
     }
 
     private static void executePi(Command c, JTextArea area) throws ExpressionException {
@@ -1552,6 +1584,7 @@ public class MathCommandCompiler {
         Expression[] exprs = new Expression[c.getParams().length - 2];
         for (int i = 0; i < c.getParams().length - 2; i++) {
             exprs[i] = (Expression) c.getParams()[i];
+            exprs[i] = exprs[i].simplify();
             exprs[i].getContainedVars(vars);
         }
 
@@ -1586,6 +1619,7 @@ public class MathCommandCompiler {
 
         HashSet vars = new HashSet();
         Expression expr = (Expression) c.getParams()[0];
+        expr = expr.simplify();
         expr.getContainedVars(vars);
 
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -1725,9 +1759,11 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression[] expr = new Expression[2];
         expr[0] = (Expression) c.getParams()[0];
+        expr[0] = expr[0].simplify();
         expr[0].getContainedVars(vars);
         expr[1] = (Expression) c.getParams()[1];
         expr[1].getContainedVars(vars);
+        expr[1] = expr[1].simplify();
 
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -1756,10 +1792,13 @@ public class MathCommandCompiler {
         Expression[] expr = new Expression[3];
         expr[0] = (Expression) c.getParams()[0];
         expr[0].getContainedVars(vars);
+        expr[0] = expr[0].simplify();
         expr[1] = (Expression) c.getParams()[1];
         expr[1].getContainedVars(vars);
+        expr[1] = expr[1].simplify();
         expr[2] = (Expression) c.getParams()[2];
         expr[2].getContainedVars(vars);
+        expr[2] = expr[2].simplify();
 
         //Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
@@ -1789,6 +1828,7 @@ public class MathCommandCompiler {
         Expression[] exprs = new Expression[c.getParams().length - 2];
         for (int i = 0; i < c.getParams().length - 2; i++) {
             exprs[i] = (Expression) c.getParams()[i];
+            exprs[i] = exprs[i].simplify();
             exprs[i].getContainedVars(vars);
         }
 
