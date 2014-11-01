@@ -295,7 +295,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("taylor((1+x)^(1/2),x,0,5)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -679,19 +678,24 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(typeGraphic.GRAPH2D)) {
-                LegendGUI legendGUI = new LegendGUI(GraphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        GraphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.GRAPH3D)) {
-                LegendGUI legendGUI = new LegendGUI(GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
+                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.CURVE2D)) {
-                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
+                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.CURVE3D)) {
-                LegendGUI legendGUI = new LegendGUI(GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
+                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.POLARGRAPH2D)) {
-                LegendGUI legendGUI = new LegendGUI(GraphicMethodsPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
+                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        GraphicMethodsPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
                 legendGUI.setVisible(true);
             }
         }

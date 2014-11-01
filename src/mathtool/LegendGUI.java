@@ -10,13 +10,16 @@ import java.util.HashMap;
 
 public class LegendGUI extends JDialog {
 
-    public LegendGUI(String[] instructions, HashMap<Integer, Color> colors, HashMap<Integer, Expression> expr) {
+    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+            String[] instructions, HashMap<Integer, Color> colors, HashMap<Integer, Expression> expr) {
         setTitle("Legende");
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds(400, 200, 500, 145 + 20*instructions.length + 20*colors.size());
+        this.setBounds((with_mathtoolform - 500)/2 + x_mathtoolform, 
+                (heigth_mathtoolform - 145 - 20*instructions.length - 20*colors.size())/2 + y_mathtoolform, 
+                500, 145 + 20*instructions.length + 20*colors.size());
         this.getContentPane().setBackground(Color.white);
 
         JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
@@ -56,13 +59,16 @@ public class LegendGUI extends JDialog {
         repaint();
     }
 
-    public LegendGUI(String[] instructions, Expression expr) {
+    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+            String[] instructions, Expression expr) {
         setTitle("Legende");
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds(400, 200, 500, 165 + 20*instructions.length);
+        this.setBounds((with_mathtoolform - 500)/2 + x_mathtoolform, 
+                (heigth_mathtoolform - 165 - 20*instructions.length)/2 + y_mathtoolform, 
+                500, 165 + 20*instructions.length);
         this.getContentPane().setBackground(Color.white);
 
         JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
@@ -97,13 +103,16 @@ public class LegendGUI extends JDialog {
         repaint();
     }
 
-    public LegendGUI(String[] instructions, Expression[] expr) {
+    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+            String[] instructions, Expression[] expr) {
         setTitle("Legende");
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds(400, 200, 500, 165 + 20*instructions.length + 20*expr.length);
+        this.setBounds((with_mathtoolform - 500)/2 + x_mathtoolform, 
+                (heigth_mathtoolform - 165 - 20*instructions.length - 20*expr.length)/2 + y_mathtoolform, 
+                500, 165 + 20*instructions.length + 20*expr.length);
         this.getContentPane().setBackground(Color.white);
 
         JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");

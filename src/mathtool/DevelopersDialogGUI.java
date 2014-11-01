@@ -11,8 +11,8 @@ import javax.swing.JScrollPane;
 
 public class DevelopersDialogGUI extends JDialog {
 
-    private JEditorPane developersArea;
-    private JScrollPane scrollPaneDevelopers;
+    private final JEditorPane developersArea;
+    private final JScrollPane scrollPaneDevelopers;
 
     public DevelopersDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
