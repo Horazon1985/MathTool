@@ -146,7 +146,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
         /**
          * ComponentListener für das Ausrichten von Komponenten
-         */        
+         */
         this.addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -478,6 +478,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     }
                     if (valid_command) {
                         mathToolArea.append(command + "\n \n");
+                        /**
+                         * Wichtig: Wenn command im Namen 'plot' enthält ->
+                         * Rotation stoppen, falls diese aktiv ist.
+                         */
+                        if (startRotate && com[0].contains("plot")) {
+                            startRotate = false;
+                            threadRotate.interrupt();
+                        }
+
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars,
                                 definedVarsSet, definedFunctions);
@@ -639,6 +648,10 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
+
+//                double x = -3.1;
+//                int y = -3;
+//                System.out.println(x==y);
                 executeCommand();
                 break;
 

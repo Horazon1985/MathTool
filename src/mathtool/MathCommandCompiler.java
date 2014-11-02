@@ -11,9 +11,9 @@ import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
-import expressionbuilder.AnalysisMethods;
+import ComputationalClasses.AnalysisMethods;
 import expressionbuilder.BinaryOperation;
-import expressionbuilder.NumericalMethods;
+import ComputationalClasses.NumericalMethods;
 import expressionbuilder.SolveMethods;
 import expressionbuilder.TypeBinary;
 import java.math.BigDecimal;
@@ -153,6 +153,10 @@ public class MathCommandCompiler {
          * wird.
          */
         if (command.equals("def")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException("Im Befehl 'def' muss genau ein Parameter stehen, welcher aus einer Variablenzuweisung oder einer Funktionszuweisung besteht.");
+            }
 
             if (!params[0].contains("=")) {
                 throw new ExpressionException("Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
@@ -1512,7 +1516,7 @@ public class MathCommandCompiler {
             for (String function_name : definedFunctions.keySet()) {
 
                 f = (SelfDefinedFunction) definedFunctions.get(function_name);
-                function = f.getName() + "(";
+                function = function + f.getName() + "(";
                 for (int i = 0; i < f.getArguments().length; i++) {
                     function = function + "X_" + (i + 1) + ",";
                 }
@@ -1523,10 +1527,10 @@ public class MathCommandCompiler {
                     vars_for_output[i] = Variable.create("X_" + (i + 1));
                 }
                 f_for_output = f.replaceAllVariables(vars_for_output);
-                function = function + f_for_output.writeFormula(true);
-                area.append(function + "\n \n");
+                function = function + f_for_output.writeFormula(true) + ", ";
 
             }
+            function = function.substring(0, function.length() - 2);
         }
         output = new String[1];
         output[0] = "Liste aller selbstdefinierten Funktionen: " + function + "\n \n";
