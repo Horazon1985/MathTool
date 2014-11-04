@@ -1426,7 +1426,8 @@ public class MathCommandCompiler {
         }
 
         expr = expr.turnToIrrationals().simplify();
-        area.append(expr.writeFormula(true) + "\n \n");
+        output = new String[1];
+        output[0] = expr.writeFormula(true) + " \n \n";
 
         /**
          * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
