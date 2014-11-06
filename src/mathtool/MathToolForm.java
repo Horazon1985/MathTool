@@ -477,16 +477,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         }
                     }
                     if (valid_command) {
-                        mathToolArea.append(command + "\n \n");
-                        /**
-                         * Wichtig: Wenn command im Namen 'plot' enthält ->
-                         * Rotation stoppen, falls diese aktiv ist.
-                         */
-                        if (startRotate && com[0].contains("plot")) {
-                            startRotate = false;
-                            threadRotate.interrupt();
-                        }
 
+                        mathToolArea.append(command + "\n \n");
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars,
                                 definedVarsSet, definedFunctions);
@@ -566,6 +558,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
+        /**
+         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
+         * falls diese aktiv ist.
+         */
+        if (startRotate && inputField.getText().contains("plot")) {
+            startRotate = false;
+            threadRotate.interrupt();
+        }
         executeCommand();
     }//GEN-LAST:event_inputButtonActionPerformed
 
@@ -606,12 +606,28 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }//GEN-LAST:event_MenuItemAboutActionPerformed
 
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
+        /**
+         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
+         * falls diese aktiv ist.
+         */
+        if (startRotate) {
+            startRotate = false;
+            threadRotate.interrupt();
+        }
         String line = inputField.getText();
         inputField.setText("approx(" + line + ")");
         executeCommand();
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
+        /**
+         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
+         * falls diese aktiv ist.
+         */
+        if (startRotate) {
+            startRotate = false;
+            threadRotate.interrupt();
+        }
         String line = inputField.getText();
         inputField.setText("latex(" + line + ")");
         executeCommand();
@@ -649,9 +665,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
 
-//                double x = -3.1;
-//                int y = -3;
-//                System.out.println(x==y);
+                /**
+                 * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation
+                 * stoppen, falls diese aktiv ist.
+                 */
+                if (startRotate) {
+                    startRotate = false;
+                    threadRotate.interrupt();
+                }
+
                 executeCommand();
                 break;
 
@@ -683,6 +705,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }//GEN-LAST:event_inputFieldKeyPressed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        /**
+         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
+         * falls diese aktiv ist.
+         */
+        if (startRotate) {
+            startRotate = false;
+            threadRotate.interrupt();
+        }
         inputField.setText("clear()");
         executeCommand();
     }//GEN-LAST:event_clearButtonActionPerformed
