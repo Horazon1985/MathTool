@@ -410,6 +410,19 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void stopPossibleRotation() {
+        if (startRotate) {
+            startRotate = false;
+            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
+                graphicMethods3D.setStartRotate(false);
+            } else {
+                graphicMethodsCurves3D.setStartRotate(false);
+            }
+            threadRotate.interrupt();
+            rotateButton.setText("Graphen rotieren lassen");
+        }
+    }
+
     private void executeCommand() {
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
@@ -562,10 +575,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
          * falls diese aktiv ist.
          */
-        if (startRotate && inputField.getText().contains("plot")) {
-            startRotate = false;
-            threadRotate.interrupt();
-        }
+        stopPossibleRotation();
         executeCommand();
     }//GEN-LAST:event_inputButtonActionPerformed
 
@@ -610,10 +620,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
          * falls diese aktiv ist.
          */
-        if (startRotate) {
-            startRotate = false;
-            threadRotate.interrupt();
-        }
+        stopPossibleRotation();
         String line = inputField.getText();
         inputField.setText("approx(" + line + ")");
         executeCommand();
@@ -624,10 +631,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
          * falls diese aktiv ist.
          */
-        if (startRotate) {
-            startRotate = false;
-            threadRotate.interrupt();
-        }
+        stopPossibleRotation();
         String line = inputField.getText();
         inputField.setText("latex(" + line + ")");
         executeCommand();
@@ -664,16 +668,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-
                 /**
                  * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation
                  * stoppen, falls diese aktiv ist.
                  */
-                if (startRotate) {
-                    startRotate = false;
-                    threadRotate.interrupt();
-                }
-
+                stopPossibleRotation();
                 executeCommand();
                 break;
 
@@ -709,10 +708,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
          * falls diese aktiv ist.
          */
-        if (startRotate) {
-            startRotate = false;
-            threadRotate.interrupt();
-        }
+        stopPossibleRotation();
         inputField.setText("clear()");
         executeCommand();
     }//GEN-LAST:event_clearButtonActionPerformed
