@@ -54,7 +54,7 @@ Die Zahl n darf hier aus Speichergründen maximal 20000 betragen.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Bestimmt die numerischen Lösungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Hierbei wird das Intervall [x<sub>1</sub>, x<sub>2</sub>] in n gleiche Teile unterteilt und in jedem Teilintervall wird höchstens eine Lösung ermittelt. Höheres n kann zwar potentiell mehr Lösungen liefern, verlängert dafür aber die Berechnungszeit. Diese Funktion kann dann nützlich sein, wenn der Benutzen über bestimmte Kenntnissebezüglich der Lösungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) verfügt.<br><br>
 
-<strong>solvedgl(F(x, y, y', y'', ..., y<sup>k</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Liefert eine numerische Lösung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub> mit k &lt;= n im Bereich x_0 &lt;= x &lt;= x<sub>1</sub>. Für die numerische Berechnung wird das Intervall [x<sub>0</sub>, x<sub>1</sub>] in 1000 gleiche Teile unterteilt und in der Konsole werden alle 1000 Funktionswerte an den betreffenden Stellen ausgegeben.<br><br>
+<strong>solvedeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Liefert eine numerische Lösung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>n-1</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub> im Bereich x_0 &lt;= x &lt;= x<sub>1</sub>. Für die numerische Berechnung wird das Intervall [x<sub>0</sub>, x<sub>1</sub>] in 1000 gleiche Teile unterteilt und in der Konsole werden alle 1000 Funktionswerte an den betreffenden Stellen ausgegeben.<br><br>
 
 <em>Beispiel:</em> solvedgl(-y,t,2,0,10,1,0) liefert eine numerische Lösung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0 im Bereich 0 &lt;= t &lt;= 10. Hierbei werden 1000 Funktionswerte von y(t) ausgegeben; die Schrittweite beträgt daher 0.01.<br><br>
 
@@ -65,7 +65,7 @@ Die Zahl n darf hier aus Speichergründen maximal 20000 betragen.<br><br>
 
 Zusätzlich werden beide Graphen (der von x^3+x/2+3 und von 12+25*(x-2)/2) gezeichnet.<br><br>
 
-<strong>taylordgl(F(x, y, y', y'', ..., y<sup>k</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Liefert das Taylorpolynom m-ten Grades von der Lösung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub> mit k &lt;= n.<br><br>
+<strong>taylordeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Liefert das Taylorpolynom m-ten Grades von der Lösung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
 <em>Beispiel:</em> taylordgl(-y,t,2,0,1,0,10) liefert das Taylorpolynom 10. Grades von der Lösung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0. Die exakte Lösung ist gegeben durch y(t) = cos(t), als Potenzreiche ausgedrückt also<br>
 

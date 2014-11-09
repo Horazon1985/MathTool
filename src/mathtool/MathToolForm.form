@@ -227,10 +227,10 @@
             <StringItem index="11" value="plotcurve"/>
             <StringItem index="12" value="plotpolar"/>
             <StringItem index="13" value="solve"/>
-            <StringItem index="14" value="solvedgl"/>
+            <StringItem index="14" value="solvedeq"/>
             <StringItem index="15" value="solveexact"/>
             <StringItem index="16" value="tangent"/>
-            <StringItem index="17" value="taylordgl"/>
+            <StringItem index="17" value="taylordeq"/>
             <StringItem index="18" value="undef"/>
             <StringItem index="19" value="undefall"/>
           </StringArray>
