@@ -239,7 +239,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         } else if (command_name.equals("solve") || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
-        } else if (command_name.equals("solvedgl")) {
+        } else if (command_name.equals("solvedeq")) {
             graphicMethods2D.setVisible(true);
             legendLabel.setVisible(false);
             typeGraphic = TypeGraphic.GRAPH2D;
@@ -344,7 +344,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         cancelButton.setBounds(520, 300, 100, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff()", "div()", "fac()", "gcd()", "int()", "laplace()", "lcm()", "mod()", "prod()", "sum()", "taylor()" }));
+        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "int", "laplace", "lcm", "mod", "prod", "sum", "taylor" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 operatorChoiceActionPerformed(evt);
@@ -354,14 +354,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx()", "clear()", "def()", "deffuncs()", "defvars()", "euler()", "latex()", "pi()", "plot2d()", "plot3d()", "plotcurve()", "plotpolar()", "solve()", "solvedgl()", "solveexact()", "tangent()", "taylordgl()", "undef()", "undefall()" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "clear", "def", "deffuncs", "defvars", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedgl", "solveexact", "tangent", "taylordgl", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 115, 23);
+        commandChoice.setBounds(560, 370, 105, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Clear");
@@ -645,22 +645,145 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         computingSwingWorker.cancel(true);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
+     * Kommata bei einer gültigen Eingabe.
+     */
+    private int getNumberOfComma(String s) {
+
+        if (s.equals("diff")) {
+            return 2;
+        }
+        if (s.equals("div")) {
+            return 0;
+        }
+        if (s.equals("fac")) {
+            return 0;
+        }
+        if (s.equals("gcd")) {
+            return 1;
+        }
+        if (s.equals("int")) {
+            return 2;
+        }
+        if (s.equals("laplace")) {
+            return 0;
+        }
+        if (s.equals("lcm")) {
+            return 1;
+        }
+        if (s.equals("mod")) {
+            return 1;
+        }
+        if (s.equals("prod")) {
+            return 3;
+        }
+        if (s.equals("sum")) {
+            return 3;
+        }
+        if (s.equals("taylor")) {
+            return 3;
+        }
+        
+        if (s.equals("approx")) {
+            return 0;
+        }
+        if (s.equals("clear")) {
+            return 0;
+        }
+        if (s.equals("def")) {
+            return 0;
+        }
+        if (s.equals("deffuncs")) {
+            return 0;
+        }
+        if (s.equals("defvars")) {
+            return 0;
+        }
+        if (s.equals("euler")) {
+            return 0;
+        }
+        if (s.equals("latex")) {
+            return 0;
+        }
+        if (s.equals("pi")) {
+            return 0;
+        }
+        if (s.equals("plot2d")) {
+            return 2;
+        }
+        if (s.equals("plot3d")) {
+            return 4;
+        }
+        if (s.equals("plotcurve")) {
+            return 2;
+        }
+        if (s.equals("plotpolar")) {
+            return 2;
+        }
+        if (s.equals("solve")) {
+            return 2;
+        }
+        if (s.equals("solveexact")) {
+            return 0;
+        }
+        if (s.equals("solvedeq")) {
+            return 5;
+        }
+        if (s.equals("tangent")) {
+            return 1;
+        }
+        if (s.equals("taylordeq")) {
+            return 5;
+        }
+        if (s.equals("undef")) {
+            return 0;
+        }
+        if (s.equals("undefall")) {
+            return 0;
+        }
+
+        /**
+         * Default-Case! Sollte nie eintreten.
+         */
+        return 0;
+
+    }
+
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
-            inputField.replaceSelection((String) operatorChoice.getSelectedItem());
+            
+            String inserted_operator = (String) operatorChoice.getSelectedItem() + "(";
+            int number_of_commata = getNumberOfComma((String) operatorChoice.getSelectedItem());
+            for (int i = 0; i < number_of_commata; i++){
+                inserted_operator = inserted_operator + ",";
+            }
+            inserted_operator = inserted_operator + ")";
+
+            inputField.replaceSelection(inserted_operator);
             operatorChoice.setSelectedIndex(0);
-            inputField.setSelectionStart(inputField.getSelectionStart() - 1);
+            inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
+            
         }
         inputField.requestFocus();
     }//GEN-LAST:event_operatorChoiceActionPerformed
 
     private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
         if (commandChoice.getSelectedIndex() > 0) {
-            inputField.replaceSelection((String) commandChoice.getSelectedItem());
+            
+            String inserted_command = (String) commandChoice.getSelectedItem() + "(";
+            int number_of_commata = getNumberOfComma((String) commandChoice.getSelectedItem());
+            for (int i = 0; i < number_of_commata; i++){
+                inserted_command = inserted_command + ",";
+            }
+            inserted_command = inserted_command + ")";
+
+            inputField.setText(inserted_command);
             commandChoice.setSelectedIndex(0);
-            inputField.setSelectionStart(inputField.getSelectionStart() - 1);
+            inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
+
         }
         inputField.requestFocus();
     }//GEN-LAST:event_commandChoiceActionPerformed

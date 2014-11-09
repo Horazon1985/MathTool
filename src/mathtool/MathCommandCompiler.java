@@ -33,7 +33,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedgl", "tangent", "taylordgl", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedeq", "tangent", "taylordeq", "undef", "undefall"};
 
     /**
      * Hier werden zusätzliche Hinweise/Meldungen/Warnungen etc. gespeichert,
@@ -989,17 +989,17 @@ public class MathCommandCompiler {
             return result;
         }
 
-        //SOLVEDGL
+        //SOLVEDEQ
         /**
-         * Struktur: solvedgl(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
+         * Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
          * y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
          * EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
          * der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
          * fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
-        if (command.equals("solvedgl")) {
+        if (command.equals("solvedeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'");
             }
 
             if (params.length >= 6) {
@@ -1008,13 +1008,13 @@ public class MathCommandCompiler {
                 try {
                     Integer.parseInt(params[2]);
                 } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine positive ganze Zahl sein.");
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.");
                 }
 
                 int ord = Integer.parseInt(params[2]);
 
                 if (ord < 1) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedgl' muss eine positive ganze Zahl sein.");
+                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.");
                 }
 
                 /**
@@ -1026,7 +1026,7 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(params[0], vars);
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der erste Parameter im Befehl 'solvedgl' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                    throw new ExpressionException("Der erste Parameter im Befehl 'solvedeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
                 }
                 Expression expr = Expression.build(params[0], vars);
 
@@ -1056,14 +1056,14 @@ public class MathCommandCompiler {
                         }
                     }
                 } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedgl' muss eine gültige Veränderliche sein.");
+                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedeq' muss eine gültige Veränderliche sein.");
                 }
 
                 if (params.length < ord + 5) {
-                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedgl'");
+                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'");
                 }
                 if (params.length > ord + 5) {
-                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedgl'");
+                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedeq'");
                 }
 
                 //Prüft, ob die AWP-Daten korrekt sind
@@ -1072,11 +1072,11 @@ public class MathCommandCompiler {
                     try {
                         Expression limit = Expression.build(params[i], vars_in_limits);
                         if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein.");
                         }
                         limit.evaluate();
                     } catch (ExpressionException | EvaluationException e) {
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedgl' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein.");
                     }
                 }
 
@@ -1161,30 +1161,30 @@ public class MathCommandCompiler {
             return result;
         }
 
-        //TAYLORDGL
+        //TAYLORDEQ
         /**
-         * Struktur: taylordgl(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
+         * Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
          * y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
          * EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
          * der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
          * fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
          */
-        if (command.equals("taylordgl")) {
+        if (command.equals("taylordeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'");
             }
 
             //Ermittelt die Ordnung der DGL
             try {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.");
             }
 
             int ord = Integer.parseInt(params[2]);
 
             if (ord < 1) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordgl' muss eine positive ganze Zahl sein.");
+                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.");
             }
 
             /**
@@ -1196,7 +1196,7 @@ public class MathCommandCompiler {
             try {
                 Expression.build(params[0], vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'taylordgl' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException("Der erste Parameter im Befehl 'taylordeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
             }
             Expression expr = Expression.build(params[0], vars);
 
@@ -1226,15 +1226,15 @@ public class MathCommandCompiler {
                     }
                 }
             } else {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'taylordgl' muss eine gültige Veränderliche sein.");
+                throw new ExpressionException("Der zweite Parameter im Befehl 'taylordeq' muss eine gültige Veränderliche sein.");
             }
 
             if (params.length < ord + 5) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordgl'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'");
             }
 
             if (params.length > ord + 5) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordgl'");
+                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordeq'");
             }
 
             //Prüft, ob die AWP-Daten korrekt sind
@@ -1243,17 +1243,17 @@ public class MathCommandCompiler {
                 try {
                     Expression limit = Expression.build(params[i], vars_in_limits).simplify();
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordeq' muss eine reelle Zahl sein.");
                     }
                 } catch (ExpressionException | EvaluationException e) {
-                    throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordgl' muss eine reelle Zahl sein.");
+                    throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordeq' muss eine reelle Zahl sein.");
                 }
             }
 
             try {
                 Integer.parseInt(params[ord + 4]);
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der letzte Parameter im Befehl 'taylordgl' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException("Der letzte Parameter im Befehl 'taylordeq' muss eine nichtnegative ganze Zahl sein.");
             }
 
             command_params = new Object[ord + 5];
@@ -1378,11 +1378,11 @@ public class MathCommandCompiler {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getName().equals("solveexact")) {
             executeSolveExact(c, area);
-        } else if (c.getName().equals("solvedgl")) {
+        } else if (c.getName().equals("solvedeq")) {
             executeSolveDGL(c, area, graphicMethods2D);
         } else if (c.getName().equals("tangent")) {
             executeTangent(c, area, graphicMethods2D);
-        } else if (c.getName().equals("taylordgl")) {
+        } else if (c.getName().equals("taylordeq")) {
             executeTaylorDGL(c, area);
         } else if (c.getName().equals("undef")) {
             executeUndefine(c, area, definedVars, definedVarsSet);
@@ -2252,7 +2252,7 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDGL(expr, var_1, var_2, ord, x_0, y_0, k);
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDEq(expr, var_1, var_2, ord, x_0, y_0, k);
         output = new String[1];
         output[0] = var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n";
 
