@@ -1349,7 +1349,7 @@ public class MathCommandCompiler {
         } else if (c.getName().equals("clear")) {
             executeClear(c, area);
         } else if ((c.getName().equals("def")) && c.getParams().length >= 1) {
-            executeDefine(c, area, definedVars, definedVarsSet, definedFunctions);
+            executeDefine(c, definedVars, definedVarsSet, definedFunctions);
         } else if (c.getName().equals("deffuncs")) {
             executeDefFuncs(c, area, definedFunctions);
         } else if (c.getName().equals("defvars")) {
@@ -1443,7 +1443,7 @@ public class MathCommandCompiler {
         area.setText("");
     }
 
-    private static void executeDefine(Command c, JTextArea area, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
+    private static void executeDefine(Command c, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         /**
@@ -1480,7 +1480,7 @@ public class MathCommandCompiler {
             /**
              * Ausgabe an den Benutzer.
              */
-            String function = "";
+            String function;
             SelfDefinedFunction f;
             Expression[] vars_for_output;
             Expression f_for_output;
