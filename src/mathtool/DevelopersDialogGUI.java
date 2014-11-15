@@ -21,7 +21,7 @@ public class DevelopersDialogGUI extends JDialog {
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 440)/2 + y_mathtoolform, 505, 440);
+        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 490)/2 + y_mathtoolform, 505, 490);
         this.getContentPane().setBackground(Color.white);
 
         /**
@@ -30,7 +30,7 @@ public class DevelopersDialogGUI extends JDialog {
         JPanel panel = new JPanel();
         add(panel);
         panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/MathToolLogo.png"))));
-        panel.setBounds(0, -5, 500, 100);
+        panel.setBounds(0, -5, 500, 150);
         panel.setVisible(true);
 
         /**
@@ -39,10 +39,10 @@ public class DevelopersDialogGUI extends JDialog {
         developersArea = new JEditorPane();
         developersArea.setContentType("text/html");
         add(developersArea);
-        developersArea.setBounds(20, 120, 460, 270);
+        developersArea.setBounds(20, 170, 460, 270);
         developersArea.setEditable(false);
         scrollPaneDevelopers = new JScrollPane(developersArea);
-        scrollPaneDevelopers.setBounds(20, 120, 460, 270);
+        scrollPaneDevelopers.setBounds(20, 170, 460, 270);
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 

@@ -2,7 +2,6 @@ package mathtool;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
-import java.awt.Image;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +23,7 @@ public class ComputingDialogGUI extends JDialog {
         
         JPanel owlPanel = new JPanel();
         add(owlPanel);
-        ImageIcon computingOwl = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpenScaled.png"));
+        ImageIcon computingOwl = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
         owlPanel.add(new JLabel(computingOwl));
         owlPanel.setBounds(10, -5, 50, 70);
         owlPanel.setVisible(true);
