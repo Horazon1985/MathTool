@@ -1973,7 +1973,7 @@ public class MathCommandCompiler {
          */
         if (zeros.isEmpty()) {
             output = new String[1];
-            output[0] = "Es konnten keine exakten Lösungen ermittelt werden.";
+            output[0] = "Es konnten keine exakten Lösungen ermittelt werden. \n \n";
             return;
         }
 
