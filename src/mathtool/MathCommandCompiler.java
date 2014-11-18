@@ -14,7 +14,7 @@ import expressionbuilder.Variable;
 import ComputationalClasses.AnalysisMethods;
 import expressionbuilder.BinaryOperation;
 import ComputationalClasses.NumericalMethods;
-import expressionbuilder.SolveMethods;
+import SolveEquationsMethods.SolveMethods;
 import expressionbuilder.TypeBinary;
 import java.math.BigDecimal;
 
@@ -1967,6 +1967,15 @@ public class MathCommandCompiler {
         }
 
         HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
+
+        /**
+         * Falls keine Lösungen ermittelt werden konnten, User informieren.
+         */
+        if (zeros.isEmpty()) {
+            output = new String[1];
+            output[0] = "Es konnten keine exakten Lösungen ermittelt werden.";
+            return;
+        }
 
         /**
          * Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
