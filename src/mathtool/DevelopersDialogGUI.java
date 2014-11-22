@@ -21,7 +21,7 @@ public class DevelopersDialogGUI extends JDialog {
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 490)/2 + y_mathtoolform, 505, 490);
+        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 530)/2 + y_mathtoolform, 505, 530);
         this.getContentPane().setBackground(Color.white);
 
         /**
@@ -42,7 +42,7 @@ public class DevelopersDialogGUI extends JDialog {
         developersArea.setBounds(20, 170, 460, 270);
         developersArea.setEditable(false);
         scrollPaneDevelopers = new JScrollPane(developersArea);
-        scrollPaneDevelopers.setBounds(20, 170, 460, 270);
+        scrollPaneDevelopers.setBounds(20, 170, 460, 310);
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 
