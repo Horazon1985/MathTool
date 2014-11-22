@@ -9,7 +9,6 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
-import SolveEquationsMethods.PolynomialRootsMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -19,13 +18,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.math.BigInteger;
 
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
@@ -563,12 +562,40 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         };
         computing = true;
         computingTimer = new Timer();
-        computingTimer.schedule(new TimerTask() {
+        
+        final ImageIcon computingOwlEyesOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
+        final ImageIcon computingOwlEyesHalfOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesHalfOpen.png"));
+        final ImageIcon computingOwlEyesClosed = new ImageIcon(getClass().getResource("icons/LogoOwlEyesClosed.png"));
+        
+        TimerTask start = new TimerTask() {
             @Override
             public void run() {
                 computingDialog.setVisible(true);
             }
-        }, 1000);
+        };
+        TimerTask openEyes = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesOpen);
+            }
+        };
+        TimerTask halfOpenEyes = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesOpen);
+            }
+        };
+        TimerTask closedEyes = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesOpen);
+            }
+        };
+        
+        computingTimer.schedule(start, 1000);
+        computingTimer.schedule(openEyes, 0, 1500);
+        computingTimer.schedule(halfOpenEyes, 100, 1500);
+        computingTimer.schedule(closedEyes, 200, 1500);
         computingSwingWorker.execute();
     }
 

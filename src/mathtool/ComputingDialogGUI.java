@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 public class ComputingDialogGUI extends JDialog {
 
+    private ImageIcon computingIcon;
+    
     public ComputingDialogGUI() {
 
         setTitle("Info");
@@ -23,17 +25,19 @@ public class ComputingDialogGUI extends JDialog {
         
         JPanel owlPanel = new JPanel();
         add(owlPanel);
-        ImageIcon computingOwl = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
-        owlPanel.add(new JLabel(computingOwl));
+        this.computingIcon = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
+        owlPanel.add(new JLabel(computingIcon));
         owlPanel.setBounds(10, -5, 50, 70);
         owlPanel.setVisible(true);
-        
-        
         
         validate();
         repaint();
     }
     
-    
+    public void changeIcon(ImageIcon icon){
+        this.computingIcon = icon;
+        validate();
+        repaint();
+    }
     
 }
