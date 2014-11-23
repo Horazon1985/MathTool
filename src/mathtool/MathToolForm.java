@@ -296,6 +296,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("plot2d(3^(1/2),-1,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -582,10 +583,46 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         TimerTask halfOpenEyes = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesOpen);
+                computingDialog.changeIcon(computingOwlEyesHalfOpen);
             }
         };
         TimerTask closedEyes = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesClosed);
+            }
+        };
+        TimerTask halfOpenEyesAgain = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+            }
+        };
+        TimerTask openEyesAgain = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesOpen);
+            }
+        };
+        TimerTask halfOpenEyes2 = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+            }
+        };
+        TimerTask closedEyes2 = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesClosed);
+            }
+        };
+        TimerTask halfOpenEyesAgain2 = new TimerTask() {
+            @Override
+            public void run() {
+                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+            }
+        };
+        TimerTask openEyesAgain2 = new TimerTask() {
             @Override
             public void run() {
                 computingDialog.changeIcon(computingOwlEyesOpen);
@@ -593,9 +630,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         };
         
         computingTimer.schedule(start, 1000);
-        computingTimer.schedule(openEyes, 0, 1500);
-        computingTimer.schedule(halfOpenEyes, 100, 1500);
-        computingTimer.schedule(closedEyes, 200, 1500);
+        computingTimer.schedule(openEyes, 0, 2000);
+        computingTimer.schedule(halfOpenEyes, 100, 2000);
+        computingTimer.schedule(closedEyes, 200, 2000);
+        computingTimer.schedule(halfOpenEyesAgain, 300, 2000);
+        computingTimer.schedule(openEyesAgain, 400, 2000);
+        computingTimer.schedule(halfOpenEyes2, 500, 2000);
+        computingTimer.schedule(closedEyes2, 600, 2000);
+        computingTimer.schedule(halfOpenEyesAgain2, 700, 2000);
+        computingTimer.schedule(openEyesAgain2, 800, 2000);
         computingSwingWorker.execute();
     }
 
