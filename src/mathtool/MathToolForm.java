@@ -40,7 +40,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
-    private final ComputingDialogGUI computingDialog = new ComputingDialogGUI();
+    private final ComputingDialogGUI computingDialog = new ComputingDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     private final JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
 
     JTextArea mathToolArea;
