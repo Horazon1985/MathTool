@@ -101,7 +101,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="solveexact(sin(x)+sin(x)^3+1 = 0)"/>
+        <Property name="text" type="java.lang.String" value="solveexact(sin(x)^3+sin(x)/2+3/8=0)"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
