@@ -40,7 +40,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
-    private final ComputingDialogGUI computingDialog = new ComputingDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    private ComputingDialogGUI computingDialog;
     private final JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
 
     JTextArea mathToolArea;
@@ -73,7 +73,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         initComponents();
         this.setLayout(null);
         this.startRotate = false;
-
+        computingDialog = new ComputingDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -174,6 +175,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 legendLabel.setBounds(graphicMethods3D.getX(), scrollPane.getHeight() + 25, 100, 25);
                 rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPane.getHeight() + 20, 220, 30);
 
+                computingDialog = new ComputingDialogGUI(getX(), getY(), getWidth(), getHeight());
+                
                 if (!typeGraphic.equals(typeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
@@ -296,14 +299,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solveexact(sin(x)^3+sin(x)/2+3/8=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 22);
+        inputField.setBounds(10, 336, 490, 20);
 
         rotateButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -976,7 +978,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             public void run() {
                 MathToolForm myMathToolForm = new MathToolForm();
                 myMathToolForm.setVisible(true);
-                myMathToolForm.setBounds(20, 50, 1300, 670);
+                myMathToolForm.setBounds(50, 50, 1300, 650);
                 myMathToolForm.setExtendedState(MAXIMIZED_BOTH);
                 myMathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
             }
