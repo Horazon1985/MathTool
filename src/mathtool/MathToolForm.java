@@ -240,7 +240,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         } else if (command_name.equals("plotpolar")) {
             graphicMethodsPolar2D.setVisible(true);
             typeGraphic = TypeGraphic.POLARGRAPH2D;
-        } else if (command_name.equals("solve") || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
+        } else if ((command_name.equals("solve") && c.getParams().length >= 4) || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else if (command_name.equals("solvedeq")) {
@@ -299,6 +299,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("(10/7+x/7)^4/(5+x/2)^4");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -358,14 +359,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "clear", "def", "deffuncs", "defvars", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "solveexact", "tangent", "taylordeq", "undef", "undefall" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "clear", "def", "deffuncs", "defvars", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 105, 23);
+        commandChoice.setBounds(560, 370, 96, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Clear");
@@ -796,9 +797,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             return 2;
         }
         if (s.equals("solve")) {
-            return 2;
-        }
-        if (s.equals("solveexact")) {
             return 0;
         }
         if (s.equals("solvedeq")) {

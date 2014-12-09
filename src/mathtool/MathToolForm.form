@@ -101,6 +101,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="(10/7+x/7)^4/(5+x/2)^4"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
@@ -212,7 +213,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="20">
+          <StringArray count="19">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
             <StringItem index="2" value="clear"/>
@@ -228,11 +229,10 @@
             <StringItem index="12" value="plotpolar"/>
             <StringItem index="13" value="solve"/>
             <StringItem index="14" value="solvedeq"/>
-            <StringItem index="15" value="solveexact"/>
-            <StringItem index="16" value="tangent"/>
-            <StringItem index="17" value="taylordeq"/>
-            <StringItem index="18" value="undef"/>
-            <StringItem index="19" value="undefall"/>
+            <StringItem index="15" value="tangent"/>
+            <StringItem index="16" value="taylordeq"/>
+            <StringItem index="17" value="undef"/>
+            <StringItem index="18" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>

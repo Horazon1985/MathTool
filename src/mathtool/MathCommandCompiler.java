@@ -33,7 +33,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solveexact", "solvedeq", "tangent", "taylordeq", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "tangent", "taylordeq", "undef", "undefall"};
 
     /**
      * Hier werden zusätzliche Hinweise/Meldungen/Warnungen etc. gespeichert,
@@ -853,17 +853,17 @@ public class MathCommandCompiler {
          * Intervalls [x_1, x_2]
          */
         if (command.equals("solve")) {
-            if (params.length < 3) {
+            if (params.length < 1) {
                 throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'");
             }
             if (params.length > 4) {
                 throw new ExpressionException("Zu viele Parameter im Befehl 'solve'");
             }
-
             if (!params[0].contains("=")) {
                 throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
                         + "wobei f und g Funktionen und x eine gültiger Veränderliche sind.");
             }
+
             HashSet vars = new HashSet();
             try {
                 Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
@@ -875,118 +875,97 @@ public class MathCommandCompiler {
 
             Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
             Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            if (vars.size() > 1) {
-                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
-            }
 
-            HashSet vars_in_limit = new HashSet();
-            try {
-                Expression expr = Expression.build(params[1], vars_in_limit);
-                if (!vars_in_limit.isEmpty()) {
+            if (params.length == 1 || params.length == 2) {
+
+                if (vars.size() > 1 && params.length == 1) {
+                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben "
+                            + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
+                }
+
+                if (params.length == 2) {
+                    if (!Expression.isValidVariable(params[1])) {
+                        throw new ExpressionException("Der zweite Parameter im Befehl 'solveexact' muss eine gültige Veränderliche sein.");
+                    }
+                }
+
+                if (params.length == 1) {
+                    command_params = new Object[2];
+                    command_params[0] = expr_1;
+                    command_params[1] = expr_2;
+                } else {
+                    command_params = new Object[3];
+                    command_params[0] = expr_1;
+                    command_params[1] = expr_2;
+                    command_params[2] = params[1];
+                }
+
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
+
+            } else {
+
+                if (vars.size() > 1) {
+                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
+                }
+
+                HashSet vars_in_limit = new HashSet();
+                try {
+                    Expression expr = Expression.build(params[1], vars_in_limit);
+                    if (!vars_in_limit.isEmpty()) {
+                        throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                    }
+                    expr.evaluate();
+                } catch (ExpressionException | EvaluationException e) {
                     throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                 }
-                expr.evaluate();
-            } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
-            }
 
-            try {
-                Expression expr = Expression.build(params[2], vars_in_limit);
-                if (!vars_in_limit.isEmpty()) {
+                try {
+                    Expression expr = Expression.build(params[2], vars_in_limit);
+                    if (!vars_in_limit.isEmpty()) {
+                        throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                    }
+                    expr.evaluate();
+                } catch (ExpressionException | EvaluationException e) {
                     throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                 }
-                expr.evaluate();
-            } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
-            }
 
-            if (params.length == 4) {
-                try {
-                    Integer.parseInt(params[3]);
-                } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                if (params.length == 4) {
+                    try {
+                        Integer.parseInt(params[3]);
+                    } catch (NumberFormatException e) {
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                    }
                 }
-            }
 
-            Expression x_1 = Expression.build(params[1], vars);
-            Expression x_2 = Expression.build(params[2], vars);
+                Expression x_1 = Expression.build(params[1], vars);
+                Expression x_2 = Expression.build(params[2], vars);
 
-            if (params.length == 3) {
-                command_params = new Object[4];
-                command_params[0] = expr_1;
-                command_params[1] = expr_2;
-                command_params[2] = x_1;
-                command_params[3] = x_2;
-            } else {
-                int n = Integer.parseInt(params[3]);
-                if (n < 1) {
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                if (params.length == 3) {
+                    command_params = new Object[4];
+                    command_params[0] = expr_1;
+                    command_params[1] = expr_2;
+                    command_params[2] = x_1;
+                    command_params[3] = x_2;
+                } else {
+                    int n = Integer.parseInt(params[3]);
+                    if (n < 1) {
+                        throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                    }
+                    command_params = new Object[5];
+                    command_params[0] = expr_1;
+                    command_params[1] = expr_2;
+                    command_params[2] = x_1;
+                    command_params[3] = x_2;
+                    command_params[4] = n;
                 }
-                command_params = new Object[5];
-                command_params[0] = expr_1;
-                command_params[1] = expr_2;
-                command_params[2] = x_1;
-                command_params[3] = x_2;
-                command_params[4] = n;
-            }
 
-            result.setName(command);
-            result.setParams(command_params);
-            return result;
-        }
+                result.setName(command);
+                result.setParams(command_params);
+                return result;
 
-        //SOLVEEXACT
-        /**
-         * Struktur: solveexact(expr_1 = expr_2).
-         */
-        if (command.equals("solveexact")) {
-            if (params.length < 1) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solveexact'");
             }
-            if (params.length > 2) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'solveexact'");
-            }
-
-            if (!params[0].contains("=")) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solveexact' muss von der Form 'f(x) = g(x)' sein, "
-                        + "wobei f und g Funktionen und x eine gültiger Veränderliche sind.");
-            }
-            HashSet vars = new HashSet();
-            try {
-                Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solveexact' muss zwei gültige Ausdrücke enthalten, "
-                        + "welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
-            }
-
-            Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-            Expression expr_2 = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            if (vars.size() > 1 && params.length == 1) {
-                throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben "
-                        + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
-            }
-
-            if (params.length == 2) {
-                if (!Expression.isValidVariable(params[1])) {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solveexact' muss eine gültige Veränderliche sein.");
-                }
-            }
-
-            if (params.length == 1) {
-                command_params = new Object[2];
-                command_params[0] = expr_1;
-                command_params[1] = expr_2;
-            } else {
-                command_params = new Object[3];
-                command_params[0] = expr_1;
-                command_params[1] = expr_2;
-                command_params[2] = params[1];
-            }
-
-            result.setName(command);
-            result.setParams(command_params);
-            return result;
         }
 
         //SOLVEDEQ
@@ -1376,8 +1355,6 @@ public class MathCommandCompiler {
             executePlotPolar2D(c, graphicMethodsPolar2D);
         } else if (c.getName().equals("solve")) {
             executeSolve(c, area, graphicMethods2D);
-        } else if (c.getName().equals("solveexact")) {
-            executeSolveExact(c, area);
         } else if (c.getName().equals("solvedeq")) {
             executeSolveDGL(c, area, graphicMethods2D);
         } else if (c.getName().equals("tangent")) {
@@ -1866,35 +1843,152 @@ public class MathCommandCompiler {
         HashSet vars = new HashSet();
         Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
         Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
-        Expression expr = expr_1.sub(expr_2).simplify();
-        expr.getContainedVars(vars);
-        //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
-        String var = "x";
-        if (!vars.isEmpty()) {
-            Iterator iter = vars.iterator();
-            var = (String) iter.next();
-        }
 
-        Expression x_0 = (Expression) c.getParams()[2];
-        Expression x_1 = (Expression) c.getParams()[3];
-        /**
-         * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll das
-         * Intervall in 1000000 Teile unterteilt werden.
-         */
-        int n = 1000000;
+        if (c.getParams().length <= 3) {
 
-        if (c.getParams().length == 5) {
-            n = (int) c.getParams()[4];
-        }
+            expr_1.getContainedVars(vars);
+            expr_2.getContainedVars(vars);
 
-        if (expr instanceof Constant) {
-            output = new String[2];
+            //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+            String var;
+            if (c.getParams().length == 3) {
+                var = (String) c.getParams()[2];
+            } else {
+                var = "x";
+                if (!vars.isEmpty()) {
+                    Iterator iter = vars.iterator();
+                    var = (String) iter.next();
+                }
+            }
+
+            HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
+
+            /**
+             * Falls keine Lösungen ermittelt werden konnten, User informieren.
+             */
+            if (zeros.isEmpty()) {
+                output = new String[1];
+                output[0] = "Es konnten keine exakten Lösungen ermittelt werden. \n \n";
+                return;
+            }
+
+            /**
+             * Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+             * ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+             */
+            boolean contains_free_parameter = false;
+            String message_about_free_parameters = "";
+            for (int i = 0; i < zeros.size(); i++) {
+                contains_free_parameter = contains_free_parameter || zeros.get(i).contains("K_1");
+            }
+            if (contains_free_parameter) {
+                boolean contains_free_parameter_of_given_index = true;
+                int max_index = 1;
+                while (contains_free_parameter_of_given_index) {
+                    max_index++;
+                    contains_free_parameter_of_given_index = false;
+                    for (int i = 0; i < zeros.size(); i++) {
+                        contains_free_parameter_of_given_index = contains_free_parameter_of_given_index
+                                || zeros.get(i).contains("K_" + max_index);
+                    }
+                }
+                max_index--;
+
+                message_about_free_parameters = "K_1, ";
+                for (int i = 2; i <= max_index; i++) {
+                    message_about_free_parameters = message_about_free_parameters + "K_" + i + ", ";
+                }
+                message_about_free_parameters = message_about_free_parameters.substring(0, message_about_free_parameters.length() - 2);
+                if (max_index == 1) {
+                    message_about_free_parameters = message_about_free_parameters + " ist eine beliebige ganze Zahl. \n \n";
+                } else {
+                    message_about_free_parameters = message_about_free_parameters + " sind beliebige ganze Zahlen. \n \n";
+                }
+
+            }
+
+            if (contains_free_parameter) {
+                output = new String[zeros.size() + 2];
+                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                for (int i = 0; i < zeros.size(); i++) {
+                    output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
+                }
+                output[output.length - 1] = message_about_free_parameters;
+            } else {
+                output = new String[zeros.size() + 1];
+                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                for (int i = 0; i < zeros.size(); i++) {
+                    output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
+                }
+            }
+
+        } else {
+
+            Expression expr = expr_1.sub(expr_2).simplify();
+            expr.getContainedVars(vars);
+            //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+            String var = "x";
+            if (!vars.isEmpty()) {
+                Iterator iter = vars.iterator();
+                var = (String) iter.next();
+            }
+
+            Expression x_0 = (Expression) c.getParams()[2];
+            Expression x_1 = (Expression) c.getParams()[3];
+            /**
+             * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
+             * das Intervall in 1000000 Teile unterteilt werden.
+             */
+            int n = 1000000;
+
+            if (c.getParams().length == 5) {
+                n = (int) c.getParams()[4];
+            }
+
+            if (expr instanceof Constant) {
+                output = new String[2];
+                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
+                    output[1] = "Alle reellen Zahlen. \n \n";
+                } else {
+                    output[1] = "Die gegebene Gleichung besitzt keine Lösungen. \n \n";
+                }
+
+                graphicMethods2D.setIsInitialized(true);
+                graphicMethods2D.setGraphIsExplicit(true);
+                graphicMethods2D.setGraphIsFixed(false);
+                graphicMethods2D.clearExpressionAndGraph();
+                graphicMethods2D.addExpression(expr_1);
+                graphicMethods2D.addExpression(expr_2);
+                graphicMethods2D.setVar(var);
+                graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
+                graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
+                graphicMethods2D.setDrawSpecialPoints(false);
+                graphicMethods2D.drawGraph2D();
+                return;
+
+            }
+
+            HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
+
+            output = new String[zeros.size() + 1];
             output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                     + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
-            if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
-                output[1] = "Alle reellen Zahlen. \n \n";
-            } else {
-                output[1] = "Die gegebene Gleichung besitzt keine Lösungen. \n \n";
+            for (int i = 0; i < zeros.size(); i++) {
+                output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n";
+            }
+
+            /**
+             * Nullstellen als Array (zum Markieren).
+             */
+            double[][] zeros_as_array = new double[zeros.size()][2];
+            for (int i = 0; i < zeros_as_array.length; i++) {
+                zeros_as_array[i][0] = zeros.get(i);
+                Variable.setValue(var, zeros_as_array[i][0]);
+                zeros_as_array[i][1] = expr_1.evaluate();
             }
 
             graphicMethods2D.setIsInitialized(true);
@@ -1906,43 +2000,11 @@ public class MathCommandCompiler {
             graphicMethods2D.setVar(var);
             graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
             graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-            graphicMethods2D.setDrawSpecialPoints(false);
+            graphicMethods2D.setDrawSpecialPoints(true);
+            graphicMethods2D.setSpecialPoints(zeros_as_array);
             graphicMethods2D.drawGraph2D();
-            return;
 
         }
-
-        HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
-
-        output = new String[zeros.size() + 1];
-        output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
-        for (int i = 0; i < zeros.size(); i++) {
-            output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n";
-        }
-
-        /**
-         * Nullstellen als Array (zum Markieren).
-         */
-        double[][] zeros_as_array = new double[zeros.size()][2];
-        for (int i = 0; i < zeros_as_array.length; i++) {
-            zeros_as_array[i][0] = zeros.get(i);
-            Variable.setValue(var, zeros_as_array[i][0]);
-            zeros_as_array[i][1] = expr_1.evaluate();
-        }
-
-        graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setGraphIsExplicit(true);
-        graphicMethods2D.setGraphIsFixed(false);
-        graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr_1);
-        graphicMethods2D.addExpression(expr_2);
-        graphicMethods2D.setVar(var);
-        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
-        graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-        graphicMethods2D.setDrawSpecialPoints(true);
-        graphicMethods2D.setSpecialPoints(zeros_as_array);
-        graphicMethods2D.drawGraph2D();
 
     }
 
