@@ -1939,9 +1939,9 @@ public class MathCommandCompiler {
             Expression x_1 = (Expression) c.getParams()[3];
             /**
              * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
-             * das Intervall in 1000000 Teile unterteilt werden.
+             * das Intervall in 10000 Teile unterteilt werden.
              */
-            int n = 1000000;
+            int n = 10000;
 
             if (c.getParams().length == 5) {
                 n = (int) c.getParams()[4];
@@ -1951,7 +1951,7 @@ public class MathCommandCompiler {
                 output = new String[2];
                 output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                         + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
-                if (((Constant) expr).getPreciseValue().compareTo(BigDecimal.ZERO) == 0) {
+                if (expr.equals(Expression.ZERO)) {
                     output[1] = "Alle reellen Zahlen. \n \n";
                 } else {
                     output[1] = "Die gegebene Gleichung besitzt keine Lösungen. \n \n";
@@ -1974,11 +1974,15 @@ public class MathCommandCompiler {
 
             HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
 
-            output = new String[zeros.size() + 1];
+            output = new String[Math.max(zeros.size() + 1, 2)];
             output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
                     + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
             for (int i = 0; i < zeros.size(); i++) {
                 output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n";
+            }
+
+            if (zeros.isEmpty()) {
+                output[1] = "Es konnten keine Lösungen ermittelt werden. \n \n";
             }
 
             /**
