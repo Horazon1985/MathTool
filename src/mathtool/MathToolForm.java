@@ -74,7 +74,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         this.setLayout(null);
         this.startRotate = false;
         computingDialog = new ComputingDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -176,7 +176,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPane.getHeight() + 20, 220, 30);
 
                 computingDialog = new ComputingDialogGUI(getX(), getY(), getWidth(), getHeight());
-                
+
                 if (!typeGraphic.equals(typeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
@@ -299,7 +299,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("int(x*exp(x),x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -489,10 +488,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     String[] com = Expression.getOperatorAndArguments(command);
                     String[] params = Expression.getArguments(com[1]);
 
-                    for (int i = 0; i < MathCommandCompiler.commands.length; i++) {
-                        if (com[0].equals(MathCommandCompiler.commands[i])) {
-                            valid_command = true;
-                        }
+                    for (String c : MathCommandCompiler.commands) {
+                        valid_command = valid_command || com[0].equals(c);
                     }
                     if (valid_command) {
 
@@ -566,11 +563,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         };
         computing = true;
         computingTimer = new Timer();
-        
+
         final ImageIcon computingOwlEyesOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
         final ImageIcon computingOwlEyesHalfOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesHalfOpen.png"));
         final ImageIcon computingOwlEyesClosed = new ImageIcon(getClass().getResource("icons/LogoOwlEyesClosed.png"));
-        
+
         TimerTask start = new TimerTask() {
             @Override
             public void run() {
@@ -631,7 +628,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 computingDialog.changeIcon(computingOwlEyesOpen);
             }
         };
-        
+
         computingTimer.schedule(start, 1000);
         computingTimer.schedule(openEyes, 0, 2000);
         computingTimer.schedule(halfOpenEyes, 100, 2000);
@@ -739,7 +736,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             return 1;
         }
         if (s.equals("int")) {
-            return 2;
+            return 1;
         }
         if (s.equals("laplace")) {
             return 0;
@@ -759,7 +756,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         if (s.equals("taylor")) {
             return 3;
         }
-        
+
         if (s.equals("approx")) {
             return 0;
         }
@@ -824,10 +821,10 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
-            
+
             String inserted_operator = (String) operatorChoice.getSelectedItem() + "(";
             int number_of_commata = getNumberOfComma((String) operatorChoice.getSelectedItem());
-            for (int i = 0; i < number_of_commata; i++){
+            for (int i = 0; i < number_of_commata; i++) {
                 inserted_operator = inserted_operator + ",";
             }
             inserted_operator = inserted_operator + ")";
@@ -836,17 +833,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             operatorChoice.setSelectedIndex(0);
             inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
-            
+
         }
         inputField.requestFocus();
     }//GEN-LAST:event_operatorChoiceActionPerformed
 
     private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
         if (commandChoice.getSelectedIndex() > 0) {
-            
+
             String inserted_command = (String) commandChoice.getSelectedItem() + "(";
             int number_of_commata = getNumberOfComma((String) commandChoice.getSelectedItem());
-            for (int i = 0; i < number_of_commata; i++){
+            for (int i = 0; i < number_of_commata; i++) {
                 inserted_command = inserted_command + ",";
             }
             inserted_command = inserted_command + ")";
