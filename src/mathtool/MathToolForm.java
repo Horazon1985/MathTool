@@ -299,7 +299,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("int(x^3*exp(x^2),x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -725,7 +724,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private int getNumberOfComma(String s) {
 
         if (s.equals("diff")) {
-            return 2;
+            return 1;
         }
         if (s.equals("div")) {
             return 0;
