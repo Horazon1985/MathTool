@@ -119,7 +119,7 @@ public class MathCommandCompiler {
 
             command_params = new Object[1];
             command_params[0] = Expression.build(params[0], new HashSet());
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.APPROX);
             result.setParams(command_params);
             return result;
 
@@ -139,7 +139,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.CLEAR);
             result.setParams(command_params);
             return result;
 
@@ -186,7 +186,7 @@ public class MathCommandCompiler {
                 command_params = new Object[2];
                 command_params[0] = Variable.create(function_name_and_params);
                 command_params[1] = preciseExpression;
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.DEF);
                 result.setParams(command_params);
                 return result;
             }
@@ -316,7 +316,7 @@ public class MathCommandCompiler {
              * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
              * Expression).
              */
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.DEF);
             result.setParams(command_params);
             return result;
 
@@ -336,7 +336,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.DEFFUNCS);
             result.setParams(command_params);
             return result;
 
@@ -356,7 +356,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.DEFVARS);
             result.setParams(command_params);
             return result;
 
@@ -376,7 +376,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.EULER);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -420,7 +420,7 @@ public class MathCommandCompiler {
                 } else {
                     exprs[n] = Expression.build(expressions, vars);
                 }
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.LATEX);
                 result.setParams(exprs);
                 return result;
             } catch (ExpressionException e) {
@@ -443,7 +443,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.PI);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -517,7 +517,7 @@ public class MathCommandCompiler {
                 }
                 command_params[params.length - 2] = x_0;
                 command_params[params.length - 1] = x_1;
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.PLOT2D);
                 result.setParams(command_params);
                 return result;
 
@@ -600,7 +600,7 @@ public class MathCommandCompiler {
                     command_params[3] = x_1;
                     command_params[4] = y_0;
                     command_params[5] = y_1;
-                    result.setName(command);
+                    result.setTypeCommand(TypeCommand.PLOT2D);
                     result.setParams(command_params);
                     return result;
 
@@ -691,7 +691,7 @@ public class MathCommandCompiler {
             command_params[2] = x_1;
             command_params[3] = y_0;
             command_params[4] = y_1;
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.PLOT3D);
             result.setParams(command_params);
             return result;
 
@@ -772,7 +772,7 @@ public class MathCommandCompiler {
                 command_params[4] = Expression.build(params[2], vars);
             }
 
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.PLOTCURVE);
             result.setParams(command_params);
             return result;
         }
@@ -840,7 +840,7 @@ public class MathCommandCompiler {
             }
             command_params[params.length - 2] = x_0;
             command_params[params.length - 1] = x_1;
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.PLOTPOLAR);
             result.setParams(command_params);
             return result;
         }
@@ -900,7 +900,7 @@ public class MathCommandCompiler {
                     command_params[2] = params[1];
                 }
 
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.SOLVE);
                 result.setParams(command_params);
                 return result;
 
@@ -961,7 +961,7 @@ public class MathCommandCompiler {
                     command_params[4] = n;
                 }
 
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.SOLVE);
                 result.setParams(command_params);
                 return result;
 
@@ -1067,7 +1067,7 @@ public class MathCommandCompiler {
                     command_params[i] = Expression.build(params[i], vars);
                 }
 
-                result.setName(command);
+                result.setTypeCommand(TypeCommand.SOLVEDEQ);
                 result.setParams(command_params);
                 return result;
 
@@ -1135,7 +1135,7 @@ public class MathCommandCompiler {
             command_params[0] = expr;
             command_params[1] = vars_contained_in_params;
 
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.TANGENT);
             result.setParams(command_params);
             return result;
         }
@@ -1244,7 +1244,7 @@ public class MathCommandCompiler {
             }
             command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
 
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.TAYLORDEQ);
             result.setParams(command_params);
             return result;
         }
@@ -1268,7 +1268,7 @@ public class MathCommandCompiler {
                 command_params[i] = Variable.create(params[i]);
             }
 
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.UNDEF);
             result.setParams(command_params);
             return result;
         }
@@ -1286,7 +1286,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setName(command);
+            result.setTypeCommand(TypeCommand.UNDEFALL);
             result.setParams(command_params);
             return result;
 
@@ -1323,47 +1323,47 @@ public class MathCommandCompiler {
 
         Command c = getCommand(command, params);
 
-        if (c.getName().equals("approx")) {
+        if (c.getTypeCommand().equals(TypeCommand.APPROX)) {
             executeApprox(c, area, definedVars);
-        } else if (c.getName().equals("clear")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.CLEAR)) {
             executeClear(c, area);
-        } else if ((c.getName().equals("def")) && c.getParams().length >= 1) {
+        } else if ((c.getTypeCommand().equals(TypeCommand.DEF)) && c.getParams().length >= 1) {
             executeDefine(c, definedVars, definedVarsSet, definedFunctions);
-        } else if (c.getName().equals("deffuncs")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.DEFFUNCS)) {
             executeDefFuncs(c, area, definedFunctions);
-        } else if (c.getName().equals("defvars")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
             executeDefVars(c, area, definedVars);
-        } else if (c.getName().equals("euler")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.EULER)) {
             executeEuler(c, area);
-        } else if (c.getName().equals("latex")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.LATEX)) {
             executeLatex(c, area);
-        } else if (c.getName().equals("pi")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PI)) {
             executePi(c, area);
-        } else if (c.getName().equals("plot2d")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PLOT2D)) {
             if (params[0].contains("=")) {
                 executeImplicitPlot2D(c, graphicMethods2D);
             } else {
                 executePlot2D(c, graphicMethods2D);
             }
-        } else if (c.getName().equals("plot3d")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PLOT3D)) {
             executePlot3D(c, graphicMethods3D);
-        } else if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PLOTCURVE) && c.getParams().length == 4) {
             executePlotCurve2D(c, graphicMethodsCurves2D);
-        } else if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PLOTCURVE) && c.getParams().length == 5) {
             executePlotCurve3D(c, graphicMethodsCurves3D);
-        } else if (c.getName().equals("plotpolar")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.PLOTPOLAR)) {
             executePlotPolar2D(c, graphicMethodsPolar2D);
-        } else if (c.getName().equals("solve")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.SOLVE)) {
             executeSolve(c, area, graphicMethods2D);
-        } else if (c.getName().equals("solvedeq")) {
-            executeSolveDGL(c, area, graphicMethods2D);
-        } else if (c.getName().equals("tangent")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
+            executeSolveDEQ(c, area, graphicMethods2D);
+        } else if (c.getTypeCommand().equals(TypeCommand.TANGENT)) {
             executeTangent(c, area, graphicMethods2D);
-        } else if (c.getName().equals("taylordeq")) {
-            executeTaylorDGL(c, area);
-        } else if (c.getName().equals("undef")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
+            executeTaylorDEQ(c, area);
+        } else if (c.getTypeCommand().equals(TypeCommand.UNDEF)) {
             executeUndefine(c, area, definedVars, definedVarsSet);
-        } else if (c.getName().equals("undefall")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
             executeUndefineAll(c, area, definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
@@ -2097,7 +2097,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDGL(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
+    private static void executeSolveDEQ(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
@@ -2264,7 +2264,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTaylorDGL(Command c, JTextArea area) throws ExpressionException, EvaluationException {
+    private static void executeTaylorDEQ(Command c, JTextArea area) throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();

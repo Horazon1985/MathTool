@@ -1,20 +1,14 @@
 package mathtool;
 
-import javax.swing.JTextArea;
-import javax.swing.JOptionPane;
-import expressionbuilder.*;
-import java.util.HashSet;
-import java.util.Hashtable;
-
 public class Command {
 
-    private String name;
+    private TypeCommand typeCommand;
     private Object[] params;
     
     //Getter und Setter
     //Getter
-    public String getName(){
-        return this.name;
+    public TypeCommand getTypeCommand(){
+        return this.typeCommand;
     }
     
     public Object[] getParams(){
@@ -22,8 +16,8 @@ public class Command {
     }
     
     //Setter
-    public void setName(String name){
-        this.name = name;
+    public void setTypeCommand(TypeCommand typeCommand){
+        this.typeCommand = typeCommand;
     }
     
     public void setParams(Object[] params){
