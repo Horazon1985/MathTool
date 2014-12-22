@@ -9,6 +9,7 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
+import expressionbuilder.TypeSimplify;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -299,6 +300,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("(a+b)^2");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -865,7 +867,21 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * stoppen, falls diese aktiv ist.
                  */
                 stopPossibleRotation();
-                executeCommand();
+  
+                try{
+                    Expression expr = Expression.build(inputField.getText(), new HashSet());
+                    
+                    HashSet simplify = new HashSet();
+                    simplify.add(TypeSimplify.simplify_trivial);
+                    simplify.add(TypeSimplify.expand);
+                    simplify.add(TypeSimplify.collect_products);
+                    expr = expr.simplify(simplify);
+                    mathToolArea.append(expr.writeFormula(true) + "\n \n");
+                } catch (ExpressionException | EvaluationException e){
+                    mathToolArea.append("FEHLER!");
+                }
+                
+//                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:

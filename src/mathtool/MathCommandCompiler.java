@@ -2163,7 +2163,7 @@ public class MathCommandCompiler {
             }
         }
 
-        double[][] solution = NumericalMethods.solveDGL(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
+        double[][] solution = NumericalMethods.solveDEQ(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
 
         /**
          * Falls die Lösung innerhalb des Berechnungsbereichs
