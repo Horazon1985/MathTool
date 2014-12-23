@@ -300,7 +300,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("(a+b)^2");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -483,16 +482,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  */
                 try {
 
-                    /**
-                     * Falls es ein Grafikbefehl ist -> entsprechendes Panel
-                     * sichtbar machen und alle anderen unsichtbar.
-                     */
                     String[] com = Expression.getOperatorAndArguments(command);
                     String[] params = Expression.getArguments(com[1]);
 
                     for (String c : MathCommandCompiler.commands) {
                         valid_command = valid_command || com[0].equals(c);
                     }
+                    
                     if (valid_command) {
 
                         mathToolArea.append(command + "\n \n");
@@ -873,12 +869,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     
                     HashSet simplify = new HashSet();
                     simplify.add(TypeSimplify.simplify_trivial);
+                    simplify.add(TypeSimplify.sort_difference_and_division);
                     simplify.add(TypeSimplify.expand);
                     simplify.add(TypeSimplify.collect_products);
+                    simplify.add(TypeSimplify.factorize_rationals_in_sums);
+                    simplify.add(TypeSimplify.factorize_rationals_in_differences);
+                    simplify.add(TypeSimplify.order_sums_and_products);
                     expr = expr.simplify(simplify);
                     mathToolArea.append(expr.writeFormula(true) + "\n \n");
                 } catch (ExpressionException | EvaluationException e){
-                    mathToolArea.append("FEHLER!");
+                    mathToolArea.append("FEHLER! \n \n");
                 }
                 
 //                executeCommand();

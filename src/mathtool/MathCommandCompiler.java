@@ -16,6 +16,7 @@ import expressionbuilder.BinaryOperation;
 import ComputationalClasses.NumericalMethods;
 import SolveEquationsMethods.SolveMethods;
 import expressionbuilder.TypeBinary;
+import expressionbuilder.TypeSimplify;
 import java.math.BigDecimal;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class MathCommandCompiler {
      * Liste aller gültiger Befehle. Dies benötigt das Hauptprogramm
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
-    public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "latex",
+    public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "expand", "latex",
         "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "tangent", "taylordeq", "undef", "undefall"};
 
     /**
@@ -364,7 +365,7 @@ public class MathCommandCompiler {
 
         //EULER
         /**
-         * Struktur: euler(int) int: nichtnegative ganze Zahl; bestimmt die
+         * Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
          * Anzahl der Stellen, die von e ausgegeben werden sollen.
          */
         if (command.equals("euler")) {
@@ -381,6 +382,28 @@ public class MathCommandCompiler {
                 return result;
             } catch (NumberFormatException e) {
                 throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+            }
+
+        }
+
+        //EXPAND
+        /**
+         * Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
+         */
+        if (command.equals("expand")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException("Im Befehl 'expand' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.");
+            }
+
+            try {
+                command_params = new Object[1];
+                command_params[0] = Expression.build(params[0], new HashSet());
+                result.setTypeCommand(TypeCommand.EXPAND);
+                result.setParams(command_params);
+                return result;
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
             }
 
         }
@@ -431,7 +454,7 @@ public class MathCommandCompiler {
 
         //PI
         /**
-         * Struktur: pi(int) int: nichtnegative ganze Zahl; bestimmt die Anzahl
+         * Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
          * der Stellen, die von pi ausgegeben werden sollen.
          */
         if (command.equals("pi")) {
@@ -1324,21 +1347,23 @@ public class MathCommandCompiler {
         Command c = getCommand(command, params);
 
         if (c.getTypeCommand().equals(TypeCommand.APPROX)) {
-            executeApprox(c, area, definedVars);
+            executeApprox(c, definedVars);
         } else if (c.getTypeCommand().equals(TypeCommand.CLEAR)) {
             executeClear(c, area);
         } else if ((c.getTypeCommand().equals(TypeCommand.DEF)) && c.getParams().length >= 1) {
             executeDefine(c, definedVars, definedVarsSet, definedFunctions);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFFUNCS)) {
-            executeDefFuncs(c, area, definedFunctions);
+            executeDefFuncs(definedFunctions);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
-            executeDefVars(c, area, definedVars);
+            executeDefVars(definedVars);
         } else if (c.getTypeCommand().equals(TypeCommand.EULER)) {
-            executeEuler(c, area);
+            executeEuler(c);
+        } else if (c.getTypeCommand().equals(TypeCommand.EXPAND)) {
+            executeExpand(c);
         } else if (c.getTypeCommand().equals(TypeCommand.LATEX)) {
-            executeLatex(c, area);
+            executeLatex(c);
         } else if (c.getTypeCommand().equals(TypeCommand.PI)) {
-            executePi(c, area);
+            executePi(c);
         } else if (c.getTypeCommand().equals(TypeCommand.PLOT2D)) {
             if (params[0].contains("=")) {
                 executeImplicitPlot2D(c, graphicMethods2D);
@@ -1356,15 +1381,15 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVE)) {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
-            executeSolveDEQ(c, area, graphicMethods2D);
+            executeSolveDEQ(c, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.TANGENT)) {
-            executeTangent(c, area, graphicMethods2D);
+            executeTangent(c, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
-            executeTaylorDEQ(c, area);
+            executeTaylorDEQ(c);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEF)) {
-            executeUndefine(c, area, definedVars, definedVarsSet);
+            executeUndefine(c, definedVars, definedVarsSet);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
-            executeUndefineAll(c, area, definedVars, definedVarsSet);
+            executeUndefineAll(definedVars, definedVarsSet);
         } else {
             throw new ExpressionException("Ungültiger Befehl.");
         }
@@ -1384,7 +1409,7 @@ public class MathCommandCompiler {
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
-    private static void executeApprox(Command c, JTextArea area, HashMap<String, Expression> definedVars)
+    private static void executeApprox(Command c, HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -1483,7 +1508,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefFuncs(Command c, JTextArea area, HashMap<String, Expression> definedFunctions)
+    private static void executeDefFuncs(HashMap<String, Expression> definedFunctions)
             throws ExpressionException, EvaluationException {
 
         String function = "";
@@ -1515,7 +1540,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefVars(Command c, JTextArea area, HashMap<String, Expression> definedVars)
+    private static void executeDefVars(HashMap<String, Expression> definedVars)
             throws ExpressionException, EvaluationException {
 
         String result = "";
@@ -1530,13 +1555,38 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeEuler(Command c, JTextArea area) throws ExpressionException {
+    private static void executeEuler(Command c) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         output = new String[1];
         output[0] = "Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n \n";
     }
 
-    private static void executeLatex(Command c, JTextArea area) throws ExpressionException {
+    private static void executeExpand(Command c) throws ExpressionException, EvaluationException {
+        /**
+         * Es wird definiert, welche Arten von Vereinfachungen durchgeführt
+         * werden müssen.
+         */
+        HashSet simplify = new HashSet();
+        simplify.add(TypeSimplify.simplify_trivial);
+        simplify.add(TypeSimplify.sort_difference_and_division);
+        simplify.add(TypeSimplify.expand);
+        simplify.add(TypeSimplify.collect_products);
+        simplify.add(TypeSimplify.factorize_rationals_in_sums);
+        simplify.add(TypeSimplify.factorize_rationals_in_differences);
+        simplify.add(TypeSimplify.reduce_quotients);
+        simplify.add(TypeSimplify.reduce_leadings_coefficients);
+        simplify.add(TypeSimplify.simplify_algebraic_expressions);
+        simplify.add(TypeSimplify.simplify_powers);
+        simplify.add(TypeSimplify.simplify_functional_equations);
+        simplify.add(TypeSimplify.order_sums_and_products);
+        
+        Expression expr = (Expression) c.getParams()[0];
+        expr = expr.simplify(simplify);
+        output = new String[1];
+        output[0] = expr.writeFormula(true) + "\n \n";
+    }
+
+    private static void executeLatex(Command c) throws ExpressionException {
         output = new String[1];
         output[0] = "Latex-Code: ";
         for (int i = 0; i < c.getParams().length - 1; i++) {
@@ -1553,7 +1603,7 @@ public class MathCommandCompiler {
         }
     }
 
-    private static void executePi(Command c, JTextArea area) throws ExpressionException {
+    private static void executePi(Command c) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
         output = new String[1];
         output[0] = "Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n";
@@ -2097,7 +2147,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDEQ(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
+    private static void executeSolveDEQ(Command c, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
@@ -2217,7 +2267,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
+    private static void executeTangent(Command c, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -2231,8 +2281,9 @@ public class MathCommandCompiler {
         tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
-        area.append(tangent_announcement);
-        area.append("Y=" + tangent.writeFormula(true) + "\n \n");
+        output = new String[2];
+        output[0] = tangent_announcement;
+        output[1] = "Y=" + tangent.writeFormula(true) + "\n \n";
 
         if (vars.size() == 1) {
 
@@ -2264,7 +2315,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTaylorDEQ(Command c, JTextArea area) throws ExpressionException, EvaluationException {
+    private static void executeTaylorDEQ(Command c) throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();
@@ -2333,7 +2384,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeUndefine(Command c, JTextArea area, HashMap definedVars, HashSet definedVarsSet)
+    private static void executeUndefine(Command c, HashMap definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         /**
@@ -2359,7 +2410,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeUndefineAll(Command c, JTextArea area, HashMap definedVars, HashSet definedVarsSet)
+    private static void executeUndefineAll(HashMap definedVars, HashSet definedVarsSet)
             throws ExpressionException, EvaluationException {
 
         /**
