@@ -300,7 +300,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("int(x*exp(x)*sin(x),x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -864,25 +863,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * stoppen, falls diese aktiv ist.
                  */
                 stopPossibleRotation();
-  
-                try{
-                    Expression expr = Expression.build(inputField.getText(), new HashSet());
-                    
-                    HashSet simplify = new HashSet();
-                    simplify.add(TypeSimplify.simplify_trivial);
-                    simplify.add(TypeSimplify.sort_difference_and_division);
-                    simplify.add(TypeSimplify.expand);
-                    simplify.add(TypeSimplify.collect_products);
-                    simplify.add(TypeSimplify.factorize_rationals_in_sums);
-                    simplify.add(TypeSimplify.factorize_rationals_in_differences);
-                    simplify.add(TypeSimplify.order_sums_and_products);
-                    expr = expr.simplify(simplify);
-                    mathToolArea.append(expr.writeFormula(true) + "\n \n");
-                } catch (ExpressionException | EvaluationException e){
-                    mathToolArea.append("FEHLER! \n \n");
-                }
-                
-//                executeCommand();
+                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:
@@ -926,8 +907,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(typeGraphic.GRAPH2D)) {
-                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                LegendGUI legendGUI;
+                if (graphicMethods2D.getGraphIsExplicit()){
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        graphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                } else {
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
+                }
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.GRAPH3D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
