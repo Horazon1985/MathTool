@@ -1891,8 +1891,8 @@ public class MathCommandCompiler {
             throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
-        Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
+        Expression expr_1 = (Expression) c.getParams()[0];
+        Expression expr_2 = (Expression) c.getParams()[1];
 
         if (c.getParams().length <= 3) {
 
