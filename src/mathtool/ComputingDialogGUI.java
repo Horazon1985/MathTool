@@ -15,6 +15,7 @@ public class ComputingDialogGUI extends JDialog {
         setTitle("Info");
         setLayout(null);
         setResizable(false);
+        setModal(true);
 
         this.setBounds((with_mathtoolform - 400)/2 + x_mathtoolform, (heigth_mathtoolform - 100)/2 + y_mathtoolform, 400, 100);
         this.getContentPane().setBackground(Color.white);

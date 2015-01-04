@@ -1577,7 +1577,7 @@ public class MathCommandCompiler {
         simplify.add(TypeSimplify.reduce_leadings_coefficients);
         simplify.add(TypeSimplify.simplify_algebraic_expressions);
         simplify.add(TypeSimplify.simplify_powers);
-        simplify.add(TypeSimplify.simplify_functional_equations);
+        simplify.add(TypeSimplify.simplify_functional_relations);
         simplify.add(TypeSimplify.order_sums_and_products);
         
         Expression expr = (Expression) c.getParams()[0];
