@@ -28,6 +28,12 @@ MathTool kennt die folgenden Befehle:<br><br>
 
 Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Löst alle enthaltenen Klammern bei Multiplikationen auf (multipliziert alle Terme aus).<br><br>
+
+<em>Beispiel:</em> expand(x+(a+b)*(c+d+e)) liefert die Ausgabe
+
+<p style="text-align: center;">x+a*c+a*d+a*e+b*c+b*d+b*e</p><br>
+
 <strong>latex(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generiert den Latex-Code f&uuml;r den mathematischen Ausdruck F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
 <strong>pi(n):</strong> Gibt die ersten n Stellen der Kreiszahl Pi aus. Das Ergebnis wird <em>nicht</em> gerundet.<br><br>
