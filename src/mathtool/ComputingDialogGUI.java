@@ -19,11 +19,11 @@ public class ComputingDialogGUI extends JDialog {
         setLayout(null);
         setResizable(false);
 
-        this.setBounds((with_mathtoolform - 400) / 2 + x_mathtoolform, (heigth_mathtoolform - 100) / 2 + y_mathtoolform, 400, 100);
+        this.setBounds((with_mathtoolform - 550) / 2 + x_mathtoolform, (heigth_mathtoolform - 100) / 2 + y_mathtoolform, 550, 100);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel computingLabel = new JLabel("Berechnung wird ausgeführt...");
-        computingLabel.setBounds(70, 25, 300, 25);
+        JLabel computingLabel = new JLabel("Berechnung wird ausgeführt. Zum Abbrechen ESC-Taste drücken.");
+        computingLabel.setBounds(70, 25, 450, 25);
         add(computingLabel);
 
         JPanel owlPanel = new JPanel();
