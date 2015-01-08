@@ -73,7 +73,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         initComponents();
         this.setLayout(null);
         this.startRotate = false;
-        computingDialog = new ComputingDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+//        computingDialog = new ComputingDialogGUI(computingSwingWorker, this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -175,7 +175,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 legendLabel.setBounds(graphicMethods3D.getX(), scrollPane.getHeight() + 25, 100, 25);
                 rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPane.getHeight() + 20, 220, 30);
 
-                computingDialog = new ComputingDialogGUI(getX(), getY(), getWidth(), getHeight());
+                if (computingDialog != null) {
+                    computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
+                }
 
                 if (!typeGraphic.equals(typeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
@@ -430,6 +432,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private void executeCommand() {
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
+        final MathToolForm mtf = this;
         computingSwingWorker = new SwingWorker<Void, Void>() {
             @Override
             protected void done() {
@@ -447,6 +450,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
             @Override
             protected Void doInBackground() throws Exception {
+
+                computingDialog = new ComputingDialogGUI(computingSwingWorker, mtf.getX(), mtf.getY(), mtf.getWidth(), mtf.getHeight());
+
                 boolean valid_command = false;
 
                 /**
@@ -487,7 +493,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     for (String c : MathCommandCompiler.commands) {
                         valid_command = valid_command || com[0].equals(c);
                     }
-                    
+
                     if (valid_command) {
 
                         mathToolArea.append(command + "\n \n");
@@ -568,61 +574,81 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         TimerTask start = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.setVisible(true);
+                if (computingDialog != null) {
+                    computingDialog.setVisible(true);
+                }
             }
         };
         TimerTask openEyes = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
             }
         };
         TimerTask halfOpenEyes = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
             }
         };
         TimerTask closedEyes = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesClosed);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesClosed);
+                }
             }
         };
         TimerTask halfOpenEyesAgain = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
             }
         };
         TimerTask openEyesAgain = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
             }
         };
         TimerTask halfOpenEyes2 = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
             }
         };
         TimerTask closedEyes2 = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesClosed);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesClosed);
+                }
             }
         };
         TimerTask halfOpenEyesAgain2 = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
             }
         };
         TimerTask openEyesAgain2 = new TimerTask() {
             @Override
             public void run() {
-                computingDialog.changeIcon(computingOwlEyesOpen);
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
             }
         };
 
@@ -907,12 +933,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(typeGraphic.GRAPH2D)) {
                 LegendGUI legendGUI;
-                if (graphicMethods2D.getGraphIsExplicit()){
+                if (graphicMethods2D.getGraphIsExplicit()) {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        graphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
                 } else {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
+                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
                 }
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(typeGraphic.GRAPH3D)) {
