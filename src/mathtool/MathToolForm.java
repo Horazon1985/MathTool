@@ -10,6 +10,8 @@ import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
 
+import LogicalExpressionBuilder.LogicalExpression;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -535,9 +537,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * Nun wird geprüft, ob es sich bei s um einen gültigen Ausdruck
                  * handelt. Ja -> vereinfachen und ausgeben.
                  */
+                /**
+                 * input_is_arithmetic_expression besagt, ob die Eingabe ein
+                 * gültiger arithmetischer Ausdruck ist (welcher aber vielleicht
+                 * Vereinfachungsprobleme etc. bereitet). Falls nicht, so wird
+                 * weiter geprüft, ob die Eingabe ein logischer Ausdruck ist.
+                 */
+                boolean input_is_arithmetic_expression = false;
                 try {
 
                     Expression expr = Expression.build(command, new HashSet());
+                    input_is_arithmetic_expression = true;
 
                     /**
                      * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -549,18 +559,36 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                         expr_simplified = expr_simplified.simplify();
                         mathToolArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
                         inputField.setText("");
+                        return null;
                     } catch (EvaluationException e) {
-                        mathToolArea.append(expr.writeFormula(true) + "\n \n");
-                        if (e.getMessage().equals("Berechnung abgebrochen.")) {
-                            mathToolArea.append(e.getMessage() + "\n \n");
-                        } else {
-                            mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                        if (input_is_arithmetic_expression) {
+                            mathToolArea.append(expr.writeFormula(true) + "\n \n");
+                            if (e.getMessage().equals("Berechnung abgebrochen.")) {
+                                mathToolArea.append(e.getMessage() + "\n \n");
+                            } else {
+                                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                            }
+                            return null;
                         }
                     }
 
                 } catch (ExpressionException e) {
+//                    mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                }
+
+                /**
+                 * Nun wird geprüft, ob es sich bei s um einen gültigen
+                 * logischen Ausdruck handelt. Ja -> vereinfachen und ausgeben.
+                 */
+                try {
+
+                    LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
+                    inputField.setText("");
+
+                } catch (ExpressionException e) {
                     mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 }
+
                 return null;
             }
         };
