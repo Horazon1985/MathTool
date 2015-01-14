@@ -583,6 +583,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 try {
 
                     LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
+                    LogicalExpression log_expr_simplified = log_expr.simplify();
+                    mathToolArea.append(log_expr.writeFormula() + " ist äquivalent zu " + log_expr_simplified.writeFormula() + "\n \n");
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
