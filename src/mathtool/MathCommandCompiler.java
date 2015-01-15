@@ -17,6 +17,9 @@ import ComputationalClasses.NumericalMethods;
 import SolveEquationsMethods.SolveMethods;
 import expressionbuilder.TypeBinary;
 import expressionbuilder.TypeSimplify;
+import LogicalExpressionBuilder.LogicalExpression;
+import LogicalExpressionBuilder.LogicalVariable;
+import java.math.BigInteger;
 import java.math.BigDecimal;
 
 import javax.swing.*;
@@ -34,7 +37,7 @@ public class MathCommandCompiler {
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
     public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "expand", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "tangent", "taylordeq", "undef", "undefall"};
+        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall"};
 
     /**
      * Hier werden zusätzliche Hinweise/Meldungen/Warnungen etc. gespeichert,
@@ -1093,8 +1096,37 @@ public class MathCommandCompiler {
                 result.setTypeCommand(TypeCommand.SOLVEDEQ);
                 result.setParams(command_params);
                 return result;
-
             }
+        }
+
+        //TABLE
+        /**
+         * Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer
+         * Ausdruck.
+         */
+        if (command.equals("table")) {
+            if (params.length == 0) {
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein logischer Ausdruck sein.");
+            }
+            if (params.length > 1) {
+                throw new ExpressionException("Zu viele Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein logischer Ausdruck sein.");
+            }
+
+            HashSet vars = new HashSet();
+            LogicalExpression log_expr;
+
+            try {
+                log_expr = LogicalExpression.build(params[0], vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+            }
+
+            command_params = new Object[1];
+            command_params[0] = log_expr;
+
+            result.setTypeCommand(TypeCommand.TABLE);
+            result.setParams(command_params);
+            return result;
         }
 
         //TANGENT
@@ -1382,6 +1414,8 @@ public class MathCommandCompiler {
             executeSolve(c, area, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
             executeSolveDEQ(c, graphicMethods2D);
+        } else if (c.getTypeCommand().equals(TypeCommand.TABLE)) {
+            executeTable(c);
         } else if (c.getTypeCommand().equals(TypeCommand.TANGENT)) {
             executeTangent(c, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
@@ -1579,7 +1613,7 @@ public class MathCommandCompiler {
         simplify.add(TypeSimplify.simplify_powers);
         simplify.add(TypeSimplify.simplify_functional_relations);
         simplify.add(TypeSimplify.order_sums_and_products);
-        
+
         Expression expr = (Expression) c.getParams()[0];
         expr = expr.simplify(simplify);
         output = new String[1];
@@ -2267,6 +2301,83 @@ public class MathCommandCompiler {
 
     }
 
+    private static void executeTable(Command c) throws EvaluationException {
+
+        LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
+        HashSet vars = new HashSet();
+        log_expr.getContainedVars(vars);
+        int n = vars.size();
+        if (n > 20) {
+            throw new EvaluationException("Der logische Ausdruck " + log_expr.writeFormula() + " enthält mehr als 20 Veränderliche. Die Wertetabelle"
+                    + " ist damit zu groß für die Ausgabe.");
+        }
+
+        String table_announcement = "Wertetabelle für den logischen Ausdruck " + log_expr.writeFormula() + ": \n \n";
+
+        /**
+         * Für die Geschwindigkeit der Tabellenberechnung: log_expr
+         * vereinfachen.
+         */
+        log_expr = log_expr.simplify();
+        
+        /**
+         * Nummerierung der logischen Variablen.
+         */
+        HashMap<Integer, String> vars_enumerated = new HashMap<>();
+
+        Iterator iter = vars.iterator();
+        for (int i = 0; i < vars.size(); i++) {
+            vars_enumerated.put(vars_enumerated.size(), (String) iter.next());
+        }
+
+        int table_length = BigInteger.valueOf(2).pow(n).intValue();
+        output = new String[2 + table_length];
+        output[0] = table_announcement;
+        output[1] = "Reihenfolge der logischen Veränderlichen in den Tupeln: ";
+        for (int i = 0; i < vars_enumerated.size(); i++) {
+            output[1] = output[1] + vars_enumerated.get(i) + ", ";
+        }
+        output[1] = output[1].substring(0, output[1].length() - 2) + " \n \n";
+
+        /**
+         * Erstellung eines Binärcounters zum Durchlaufen aller möglichen
+         * Belegungen der Variablen in vars.
+         */
+        boolean[] vars_values = new boolean[vars.size()];
+        boolean current_value;
+
+        for (int i = 0; i < table_length; i++) {
+
+            output[2 + i] = "(";
+            for (int j = 0; j < vars.size(); j++) {
+                if (vars_values[j]) {
+                    output[2 + i] = output[2 + i] + "1, ";
+                } else {
+                    output[2 + i] = output[2 + i] + "0, ";
+                }
+                LogicalVariable.setValue(vars_enumerated.get(j), vars_values[j]);
+            }
+            output[2 + i] = output[2 + i].substring(0, output[2 + i].length() - 2) + "): ";
+
+            current_value = log_expr.evaluate();
+            if (current_value) {
+                output[2 + i] = output[2 + i] + "1 \n";
+            } else {
+                output[2 + i] = output[2 + i] + "0 \n";
+            }
+            vars_values = binaryCounter(vars_values);
+
+            /**
+             * Am Ende der Tabelle: Leerzeile lassen.
+             */
+            if (i == table_length - 1){
+                output[table_length + 1] = output[table_length + 1] + "\n";
+            }
+            
+        }
+
+    }
+
     private static void executeTangent(Command c, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
@@ -2420,6 +2531,21 @@ public class MathCommandCompiler {
         definedVars.clear();
         output = new String[1];
         output[0] = "Alle Veränderlichen sind wieder Unbestimmte. \n \n";
+
+    }
+
+    private static boolean[] binaryCounter(boolean[] counter) {
+
+        boolean[] result = counter;
+        for (int i = 0; i < counter.length; i++) {
+            if (counter[i]) {
+                counter[i] = false;
+            } else {
+                counter[i] = true;
+                break;
+            }
+        }
+        return result;
 
     }
 
