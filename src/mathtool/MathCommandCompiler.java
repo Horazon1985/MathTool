@@ -80,12 +80,27 @@ public class MathCommandCompiler {
                 return false;
             }
         }
-        /**
-         * Prüfen, ob name nicht + - * / oder ^ enthält.
-         */
-        if (name.contains("+") || name.contains("-") || name.contains("*")
-                || name.contains("/") || name.contains("^") || name.contains("!")) {
-            return false;
+
+        return true;
+
+    }
+
+    /**
+     * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
+     * benötigt. Sie prüft nach, ob der Funktionsname Sonderzeichen enthält
+     * (also Zeichen außer Buchstaben und Ziffern).
+     */
+    private static boolean checkForSpecialCharacters(String name) {
+
+        int ascii_value_of_letter;
+
+        for (int i = 0; i < name.length(); i++) {
+
+            ascii_value_of_letter = (int) name.charAt(i);
+            if (!(ascii_value_of_letter >= 48 && ascii_value_of_letter < 57) && !(ascii_value_of_letter >= 97 && ascii_value_of_letter < 122)) {
+                return false;
+            }
+
         }
 
         return true;
@@ -282,6 +297,13 @@ public class MathCommandCompiler {
             if (!checkForbiddenNames(function_name)) {
                 throw new ExpressionException("Der Funktionsname '" + function_name + "' ist der Name einer geschützten Funktion, eines geschützten Operators "
                         + "oder eines geschützten Befehls. Bitte wählen Sie einen anderen Namen.");
+            }
+
+            /**
+             * Prüfen, ob keine Sonderzeichen vorkommen.
+             */
+            if (!checkForSpecialCharacters(function_name)) {
+                throw new ExpressionException("Der Funktionsname '" + function_name + "' enthält Sonderzeichen. Bitte wählen Sie einen anderen Namen, welcher nur aus Buchstaben und Ziffern besteht.");
             }
 
             /**
@@ -2315,11 +2337,26 @@ public class MathCommandCompiler {
         String table_announcement = "Wertetabelle für den logischen Ausdruck " + log_expr.writeFormula() + ": \n \n";
 
         /**
+         * Falls es sich um einen konstanten Ausdruck handelt.
+         */
+        if (n == 0) {
+            output = new String[2];
+            output[0] = table_announcement;
+            boolean value = log_expr.evaluate();
+            if (value) {
+                output[1] = "Der logische Ausdruck " + log_expr.writeFormula() + " enthält keine logischen Veränderlichen und hat den Wert 1. \n \n";
+            } else {
+                output[1] = "Der logische Ausdruck " + log_expr.writeFormula() + " enthält keine logischen Veränderlichen und hat den Wert 0. \n \n";
+            }
+            return;
+        }
+
+        /**
          * Für die Geschwindigkeit der Tabellenberechnung: log_expr
          * vereinfachen.
          */
         log_expr = log_expr.simplify();
-        
+
         /**
          * Nummerierung der logischen Variablen.
          */
@@ -2370,10 +2407,10 @@ public class MathCommandCompiler {
             /**
              * Am Ende der Tabelle: Leerzeile lassen.
              */
-            if (i == table_length - 1){
+            if (i == table_length - 1) {
                 output[table_length + 1] = output[table_length + 1] + "\n";
             }
-            
+
         }
 
     }

@@ -9,6 +9,7 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
+import expressionbuilder.TypeSimplify;
 
 import LogicalExpressionBuilder.LogicalExpression;
 
@@ -303,7 +304,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("table(a|b)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -582,7 +582,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * logischen Ausdruck handelt. Ja -> vereinfachen und ausgeben.
                  */
                 try {
-
                     LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
                     LogicalExpression log_expr_simplified = log_expr.simplify();
                     mathToolArea.append(log_expr.writeFormula() + " ist äquivalent zu " + log_expr_simplified.writeFormula() + "\n \n");
