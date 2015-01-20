@@ -1,0 +1,229 @@
+﻿<objects>
+  <object>
+    <ExceptionID>BinaryOperation_UNDEFINED_VALUE</ExceptionID>
+    <German>Zu großer oder undefinierter Wert.</German>
+    <English>Too big or undefined value.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>BinaryOperation_DIVISION_BY_ZERO</ExceptionID>
+    <German>Division durch 0.</German>
+    <English>Division by zero.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>BinaryOperation_FUNCTION_NOT_DIFFERENTIABLE</ExceptionID>
+    <German>Die Funktion ist nicht differenzierbar.</German>
+    <English>The function is not differentiable.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>BinaryOperation0004_COMPUTING_STOPPED</ExceptionID>
+    <German>Berechnung abgebrochen.</German>
+    <English>Computation aborted.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Constant_CONSTANT_CANNOT_BE_EVALUATED</ExceptionID>
+    <German>Eine der Konstanten kann nicht ausgewertet werden. Approximiert werden können nur Konstanten, deren Betrag höchstens 1.7E308 beträgt. Ist der Betrag der Konstante kleiner als 4.9E-324, so wird er durch 0 approximiert.</German>
+    <English>One of the constants cannot be evaluated. Only constants with absolute value of at most 1.7E308 can be approximated. If the absolute value of a constant is less that 4.9E-324, it is approximated by 0.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Constant_DIVISION_BY_ZERO</ExceptionID>
+    <German>Division durch 0.</German>
+    <English>Division by zero.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_EXPRESSION_EMPTY_OR_INCOMPLETE</ExceptionID>
+    <German>Der Ausdruck ist leer oder unvollständig.</German>
+    <English>The expression is either epmty or incomplete.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_IS_NOT_VALID_COMMAND</ExceptionID>
+    <German> ist kein gültiger Befehl bzw. Operator.</German>
+    <English> is not a valid command or operator</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_MISSING_CLOSING_BRACKET_1</ExceptionID>
+    <German>In </German>
+    <English>In </English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_MISSING_CLOSING_BRACKET_2</ExceptionID>
+    <German> fehlt am Ende eine schließende Klammer.</German>
+    <English> a closing bracket is missing.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_WRONG_BRACKETS</ExceptionID>
+    <German>Falsche Klammerung.</German>
+    <English>Incorrect brackets.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_EMPTY_PARAMETER</ExceptionID>
+    <German>Leerer Parameter.</German>
+    <English>Empty parameter.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_WRONG_ABS_BRACKETS</ExceptionID>
+    <German>Falsche Klammerung der Betragsklammern.</German>
+    <English>Incorrect brackets of the absolute value function.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_LEFT_SIDE_OF_BINARY_IS_EMPTY</ExceptionID>
+    <German>Linke Seite eines binären Operators ist leer.</German>
+    <English>Left side of a binary operator is empty.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_RIGHT_SIDE_OF_BINARY_IS_EMPTY</ExceptionID>
+    <German>RECHTE Seite eines binären Operators ist leer.</German>
+    <English>Right side of a binary operator is empty.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_1</ExceptionID>
+    <German>Die Funktion '</German>
+    <English>The function '</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_2</ExceptionID>
+    <German>' benötigt genau </German>
+    <English>' requires precisely</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_3</ExceptionID>
+    <German> Argumente.</German>
+    <English> arguments.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_FORMULA_CANNOT_BE_INTERPRETED</ExceptionID>
+    <German>Folgende Formel/Teil der Formel kann nicht interpretiert werden: </German>
+    <English>The following formula/part of the formula cannot be interpreted: </English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Expression_STACK_OVERFLOW</ExceptionID>
+    <German>Speicher voll. Die Berechnung wurde beendet.</German>
+    <English>Stack overflow. The computation was aborted.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Function_UNDEFINED_VALUE</ExceptionID>
+    <German>Undefinierter Wert.</German>
+    <English>Undefined value</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETER_IN_DIFF</ExceptionID>
+    <German>Zu wenig Parameter im Operator 'diff'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FIRST_PARAMETER_IN_DIFF_IS_WRONG</ExceptionID>
+    <German>Der erste Parameter im Operator 'diff' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_SECOND_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>
+    <German>Der zweite Parameter im Operator 'diff' muss eine Variable sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_THIRD_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>
+    <German>Der dritte Parameter im Operator 'diff' muss entweder eine gültige Variable oder eine gültige nicht-negative ganze Zahl sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'diff' muss eine gültige Variable sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_WRONG_NUMBER_OF_PARAMETERS_IN_DIV</ExceptionID>
+    <German>Im Operator 'div' muss genau ein Parameter stehen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_PARAMETER_IN_DIV_IS_INVALID</ExceptionID>
+    <German>Der Parameter im Operator 'div' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_WRONG_NUMBER_OF_PARAMETERS_IN_FAC</ExceptionID>
+    <German>Im Operator 'fac' muss genau ein Parameter stehen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_PARAMETER_IN_FAC_IS_INVALID</ExceptionID>
+    <German>Der Parameter im Operator 'fac' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETER_IN_GCD</ExceptionID>
+    <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'gcd' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_</ExceptionID>
+    <German></German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_</ExceptionID>
+    <German></German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_</ExceptionID>
+    <German></German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+
+
+
+
+
+</objects>
