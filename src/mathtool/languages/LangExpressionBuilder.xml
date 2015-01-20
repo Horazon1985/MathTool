@@ -126,39 +126,39 @@
     <Russian>?</Russian>
   </object>
   <object>
-    <ExceptionID>Operator_NOT_ENOUGH_PARAMETER_IN_DIFF</ExceptionID>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_DIFF</ExceptionID>
     <German>Zu wenig Parameter im Operator 'diff'.</German>
-    <English>?</English>
+    <English>Not enought parameters in operator 'diff'.</English>
     <Russian>?</Russian>
   </object>
   <object>
     <ExceptionID>Operator_FIRST_PARAMETER_IN_DIFF_IS_WRONG</ExceptionID>
     <German>Der erste Parameter im Operator 'diff' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The first parameter in the operator 'diff' has to be a valid expression.</English>
     <Russian>?</Russian>
   </object>
   <object>
     <ExceptionID>Operator_SECOND_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>
-    <German>Der zweite Parameter im Operator 'diff' muss eine Variable sein.</German>
+    <German>The second parameter in the operator 'diff' has to be a valid variable.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
   <object>
     <ExceptionID>Operator_THIRD_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>
-    <German>Der dritte Parameter im Operator 'diff' muss entweder eine gültige Variable oder eine gültige nicht-negative ganze Zahl sein.</German>
-    <English>?</English>
+    <German>Der dritte Parameter im Operator 'diff' muss engtweder eine gültige Variable oder eine nicht-negative ganze Zahl sein.</German>
+    <English>The third parameter in the operator 'diff' must either be a valid variable or a non-negative integer.</English>
     <Russian>?</Russian>
   </object>
   <object>
     <ExceptionID>Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_1</ExceptionID>
     <German>Der </German>
-    <English>?</English>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
   <object>
     <ExceptionID>Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_2</ExceptionID>
     <German>. Parameter im Operator 'diff' muss eine gültige Variable sein.</German>
-    <English>?</English>
+    <English>. parameter in the operator 'diff' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
   <object>
@@ -186,7 +186,7 @@
     <Russian>?</Russian>
   </object>
   <object>
-    <ExceptionID>Operator_NOT_ENOUGH_PARAMETER_IN_GCD</ExceptionID>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_GCD</ExceptionID>
     <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
@@ -204,26 +204,291 @@
     <Russian>?</Russian>
   </object>
   <object>
-    <ExceptionID>Operator_</ExceptionID>
-    <German></German>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_INT</ExceptionID>
+    <German>Zu wenig Parameter im Operator 'int'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
   <object>
-    <ExceptionID>Operator_</ExceptionID>
-    <German></German>
+    <ExceptionID>Operator_WRONG_NUMBER_OF_PARAMETERS_PARAMETER_IN_INT</ExceptionID>
+    <German>Im Operator 'int' müssen entweder genau zwei Parameter (im Falle einer unbestimmten Integration) oder genau vier (im Falle einer bestimmten Integration) Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
   <object>
-    <ExceptionID>Operator_</ExceptionID>
-    <German></German>
+    <ExceptionID>Operator_TOO_MANY_PARAMETER_IN_INT</ExceptionID>
+    <German>Zu viele Parameter im Operator 'int'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-
-
-
-
-
+  <object>
+    <ExceptionID>Operator_FIRST_PARAMETER_IN_INT_IS_INVALID</ExceptionID>
+    <German>Der erste Parameter im Operator 'int' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_SECOND_PARAMETER_IN_INT_IS_INVALID</ExceptionID>
+    <German>Der zweite Parameter im Operator 'int' muss eine gültige Veränderliche sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_THIRD_PARAMETER_IN_INT_IS_INVALID</ExceptionID>
+    <German>Der dritte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FOURTH_PARAMETER_IN_INT_IS_INVALID</ExceptionID>
+    <German>Der vierte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_WRONG_NUMBER_OF_PARAMETERS_IN_LAPLACE</ExceptionID>
+    <German>Im Operator 'laplace' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_PARAMETER_IN_LAPLACE_IS_INVALID</ExceptionID>
+    <German>Der Parameter im Operator 'laplace' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_LCM</ExceptionID>
+    <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'lcm' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_WRONG_NUMBER_OF_PARAMETERS_IN_MOD</ExceptionID>
+    <German>Im Operator 'mod' müssen genau zwei Parameter stehen, die jeweils ganze Zahlen darstellen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'mod' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_PROD</ExceptionID>
+    <German>Zu wenig Parameter im Operator 'prod'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_TOO_MANY_PARAMETERS_IN_PROD</ExceptionID>
+    <German>Zu viele Parameter im Operator 'prod'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FIRST_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>
+    <German>Der erste Parameter im Operator 'prod' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_SECOND_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>
+    <German>Der zweite Parameter im Operator 'prod' muss eine Variable sein, nach der multipliziert wird.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_THIRD_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>
+    <German>Der dritte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FOURTH_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>
+    <German>Der vierte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_BOUNDS_IN_PROD_CANNOT_CONTAIN_INDEX_VARIABLE</ExceptionID>
+    <German>Die Grenzen im Operator 'prod' dürfen die Indexvariable nicht enthalten.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_SUM</ExceptionID>
+    <German>Zu wenig Parameter im Operator 'sum'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_TOO_MANY_PARAMETERS_IN_SUM</ExceptionID>
+    <German>Zu viele Parameter im Operator 'sum'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FIRST_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>
+    <German>Der erste Parameter im Operator 'sum' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_SECOND_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>
+    <German>Der zweite Parameter im Operator 'sum' muss eine Variable sein, nach der summiert wird.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_THIRD_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>
+    <German>Der dritte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FOURTH_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>
+    <German>Der vierte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_BOUNDS_IN_SUM_CANNOT_CONTAIN_INDEX_VARIABLE</ExceptionID>
+    <German>Die Grenzen im Operator 'sum' dürfen die Indexvariable nicht enthalten.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_NOT_ENOUGH_PARAMETERS_IN_TAYLOR</ExceptionID>
+    <German>Zu wenig Parameter im Operator 'taylor'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_TOO_MANY_PARAMETERS_IN_TAYLOR</ExceptionID>
+    <German>Zu viele Parameter im Operator 'taylor'.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FIRST_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>
+    <German>Der erste Parameter im Operator 'taylor' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_SECOND_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>
+    <German>Der zweite Parameter im Operator 'taylor' muss eine gültige Veränderliche sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_THIRD_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>
+    <German>Der dritte Parameter im Operator 'taylor' muss eine reele Zahl sein, die im Definitionsbereich der Funktion liegt.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FOURTH_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>
+    <German>Der vierte Parameter im Operator 'taylor' muss eine natürliche Zahl sein. Dies ist die Ordnung des Taylorpolynoms.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_1</ExceptionID>
+    <German>Der Ausdruck </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_2</ExceptionID>
+    <German> kann nicht explizit nach </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_3</ExceptionID>
+    <German> differenziert werden.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_FACULTIES_OF_NEGATIVE_INTEGERS_UNDEFINED</ExceptionID>
+    <German>Fakultäten von negativen ganzen Zahlen sind nicht definiert.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'gcd' muss eine ganze Zahl sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'lcm' muss eine ganze Zahl sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1</ExceptionID>
+    <German>Der </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2</ExceptionID>
+    <German>. Parameter im Operator 'mod' muss eine ganze Zahl sein.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>SelfDefinedFunction_INCORRECT_NUMBER_OF_INSERTED_FUNCTIONS</ExceptionID>
+    <German>Die Anzahl der eingesetzten Funktionen muss mit der Anzahl der Parameter der Funktion übereinstimmen.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Variable_</ExceptionID>
+    <German>Die Variable </German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>Variable_</ExceptionID>
+    <German> besitzt einen nichtdefinierten Wert.</German>
+    <English>?</English>
+    <Russian>?</Russian>
+  </object>
 </objects>
