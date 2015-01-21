@@ -1,0 +1,17 @@
+﻿<objects>
+  <object id="CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_1">
+    <German>Das Taylorpolynom der Lösung der Differentialgleichung </German>
+    <English>The taylor polynomial of the solution of the differential equation </English>
+    <Russian>?</Russian>
+  </object>
+  <object id="CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_2">
+    <German>^(</German>
+    <English>^(</English>
+    <Russian>^(</Russian>
+  </object>
+  <object id="CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_3">
+    <German>) = </German>
+    <English>) = </English>
+    <Russian>) = </Russian>
+  </object>
+</objects>

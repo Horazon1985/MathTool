@@ -1,0 +1,139 @@
+﻿<objects>
+  <object>
+    <ExceptionID>SM_SimplifyMethods_COMPUTATION_ABORTED</ExceptionID>SM_
+    <German>Berechnung abgebrochen.</German>
+    <English>Computation aborted.</English>
+    <Russian>?</Russian>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_TAN_PI_DIVIDED_BY_TWO_NOT_DEFINED</ExceptionID>SM_
+    <German>tan(pi/2) ist nicht definiert.</German>
+    <English>tan(pi/2) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COT_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>cot(0) ist nicht definiert.</German>
+    <English>cot(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COT_PI_NOT_DEFINED</ExceptionID>SM_
+    <German>cot(pi) ist nicht definiert.</German>
+    <English>cot(pi) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COT_MULTIPLE_OF_PI_NOT_DEFINED</ExceptionID>SM_
+    <German> ist nicht definiert.</German>
+    <English> is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COSEC_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>cosec(0) ist nicht definiert.</German>
+    <English>cosec(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COSEC_PI_NOT_DEFINED</ExceptionID>SM_
+    <German>cosec(pi) ist nicht definiert.</German>
+    <English>cosec(pi) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_COSEC_MULITPLE_OF_PI_NOT_DEFINED</ExceptionID>SM_
+    <German> ist nicht definiert.</German>
+    <English> is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_SEC_PI_DIVIDED_BY_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>sec(pi/2) ist nicht definiert.</German>
+    <English>sec(pi/2) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_ARCCOSEC_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>arccosec(0) ist nicht definiert.</German>
+    <English>arccosec(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_SimplifyTrigonometry_ARCSEC_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>arcsec(0) ist nicht definiert.</German>
+    <English>arcsec(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyBinaryOperationMethods_DIVISION_BY_ZERO</ExceptionID>SM_
+    <German>Division durch 0.</German>
+    <English>Division by zero.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyBinaryOperationMethods_NEGATIVE_POWERS_OF_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>Negative Potenzen von 0 sind nicht definiert.</German>
+    <English>Negative powers of 0 are not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyBinaryOperationMethods_ROOTS_OF_EVEN_ORDER_OF_NEGATIVE_NUMBERS_NOT_DEFINED</ExceptionID>SM_
+    <German>Wurzeln gerader Ordnung können (im Reellen) aus negativen Zahlen nicht gezogen werden.</German>
+    <English>Roots of negative order of negative numbers do not exist (in the real numbers).</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_UNDEFINED_VALUE</ExceptionID>SM_
+    <German>Undefinierter Wert.</German>
+    <English>Undefined value.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_</ExceptionID>SM_
+    <German>arsech(0) ist nicht definiert.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_</ExceptionID>SM_
+    <German>arcosech(0) ist nicht definiert.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_COT_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>cot(0) ist nicht definiert.</German>
+    <English>cot(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_COTH_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>coth(0) ist nicht definiert.</German>
+    <English>coth(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_COSEC_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>cosec(0) ist nicht definiert.</German>
+    <English>cosec(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_COSECH_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>cosech(0) ist nicht definiert.</German>
+    <English>cosech(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_LG_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>lg(0) ist nicht definiert.</German>
+    <English>lg(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+  </object>
+    <ExceptionID>SM_TrivialSimplifyFunctionMethods_LN_ZERO_NOT_DEFINED</ExceptionID>SM_
+    <German>ln(0) ist nicht definiert.</German>
+    <English>ln(0) is not defined.</English>
+    <Russian>?</Russian>
+  </object>
+</objects>

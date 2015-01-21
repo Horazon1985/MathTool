@@ -1,0 +1,80 @@
+﻿<objects>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_1"</ExceptionID>"
+    <German>Das Taylorpolynom der Lösung der Differentialgleichung </German>
+    <English>The taylor polynomial of the solution of the differential equation </English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_2"</ExceptionID>"
+    <German>^(</German>
+    <English>^(</English>
+    <Russian>^(</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_3"</ExceptionID>"
+    <German>) = </German>
+    <English>) = </English>
+    <Russian>) = </Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_4"</ExceptionID>"
+    <German> kann nicht explizit berechnet werden, da entweder in der Differentialgleichung oder in den Koeffizienten des Taylorpolynoms unbestimmte Integrale auftreten.</German>
+    <English> cannot be computed explicitly, since either the differential equation or the coefficients of the taylor polynomial contain indefinite integrals.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_FUNCTION_CANNOT_BE_COMPUTED_1"</ExceptionID>"
+    <German>Das Taylorpolynom der Funktion </German>
+    <English>The taylor polynomial of the function </English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_FUNCTION_CANNOT_BE_COMPUTED_2"</ExceptionID>"
+    <German> kann nicht explizit berechnet werden, da in den Koeffizienten unbestimmte Integrale auftreten.</German>
+    <English> cannot be computed explicitly, since its coefficients contain indefinite integrals.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_TANGENT_SPACE_CANNOT_BE_COMPUTED"</ExceptionID>"
+    <German>Die Tangentialebene kann im vorgegebenen Punkt nicht berechnet werden, da die Funktion oder eine ihrer partiellen Ableitungen in diesem Punkt nicht definiert ist.</German>
+    <English>The tangent space cannot be computed in the given point, since either the function or one of her partial derivatives is not defined in this point.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_AnalysisMethods_ENTER_A_SMALLER_NUMBER_OF_DIGITS"</ExceptionID>"
+    <German>Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.</German>
+    <English>Enter a smaller integer for the number of digits.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_ArithmeticMethods_SECOND_PARAMETER_IN_MOD_IS_ZERO"</ExceptionID>"
+    <German>Der zweite Parameter im Operator 'mod' darf nicht 0 sein.</German>
+    <English>The second parameter in the operator 'mod' does not have to be 0.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_ArithmeticMethods_ROOTS_OF_EVEN_ORDER_DO_NOT_EXIST_1"</ExceptionID>"
+    <German>Wurzeln gerader Ordnung können aus </German>
+    <English>Roots of even order cannot be taken from </English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_ArithmeticMethods_ROOTS_OF_EVEN_ORDER_DO_NOT_EXIST_2"</ExceptionID>"
+    <German> nicht gezogen werden.</German>
+    <English>.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_NumericalMethods_VECTOR_SHOULD_HAVE_SAME_DIMENSION"</ExceptionID>"
+    <German>Die zu addierenden Vektoren müssen die gleiche Dimension besitzen.</German>
+    <English>The vactors to be added must have the same dimension.</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>"CC_NumericalMethods_UNDEFINED_VALUE"</ExceptionID>"
+    <German>Undefinierter Wert.</German>
+    <English>Undefined value.</English>
+    <Russian>?</Russian>
+  </object>
+</objects>

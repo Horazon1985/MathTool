@@ -9,9 +9,9 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
-import expressionbuilder.TypeSimplify;
 
 import LogicalExpressionBuilder.LogicalExpression;
+import expressionbuilder.TypeLanguage;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -34,6 +34,17 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+
+/**
+ * Bibliotheken zum Öffnen von XML-Dateien.
+ */
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import java.io.File;
 
 public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
@@ -202,6 +213,59 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputField.setText(listOfCommands.get(i));
     }
 
+    private void changeLanguage(TypeLanguage typeLanguage) {
+        Expression.setLanguage(typeLanguage);
+    }
+
+    private void translateExceptionMessage(String exception_id) {
+
+        /**
+         * Die entsprechende XML-Datei öffnen.
+         */
+        if (exception_id.substring(0, 2).equals("CC")) {
+
+            try {
+                File fXmlFile = new File("src/mathtool/languages/LangComputationalClassesTEST.xml");
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(fXmlFile);
+
+                doc.getDocumentElement().normalize();
+
+                System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+                NodeList nList = doc.getElementsByTagName("object");
+
+                System.out.println("----------------------------");
+
+                for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                    Node nNode = nList.item(temp);
+
+                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                        Element eElement = (Element) nNode;
+
+                        System.out.println("German: " + eElement.getElementsByTagName("German").item(0).getTextContent());
+                        System.out.println("English: " + eElement.getElementsByTagName("English").item(0).getTextContent());
+                        System.out.println("Russian: " + eElement.getElementsByTagName("Russian").item(0).getTextContent());
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        /**
+         * Sollte nie eintreten.
+         */
+
+    }
+
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
 
         Command c = MathCommandCompiler.getCommand(command_name, params);
@@ -284,6 +348,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         MenuItemQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         MenuItemHelp = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         MenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -403,6 +468,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
         jMenu2.add(MenuItemHelp);
+
+        jMenuItem1.setText("Einstellungen");
+        jMenu2.add(jMenuItem1);
 
         MenuItemAbout.setText("Über MathTool");
         MenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -921,7 +989,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * stoppen, falls diese aktiv ist.
                  */
                 stopPossibleRotation();
-                executeCommand();
+//                executeCommand();
+                translateExceptionMessage("CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_1");
                 break;
 
             case KeyEvent.VK_UP:
@@ -1055,6 +1124,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JTextField inputField;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JButton latexButton;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;

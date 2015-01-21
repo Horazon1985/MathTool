@@ -399,14 +399,30 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Im Befehl 'euler' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
             }
 
+            /**
+             * Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze
+             * Zahl handelt.
+             */
+            try {
+                BigInteger number_of_digits = new BigInteger(params[0]);
+                if (number_of_digits.compareTo(BigInteger.ZERO) < 0) {
+                    throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+            }
+
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
+                if ((int) command_params[0] < 0) {
+                    throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                }
                 result.setTypeCommand(TypeCommand.EULER);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException("Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.");
             }
 
         }
@@ -488,14 +504,30 @@ public class MathCommandCompiler {
                 throw new ExpressionException("Im Befehl 'pi' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
             }
 
+            /**
+             * Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze
+             * Zahl handelt.
+             */
+            try {
+                BigInteger number_of_digits = new BigInteger(params[0]);
+                if (number_of_digits.compareTo(BigInteger.ZERO) < 0) {
+                    throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+            }
+
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
+                if ((int) command_params[0] < 0) {
+                    throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                }
                 result.setTypeCommand(TypeCommand.PI);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException("Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.");
             }
 
         }

@@ -1,0 +1,14 @@
+﻿<objects>
+  <object>
+    <ExceptionID>PRM_PolynomialRootMethods_</ExceptionID>PRM_
+    <German> ist kein Polynom.</German>
+    <English> is not a polynomial</English>
+    <Russian>?</Russian>
+  </object>
+  <object>
+    <ExceptionID>PRM_PolynomialRootMethods_</ExceptionID>PRM_
+    <German>Zu hoher Polynomgrad.</German>
+    <English>too high polynomial degree.</English>
+    <Russian>?</Russian>
+  </object>
+</objects>
