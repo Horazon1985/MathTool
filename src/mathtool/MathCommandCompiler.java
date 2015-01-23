@@ -132,7 +132,7 @@ public class MathCommandCompiler {
             try {
                 Expression.build(params[0], new HashSet());
             } catch (ExpressionException e) {
-                throw new ExpressionException("Im Befehl 'approx' muss der Parameter ein gültiger Ausdruck sein. Gemeldeter Fehler: "
+                throw new ExpressionException("Der Parameter im Befehl 'approx' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: "
                         + e.getMessage());
             }
 
@@ -200,7 +200,7 @@ public class MathCommandCompiler {
                 HashSet vars = new HashSet();
                 preciseExpression.getContainedVars(vars);
                 if (!vars.isEmpty()) {
-                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
+                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller konstanter Wert zugewiesen werden.");
                 }
                 command_params = new Object[2];
                 command_params[0] = Variable.create(function_name_and_params);
@@ -443,8 +443,8 @@ public class MathCommandCompiler {
                 result.setTypeCommand(TypeCommand.EXPAND);
                 result.setParams(command_params);
                 return result;
-            } catch (NumberFormatException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+            } catch (ExpressionException e) {
+                throw new ExpressionException("Der Parameter im Befehl 'expand' ist kein gültiger Ausdruck.");
             }
 
         }
@@ -587,7 +587,7 @@ public class MathCommandCompiler {
                 Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
                 Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
                 if (x_0.evaluate() >= x_1.evaluate()) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss größer sein als der "
+                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss kleiner sein als der "
                             + (params.length) + ". Parameter.");
                 }
 
@@ -934,10 +934,10 @@ public class MathCommandCompiler {
          */
         if (command.equals("solve")) {
             if (params.length < 1) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'.");
             }
             if (params.length > 4) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'solve'");
+                throw new ExpressionException("Zu viele Parameter im Befehl 'solve'.");
             }
             if (!params[0].contains("=")) {
                 throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
@@ -965,7 +965,7 @@ public class MathCommandCompiler {
 
                 if (params.length == 2) {
                     if (!Expression.isValidVariable(params[1])) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'solveexact' muss eine gültige Veränderliche sein.");
+                        throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine gültige Veränderliche sein.");
                     }
                 }
 
@@ -1119,10 +1119,10 @@ public class MathCommandCompiler {
                 }
 
                 if (params.length < ord + 5) {
-                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'");
+                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'.");
                 }
                 if (params.length > ord + 5) {
-                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedeq'");
+                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedeq'.");
                 }
 
                 //Prüft, ob die AWP-Daten korrekt sind
@@ -1160,10 +1160,10 @@ public class MathCommandCompiler {
          */
         if (command.equals("table")) {
             if (params.length == 0) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein logischer Ausdruck sein.");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.");
             }
             if (params.length > 1) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein logischer Ausdruck sein.");
+                throw new ExpressionException("Zu viele Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.");
             }
 
             HashSet vars = new HashSet();
@@ -1172,7 +1172,7 @@ public class MathCommandCompiler {
             try {
                 log_expr = LogicalExpression.build(params[0], vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException("Der erste Parameter im Befehl 'table' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
             }
 
             command_params = new Object[1];
@@ -1192,7 +1192,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("tangent")) {
             if (params.length < 2) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'tangent'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'tangent'.");
             }
 
             try {
@@ -1223,6 +1223,17 @@ public class MathCommandCompiler {
                     }
                 } catch (ExpressionException e) {
                     throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
+                }
+            }
+
+            /**
+             * Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
+             */
+            for (int i = 1; i < params.length; i++) {
+                for (int j = i + 1; j < params.length; j++) {
+                    if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
+                        throw new ExpressionException("Die Veränderliche " + params[i].substring(0, params[i].indexOf("=")) + " tritt doppelt auf.");
+                    }
                 }
             }
 
@@ -1259,7 +1270,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("taylordeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'.");
             }
 
             //Ermittelt die Ordnung der DGL
@@ -1318,11 +1329,11 @@ public class MathCommandCompiler {
             }
 
             if (params.length < ord + 5) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'.");
             }
 
             if (params.length > ord + 5) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordeq'");
+                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordeq'.");
             }
 
             //Prüft, ob die AWP-Daten korrekt sind

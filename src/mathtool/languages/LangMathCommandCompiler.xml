@@ -1,0 +1,732 @@
+﻿<objects>
+  <object id = "MCC_">
+    <German>Im Befehl 'approx' muss genau ein Parameter stehen, der einen gültigen Ausdruck darstellt.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Parameter im Befehl 'approx' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'clear' dürfen keine Parameter stehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'def' muss genau ein Parameter stehen, welcher aus einer Variablenzuweisung oder einer Funktionszuweisung besteht.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Bei einer Variablenzuweisung muss der Veränderlichen ein reeller konstanter Wert zugewiesen werden.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Ungültiger Ausdruck auf der rechten Seite. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Ungültige Variablen- oder Funktionsdefinition.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>'</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>' ist keine gültige Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>In der Funktionsdeklaration der Funktion </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> dürfen nicht mehrmals dieselben Veränderlichen vorkommen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Funktionsname '</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>' ist der Name einer geschützten Funktion, eines geschützten Operators oder eines geschützten Befehls. Bitte wählen Sie einen anderen Namen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Funktionsname '</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>' enthält Sonderzeichen. Bitte wählen Sie einen anderen Namen, welcher nur aus Buchstaben und Ziffern besteht.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'deffuncs' dürfen keine Parameter stehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'defvars' dürfen keine Parameter stehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'euler' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'expand' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Parameter im Befehl 'expand' ist kein gültiger Ausdruck.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'latex' muss genau ein Parameter stehen. Dieser muss aus gültigen Ausdrücken bestehen, die allesamt durch Gleichheitszeichen verbunden sind.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Fehler im Parameter des Befehls 'latex': </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'pi' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'plot2d'</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plot2d' muss ein gültiger Ausdruck in einer Veränderlichen sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Ausdrücke im Befehl 'plot2d' dürfen höchstens eine Veränderliche enthalten. Diese enthalten jedoch </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plot2d' muss kleiner sein als der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Beim Plotten impliziter Funktionen muss der Befehl 'plot2d' genau 5 Parameter enthalten: der erste ist die Gleichung, die anderen vier sind die Grenzen, innerhalb derer der Graph geplottet wird.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'plot2d' muss aus zwei gültigen Ausdrücken bestehen, welche durch ein '=' verbunden sind. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die beiden Ausdrücke im Befehl 'plot2d' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'plot2d' muss größer sein als der zweite Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der fünfte Parameter im Befehl 'plot2d' muss größer sein als der vierte Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'plot3d</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu viele Parameter im Befehl 'plot3d'</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'plot3d' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Ausdruck im Befehl 'plot3d' darf höchstens zwei Veränderliche enthalten. Dieser enthält jedoch </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'plot3d' muss größer sein als der zweite Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der fünfte Parameter im Befehl 'plot3d' muss größer sein als der vierte Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'plotcurve' müssen genau drei Parameter stehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die parametrisierte Kurve im Befehl 'plotcurve' muss entweder aus zwei oder aus drei Komponenten bestehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Kompomente in der Kurvendarstellung muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Kurve im Befehl 'plotcurve' darf durch höchstens einen Parameter parametrisiert werden.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'plotpolar'</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plotpolar' muss ein gültiger Ausdruck in einer Veränderlichen sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Ausdrücke im Befehl 'plotpolar' dürfen höchstens eine Veränderliche enthalten. Diese enthalten jedoch </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'plotpolar' muss größer sein als der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'solve'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, wobei f und g Funktionen und x eine gültiger Veränderliche sind.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'solve' muss zwei gültige Ausdrücke enthalten, welche durch ein '=' verbunden sind. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'solve' muss eine gültige Veränderliche sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>In der Gleichung darf höchstens eine Veränderliche auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'solvedeq'</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'solvedeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Differentialgleichung besitzt die Ordnung </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Es dürfen daher nur Ableitungen höchstens </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Ordnung auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Veränderliche </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> muss in der Differentialgleichung vorkommen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'solvedeq' muss eine gültige Veränderliche sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'solvedeq'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu viele Parameter im Befehl 'solvedeq'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu viele Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'table' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'tangent'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter muss von der Form 'VARIABLE = WERT' sein, wobei die Veränderliche VARIABLE im Ausdruck vorkommen muss.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> ist keine gültige Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der Veränderlichen im </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Veränderliche </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> tritt doppelt auf.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Veränderliche </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> muss in den Parametern vorkommen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'taylordeq'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der erste Parameter im Befehl 'taylordeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Differentialgleichung besitzt die Ordnung </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Es dürfen daher nur Ableitungen höchstens </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Ordnung auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Veränderliche </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> muss in der Differentialgleichung vorkommen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der zweite Parameter im Befehl 'taylordeq' muss eine gültige Veränderliche sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu wenig Parameter im Befehl 'taylordeq'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Zu viele Parameter im Befehl 'taylordeq'.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'taylordeq' muss eine reelle Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der letzte Parameter im Befehl 'taylordeq' muss eine nichtnegative ganze Zahl sein.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Parameter im Befehl 'undef' ist keine gültige Veränderliche.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Im Befehl 'undefall' dürfen keine Parameter stehen.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Ungültiger Befehl.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Differentialgleichung besitzt die Ordnung </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Es dürfen daher nur Ableitungen höchstens </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Ordnung auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der logische Ausdruck </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> enthält mehr als 20 Veränderliche. Die Wertetabelle ist damit zu groß für die Ausgabe.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Wertetabelle für den logischen Ausdruck </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>: \n \n</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Differentialgleichung besitzt die Ordnung </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Es dürfen daher nur Ableitungen höchstens </German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>. Ordnung auftreten.</German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+</objects>
