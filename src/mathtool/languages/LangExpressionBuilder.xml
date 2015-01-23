@@ -1,492 +1,410 @@
 ﻿<objects>
-  <object>
-    <ExceptionID>EB_BinaryOperation_UNDEFINED_VALUE</ExceptionID>EB_
+  <object id = "EB_BinaryOperation_UNDEFINED_VALUE">
     <German>Zu großer oder undefinierter Wert.</German>
     <English>Too big or undefined value.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_BinaryOperation_DIVISION_BY_ZERO</ExceptionID>EB_
+  <object id = "EB_BinaryOperation_DIVISION_BY_ZERO">
     <German>Division durch 0.</German>
     <English>Division by zero.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_BinaryOperation_FUNCTION_NOT_DIFFERENTIABLE</ExceptionID>EB_
+  <object id = "EB_BinaryOperation_FUNCTION_NOT_DIFFERENTIABLE">
     <German>Die Funktion ist nicht differenzierbar.</German>
     <English>The function is not differentiable.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_BinaryOperation_COMPUTATION_ABORTED</ExceptionID>EB_
+  <object id = "EB_BinaryOperation_COMPUTATION_ABORTED">
     <German>Berechnung abgebrochen.</German>
     <English>Computation aborted.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Constant_CONSTANT_CANNOT_BE_EVALUATED</ExceptionID>EB_
+  <object id = "EB_Constant_CONSTANT_CANNOT_BE_EVALUATED">
     <German>Eine der Konstanten kann nicht ausgewertet werden. Approximiert werden können nur Konstanten, deren Betrag höchstens 1.7E308 beträgt. Ist der Betrag der Konstante kleiner als 4.9E-324, so wird er durch 0 approximiert.</German>
     <English>One of the constants cannot be evaluated. Only constants with absolute value of at most 1.7E308 can be approximated. If the absolute value of a constant is less that 4.9E-324, it is approximated by 0.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Constant_DIVISION_BY_ZERO</ExceptionID>EB_
+  <object id = "EB_Constant_DIVISION_BY_ZERO">
     <German>Division durch 0.</German>
     <English>Division by zero.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_EXPRESSION_EMPTY_OR_INCOMPLETE</ExceptionID>EB_
+  <object id = "EB_Expression_EXPRESSION_EMPTY_OR_INCOMPLETE">
     <German>Der Ausdruck ist leer oder unvollständig.</German>
     <English>The expression is either epmty or incomplete.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_IS_NOT_VALID_COMMAND</ExceptionID>EB_
+  <object id = "EB_Expression_IS_NOT_VALID_COMMAND">
     <German> ist kein gültiger Befehl bzw. Operator.</German>
     <English> is not a valid command or operator</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_MISSING_CLOSING_BRACKET_1</ExceptionID>EB_
+  <object id = "EB_Expression_MISSING_CLOSING_BRACKET_1">
     <German>In </German>
     <English>In </English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_MISSING_CLOSING_BRACKET_2</ExceptionID>EB_
+  <object id = "EB_Expression_MISSING_CLOSING_BRACKET_2">
     <German> fehlt am Ende eine schließende Klammer.</German>
     <English> a closing bracket is missing.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_WRONG_BRACKETS</ExceptionID>EB_
+  <object id = "EB_Expression_WRONG_BRACKETS">
     <German>Falsche Klammerung.</German>
     <English>Incorrect brackets.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_EMPTY_PARAMETER</ExceptionID>EB_
+  <object id = "EB_Expression_EMPTY_PARAMETER">
     <German>Leerer Parameter.</German>
     <English>Empty parameter.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_WRONG_ABS_BRACKETS</ExceptionID>EB_
+  <object id = "EB_Expression_WRONG_ABS_BRACKETS">
     <German>Falsche Klammerung der Betragsklammern.</German>
     <English>Incorrect brackets of the absolute value function.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_LEFT_SIDE_OF_BINARY_IS_EMPTY</ExceptionID>EB_
+  <object id = "EB_Expression_LEFT_SIDE_OF_BINARY_IS_EMPTY">
     <German>Linke Seite eines binären Operators ist leer.</German>
     <English>Left side of a binary operator is empty.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_RIGHT_SIDE_OF_BINARY_IS_EMPTY</ExceptionID>EB_
+  <object id = "EB_Expression_RIGHT_SIDE_OF_BINARY_IS_EMPTY">
     <German>RECHTE Seite eines binären Operators ist leer.</German>
     <English>Right side of a binary operator is empty.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_1</ExceptionID>EB_
+  <object id = "EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_1">
     <German>Die Funktion '</German>
     <English>The function '</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_2</ExceptionID>EB_
+  <object id = "EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_2">
     <German>' benötigt genau </German>
     <English>' requires precisely</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_3</ExceptionID>EB_
+  <object id = "EB_Expression_WRONG_NUMBER_OF_PARAMETERS_IN_SELF_DEFINED_FUNCTION_3">
     <German> Argumente.</German>
     <English> arguments.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_FORMULA_CANNOT_BE_INTERPRETED</ExceptionID>EB_
+  <object id = "EB_Expression_FORMULA_CANNOT_BE_INTERPRETED">
     <German>Folgende Formel/Teil der Formel kann nicht interpretiert werden: </German>
     <English>The following formula/part of the formula cannot be interpreted: </English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Expression_STACK_OVERFLOW</ExceptionID>EB_
+  <object id = "EB_Expression_STACK_OVERFLOW">
     <German>Speicher voll. Die Berechnung wurde beendet.</German>
     <English>Stack overflow. The computation was aborted.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Function_UNDEFINED_VALUE</ExceptionID>EB_
+  <object id = "EB_Function_UNDEFINED_VALUE">
     <German>Undefinierter Wert.</German>
     <English>Undefined value</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_DIFF</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_DIFF">
     <German>Zu wenig Parameter im Operator 'diff'.</German>
     <English>Not enought parameters in operator 'diff'.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FIRST_PARAMETER_IN_DIFF_IS_WRONG</ExceptionID>EB_
+  <object id = "EB_Operator_FIRST_PARAMETER_IN_DIFF_IS_WRONG">
     <German>Der erste Parameter im Operator 'diff' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>The first parameter in the operator 'diff' has to be a valid expression.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_SECOND_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_SECOND_PARAMETER_IN_DIFF_IS_INVALID">
     <German>The second parameter in the operator 'diff' has to be a valid variable.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_THIRD_PARAMETER_IN_DIFF_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_THIRD_PARAMETER_IN_DIFF_IS_INVALID">
     <German>Der dritte Parameter im Operator 'diff' muss engtweder eine gültige Variable oder eine nicht-negative ganze Zahl sein.</German>
     <English>The third parameter in the operator 'diff' must either be a valid variable or a non-negative integer.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_1">
     <German>Der </German>
     <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_DIFF_IS_INVALID_2">
     <German>. Parameter im Operator 'diff' muss eine gültige Variable sein.</German>
     <English>. parameter in the operator 'diff' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_DIV</ExceptionID>EB_
+  <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_DIV">
     <German>Im Operator 'div' muss genau ein Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_PARAMETER_IN_DIV_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_PARAMETER_IN_DIV_IS_INVALID">
     <German>Der Parameter im Operator 'div' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_FAC</ExceptionID>EB_
+  <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_FAC">
     <German>Im Operator 'fac' muss genau ein Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_PARAMETER_IN_FAC_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_PARAMETER_IN_FAC_IS_INVALID">
     <German>Der Parameter im Operator 'fac' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_GCD</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_GCD">
     <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2">
     <German>. Parameter im Operator 'gcd' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_INT</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_INT">
     <German>Zu wenig Parameter im Operator 'int'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_WRONG_NUMBER_OF_PARAMETERS_PARAMETER_IN_INT</ExceptionID>EB_
+  <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_PARAMETER_IN_INT">
     <German>Im Operator 'int' müssen entweder genau zwei Parameter (im Falle einer unbestimmten Integration) oder genau vier (im Falle einer bestimmten Integration) Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_TOO_MANY_PARAMETER_IN_INT</ExceptionID>EB_
+  <object id = "EB_Operator_TOO_MANY_PARAMETER_IN_INT">
     <German>Zu viele Parameter im Operator 'int'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FIRST_PARAMETER_IN_INT_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FIRST_PARAMETER_IN_INT_IS_INVALID">
     <German>Der erste Parameter im Operator 'int' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_SECOND_PARAMETER_IN_INT_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_SECOND_PARAMETER_IN_INT_IS_INVALID">
     <German>Der zweite Parameter im Operator 'int' muss eine gültige Veränderliche sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_THIRD_PARAMETER_IN_INT_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_THIRD_PARAMETER_IN_INT_IS_INVALID">
     <German>Der dritte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FOURTH_PARAMETER_IN_INT_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FOURTH_PARAMETER_IN_INT_IS_INVALID">
     <German>Der vierte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_LAPLACE</ExceptionID>EB_
+  <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_LAPLACE">
     <German>Im Operator 'laplace' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_PARAMETER_IN_LAPLACE_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_PARAMETER_IN_LAPLACE_IS_INVALID">
     <German>Der Parameter im Operator 'laplace' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_LCM</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_LCM">
     <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2">
     <German>. Parameter im Operator 'lcm' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_MOD</ExceptionID>EB_
+  <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_MOD">
     <German>Im Operator 'mod' müssen genau zwei Parameter stehen, die jeweils ganze Zahlen darstellen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2">
     <German>. Parameter im Operator 'mod' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_PROD</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_PROD">
     <German>Zu wenig Parameter im Operator 'prod'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_TOO_MANY_PARAMETERS_IN_PROD</ExceptionID>EB_
+  <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_PROD">
     <German>Zu viele Parameter im Operator 'prod'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FIRST_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FIRST_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der erste Parameter im Operator 'prod' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_SECOND_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_SECOND_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der zweite Parameter im Operator 'prod' muss eine Variable sein, nach der multipliziert wird.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_THIRD_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_THIRD_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der dritte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FOURTH_PARAMETER_IN_PROD_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FOURTH_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der vierte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_BOUNDS_IN_PROD_CANNOT_CONTAIN_INDEX_VARIABLE</ExceptionID>EB_
+  <object id = "EB_Operator_BOUNDS_IN_PROD_CANNOT_CONTAIN_INDEX_VARIABLE">
     <German>Die Grenzen im Operator 'prod' dürfen die Indexvariable nicht enthalten.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_SUM</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_SUM">
     <German>Zu wenig Parameter im Operator 'sum'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_TOO_MANY_PARAMETERS_IN_SUM</ExceptionID>EB_
+  <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_SUM">
     <German>Zu viele Parameter im Operator 'sum'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FIRST_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FIRST_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der erste Parameter im Operator 'sum' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_SECOND_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_SECOND_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der zweite Parameter im Operator 'sum' muss eine Variable sein, nach der summiert wird.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_THIRD_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_THIRD_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der dritte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FOURTH_PARAMETER_IN_SUM_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FOURTH_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der vierte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_BOUNDS_IN_SUM_CANNOT_CONTAIN_INDEX_VARIABLE</ExceptionID>EB_
+  <object id = "EB_Operator_BOUNDS_IN_SUM_CANNOT_CONTAIN_INDEX_VARIABLE">
     <German>Die Grenzen im Operator 'sum' dürfen die Indexvariable nicht enthalten.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_NOT_ENOUGH_PARAMETERS_IN_TAYLOR</ExceptionID>EB_
+  <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_TAYLOR">
     <German>Zu wenig Parameter im Operator 'taylor'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_TOO_MANY_PARAMETERS_IN_TAYLOR</ExceptionID>EB_
+  <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_TAYLOR">
     <German>Zu viele Parameter im Operator 'taylor'.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FIRST_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FIRST_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der erste Parameter im Operator 'taylor' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_SECOND_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_SECOND_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der zweite Parameter im Operator 'taylor' muss eine gültige Veränderliche sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_THIRD_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_THIRD_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der dritte Parameter im Operator 'taylor' muss eine reele Zahl sein, die im Definitionsbereich der Funktion liegt.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FOURTH_PARAMETER_IN_TAYLOR_IS_INVALID</ExceptionID>EB_
+  <object id = "EB_Operator_FOURTH_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der vierte Parameter im Operator 'taylor' muss eine natürliche Zahl sein. Dies ist die Ordnung des Taylorpolynoms.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_1</ExceptionID>EB_
+  <object id = "EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_1">
     <German>Der Ausdruck </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_2</ExceptionID>EB_
+  <object id = "EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_2">
     <German> kann nicht explizit nach </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_3</ExceptionID>EB_
+  <object id = "EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_3">
     <German> differenziert werden.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_FACULTIES_OF_NEGATIVE_INTEGERS_UNDEFINED</ExceptionID>EB_
+  <object id = "EB_Operator_FACULTIES_OF_NEGATIVE_INTEGERS_UNDEFINED">
     <German>Fakultäten von negativen ganzen Zahlen sind nicht definiert.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2">
     <German>. Parameter im Operator 'gcd' muss eine ganze Zahl sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2">
     <German>. Parameter im Operator 'lcm' muss eine ganze Zahl sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1">
     <German>Der </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2</ExceptionID>EB_
+  <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2">
     <German>. Parameter im Operator 'mod' muss eine ganze Zahl sein.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_SelfDefinedFunction_INCORRECT_NUMBER_OF_INSERTED_FUNCTIONS</ExceptionID>EB_
+  <object id = "EB_SelfDefinedFunction_INCORRECT_NUMBER_OF_INSERTED_FUNCTIONS">
     <German>Die Anzahl der eingesetzten Funktionen muss mit der Anzahl der Parameter der Funktion übereinstimmen.</German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Variable_</ExceptionID>EB_
+  <object id = "EB_Variable_VARIABLE_HAS_UNDEFINED_VALUE_1">
     <German>Die Variable </German>
     <English>?</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>EB_Variable_</ExceptionID>EB_
+  <object id = "EB_Variable_VARIABLE_HAS_UNDEFINED_VALUE_2">
     <German> besitzt einen nichtdefinierten Wert.</German>
     <English>?</English>
     <Russian>?</Russian>

@@ -9,7 +9,6 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
-
 import LogicalExpressionBuilder.LogicalExpression;
 import expressionbuilder.TypeLanguage;
 
@@ -96,6 +95,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
 
+        /**
+         * Standardsprache = DE
+         */
+        Expression.setLanguage(TypeLanguage.DE);
+        
         /**
          * Es wird noch keine Grafik angezeigt
          */
@@ -225,32 +229,33 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         if (exception_id.substring(0, 2).equals("CC")) {
 
             try {
-                File fXmlFile = new File("src/mathtool/languages/LangComputationalClassesTEST.xml");
+                File langFile = new File("src/mathtool/languages/LangComputationalClasses.xml");
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(fXmlFile);
+                Document doc = dBuilder.parse(langFile);
 
                 doc.getDocumentElement().normalize();
 
-                System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
+//                System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                 NodeList nList = doc.getElementsByTagName("object");
 
-                System.out.println("----------------------------");
-
+//                System.out.println("----------------------------");
                 for (int temp = 0; temp < nList.getLength(); temp++) {
 
                     Node nNode = nList.item(temp);
 
-                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
+//                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
                         Element eElement = (Element) nNode;
 
-                        System.out.println("German: " + eElement.getElementsByTagName("German").item(0).getTextContent());
-                        System.out.println("English: " + eElement.getElementsByTagName("English").item(0).getTextContent());
-                        System.out.println("Russian: " + eElement.getElementsByTagName("Russian").item(0).getTextContent());
+                        if (Expression.getLanguage().equals(TypeLanguage.DE)) {
+                            System.out.println("German: " + eElement.getElementsByTagName("German").item(0).getTextContent());
+                        } else if (Expression.getLanguage().equals(TypeLanguage.EN)) {
+                            System.out.println("English: " + eElement.getElementsByTagName("English").item(0).getTextContent());
+                        } else if (Expression.getLanguage().equals(TypeLanguage.RU)) {
+                            System.out.println("Russian: " + eElement.getElementsByTagName("Russian").item(0).getTextContent());
+                        }
 
                     }
                 }
@@ -263,7 +268,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Sollte nie eintreten.
          */
-
     }
 
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {

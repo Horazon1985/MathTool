@@ -1,12 +1,10 @@
 ﻿<objects>
-  <object>
-    <ExceptionID>PRM_PolynomialRootMethods_</ExceptionID>PRM_
+  <object id = "PRM_PolynomialRootMethods_IS_NOT_POLYNOMIAL">
     <German> ist kein Polynom.</German>
     <English> is not a polynomial</English>
     <Russian>?</Russian>
   </object>
-  <object>
-    <ExceptionID>PRM_PolynomialRootMethods_</ExceptionID>PRM_
+  <object id = "PRM_PolynomialRootMethods_TOO_HIGH_DEGREE">
     <German>Zu hoher Polynomgrad.</German>
     <English>too high polynomial degree.</English>
     <Russian>?</Russian>
