@@ -661,72 +661,213 @@
   </object>
   <object id = "MCC_">
     <German>Der </German>
-    <English></English>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>. Parameter im Befehl 'undef' ist keine gültige Veränderliche.</German>
-    <English></English>
+    <English>. parameter in command 'undef' is not a valid variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Im Befehl 'undefall' dürfen keine Parameter stehen.</German>
-    <English></English>
+    <English>In command 'undefall' no parameters are allowed.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Ungültiger Befehl.</German>
-    <English></English>
+    <English>Invalid command.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Die Differentialgleichung besitzt die Ordnung </German>
-    <English></English>
+    <English>The differential equation has order </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>. Es dürfen daher nur Ableitungen höchstens </German>
-    <English></English>
+    <English>. Hence only derivatives of order at most </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>. Ordnung auftreten.</German>
-    <English></English>
+    <English> are allowed.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Der logische Ausdruck </German>
-    <English></English>
+    <English>The logical expression </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German> enthält mehr als 20 Veränderliche. Die Wertetabelle ist damit zu groß für die Ausgabe.</German>
-    <English></English>
+    <English> contains more than 20 variables. The table of values is too big for output.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Wertetabelle für den logischen Ausdruck </German>
-    <English></English>
+    <English>Table of values of the logical expression </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>: \n \n</German>
-    <English></English>
+    <English>: \n \n</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>Die Differentialgleichung besitzt die Ordnung </German>
-    <English></English>
+    <English>The differential equation has order </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>. Es dürfen daher nur Ableitungen höchstens </German>
-    <English></English>
+    <English>. Hence only derivatives of order at most </English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
     <German>. Ordnung auftreten.</German>
+    <English> are allowed.</English>
+    <Russian>?</Russian>
+  </object>
+ <!-- Übersetzungen der output-Nachrichten: -->  
+  <object id = "MCC_">
+    <German>Der Wert der Veränderlichen </German>
+    <English>The value of the variable </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> wurde auf </German>
+    <English> was set to </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> gesetzt. \n \n</German>
+    <English>. \n \n</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Es wurde die folgende Funktion definiert: </German>
+    <English>The following function was defined: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Liste aller selbstdefinierten Funktionen: </German>
+    <English>List of all functions defined by user: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Liste aller Veränderlichen mit vordefinierten Werten: </German>
+    <English>List of all variables which are given values: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Eulersche Zahl e auf </German>
+    <English>Euler constant e rounded to </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Stellen gerundet: </German>
+    <English> digits: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Konstante pi auf </German>
+    <English>Constant pi, rounded to </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> Stellen gerundet: </German>
+    <English> digits: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> ist eine beliebige ganze Zahl. \n \n</German>
+    <English> is an arbitrary integer.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> sind beliebige ganze Zahlen. \n \n</German>
+    <English> are arbitrary integers.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Es konnten keine exakten Lösungen ermittelt werden. \n \n</German>
+    <English>No precise solutions found.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Lösungen der Gleichung </German>
+    <English>Solutions of the equation </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Alle reellen Zahlen. \n \n</German>
+    <English>All real numbers.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die gegebene Gleichung besitzt keine Lösungen. \n \n</German>
+    <English>The given equation admits no solutions.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Es konnten keine Lösungen ermittelt werden. \n \n</German>
+    <English>No solutions found.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Lösung der Differentialgleichung ist nicht definiert an der Stelle </German>
+    <English>The solution of the differential equation is not defined in </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Lösung der Differentialgleichung: </German>
+    <English>Solution of the differential equation: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Der logische Ausdruck </German>
+    <English>The logical expression </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> enthält keine logischen Veränderlichen und hat den Wert 1. \n \n</German>
+    <English> contains no logical variables an has the value 1.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> enthält keine logischen Veränderlichen und hat den Wert 0. \n \n</German>
+    <English> contains no logical variables an has the value 0.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Reihenfolge der logischen Veränderlichen in den Tupeln: </German>
     <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Gleichung des Tangentialraumes an den Graphen von Y = </German>
+    <English>Equation of the tangent space to the graph of </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> im Punkt </German>
+    <English> in the point </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Die Veränderliche </German>
+    <English>The variable </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German> ist wieder eine Unbestimmte. \n \n</German>
+    <English> is again an indeterminate.</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_">
+    <German>Alle Veränderlichen sind wieder Unbestimmte. \n \n</German>
+    <English>All variables are again indeterminates.</English>
     <Russian>?</Russian>
   </object>
 </objects>

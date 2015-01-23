@@ -16,7 +16,7 @@ public class DevelopersDialogGUI extends JDialog {
 
     public DevelopersDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
-        setTitle("About MathTool");
+        setTitle("Über MathTool");
         setLayout(null);
         setResizable(false);
         setModal(true);

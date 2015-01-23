@@ -1705,7 +1705,7 @@ public class MathCommandCompiler {
     private static void executePi(Command c) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
         output = new String[1];
-        output[0] = "Kreiszahl pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n";
+        output[0] = "Konstante pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n";
     }
 
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
@@ -2161,91 +2161,6 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveExact(Command c, JTextArea area)
-            throws ExpressionException, EvaluationException {
-
-        HashSet vars = new HashSet();
-        Expression expr_1 = ((Expression) c.getParams()[0]).simplify();
-        Expression expr_2 = ((Expression) c.getParams()[1]).simplify();
-        expr_1.getContainedVars(vars);
-        expr_2.getContainedVars(vars);
-        //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
-        String var;
-        if (c.getParams().length == 3) {
-            var = (String) c.getParams()[2];
-        } else {
-            var = "x";
-            if (!vars.isEmpty()) {
-                Iterator iter = vars.iterator();
-                var = (String) iter.next();
-            }
-        }
-
-        HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
-
-        /**
-         * Falls keine Lösungen ermittelt werden konnten, User informieren.
-         */
-        if (zeros.isEmpty()) {
-            output = new String[1];
-            output[0] = "Es konnten keine exakten Lösungen ermittelt werden. \n \n";
-            return;
-        }
-
-        /**
-         * Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
-         * ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
-         */
-        boolean contains_free_parameter = false;
-        String message_about_free_parameters = "";
-        for (int i = 0; i < zeros.size(); i++) {
-            contains_free_parameter = contains_free_parameter || zeros.get(i).contains("K_1");
-        }
-        if (contains_free_parameter) {
-            boolean contains_free_parameter_of_given_index = true;
-            int max_index = 1;
-            while (contains_free_parameter_of_given_index) {
-                max_index++;
-                contains_free_parameter_of_given_index = false;
-                for (int i = 0; i < zeros.size(); i++) {
-                    contains_free_parameter_of_given_index = contains_free_parameter_of_given_index
-                            || zeros.get(i).contains("K_" + max_index);
-                }
-            }
-            max_index--;
-
-            message_about_free_parameters = "K_1, ";
-            for (int i = 2; i <= max_index; i++) {
-                message_about_free_parameters = message_about_free_parameters + "K_" + i + ", ";
-            }
-            message_about_free_parameters = message_about_free_parameters.substring(0, message_about_free_parameters.length() - 2);
-            if (max_index == 1) {
-                message_about_free_parameters = message_about_free_parameters + " ist eine beliebige ganze Zahl. \n \n";
-            } else {
-                message_about_free_parameters = message_about_free_parameters + " sind beliebige ganze Zahlen. \n \n";
-            }
-
-        }
-
-        if (contains_free_parameter) {
-            output = new String[zeros.size() + 2];
-            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
-            for (int i = 0; i < zeros.size(); i++) {
-                output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
-            }
-            output[output.length - 1] = message_about_free_parameters;
-        } else {
-            output = new String[zeros.size() + 1];
-            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
-            for (int i = 0; i < zeros.size(); i++) {
-                output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
-            }
-        }
-
-    }
-
     private static void executeSolveDEQ(Command c, GraphicMethods2D graphicMethods2D)
             throws ExpressionException, EvaluationException {
 
@@ -2321,8 +2236,8 @@ public class MathCommandCompiler {
          */
         if (solution.length < 1001) {
             output = new String[2 + solution.length];
-            output[output.length - 1] = "Die Lösung der Differentialgleichung ist an der Stelle "
-                    + (x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000) + " nicht definiert. \n \n";
+            output[output.length - 1] = "Die Lösung der Differentialgleichung ist nicht definiert an der Stelle "
+                    + (x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000) + ". \n \n";
         } else {
             output = new String[1 + solution.length];
         }
