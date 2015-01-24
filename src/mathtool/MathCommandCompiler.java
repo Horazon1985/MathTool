@@ -545,7 +545,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("plot2d")) {
             if (params.length < 3) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot2d'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot2d'.");
             }
 
             HashSet vars = new HashSet();
