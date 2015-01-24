@@ -51,10 +51,8 @@ public class DevelopersDialogGUI extends JDialog {
             try {
                 developersArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
         } else {
-            System.err.println("Datei nicht gefunden.");
         }
 
         validate();

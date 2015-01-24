@@ -99,7 +99,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Standardsprache = DE
          */
         Expression.setLanguage(TypeLanguage.DE);
-        
+
         /**
          * Es wird noch keine Grafik angezeigt
          */
@@ -219,55 +219,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void changeLanguage(TypeLanguage typeLanguage) {
         Expression.setLanguage(typeLanguage);
-    }
-
-    private void translateExceptionMessage(String exception_id) {
-
-        /**
-         * Die entsprechende XML-Datei öffnen.
-         */
-        if (exception_id.substring(0, 2).equals("CC")) {
-
-            try {
-                File langFile = new File("src/mathtool/languages/LangComputationalClasses.xml");
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(langFile);
-
-                doc.getDocumentElement().normalize();
-
-//                System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-                NodeList nList = doc.getElementsByTagName("object");
-
-//                System.out.println("----------------------------");
-                for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                    Node nNode = nList.item(temp);
-
-//                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                        Element eElement = (Element) nNode;
-
-                        if (Expression.getLanguage().equals(TypeLanguage.DE)) {
-                            System.out.println("German: " + eElement.getElementsByTagName("German").item(0).getTextContent());
-                        } else if (Expression.getLanguage().equals(TypeLanguage.EN)) {
-                            System.out.println("English: " + eElement.getElementsByTagName("English").item(0).getTextContent());
-                        } else if (Expression.getLanguage().equals(TypeLanguage.RU)) {
-                            System.out.println("Russian: " + eElement.getElementsByTagName("Russian").item(0).getTextContent());
-                        }
-
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        /**
-         * Sollte nie eintreten.
-         */
     }
 
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
@@ -993,8 +944,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * stoppen, falls diese aktiv ist.
                  */
                 stopPossibleRotation();
-//                executeCommand();
-                translateExceptionMessage("CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_1");
+                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:

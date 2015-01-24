@@ -698,9 +698,9 @@ public class MathCommandCompiler {
          */
         if (command.equals("plot3d")) {
             if (params.length < 5) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot3d'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot3d'.");
             } else if (params.length > 5) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'plot3d'");
+                throw new ExpressionException("Zu viele Parameter im Befehl 'plot3d'.");
             }
 
             HashSet vars = new HashSet();
@@ -870,7 +870,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("plotpolar")) {
             if (params.length < 3) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plotpolar'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'plotpolar'.");
             }
 
             HashSet vars = new HashSet();
@@ -941,7 +941,7 @@ public class MathCommandCompiler {
             }
             if (!params[0].contains("=")) {
                 throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
-                        + "wobei f und g Funktionen und x eine gültiger Veränderliche sind.");
+                        + "wobei f und g Funktionen und x eine gültige Veränderliche ist.");
             }
 
             HashSet vars = new HashSet();
@@ -949,8 +949,8 @@ public class MathCommandCompiler {
                 Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
                 Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss zwei gültige Ausdrücke enthalten, "
-                        + "welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
+                        + "wobei f und g Funktionen und x eine gültige Veränderliche ist. Gemeldeter Fehler: " + e.getMessage());
             }
 
             Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
@@ -1058,7 +1058,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("solvedeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'");
+                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'.");
             }
 
             if (params.length >= 6) {
@@ -1159,11 +1159,8 @@ public class MathCommandCompiler {
          * Ausdruck.
          */
         if (command.equals("table")) {
-            if (params.length == 0) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.");
-            }
-            if (params.length > 1) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'table'. Im Befehl 'table' muss genau ein Parameter vorkommen und dieser muss ein gültiger logischer Ausdruck sein.");
+            if (params.length != 1) {
+                throw new ExpressionException("Im Befehl 'table' muss genau ein Parameter stehen und dieser muss ein gültiger logischer Ausdruck sein.");
             }
 
             HashSet vars = new HashSet();
@@ -1172,7 +1169,7 @@ public class MathCommandCompiler {
             try {
                 log_expr = LogicalExpression.build(params[0], vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'table' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException("Der Parameter im Befehl 'table' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
             }
 
             command_params = new Object[1];
