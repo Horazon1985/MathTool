@@ -624,40 +624,15 @@ public class MathCommandCompiler {
                     }
 
                     HashSet vars_in_limits = new HashSet();
-                    try {
-                        Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                    for (int i = 1; i <= 4; i++) {
+                        try {
+                            Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
+                            if (!vars_in_limits.isEmpty()) {
+                                throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                            }
+                        } catch (ExpressionException e) {
+                            throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                         }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                    }
-
-                    try {
-                        Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
-                        if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
                     }
 
                     Expression expr_left = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
@@ -718,40 +693,15 @@ public class MathCommandCompiler {
             }
 
             HashSet vars_in_limits = new HashSet();
-            try {
-                Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+            for (int i = 1; i <= 4; i++) {
+                try {
+                    Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
                 }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-            }
-
-            try {
-                Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-            }
-
-            try {
-                Expression.build(params[3], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-            }
-
-            try {
-                Expression.build(params[4], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
             }
 
             Expression expr = Expression.build(params[0], vars);
@@ -819,22 +769,15 @@ public class MathCommandCompiler {
             }
 
             HashSet vars_in_limits = new HashSet();
-            try {
-                Expression.build(params[1], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+            for (int i = 1; i <= 2; i++) {
+                try {
+                    Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
+                    if (!vars_in_limits.isEmpty()) {
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
                 }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
-            }
-
-            try {
-                Expression.build(params[2], new HashSet()).getContainedVars(vars_in_limits);
-                if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
             }
 
             if (curve_components.length == 2) {
@@ -990,25 +933,16 @@ public class MathCommandCompiler {
                     throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
                 }
 
-                HashSet vars_in_limit = new HashSet();
-                try {
-                    Expression expr = Expression.build(params[1], vars_in_limit);
-                    if (!vars_in_limit.isEmpty()) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                HashSet vars_in_limits = new HashSet();
+                for (int i = 1; i <= 2; i++) {
+                    try {
+                        Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
+                        if (!vars_in_limits.isEmpty()) {
+                            throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                        }
+                    } catch (ExpressionException e) {
+                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                     }
-                    expr.evaluate();
-                } catch (ExpressionException | EvaluationException e) {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
-                }
-
-                try {
-                    Expression expr = Expression.build(params[2], vars_in_limit);
-                    if (!vars_in_limit.isEmpty()) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
-                    }
-                    expr.evaluate();
-                } catch (ExpressionException | EvaluationException e) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
                 }
 
                 if (params.length == 4) {

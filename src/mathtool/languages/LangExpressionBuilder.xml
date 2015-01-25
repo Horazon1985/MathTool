@@ -136,212 +136,212 @@
   </object>
   <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_DIV">
     <German>Im Operator 'div' muss genau ein Parameter stehen.</German>
-    <English>?</English>
+    <English>Operator 'div' must contain exactly one parameter.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_PARAMETER_IN_DIV_IS_INVALID">
     <German>Der Parameter im Operator 'div' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The parameter in operator 'div' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_FAC">
     <German>Im Operator 'fac' muss genau ein Parameter stehen.</German>
-    <English>?</English>
+    <English>Operator 'fac' must contain exactly one parameter.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_PARAMETER_IN_FAC_IS_INVALID">
-    <German>Der Parameter im Operator 'fac' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <German>Der Parameter im Operator 'fac' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>The parameter in operator 'fac' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_GCD">
     <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
-    <English>?</English>
+    <English>Operator 'gcd' must contain at least one parameter.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_1">
     <German>Der </German>
-    <English>?</English>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_GCD_IS_INVALID_2">
     <German>. Parameter im Operator 'gcd' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>. parameter in operator 'gcd' is not a valid expression. Reported Error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_INT">
     <German>Zu wenig Parameter im Operator 'int'.</German>
-    <English>?</English>
+    <English>Not enough parameters in operator 'int'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_PARAMETER_IN_INT">
     <German>Im Operator 'int' müssen entweder genau zwei Parameter (im Falle einer unbestimmten Integration) oder genau vier (im Falle einer bestimmten Integration) Parameter stehen.</German>
-    <English>?</English>
+    <English>Operator 'int' must either contain exactly two parameters (in case of indefinite integration) or exactly four parameters (in case of definite integration).</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_TOO_MANY_PARAMETER_IN_INT">
     <German>Zu viele Parameter im Operator 'int'.</German>
-    <English>?</English>
+    <English>Too many parameters in operator 'int'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FIRST_PARAMETER_IN_INT_IS_INVALID">
     <German>Der erste Parameter im Operator 'int' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The first parameter in operator 'int' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_SECOND_PARAMETER_IN_INT_IS_INVALID">
     <German>Der zweite Parameter im Operator 'int' muss eine gültige Veränderliche sein.</German>
-    <English>?</English>
+    <English>The first parameter in operator 'int' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_THIRD_PARAMETER_IN_INT_IS_INVALID">
     <German>Der dritte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
-    <English>?</English>
+    <English>The third parameter in operator 'int' is the lower limit of integration. This must be a valid expression, which does not contain the integration variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FOURTH_PARAMETER_IN_INT_IS_INVALID">
     <German>Der vierte Parameter im Operator 'int' ist die untere Integrationsgrenze. Dies muss ein gültiger Ausdruck sein, welcher die Integrationsvariable nicht enthält.</German>
-    <English>?</English>
+    <English>The fourth parameter in operator 'int' is the upper limit of integration. This must be a valid expression, which does not contain the integration variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_LAPLACE">
-    <German>Im Operator 'laplace' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.</German>
-    <English>?</English>
+    <German>Im Operator 'laplace' muss genau ein Parameter stehen.</German>
+    <English>Operator 'laplace' must contain exactly one parameter.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_PARAMETER_IN_LAPLACE_IS_INVALID">
     <German>Der Parameter im Operator 'laplace' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The parameter in operator 'laplace' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_LCM">
-    <German>Im Operator 'gcd' muss mindestens ein Parameter stehen.</German>
-    <English>?</English>
+    <German>Im Operator 'lcm' muss mindestens ein Parameter stehen.</German>
+    <English>Operator 'lcm' must contain at least one parameter.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_1">
     <German>Der </German>
-    <English>?</English>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_LCM_IS_INVALID_2">
     <German>. Parameter im Operator 'lcm' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>. parameter in operator 'lcm' is not a valid expression. Reported Error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_WRONG_NUMBER_OF_PARAMETERS_IN_MOD">
     <German>Im Operator 'mod' müssen genau zwei Parameter stehen, die jeweils ganze Zahlen darstellen.</German>
-    <English>?</English>
+    <English>Operator 'mod' must contain exactly two parameters, each representing integers.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_1">
     <German>Der </German>
-    <English>?</English>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_GENERAL_PARAMETER_IN_MOD_IS_INVALID_2">
     <German>. Parameter im Operator 'mod' ist kein gültiger Ausdruck. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>. parameter in operator 'mod' is not a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_PROD">
     <German>Zu wenig Parameter im Operator 'prod'.</German>
-    <English>?</English>
+    <English>Not enough parameters in operator 'prod'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_PROD">
     <German>Zu viele Parameter im Operator 'prod'.</German>
-    <English>?</English>
+    <English>Too many parameters in operator 'prod'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FIRST_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der erste Parameter im Operator 'prod' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The first parameter in operator 'prod' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_SECOND_PARAMETER_IN_PROD_IS_INVALID">
     <German>Der zweite Parameter im Operator 'prod' muss eine Variable sein, nach der multipliziert wird.</German>
-    <English>?</English>
+    <English>The second parameter in operator 'prod' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_THIRD_PARAMETER_IN_PROD_IS_INVALID">
-    <German>Der dritte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
-    <English>?</English>
+  <object id = "EB_Operator_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PROD_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_FOURTH_PARAMETER_IN_PROD_IS_INVALID">
-    <German>Der vierte Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
-    <English>?</English>
+  <object id = "EB_Operator_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PROD_1">
+    <German>. Parameter im Operator 'prod' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>. parameter in operator 'prod' must be either an integer, where the expression is defined at, or an expression, containing a variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_BOUNDS_IN_PROD_CANNOT_CONTAIN_INDEX_VARIABLE">
     <German>Die Grenzen im Operator 'prod' dürfen die Indexvariable nicht enthalten.</German>
-    <English>?</English>
+    <English>The limits in operator 'prod' are not allowed to contain the index variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_SUM">
     <German>Zu wenig Parameter im Operator 'sum'.</German>
-    <English>?</English>
+    <English>Not enough parameters in operator 'sum'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_SUM">
     <German>Zu viele Parameter im Operator 'sum'.</German>
-    <English>?</English>
+    <English>Too many parameters in operator 'sum'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FIRST_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der erste Parameter im Operator 'sum' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The first parameter in operator 'sum' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_SECOND_PARAMETER_IN_SUM_IS_INVALID">
     <German>Der zweite Parameter im Operator 'sum' muss eine Variable sein, nach der summiert wird.</German>
-    <English>?</English>
+    <English>The second parameter in operator 'sum' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_THIRD_PARAMETER_IN_SUM_IS_INVALID">
-    <German>Der dritte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
-    <English>?</English>
+  <object id = "EB_Operator_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SUM_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_FOURTH_PARAMETER_IN_SUM_IS_INVALID">
-    <German>Der vierte Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
-    <English>?</English>
+  <object id = "EB_Operator_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SUM_1">
+    <German>. Parameter im Operator 'sum' muss entweder eine ganze Zahl sein, welche im Definitionsbereich des Ausdrucks liegt, oder ein Ausdruck sein, welcher Veränderliche enthält.</German>
+    <English>. parameter in operator 'sum' must be either an integer, where the expression is defined at, or an expression, containing a variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_BOUNDS_IN_SUM_CANNOT_CONTAIN_INDEX_VARIABLE">
     <German>Die Grenzen im Operator 'sum' dürfen die Indexvariable nicht enthalten.</German>
-    <English>?</English>
+    <English>The limits in operator 'prod' are not allowed to contain the index variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_NOT_ENOUGH_PARAMETERS_IN_TAYLOR">
     <German>Zu wenig Parameter im Operator 'taylor'.</German>
-    <English>?</English>
+    <English>Not enough parameters in operator 'taylor'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_TOO_MANY_PARAMETERS_IN_TAYLOR">
     <German>Zu viele Parameter im Operator 'taylor'.</German>
-    <English>?</English>
+    <English>Too many parameters in operator 'taylor'.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FIRST_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der erste Parameter im Operator 'taylor' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>?</English>
+    <English>The first parameter in operator 'taylor' must be a valid expression. Reported error: </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_SECOND_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der zweite Parameter im Operator 'taylor' muss eine gültige Veränderliche sein.</German>
-    <English>?</English>
+    <English>The second parameter in operator 'taylor' must be a valid variable.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_THIRD_PARAMETER_IN_TAYLOR_IS_INVALID">
-    <German>Der dritte Parameter im Operator 'taylor' muss eine reele Zahl sein, die im Definitionsbereich der Funktion liegt.</German>
-    <English>?</English>
+    <German>Der dritte Parameter im Operator 'taylor' muss eine reelle Zahl sein, die im Definitionsbereich der Funktion liegt.</German>
+    <English>The third parameter in operator 'taylor' must be real number, where the function is defined at.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_FOURTH_PARAMETER_IN_TAYLOR_IS_INVALID">
     <German>Der vierte Parameter im Operator 'taylor' muss eine natürliche Zahl sein. Dies ist die Ordnung des Taylorpolynoms.</German>
-    <English>?</English>
+    <English>The fourth parameter in operator 'taylor' must be a natural number. This is the degree of the taylor polynomial.</English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Operator_EXPRESSION_IS_NOT_DIFFERENTIABLE_1">
@@ -401,12 +401,12 @@
   </object>
   <object id = "EB_Variable_VARIABLE_HAS_UNDEFINED_VALUE_1">
     <German>Die Variable </German>
-    <English>?</English>
+    <English>The variable </English>
     <Russian>?</Russian>
   </object>
   <object id = "EB_Variable_VARIABLE_HAS_UNDEFINED_VALUE_2">
-    <German> besitzt einen nichtdefinierten Wert.</German>
-    <English>?</English>
+    <German> besitzt einen nicht definierten Wert.</German>
+    <English> has an undefined value.</English>
     <Russian>?</Russian>
   </object>
 </objects>

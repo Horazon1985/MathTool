@@ -219,24 +219,14 @@
     <English> variables.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_2_PARAMETER_IN_IMPLICIT_PLOT2D">
-    <German>Der zweite Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
-    <English>The second parameter in command 'plot2d' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_3_PARAMETER_IN_IMPLICIT_PLOT2D">
-    <German>Der dritte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
-    <English>The third parameter in command 'plot2d' must be a real number.</English>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_FORM_OF_4_PARAMETER_IN_IMPLICIT_PLOT2D">
-    <German>Der vierte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
-    <English>The fourth parameter in command 'plot2d' must be a real number.</English>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_FORM_OF_5_PARAMETER_IN_IMPLICIT_PLOT2D">
-    <German>Der fünfte Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
-    <English>The fifth parameter in command 'plot2d' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2">
+    <German>. Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
+    <English>. parameter in command 'plot2d' must be a real number.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D">
@@ -274,24 +264,14 @@
     <English> variables.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_2_PARAMETER_IN_PLOT3D">
-    <German>Der zweite Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
-    <English>The second parameter in command 'plot3d' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_3_PARAMETER_IN_PLOT3D">
-    <German>Der dritte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
-    <English>The third parameter in command 'plot3d' must be a real number.</English>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_FORM_OF_4_PARAMETER_IN_PLOT3D">
-    <German>Der vierte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
-    <English>The fourth parameter in command 'plot3d' must be a real number.</English>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_FORM_OF_5_PARAMETER_IN_PLOT3D">
-    <German>Der fünfte Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
-    <English>The fifth parameter in command 'plot3d' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2">
+    <German>. Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.</German>
+    <English>. parameter in command 'plot3d' must be a real number.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D">
@@ -334,14 +314,14 @@
     <English>The curve in command 'plotcurve' must be parameterized by at most one parameter variable.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_2_PARAMETER_IN_PLOTCURVE">
-    <German>Der zweite Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.</German>
-    <English>The second parameter in command 'plotcurve' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_FORM_OF_3_PARAMETER_IN_PLOTCURVE">
-    <German>Der dritte Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.</German>
-    <English>The third parameter in command 'plotcurve' must be a real number.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2">
+    <German>. Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.</German>
+    <English>. parameter in command 'plotcurve' must be a real number.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
@@ -424,14 +404,14 @@
     <English>The equation must contain at most one variable.</English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_">
-    <German>Der zweite Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.</German>
-    <English>The second parameter in command 'solve' must be a constant with absolute value of at most 1.7E308.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1">
+    <German>Der </German>
+    <English>The </English>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_">
-    <German>Der dritte Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.</German>
-    <English>The third parameter in command 'solve' must be a constant with absolute value of at most 1.7E308.</English>
+  <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2">
+    <German>. Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.</German>
+    <English>. parameter in command 'solve' must be a constant with absolute value of at most 1.7E308.</English>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_">
