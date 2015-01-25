@@ -1,5 +1,6 @@
 package mathtool;
 
+import Translator.Translator;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -14,28 +15,30 @@ import javax.swing.JScrollPane;
 
 public class HelpDialogGUI extends JDialog implements MouseListener {
 
-    private final JLabel generalities, mathFormulas, operators, commands, contact;
+    private final JLabel generalities, mathFormulas, logicalExpressions, operators, commands, contact;
     private final JEditorPane helpArea;
     private final JScrollPane scrollPaneHelp;
 
     public HelpDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
-        setTitle("Hilfe");
+        setTitle(Translator.translateExceptionMessage("GUI_HelpDialogGUI_HELP"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        JLabel menue = new JLabel("Menü");
+        JLabel menue = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MENUE"));
         menue.setFont(menue.getFont().deriveFont(Font.BOLD));
-        generalities = new JLabel("Allgemeines");
-        mathFormulas = new JLabel("Mathematische Formeln");
-        operators = new JLabel("Operatoren");
-        commands = new JLabel("Befehle");
-        contact = new JLabel("Kontakt/Bugs melden");
+        generalities = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_GENERALITIES"));
+        mathFormulas = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MATH_FORMULAS"));
+        logicalExpressions = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_LOGICAL_EXPRESSION"));
+        operators = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_OPERATORS"));
+        commands = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_COMMANDS"));
+        contact = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_BUG_REPORT"));
 
         menue.setVisible(true);
         generalities.setVisible(true);
         mathFormulas.setVisible(true);
+        logicalExpressions.setVisible(true);
         operators.setVisible(true);
         commands.setVisible(true);
         contact.setVisible(true);
@@ -47,23 +50,27 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         mathFormulas.setBounds(30, 180, 350, 25);
         mathFormulas.addMouseListener(this);
 
-        operators.setBounds(30, 210, 350, 25);
+        logicalExpressions.setBounds(30, 210, 350, 25);
+        logicalExpressions.addMouseListener(this);
+
+        operators.setBounds(30, 240, 350, 25);
         operators.addMouseListener(this);
 
-        commands.setBounds(30, 240, 350, 25);
+        commands.setBounds(30, 270, 350, 25);
         commands.addMouseListener(this);
 
-        contact.setBounds(30, 270, 350, 25);
+        contact.setBounds(30, 300, 350, 25);
         contact.addMouseListener(this);
 
         add(menue);
         add(generalities);
         add(mathFormulas);
+        add(logicalExpressions);
         add(operators);
         add(commands);
         add(contact);
 
-        this.setBounds((with_mathtoolform - 505)/2 + x_mathtoolform, (heigth_mathtoolform - 650)/2 + y_mathtoolform, 505, 340);
+        this.setBounds((with_mathtoolform - 505) / 2 + x_mathtoolform, (heigth_mathtoolform - 680) / 2 + y_mathtoolform, 505, 370);
         this.getContentPane().setBackground(Color.white);
 
         /**
@@ -78,11 +85,11 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         helpArea = new JEditorPane();
         helpArea.setContentType("text/html");
         add(helpArea);
-        helpArea.setBounds(20, 300, 460, 300);
+        helpArea.setBounds(20, 330, 460, 300);
         helpArea.setEditable(false);
         helpArea.setVisible(false);
         scrollPaneHelp = new JScrollPane(helpArea);
-        scrollPaneHelp.setBounds(20, 300, 460, 300);
+        scrollPaneHelp.setBounds(20, 330, 460, 300);
         scrollPaneHelp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneHelp);
         scrollPaneHelp.setVisible(false);
@@ -99,10 +106,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             try {
                 helpArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
-        } else {
-            System.err.println("Datei nicht gefunden.");
         }
         repaint();
         validate();
@@ -116,10 +120,21 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             try {
                 helpArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
-        } else {
-            System.err.println("Datei nicht gefunden.");
+        }
+        repaint();
+        validate();
+    }
+
+    private void showHelpFileLogicalExpressions() {
+        helpArea.setVisible(true);
+        scrollPaneHelp.setVisible(true);
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpLogicalExpressions.html");
+        if (helpURL != null) {
+            try {
+                helpArea.setPage(helpURL);
+            } catch (IOException e) {
+            }
         }
         repaint();
         validate();
@@ -133,10 +148,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             try {
                 helpArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
-        } else {
-            System.err.println("Datei nicht gefunden.");
         }
         repaint();
         validate();
@@ -150,10 +162,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             try {
                 helpArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
-        } else {
-            System.err.println("Datei nicht gefunden.");
         }
         repaint();
         validate();
@@ -167,10 +176,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             try {
                 helpArea.setPage(helpURL);
             } catch (IOException e) {
-                System.err.println("Fehler: " + helpURL);
             }
-        } else {
-            System.err.println("Datei nicht gefunden.");
         }
         repaint();
         validate();
@@ -179,53 +185,65 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == generalities) {
-            this.setBounds(this.getX(), this.getY(), 505, 650);
+            this.setBounds(this.getX(), this.getY(), 505, 680);
             generalities.setForeground(Color.blue);
             mathFormulas.setForeground(Color.black);
+            logicalExpressions.setForeground(Color.black);
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
             showHelpFileGeneralities();
             validate();
             repaint();
-        }
-        if (e.getSource() == mathFormulas) {
-            this.setBounds(this.getX(), this.getY(), 505, 650);
+        } else if (e.getSource() == mathFormulas) {
+            this.setBounds(this.getX(), this.getY(), 505, 680);
             generalities.setForeground(Color.black);
             mathFormulas.setForeground(Color.blue);
+            logicalExpressions.setForeground(Color.black);
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
             showHelpFileFormulas();
             validate();
             repaint();
-        }
-        if (e.getSource() == operators) {
-            this.setBounds(this.getX(), this.getY(), 505, 650);
+        } else if (e.getSource() == logicalExpressions) {
+            this.setBounds(this.getX(), this.getY(), 505, 680);
             generalities.setForeground(Color.black);
             mathFormulas.setForeground(Color.black);
+            logicalExpressions.setForeground(Color.blue);
+            operators.setForeground(Color.black);
+            commands.setForeground(Color.black);
+            contact.setForeground(Color.black);
+            showHelpFileLogicalExpressions();
+            validate();
+            repaint();
+        } else if (e.getSource() == operators) {
+            this.setBounds(this.getX(), this.getY(), 505, 680);
+            generalities.setForeground(Color.black);
+            mathFormulas.setForeground(Color.black);
+            logicalExpressions.setForeground(Color.black);
             operators.setForeground(Color.blue);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
             showHelpFileOperators();
             validate();
             repaint();
-        }
-        if (e.getSource() == commands) {
-            this.setBounds(this.getX(), this.getY(), 505, 650);
+        } else if (e.getSource() == commands) {
+            this.setBounds(this.getX(), this.getY(), 505, 680);
             generalities.setForeground(Color.black);
             mathFormulas.setForeground(Color.black);
+            logicalExpressions.setForeground(Color.black);
             operators.setForeground(Color.black);
             commands.setForeground(Color.blue);
             contact.setForeground(Color.black);
             showHelpFileCommands();
             validate();
             repaint();
-        }
-        if (e.getSource() == contact) {
-            this.setBounds(this.getX(), this.getY(), 505, 650);
+        } else if (e.getSource() == contact) {
+            this.setBounds(this.getX(), this.getY(), 505, 680);
             generalities.setForeground(Color.black);
             mathFormulas.setForeground(Color.black);
+            logicalExpressions.setForeground(Color.black);
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.blue);
@@ -248,27 +266,27 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == generalities) {
-            generalities.setText("<html><u>Allgemeines</u></<html>");
+            generalities.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_GENERALITIES") + "</u></html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == mathFormulas) {
-            mathFormulas.setText("<html><u>Mathematische Formeln</u></<html>");
+        } else if (e.getSource() == mathFormulas) {
+            mathFormulas.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_MATH_FORMULAS") + "</u></html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == operators) {
-            operators.setText("<html><u>Operatoren</u></<html>");
+        } else if (e.getSource() == logicalExpressions) {
+            logicalExpressions.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_LOGICAL_EXPRESSION") + "</u></html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == commands) {
-            commands.setText("<html><u>Befehle</u></<html>");
+        } else if (e.getSource() == operators) {
+            operators.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_OPERATORS") + "</u></html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == contact) {
-            contact.setText("<html><u>Kontakt/Bugs melden</u></<html>");
+        } else if (e.getSource() == commands) {
+            commands.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_COMMANDS") + "</u></html>");
+            validate();
+            repaint();
+        } else if (e.getSource() == contact) {
+            contact.setText("<html><u>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_BUG_REPORT") + "</u></html>");
             validate();
             repaint();
         }
@@ -277,27 +295,27 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == generalities) {
-            generalities.setText("<html>Allgemeines</<html>");
+            generalities.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_GENERALITIES") + "</html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == mathFormulas) {
-            mathFormulas.setText("<html>Mathematische Formeln</<html>");
+        } else if (e.getSource() == mathFormulas) {
+            mathFormulas.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_MATH_FORMULAS") + "</html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == operators) {
-            operators.setText("<html>Operatoren</<html>");
+        } else if (e.getSource() == logicalExpressions) {
+            logicalExpressions.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_LOGICAL_EXPRESSION") + "</html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == commands) {
-            commands.setText("<html>Befehle</<html>");
+        } else if (e.getSource() == operators) {
+            operators.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_OPERATORS") + "</html>");
             validate();
             repaint();
-        }
-        if (e.getSource() == contact) {
-            contact.setText("<html>Kontakt/Bugs melden</<html>");
+        } else if (e.getSource() == commands) {
+            commands.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_COMMANDS") + "</html>");
+            validate();
+            repaint();
+        } else if (e.getSource() == contact) {
+            contact.setText("<html>" + Translator.translateExceptionMessage("GUI_HelpDialogGUI_BUG_REPORT") + "</html>");
             validate();
             repaint();
         }

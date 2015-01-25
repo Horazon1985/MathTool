@@ -1,5 +1,6 @@
 package mathtool;
 
+import Translator.Translator;
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.ImageIcon;
@@ -16,7 +17,7 @@ public class DevelopersDialogGUI extends JDialog {
 
     public DevelopersDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
-        setTitle("Über MathTool");
+        setTitle(Translator.translateExceptionMessage("GUI_DevelopersDialogGUI_ABOUT"));
         setLayout(null);
         setResizable(false);
         setModal(true);

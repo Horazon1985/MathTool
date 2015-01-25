@@ -1,0 +1,80 @@
+﻿<objects>
+<!-- DevelopersDialogGUI -->    
+  <object id = "GUI_DevelopersDialogGUI_ABOUT">
+    <German>Über MathTool</German>
+    <English>About MathTool</English>
+    <Russian>?</Russian>
+  </object>
+<!-- HelpDialogGUI -->    
+  <object id = "GUI_HelpDialogGUI_HELP">
+    <German>Hilfe</German>
+    <English>Help</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_MENUE">
+    <German>Menü</German>
+    <English>Menue</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_GENERALITIES">
+    <German>Allgemeines</German>
+    <English>Generalities</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_MATH_FORMULAS">
+    <German>Mathematische Formeln</German>
+    <English>Mathematical formulas</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION">
+    <German>Logische Ausdrücke</German>
+    <English>Logical expressions</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_OPERATORS">
+    <German>Operatoren</German>
+    <English>Operators</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_COMMANDS">
+    <German>Befehle</German>
+    <English>Commands</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_HelpDialogGUI_BUG_REPORT">
+    <German>Kontakt/Bugs melden</German>
+    <English>Contact/Report bugs</English>
+    <Russian>?</Russian>
+  </object>
+ <!-- LegendGUI -->    
+ <object id = "GUI_LegendGUI_LEGEND">
+    <German>Legende</German>
+    <English>legend</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_LegendGUI_CONTROLS">
+    <German>Bedienung:</German>
+    <English>Controls:</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_LegendGUI_GRAPHS">
+    <German>Graphen:</German>
+    <English>Graphs:</English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_LegendGUI_GRAPH">
+    <German>Graph </German>
+    <English>Graph </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION">
+    <German>(Vereinfachte) Gleichung der implizit gegebenen Funktion: </German>
+    <English>(Simplified) equation of the implicitly given function: </English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_LegendGUI_PARAMETERIZED_CURVE">
+    <German>Parametrisierte Kurve:</German>
+    <English>Parameterized curve:</English>
+    <Russian>?</Russian>
+  </object>
+</objects>

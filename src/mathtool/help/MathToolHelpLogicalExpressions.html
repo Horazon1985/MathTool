@@ -1,0 +1,18 @@
+﻿<font size="6"><strong>Logische Ausdr&uuml;cke:</strong></font><br><br>
+
+MathTool versteht, ebenso wie arithmetische Ausdrücke, auch logische Ausdrücke und kann diese auswerten. 
+Die Operatoren !, &, |, > und = entsprechen den logischen Operatoren NEGATION, UND, ODER, IMPLIKATION und ÄQUIVALENZ.<br>
+<i>Wichtig:</i> Auch wenn UND- bzw. ODER-Operatoren oft durch * bzw. + ersetzt werden, so ist dies in MathTool nicht der Fall. 
+Dies dient dazu, um Missverständnissen beim Kompilieren vorzubeugen. Ansonsten würde MathTool beispielsweise nicht wissen, ob es sich bei<br><br>
+
+a + 1<br><br>
+
+um einen arithmetischen oder um einen logischen Ausdruck handelt. Gültige logische Ausdrücke sehen dann etwa wie folgt aus:<br><br>
+
+a&!b, !(a&b|c)>1|d, ...<br><br>
+
+Ein eingegebener logischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies möglich ist. 
+Dies kann jedoch zu verlängerten Wartezeiten führen, falls der Ausdruck zu kompliziert ist und eine Vereinfachung viel zu lange dauert.
+In MathTool können logische Veränderliche, in Analogie zu arithmetischen Veränderlichen, mit einem einfachen Kleinbuchstaben oder mit einem Kleinbuchstaben mit Index bezeichnet werden 
+(Apostrophs sind hier jedoch nicht erlaubt). Beachten Sie, dass MathTool beim Kompilieren eines logischen Ausdrucks Leerzeichen beseitigt und Großbuchstaben zu Kleinbuchstaben macht. 
+Insofern ist beispielsweise die Veränderliche A_3 dasselbe wie a_3.

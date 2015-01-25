@@ -1,5 +1,6 @@
 package mathtool;
 
+import Translator.Translator;
 import expressionbuilder.Expression;
 import java.awt.Color;
 import javax.swing.JDialog;
@@ -12,7 +13,7 @@ public class LegendGUI extends JDialog {
 
     public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
             String[] instructions, HashMap<Integer, Color> colors, HashMap<Integer, Expression> expr) {
-        setTitle("Legende");
+        setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
@@ -22,7 +23,7 @@ public class LegendGUI extends JDialog {
                 500, 145 + 20 * instructions.length + 20 * colors.size());
         this.getContentPane().setBackground(Color.white);
 
-        JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
+        JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
         instruction.setBounds(10, 70, 470, 25);
         add(instruction);
 
@@ -34,7 +35,7 @@ public class LegendGUI extends JDialog {
             add(instr[i]);
         }
 
-        JLabel graphs = new JLabel("<html><b><u>Graphen:</u></b></<html>");
+        JLabel graphs = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_GRAPHS") + "</u></b></html>");
         graphs.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graphs);
 
@@ -42,7 +43,7 @@ public class LegendGUI extends JDialog {
         for (int i = 0; i < colorLabels.length; i++) {
             colorLabels[i] = new JLabel();
             colorLabels[i].setForeground(colors.get(i));
-            colorLabels[i].setText("Graph " + (i + 1) + ": " + expr.get(i).writeFormula(true));
+            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + expr.get(i).writeFormula(true));
             colorLabels[i].setBounds(10, 110 + 20 * instructions.length + 20 * i, 470, 25);
             add(colorLabels[i]);
         }
@@ -64,7 +65,7 @@ public class LegendGUI extends JDialog {
      */
     public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
             String[] instructions, Color color, Expression expr) {
-        setTitle("Legende");
+        setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
@@ -74,7 +75,7 @@ public class LegendGUI extends JDialog {
                 500, 165 + 20 * instructions.length);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
+        JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
         instruction.setBounds(10, 70, 470, 25);
         add(instruction);
 
@@ -86,13 +87,13 @@ public class LegendGUI extends JDialog {
             add(instr[i]);
         }
 
-        JLabel graphs = new JLabel("<html><b><u>Graphen:</u></b></<html>");
+        JLabel graphs = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_GRAPHS") + "</u></b></html>");
         graphs.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graphs);
 
         JLabel colorLabel = new JLabel();
         colorLabel.setForeground(color);
-        colorLabel.setText("Gleichung der impliziten Funktion: " + expr.writeFormula(true) + " = 0");
+        colorLabel.setText(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION") + expr.writeFormula(true) + " = 0");
         colorLabel.setBounds(10, 110 + 20 * instructions.length, 470, 25);
         add(colorLabel);
 
@@ -110,7 +111,7 @@ public class LegendGUI extends JDialog {
 
     public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
             String[] instructions, Expression expr) {
-        setTitle("Legende");
+        setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
@@ -120,7 +121,7 @@ public class LegendGUI extends JDialog {
                 500, 165 + 20 * instructions.length);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
+        JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
         instruction.setBounds(10, 70, 470, 25);
         add(instruction);
 
@@ -132,7 +133,7 @@ public class LegendGUI extends JDialog {
             add(instr[i]);
         }
 
-        JLabel graph = new JLabel("<html><b><u>Graph:</u></b></<html>");
+        JLabel graph = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + "</u></b></html>");
         graph.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graph);
 
@@ -154,7 +155,7 @@ public class LegendGUI extends JDialog {
 
     public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
             String[] instructions, Expression[] expr) {
-        setTitle("Legende");
+        setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
@@ -164,7 +165,7 @@ public class LegendGUI extends JDialog {
                 500, 165 + 20 * instructions.length + 20 * expr.length);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel instruction = new JLabel("<html><b><u>Bedienung:</u></b></<html>");
+        JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
         instruction.setBounds(10, 70, 470, 25);
         add(instruction);
 
@@ -176,7 +177,7 @@ public class LegendGUI extends JDialog {
             add(instr[i]);
         }
 
-        JLabel graph = new JLabel("<html><b><u>Parametrisierte Kurve:</u></b></<html>");
+        JLabel graph = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE") + "</u></b></html>");
         graph.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graph);
 
