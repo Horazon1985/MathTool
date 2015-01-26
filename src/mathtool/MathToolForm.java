@@ -186,7 +186,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
                 }
 
-                if (!typeGraphic.equals(typeGraphic.NONE)) {
+                if (!typeGraphic.equals(TypeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
                     inputField.setBounds(inputField.getX(), inputField.getY(), inputField.getWidth() - 510, 30);
@@ -586,7 +586,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-//                    mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
                 }
 
                 /**
@@ -596,7 +595,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 try {
                     LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
                     LogicalExpression log_expr_simplified = log_expr.simplify();
-                    mathToolArea.append(log_expr.writeFormula() + " ist äquivalent zu " + log_expr_simplified.writeFormula() + "\n \n");
+                    mathToolArea.append(log_expr.writeFormula() + " ist äquivalent zu " + log_expr_simplified.writeFormula() + " \n \n");
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
@@ -840,6 +839,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         if (s.equals("euler")) {
             return 0;
         }
+        if (s.equals("expand")) {
+            return 0;
+        }
         if (s.equals("latex")) {
             return 0;
         }
@@ -976,7 +978,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            if (typeGraphic.equals(typeGraphic.GRAPH2D)) {
+            if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
                 LegendGUI legendGUI;
                 if (graphicMethods2D.getGraphIsExplicit()) {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
@@ -986,19 +988,19 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                             graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
                 }
                 legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(typeGraphic.GRAPH3D)) {
+            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
                 legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(typeGraphic.CURVE2D)) {
+            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
                 legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(typeGraphic.CURVE3D)) {
+            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
                 legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(typeGraphic.POLARGRAPH2D)) {
+            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         GraphicMethodsPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
                 legendGUI.setVisible(true);
