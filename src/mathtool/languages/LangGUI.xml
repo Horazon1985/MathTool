@@ -1,4 +1,50 @@
 ﻿<objects>
+<!-- MathToolForm -->    
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German></German>
+    <English></English>
+    <Russian>?</Russian>
+  </object>
 <!-- DevelopersDialogGUI -->    
   <object id = "GUI_DevelopersDialogGUI_ABOUT">
     <German>Über MathTool</German>

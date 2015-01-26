@@ -10,6 +10,7 @@ import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import expressionbuilder.TypeGraphic;
 import LogicalExpressionBuilder.LogicalExpression;
+import Translator.Translator;
 import expressionbuilder.TypeLanguage;
 
 import java.awt.*;
@@ -532,7 +533,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                      * könnte.
                      */
                     if (valid_command) {
-                        mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                        mathToolArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         return null;
                     }
                 }
@@ -579,7 +580,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                             if (e.getMessage().equals("Berechnung abgebrochen.")) {
                                 mathToolArea.append(e.getMessage() + "\n \n");
                             } else {
-                                mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                                mathToolArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             }
                             return null;
                         }
@@ -595,11 +596,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 try {
                     LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
                     LogicalExpression log_expr_simplified = log_expr.simplify();
-                    mathToolArea.append(log_expr.writeFormula() + " ist äquivalent zu " + log_expr_simplified.writeFormula() + " \n \n");
+                    mathToolArea.append(log_expr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + log_expr_simplified.writeFormula() + " \n \n");
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
-                    mathToolArea.append("FEHLER: " + e.getMessage() + "\n \n");
+                    mathToolArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                 }
 
                 return null;

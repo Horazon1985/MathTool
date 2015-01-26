@@ -1,20 +1,14 @@
 ﻿<objects>
-  <object id = "MTF_">
+  <object id = "MTF_ERROR">
     <German>FEHLER: </German>
     <English>ERROR: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MTF_">
+  <object id = "MTF_EQUIVALENT_TO">
     <German> ist äquivalent zu </German>
     <English> is equivalent to </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
-  </object>
-  <object id = "MTF_">
-    <German> \n \n</German>
-    <English> \n \n</English>
-    <Ukrainian> \n \n</Ukrainian>
-    <Russian> \n \n</Russian>
   </object>
 </objects>
