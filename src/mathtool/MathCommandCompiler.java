@@ -1065,11 +1065,11 @@ public class MathCommandCompiler {
                     try {
                         Expression limit = Expression.build(params[i], vars_in_limits);
                         if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein.");
+                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein, deren Betrag höchstens 1.7E308 beträgt.");
                         }
                         limit.evaluate();
                     } catch (ExpressionException | EvaluationException e) {
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein.");
+                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein, deren Betrag höchstens 1.7E308 beträgt.");
                     }
                 }
 
@@ -1094,7 +1094,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("table")) {
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'table' muss genau ein Parameter stehen und dieser muss ein gültiger logischer Ausdruck sein.");
+                throw new ExpressionException("Im Befehl 'table' muss genau ein Parameter stehen.");
             }
 
             HashSet vars = new HashSet();
