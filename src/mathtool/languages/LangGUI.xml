@@ -1,126 +1,180 @@
 ﻿<objects>
 <!-- MathToolForm -->    
-  <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+  <object id = "GUI_MathToolForm_MENUE_FILE">
+    <German>Datei</German>
+    <English>File</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Verlassen</German>
+    <English>Quit</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>MathTool</German>
+    <English>MathTool</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Hilfe</German>
+    <English>Help</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Sprache</German>
+    <English>Language</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Über MathTool</German>
+    <English>About MathTool</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Eingabe</German>
+    <English>Input</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>Abbruch</German>
+    <English>Cancel</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_MathToolForm_">
-    <German></German>
-    <English></English>
+    <German>LaTex-Code</German>
+    <English>LaTex-Code</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German>Operator</German>
+    <English>Operator</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German>Befehl</German>
+    <English>Command</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German>Graphen rotieren lassen</German>
+    <English>Rotate graph</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German>Rotation stoppen</German>
+    <English>Stop rotation</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_">
+    <German>Legende</German>
+    <English>Legend</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
 <!-- DevelopersDialogGUI -->    
   <object id = "GUI_DevelopersDialogGUI_ABOUT">
     <German>Über MathTool</German>
     <English>About MathTool</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
 <!-- HelpDialogGUI -->    
   <object id = "GUI_HelpDialogGUI_HELP">
     <German>Hilfe</German>
     <English>Help</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_MENUE">
     <German>Menü</German>
     <English>Menue</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_GENERALITIES">
     <German>Allgemeines</German>
     <English>Generalities</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_MATH_FORMULAS">
     <German>Mathematische Formeln</German>
     <English>Mathematical formulas</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION">
     <German>Logische Ausdrücke</German>
     <English>Logical expressions</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_OPERATORS">
     <German>Operatoren</German>
     <English>Operators</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_COMMANDS">
     <German>Befehle</German>
     <English>Commands</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_HelpDialogGUI_BUG_REPORT">
     <German>Kontakt/Bugs melden</German>
     <English>Contact/Report bugs</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
  <!-- LegendGUI -->    
  <object id = "GUI_LegendGUI_LEGEND">
     <German>Legende</German>
     <English>legend</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_LegendGUI_CONTROLS">
     <German>Bedienung:</German>
     <English>Controls:</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_LegendGUI_GRAPHS">
     <German>Graphen:</German>
     <English>Graphs:</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_LegendGUI_GRAPH">
     <German>Graph </German>
     <English>Graph </English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION">
     <German>(Vereinfachte) Gleichung der implizit gegebenen Funktion: </German>
     <English>(Simplified) equation of the implicitly given function: </English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "GUI_LegendGUI_PARAMETERIZED_CURVE">
     <German>Parametrisierte Kurve:</German>
     <English>Parameterized curve:</English>
+    <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
 </objects>

@@ -207,10 +207,26 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputField.setText(listOfCommands.get(i));
     }
 
-    private void changeLanguage(TypeLanguage typeLanguage) {
-        Expression.setLanguage(typeLanguage);
+    /**
+     * Aktualisiert die Oberfläche nach Änderung von Einstellungen
+     */
+    private void refreshInterface(){
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }
-
+    
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
 
         Command c = MathCommandCompiler.getCommand(command_name, params);
@@ -289,11 +305,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         commandChoice = new javax.swing.JComboBox();
         clearButton = new javax.swing.JButton();
         MathToolMenuBar = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        MenuFile = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        MenuMathTool = new javax.swing.JMenu();
         MenuItemHelp = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        MenuItemLanguageMenu = new javax.swing.JMenu();
+        MenuItemLanguageEnglish = new javax.swing.JMenuItem();
+        MenuItemLanguageGerman = new javax.swing.JMenuItem();
+        MenuItemLanguageRussian = new javax.swing.JMenuItem();
+        MenuItemLanguageUkrainian = new javax.swing.JMenuItem();
         MenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -392,19 +412,19 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(clearButton);
         clearButton.setBounds(280, 370, 130, 30);
 
-        jMenu1.setText("Datei");
+        MenuFile.setText("Datei");
 
-        MenuItemQuit.setText("Quit");
+        MenuItemQuit.setText("Verlassen");
         MenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MenuItemQuitActionPerformed(evt);
             }
         });
-        jMenu1.add(MenuItemQuit);
+        MenuFile.add(MenuItemQuit);
 
-        MathToolMenuBar.add(jMenu1);
+        MathToolMenuBar.add(MenuFile);
 
-        jMenu2.setText("MathTool");
+        MenuMathTool.setText("MathTool");
 
         MenuItemHelp.setText("Hilfe");
         MenuItemHelp.addActionListener(new java.awt.event.ActionListener() {
@@ -412,10 +432,43 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 MenuItemHelpActionPerformed(evt);
             }
         });
-        jMenu2.add(MenuItemHelp);
+        MenuMathTool.add(MenuItemHelp);
 
-        jMenuItem1.setText("Einstellungen");
-        jMenu2.add(jMenuItem1);
+        MenuItemLanguageMenu.setText("Sprache");
+
+        MenuItemLanguageEnglish.setText("English");
+        MenuItemLanguageEnglish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemLanguageEnglishActionPerformed(evt);
+            }
+        });
+        MenuItemLanguageMenu.add(MenuItemLanguageEnglish);
+
+        MenuItemLanguageGerman.setText("German");
+        MenuItemLanguageGerman.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemLanguageGermanActionPerformed(evt);
+            }
+        });
+        MenuItemLanguageMenu.add(MenuItemLanguageGerman);
+
+        MenuItemLanguageRussian.setText("Russian");
+        MenuItemLanguageRussian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemLanguageRussianActionPerformed(evt);
+            }
+        });
+        MenuItemLanguageMenu.add(MenuItemLanguageRussian);
+
+        MenuItemLanguageUkrainian.setText("Ukrainian");
+        MenuItemLanguageUkrainian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemLanguageUkrainianActionPerformed(evt);
+            }
+        });
+        MenuItemLanguageMenu.add(MenuItemLanguageUkrainian);
+
+        MenuMathTool.add(MenuItemLanguageMenu);
 
         MenuItemAbout.setText("Über MathTool");
         MenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -423,9 +476,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 MenuItemAboutActionPerformed(evt);
             }
         });
-        jMenu2.add(MenuItemAbout);
+        MenuMathTool.add(MenuItemAbout);
 
-        MathToolMenuBar.add(jMenu2);
+        MathToolMenuBar.add(MenuMathTool);
 
         setJMenuBar(MathToolMenuBar);
 
@@ -976,6 +1029,22 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         executeCommand();
     }//GEN-LAST:event_clearButtonActionPerformed
 
+    private void MenuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageEnglishActionPerformed
+        Expression.setLanguage(TypeLanguage.EN);
+    }//GEN-LAST:event_MenuItemLanguageEnglishActionPerformed
+
+    private void MenuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageGermanActionPerformed
+        Expression.setLanguage(TypeLanguage.DE);
+    }//GEN-LAST:event_MenuItemLanguageGermanActionPerformed
+
+    private void MenuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageRussianActionPerformed
+        Expression.setLanguage(TypeLanguage.RU);
+    }//GEN-LAST:event_MenuItemLanguageRussianActionPerformed
+
+    private void MenuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageUkrainianActionPerformed
+        Expression.setLanguage(TypeLanguage.UA);
+    }//GEN-LAST:event_MenuItemLanguageUkrainianActionPerformed
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
@@ -1059,18 +1128,22 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar MathToolMenuBar;
+    private javax.swing.JMenu MenuFile;
     private javax.swing.JMenuItem MenuItemAbout;
     private javax.swing.JMenuItem MenuItemHelp;
+    private javax.swing.JMenuItem MenuItemLanguageEnglish;
+    private javax.swing.JMenuItem MenuItemLanguageGerman;
+    private javax.swing.JMenu MenuItemLanguageMenu;
+    private javax.swing.JMenuItem MenuItemLanguageRussian;
+    private javax.swing.JMenuItem MenuItemLanguageUkrainian;
     private javax.swing.JMenuItem MenuItemQuit;
+    private javax.swing.JMenu MenuMathTool;
     private javax.swing.JButton approxButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearButton;
     private javax.swing.JComboBox commandChoice;
     private javax.swing.JButton inputButton;
     private javax.swing.JTextField inputField;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JButton latexButton;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;
