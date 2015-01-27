@@ -206,7 +206,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private void showLoggedCommand(int i) {
         inputField.setText(listOfCommands.get(i));
     }
-
+    
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen
      */
