@@ -36,7 +36,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 public class MathToolForm extends javax.swing.JFrame implements MouseListener {
-
+    
     private Thread threadRotate;
     private boolean startRotate;
     private TypeGraphic typeGraphic;
@@ -44,12 +44,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
     private ComputingDialogGUI computingDialog;
-    private final JLabel legendLabel = new JLabel("<html><b>Legende</b></<html>");
-
+    private final JLabel legendLabel = new JLabel("<html><b>Legende</b></html>");
+    
     JTextArea mathToolArea;
     JEditorPane helpArea;
     JScrollPane scrollPane;
-
+    
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
     GraphicMethodsCurves2D graphicMethodsCurves2D;
@@ -71,7 +71,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
      * ausgegeben haben möchte.
      */
     public int log_position = 0;
-
+    
     public MathToolForm() {
         initComponents();
         this.setLayout(null);
@@ -130,12 +130,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         add(graphicMethods2D);
         repaint();
         graphicMethods2D.setVisible(false);
-
+        
         graphicMethodsCurves2D = new GraphicMethodsCurves2D();
         add(graphicMethodsCurves2D);
         repaint();
         graphicMethodsCurves2D.setVisible(false);
-
+        
         graphicMethodsPolar2D = new GraphicMethodsPolar2D();
         add(graphicMethodsPolar2D);
         repaint();
@@ -148,7 +148,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         add(graphicMethods3D);
         repaint();
         graphicMethods3D.setVisible(false);
-
+        
         graphicMethodsCurves3D = new GraphicMethodsCurves3D();
         add(graphicMethodsCurves3D);
         repaint();
@@ -158,13 +158,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * ComponentListener für das Ausrichten von Komponenten
          */
         this.addComponentListener(new ComponentAdapter() {
-
+            
             @Override
             public void componentResized(ComponentEvent e) {
-
+                
                 scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
                 mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
-
+                
                 inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
                 inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
                 cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
@@ -173,20 +173,20 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 clearButton.setBounds(280, scrollPane.getHeight() + 60, 130, 30);
                 operatorChoice.setBounds(415, scrollPane.getHeight() + 60, 130, 30);
                 commandChoice.setBounds(550, scrollPane.getHeight() + 60, 130, 30);
-
+                
                 graphicMethods2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethods3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethodsCurves2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethodsCurves3D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
                 graphicMethodsPolar2D.setBounds(scrollPane.getWidth() - 490, scrollPane.getHeight() - 490, 500, 500);
-
+                
                 legendLabel.setBounds(graphicMethods3D.getX(), scrollPane.getHeight() + 25, 100, 25);
                 rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPane.getHeight() + 20, 220, 30);
-
+                
                 if (computingDialog != null) {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
                 }
-
+                
                 if (!typeGraphic.equals(TypeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
@@ -194,15 +194,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     inputButton.setBounds(inputButton.getX() - 510, inputButton.getY(), 100, 30);
                     cancelButton.setBounds(cancelButton.getX() - 510, cancelButton.getY(), 100, 30);
                 }
-
+                
                 validate();
                 repaint();
             }
-
+            
         });
-
+        
     }
-
+    
     private void showLoggedCommand(int i) {
         inputField.setText(listOfCommands.get(i));
     }
@@ -210,25 +210,34 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen
      */
-    private void refreshInterface(){
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    private void refreshInterface() {
+        
+        if (Expression.getLanguage().equals(TypeLanguage.EN)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.DE)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.RU)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.UA)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+        }
+        
     }
     
     private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
-
+        
         Command c = MathCommandCompiler.getCommand(command_name, params);
 
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
@@ -246,13 +255,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         graphicMethodsCurves3D.setVisible(false);
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
-
+        
         graphicMethods2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethods3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethodsPolar2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethodsCurves2D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
         graphicMethodsCurves3D.setBounds(scrollPane.getWidth() + 20, scrollPane.getHeight() - 490, 500, 500);
-
+        
         if (command_name.equals("plot2d")) {
             graphicMethods2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
@@ -285,12 +294,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
             typeGraphic = TypeGraphic.NONE;
         }
-
+        
         validate();
         repaint();
-
+        
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -304,17 +313,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice = new javax.swing.JComboBox();
         commandChoice = new javax.swing.JComboBox();
         clearButton = new javax.swing.JButton();
-        MathToolMenuBar = new javax.swing.JMenuBar();
-        MenuFile = new javax.swing.JMenu();
+        mathToolMenuBar = new javax.swing.JMenuBar();
+        menuFile = new javax.swing.JMenu();
         MenuItemQuit = new javax.swing.JMenuItem();
-        MenuMathTool = new javax.swing.JMenu();
-        MenuItemHelp = new javax.swing.JMenuItem();
-        MenuItemLanguageMenu = new javax.swing.JMenu();
-        MenuItemLanguageEnglish = new javax.swing.JMenuItem();
-        MenuItemLanguageGerman = new javax.swing.JMenuItem();
-        MenuItemLanguageRussian = new javax.swing.JMenuItem();
-        MenuItemLanguageUkrainian = new javax.swing.JMenuItem();
-        MenuItemAbout = new javax.swing.JMenuItem();
+        menuMathTool = new javax.swing.JMenu();
+        menuItemHelp = new javax.swing.JMenuItem();
+        menuItemLanguageMenu = new javax.swing.JMenu();
+        menuItemLanguageEnglish = new javax.swing.JMenuItem();
+        menuItemLanguageGerman = new javax.swing.JMenuItem();
+        menuItemLanguageRussian = new javax.swing.JMenuItem();
+        menuItemLanguageUkrainian = new javax.swing.JMenuItem();
+        menuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
@@ -412,7 +421,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         getContentPane().add(clearButton);
         clearButton.setBounds(280, 370, 130, 30);
 
-        MenuFile.setText("Datei");
+        menuFile.setText("Datei");
 
         MenuItemQuit.setText("Verlassen");
         MenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
@@ -420,67 +429,67 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 MenuItemQuitActionPerformed(evt);
             }
         });
-        MenuFile.add(MenuItemQuit);
+        menuFile.add(MenuItemQuit);
 
-        MathToolMenuBar.add(MenuFile);
+        mathToolMenuBar.add(menuFile);
 
-        MenuMathTool.setText("MathTool");
+        menuMathTool.setText("MathTool");
 
-        MenuItemHelp.setText("Hilfe");
-        MenuItemHelp.addActionListener(new java.awt.event.ActionListener() {
+        menuItemHelp.setText("Hilfe");
+        menuItemHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemHelpActionPerformed(evt);
+                menuItemHelpActionPerformed(evt);
             }
         });
-        MenuMathTool.add(MenuItemHelp);
+        menuMathTool.add(menuItemHelp);
 
-        MenuItemLanguageMenu.setText("Sprache");
+        menuItemLanguageMenu.setText("Sprache");
 
-        MenuItemLanguageEnglish.setText("English");
-        MenuItemLanguageEnglish.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLanguageEnglish.setText("English");
+        menuItemLanguageEnglish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLanguageEnglishActionPerformed(evt);
+                menuItemLanguageEnglishActionPerformed(evt);
             }
         });
-        MenuItemLanguageMenu.add(MenuItemLanguageEnglish);
+        menuItemLanguageMenu.add(menuItemLanguageEnglish);
 
-        MenuItemLanguageGerman.setText("German");
-        MenuItemLanguageGerman.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLanguageGerman.setText("German");
+        menuItemLanguageGerman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLanguageGermanActionPerformed(evt);
+                menuItemLanguageGermanActionPerformed(evt);
             }
         });
-        MenuItemLanguageMenu.add(MenuItemLanguageGerman);
+        menuItemLanguageMenu.add(menuItemLanguageGerman);
 
-        MenuItemLanguageRussian.setText("Russian");
-        MenuItemLanguageRussian.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLanguageRussian.setText("Russian");
+        menuItemLanguageRussian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLanguageRussianActionPerformed(evt);
+                menuItemLanguageRussianActionPerformed(evt);
             }
         });
-        MenuItemLanguageMenu.add(MenuItemLanguageRussian);
+        menuItemLanguageMenu.add(menuItemLanguageRussian);
 
-        MenuItemLanguageUkrainian.setText("Ukrainian");
-        MenuItemLanguageUkrainian.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLanguageUkrainian.setText("Ukrainian");
+        menuItemLanguageUkrainian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLanguageUkrainianActionPerformed(evt);
+                menuItemLanguageUkrainianActionPerformed(evt);
             }
         });
-        MenuItemLanguageMenu.add(MenuItemLanguageUkrainian);
+        menuItemLanguageMenu.add(menuItemLanguageUkrainian);
 
-        MenuMathTool.add(MenuItemLanguageMenu);
+        menuMathTool.add(menuItemLanguageMenu);
 
-        MenuItemAbout.setText("Über MathTool");
-        MenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAbout.setText("Über MathTool");
+        menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemAboutActionPerformed(evt);
+                menuItemAboutActionPerformed(evt);
             }
         });
-        MenuMathTool.add(MenuItemAbout);
+        menuMathTool.add(menuItemAbout);
 
-        MathToolMenuBar.add(MenuMathTool);
+        mathToolMenuBar.add(menuMathTool);
 
-        setJMenuBar(MathToolMenuBar);
+        setJMenuBar(mathToolMenuBar);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -497,7 +506,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             rotateButton.setText("Graphen rotieren lassen");
         }
     }
-
+    
     private void executeCommand() {
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
@@ -516,12 +525,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 scrollPane.getVerticalScrollBar().setValue(
                         scrollPane.getVerticalScrollBar().getMaximum());
             }
-
+            
             @Override
             protected Void doInBackground() throws Exception {
-
+                
                 computingDialog = new ComputingDialogGUI(computingSwingWorker, mtf.getX(), mtf.getY(), mtf.getWidth(), mtf.getHeight());
-
+                
                 boolean valid_command = false;
 
                 /**
@@ -555,16 +564,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * mathematischer Ausdruck ist.
                  */
                 try {
-
+                    
                     String[] com = Expression.getOperatorAndArguments(command);
                     String[] params = Expression.getArguments(com[1]);
-
+                    
                     for (String c : MathCommandCompiler.commands) {
                         valid_command = valid_command || com[0].equals(c);
                     }
-
+                    
                     if (valid_command) {
-
+                        
                         mathToolArea.append(command + "\n \n");
                         MathCommandCompiler.executeCommand(command, mathToolArea, graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D, definedVars,
@@ -575,9 +584,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                          */
                         activatePanelsForGraphs(com[0], params);
                         inputField.setText("");
-
+                        
                     }
-
+                    
                 } catch (ExpressionException | EvaluationException e) {
                     /**
                      * Falls es ein gültiger Befehl war (unabhängig davon, ob
@@ -612,7 +621,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  */
                 boolean input_is_arithmetic_expression = false;
                 try {
-
+                    
                     Expression expr = Expression.build(command, new HashSet());
                     input_is_arithmetic_expression = true;
 
@@ -638,7 +647,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                             return null;
                         }
                     }
-
+                    
                 } catch (ExpressionException e) {
                 }
 
@@ -651,21 +660,21 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     LogicalExpression log_expr_simplified = log_expr.simplify();
                     mathToolArea.append(log_expr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + log_expr_simplified.writeFormula() + " \n \n");
                     inputField.setText("");
-
+                    
                 } catch (ExpressionException e) {
                     mathToolArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                 }
-
+                
                 return null;
             }
         };
         computing = true;
         computingTimer = new Timer();
-
+        
         final ImageIcon computingOwlEyesOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
         final ImageIcon computingOwlEyesHalfOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesHalfOpen.png"));
         final ImageIcon computingOwlEyesClosed = new ImageIcon(getClass().getResource("icons/LogoOwlEyesClosed.png"));
-
+        
         TimerTask start = new TimerTask() {
             @Override
             public void run() {
@@ -746,7 +755,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 }
             }
         };
-
+        
         computingTimer.schedule(start, 1000);
         computingTimer.schedule(openEyes, 0, 2000);
         computingTimer.schedule(halfOpenEyes, 100, 2000);
@@ -768,7 +777,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         stopPossibleRotation();
         executeCommand();
     }//GEN-LAST:event_inputButtonActionPerformed
-
+    
 
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!startRotate) {
@@ -795,15 +804,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         }
     }//GEN-LAST:event_rotateButtonActionPerformed
 
-    private void MenuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpActionPerformed
+    private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
         HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         helpDialogGUI.setVisible(true);
-    }//GEN-LAST:event_MenuItemHelpActionPerformed
+    }//GEN-LAST:event_menuItemHelpActionPerformed
 
-    private void MenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAboutActionPerformed
+    private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
         DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         aboutMathToolGUI.setVisible(true);
-    }//GEN-LAST:event_MenuItemAboutActionPerformed
+    }//GEN-LAST:event_menuItemAboutActionPerformed
 
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
         /**
@@ -840,7 +849,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
      * Kommata bei einer gültigen Eingabe.
      */
     private int getNumberOfComma(String s) {
-
+        
         if (s.equals("diff")) {
             return 1;
         }
@@ -874,7 +883,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         if (s.equals("taylor")) {
             return 3;
         }
-
+        
         if (s.equals("approx")) {
             return 0;
         }
@@ -940,43 +949,43 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Default-Case! Sollte nie eintreten.
          */
         return 0;
-
+        
     }
 
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
-
+            
             String inserted_operator = (String) operatorChoice.getSelectedItem() + "(";
             int number_of_commata = getNumberOfComma((String) operatorChoice.getSelectedItem());
             for (int i = 0; i < number_of_commata; i++) {
                 inserted_operator = inserted_operator + ",";
             }
             inserted_operator = inserted_operator + ")";
-
+            
             inputField.replaceSelection(inserted_operator);
             operatorChoice.setSelectedIndex(0);
             inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
-
+            
         }
         inputField.requestFocus();
     }//GEN-LAST:event_operatorChoiceActionPerformed
 
     private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
         if (commandChoice.getSelectedIndex() > 0) {
-
+            
             String inserted_command = (String) commandChoice.getSelectedItem() + "(";
             int number_of_commata = getNumberOfComma((String) commandChoice.getSelectedItem());
             for (int i = 0; i < number_of_commata; i++) {
                 inserted_command = inserted_command + ",";
             }
             inserted_command = inserted_command + ")";
-
+            
             inputField.setText(inserted_command);
             commandChoice.setSelectedIndex(0);
             inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
-
+            
         }
         inputField.requestFocus();
     }//GEN-LAST:event_commandChoiceActionPerformed
@@ -991,7 +1000,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 stopPossibleRotation();
                 executeCommand();
                 break;
-
+            
             case KeyEvent.VK_UP:
                 if (log_position > 0) {
                     log_position--;
@@ -1001,14 +1010,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 }
                 showLoggedCommand(log_position);
                 break;
-
+            
             case KeyEvent.VK_DOWN:
                 if (log_position < listOfCommands.size() - 1) {
                     log_position++;
                 }
                 showLoggedCommand(log_position);
                 break;
-
+            
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
                     computingSwingWorker.cancel(true);
@@ -1029,22 +1038,26 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         executeCommand();
     }//GEN-LAST:event_clearButtonActionPerformed
 
-    private void MenuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageEnglishActionPerformed
+    private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
         Expression.setLanguage(TypeLanguage.EN);
-    }//GEN-LAST:event_MenuItemLanguageEnglishActionPerformed
+        refreshInterface();
+    }//GEN-LAST:event_menuItemLanguageEnglishActionPerformed
 
-    private void MenuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageGermanActionPerformed
+    private void menuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageGermanActionPerformed
         Expression.setLanguage(TypeLanguage.DE);
-    }//GEN-LAST:event_MenuItemLanguageGermanActionPerformed
+        refreshInterface();
+    }//GEN-LAST:event_menuItemLanguageGermanActionPerformed
 
-    private void MenuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageRussianActionPerformed
+    private void menuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageRussianActionPerformed
         Expression.setLanguage(TypeLanguage.RU);
-    }//GEN-LAST:event_MenuItemLanguageRussianActionPerformed
+        refreshInterface();
+    }//GEN-LAST:event_menuItemLanguageRussianActionPerformed
 
-    private void MenuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLanguageUkrainianActionPerformed
+    private void menuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageUkrainianActionPerformed
         Expression.setLanguage(TypeLanguage.UA);
-    }//GEN-LAST:event_MenuItemLanguageUkrainianActionPerformed
-
+        refreshInterface();
+    }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == legendLabel) {
@@ -1077,17 +1090,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         }
     }
-
+    
     @Override
     public void mousePressed(MouseEvent e) {
-
+        
     }
-
+    
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        
     }
-
+    
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == legendLabel) {
@@ -1096,7 +1109,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             repaint();
         }
     }
-
+    
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
@@ -1105,7 +1118,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             repaint();
         }
     }
-
+    
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
@@ -1127,17 +1140,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar MathToolMenuBar;
-    private javax.swing.JMenu MenuFile;
-    private javax.swing.JMenuItem MenuItemAbout;
-    private javax.swing.JMenuItem MenuItemHelp;
-    private javax.swing.JMenuItem MenuItemLanguageEnglish;
-    private javax.swing.JMenuItem MenuItemLanguageGerman;
-    private javax.swing.JMenu MenuItemLanguageMenu;
-    private javax.swing.JMenuItem MenuItemLanguageRussian;
-    private javax.swing.JMenuItem MenuItemLanguageUkrainian;
     private javax.swing.JMenuItem MenuItemQuit;
-    private javax.swing.JMenu MenuMathTool;
     private javax.swing.JButton approxButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearButton;
@@ -1145,6 +1148,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JButton inputButton;
     private javax.swing.JTextField inputField;
     private javax.swing.JButton latexButton;
+    private javax.swing.JMenuBar mathToolMenuBar;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenuItem menuItemAbout;
+    private javax.swing.JMenuItem menuItemHelp;
+    private javax.swing.JMenuItem menuItemLanguageEnglish;
+    private javax.swing.JMenuItem menuItemLanguageGerman;
+    private javax.swing.JMenu menuItemLanguageMenu;
+    private javax.swing.JMenuItem menuItemLanguageRussian;
+    private javax.swing.JMenuItem menuItemLanguageUkrainian;
+    private javax.swing.JMenu menuMathTool;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;
     // End of variables declaration//GEN-END:variables
