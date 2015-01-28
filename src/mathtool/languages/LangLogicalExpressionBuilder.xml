@@ -19,19 +19,19 @@
   </object>
   <object id = "LEB_LogicalExpression_LEFT_SIDE_OF_LOGICAL_BINARY_IS_EMPTY">
     <German>Linke Seite eines logischen binären Operators ist leer.</German>
-    <English>The left side of a logical binary operator is empty</English>
+    <English>The left side of a logical binary operator is empty.</English>
     <Ukainian>?</Ukainian>
     <Russian>?</Russian>
   </object>
   <object id = "LEB_LogicalExpression_RIGHT_SIDE_OF_LOGICAL_BINARY_IS_EMPTY">
     <German>Rechte Seite eines logischen binären Operators ist leer.</German>
-    <English></English>
+    <English>The right side of a logical binary operator is empty.</English>
     <Ukainian>?</Ukainian>
     <Russian>?</Russian>
   </object>
-  <object id = "LEB_LogicalExpression_">
-    <German>Folgende Formel/Teil der Formel kann nicht interpretiert werden: </German>
-    <English>The right side of a logical binary operator is empty</English>
+  <object id = "LEB_LogicalExpression_LOGICAL_EXPRESSION_CANNOT_BE_INTERPRETED">
+    <German>Folgender logischer Ausdruck/Teilausdruck kann nicht interpretiert werden: </German>
+    <English>The following logical expression/part of a logical expression cannot be interpreted: </English>
     <Ukainian>?</Ukainian>
     <Russian>?</Russian>
   </object>

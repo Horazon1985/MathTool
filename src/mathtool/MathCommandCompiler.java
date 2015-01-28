@@ -108,8 +108,11 @@ public class MathCommandCompiler {
     }
 
     /**
-     * Wichtig: Der String command und die Parameter params entahlten keine
-     * Leerzeichen mehr. Diese wurden bereits im Vorfeld beseitigt.
+     * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
+     * zu den Parametern params gehört. Ansonsten wird eine entsprechende
+     * ExpressionException geworfen. WICHTIG: Der String command und die
+     * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
+     * im Vorfeld beseitigt.
      */
     public static Command getCommand(String command, String[] params) throws ExpressionException, EvaluationException {
 
