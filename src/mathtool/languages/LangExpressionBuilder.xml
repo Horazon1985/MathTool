@@ -131,19 +131,19 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_FIRST_PARAMETER_IN_DIFF_IS_WRONG">
+  <object id = "EB_Operator_1_PARAMETER_IN_DIFF_IS_WRONG">
     <German>Der erste Parameter im Operator 'diff' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
     <English>The first parameter in the operator 'diff' has to be a valid expression.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_SECOND_PARAMETER_IN_DIFF_IS_INVALID">
+  <object id = "EB_Operator_2_PARAMETER_IN_DIFF_IS_INVALID">
     <German>The second parameter in the operator 'diff' has to be a valid variable.</German>
     <English>?</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "EB_Operator_THIRD_PARAMETER_IN_DIFF_IS_INVALID">
+  <object id = "EB_Operator_3_PARAMETER_IN_DIFF_IS_INVALID">
     <German>Der dritte Parameter im Operator 'diff' muss engtweder eine gültige Variable oder eine nicht-negative ganze Zahl sein.</German>
     <English>The third parameter in the operator 'diff' must either be a valid variable or a non-negative integer.</English>
     <Ukrainian>?</Ukrainian>
