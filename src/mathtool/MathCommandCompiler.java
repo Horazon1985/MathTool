@@ -899,10 +899,10 @@ public class MathCommandCompiler {
             Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
             Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
             if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1") 
-                        + (params.length - 1) 
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
+                        + (params.length - 1)
                         + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
-                        + (params.length) 
+                        + (params.length)
                         + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
             }
 
@@ -926,14 +926,13 @@ public class MathCommandCompiler {
          */
         if (command.equals("solve")) {
             if (params.length < 1) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solve'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVE"));
             }
             if (params.length > 4) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'solve'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVE"));
             }
             if (!params[0].contains("=")) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
-                        + "wobei f und g Funktionen und x eine gültige Veränderliche ist.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE"));
             }
 
             HashSet vars = new HashSet();
@@ -941,8 +940,7 @@ public class MathCommandCompiler {
                 Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
                 Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'solve' muss von der Form 'f(x) = g(x)' sein, "
-                        + "wobei f und g Funktionen und x eine gültige Veränderliche ist. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE_WITH_REPORTED_ERROR") + e.getMessage());
             }
 
             Expression expr_1 = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
@@ -951,13 +949,12 @@ public class MathCommandCompiler {
             if (params.length == 1 || params.length == 2) {
 
                 if (vars.size() > 1 && params.length == 1) {
-                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten. Falls mehrere Veränderliche auftreten, so geben "
-                            + "Sie bitte die Veränderliche, nach der die Gleichung gelöst werden soll, als zweiten Parameter an.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_MORE_THAN_ONE_VARIABLE_IN_SOLVE"));
                 }
 
                 if (params.length == 2) {
                     if (!Expression.isValidVariable(params[1])) {
-                        throw new ExpressionException("Der zweite Parameter im Befehl 'solve' muss eine gültige Veränderliche sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVE"));
                     }
                 }
 
@@ -979,7 +976,7 @@ public class MathCommandCompiler {
             } else {
 
                 if (vars.size() > 1) {
-                    throw new ExpressionException("In der Gleichung darf höchstens eine Veränderliche auftreten.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_SOLVE"));
                 }
 
                 HashSet vars_in_limits = new HashSet();
@@ -987,10 +984,14 @@ public class MathCommandCompiler {
                     try {
                         Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
                         if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
+                                    + (i + 1)
+                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
                         }
                     } catch (ExpressionException e) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'solve' muss eine Konstante sein, deren Betrag höchstens 1.7E308 beträgt.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
                     }
                 }
 
@@ -998,7 +999,7 @@ public class MathCommandCompiler {
                     try {
                         Integer.parseInt(params[3]);
                     } catch (NumberFormatException e) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
                     }
                 }
 
@@ -1014,7 +1015,7 @@ public class MathCommandCompiler {
                 } else {
                     int n = Integer.parseInt(params[3]);
                     if (n < 1) {
-                        throw new ExpressionException("Der vierte Parameter im Befehl 'solve' muss positive ganze Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
                     }
                     command_params = new Object[5];
                     command_params[0] = expr_1;
