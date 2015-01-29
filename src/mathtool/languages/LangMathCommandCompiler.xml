@@ -287,15 +287,9 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_NOT ENOUGH_PARAMETERS_IN_PLOT3D">
-    <German>Zu wenig Parameter im Befehl 'plot3d'.</German>
-    <English>Not enough parameters in command 'plot3d'.</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_TOO_MANY_PARAMETERS_IN_PLOT3D">
-    <German>Zu viele Parameter im Befehl 'plot3d'.</German>
-    <English>Too many parameters in command 'plot3d'.</English>
+  <object id = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOT3D">
+    <German>Im Befehl 'plot3d' müssen genau 5 Parameter stehen.</German>
+    <English>The command 'plot3d' must contain exactly 5 parameters.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -330,14 +324,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D">
-    <German>Der dritte Parameter im Befehl 'plot3d' muss größer sein als der zweite Parameter.</German>
-    <English>The third parameter in command 'plot3d' must be greater than the second parameter.</English>
+    <German>Der 3. Parameter im Befehl 'plot3d' muss größer sein als der 2. Parameter.</German>
+    <English>The 3. parameter in command 'plot3d' must be greater than the 2. parameter.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D">
-    <German>Der fünfte Parameter im Befehl 'plot3d' muss größer sein als der vierte Parameter.</German>
-    <English>The fifth parameter in command 'plot3d' must be greater than the fourth parameter.</English>
+    <German>Der 5. Parameter im Befehl 'plot3d' muss größer sein als der 4. Parameter.</German>
+    <English>The 5. parameter in command 'plot3d' must be greater than the 4. parameter.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -348,8 +342,8 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE">
-    <German>Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.</German>
-    <English>The first parameter in command 'plotcurve' must be a parameterized curve.</English>
+    <German>Der 1. Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.</German>
+    <English>The 1. parameter in command 'plotcurve' must be a parameterized curve.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -389,7 +383,7 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_NOT ENOUGH_PARAMETERS_IN_PLOTPOLAR">
+  <object id = "MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR">
     <German>Zu wenig Parameter im Befehl 'plotpolar'.</German>
     <English>Not enough parameters in command 'plotpolar'.</English>
     <Ukrainian>?</Ukrainian>

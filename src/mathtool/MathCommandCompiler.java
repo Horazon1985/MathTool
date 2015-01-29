@@ -698,10 +698,8 @@ public class MathCommandCompiler {
          * Variablen werden dabei alphabetisch geordnet.
          */
         if (command.equals("plot3d")) {
-            if (params.length < 5) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot3d'.");
-            } else if (params.length > 5) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'plot3d'.");
+            if (params.length != 5) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOT3D"));
             }
 
             HashSet vars = new HashSet();
@@ -710,12 +708,13 @@ public class MathCommandCompiler {
                 Expression expr = Expression.build(params[0], new HashSet());
                 expr.getContainedVars(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'plot3d' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOT3D") + e.getMessage());
             }
 
             if (vars.size() > 2) {
-                throw new ExpressionException("Der Ausdruck im Befehl 'plot3d' darf höchstens zwei Veränderliche enthalten. Dieser enthält jedoch "
-                        + String.valueOf(vars.size()) + " Veränderliche.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_1")
+                        + String.valueOf(vars.size())
+                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_2"));
             }
 
             HashSet vars_in_limits = new HashSet();
@@ -723,10 +722,14 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
                     }
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot3d' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
                 }
             }
 
@@ -736,10 +739,10 @@ public class MathCommandCompiler {
             Expression y_0 = Expression.build(params[3], vars);
             Expression y_1 = Expression.build(params[4], vars);
             if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'plot3d' muss größer sein als der zweite Parameter.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
             }
             if (y_0.evaluate() >= y_1.evaluate()) {
-                throw new ExpressionException("Der fünfte Parameter im Befehl 'plot3d' muss größer sein als der vierte Parameter.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
             }
             command_params = new Object[5];
             command_params[0] = expr;
@@ -763,7 +766,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("plotcurve")) {
             if (params.length != 3) {
-                throw new ExpressionException("Im Befehl 'plotcurve' müssen genau drei Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE"));
             }
 
             HashSet vars = new HashSet();
@@ -773,25 +776,27 @@ public class MathCommandCompiler {
              * expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
              */
             if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'plotcurve' muss eine parametrisierte Kurve sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE"));
             }
 
             String[] curve_components = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
             if (curve_components.length != 2 && curve_components.length != 3) {
-                throw new ExpressionException("Die parametrisierte Kurve im Befehl 'plotcurve' muss entweder aus zwei oder aus drei Komponenten bestehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_CURVE_COMPONENTS_IN_PLOTCURVE"));
             }
 
             for (int i = 0; i < curve_components.length; i++) {
                 try {
                     Expression.build(curve_components[i], vars);
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Die " + (i + 1) + ". Kompomente in der Kurvendarstellung muss ein gültiger "
-                            + "Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_2")
+                            + e.getMessage());
                 }
             }
 
             if (vars.size() > 1) {
-                throw new ExpressionException("Die Kurve im Befehl 'plotcurve' darf durch höchstens einen Parameter parametrisiert werden.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CURVE_COMPONENTS_IN_PLOTCURVE"));
             }
 
             HashSet vars_in_limits = new HashSet();
@@ -799,10 +804,14 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
                     }
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotcurve' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
                 }
             }
 
@@ -839,7 +848,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("plotpolar")) {
             if (params.length < 3) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plotpolar'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR"));
             }
 
             HashSet vars = new HashSet();
@@ -848,39 +857,53 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(params[i], new HashSet()).getContainedVars(vars);
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plotpolar' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_2"));
                 }
             }
 
             if (vars.size() > 1) {
-                throw new ExpressionException("Die Ausdrücke im Befehl 'plotpolar' dürfen höchstens eine Veränderliche enthalten. "
-                        + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_1")
+                        + vars.size()
+                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_2"));
             }
 
             HashSet vars_in_limits = new HashSet();
             try {
                 Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
                 if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                            + (params.length - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                        + (params.length - 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
             }
 
             try {
                 Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
                 if (!vars_in_limits.isEmpty()) {
-                    throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                            + params.length
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plotpolar' muss eine reelle Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                        + params.length
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
             }
 
             Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
             Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
             if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plotpolar' muss größer sein als der "
-                        + (params.length) + ". Parameter.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1") 
+                        + (params.length - 1) 
+                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
+                        + (params.length) 
+                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
             }
 
             command_params = new Object[params.length];
