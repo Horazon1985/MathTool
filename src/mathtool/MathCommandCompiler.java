@@ -266,7 +266,7 @@ public class MathCommandCompiler {
             for (int i = 0; i < function_vars.length; i++) {
                 if (!Expression.isValidVariable(function_vars[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
-                            + function_vars[i] 
+                            + function_vars[i]
                             + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
                 }
             }
@@ -279,7 +279,7 @@ public class MathCommandCompiler {
             for (int i = 0; i < function_vars.length; i++) {
                 if (function_vars_as_hashset.contains(function_vars[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_1")
-                            + function_name 
+                            + function_name
                             + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_2"));
                 }
                 function_vars_as_hashset.add(function_vars[i]);
@@ -302,7 +302,7 @@ public class MathCommandCompiler {
              */
             if (!checkForbiddenNames(function_name)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
-                        + function_name 
+                        + function_name
                         + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
             }
 
@@ -311,7 +311,7 @@ public class MathCommandCompiler {
              */
             if (!checkForSpecialCharacters(function_name)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
-                        + function_name 
+                        + function_name
                         + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
             }
 
@@ -554,7 +554,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("plot2d")) {
             if (params.length < 3) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'plot2d'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
             }
 
             HashSet vars = new HashSet();
@@ -565,39 +565,53 @@ public class MathCommandCompiler {
                     try {
                         Expression.build(params[i], new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e) {
-                        throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss ein gültiger Ausdruck in einer Veränderlichen sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
                     }
                 }
 
                 if (vars.size() > 1) {
-                    throw new ExpressionException("Die Ausdrücke im Befehl 'plot2d' dürfen höchstens eine Veränderliche enthalten. "
-                            + "Diese enthalten jedoch " + vars.size() + " Veränderliche.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
+                            + vars.size()
+                            + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
                 }
 
                 HashSet vars_in_limits = new HashSet();
                 try {
                     Expression.build(params[params.length - 2], new HashSet()).getContainedVars(vars_in_limits);
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                                + (params.length - 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
                     }
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                            + (params.length - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
                 }
 
                 try {
                     Expression.build(params[params.length - 1], new HashSet()).getContainedVars(vars_in_limits);
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                                + params.length
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
                     }
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der " + params.length + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                            + params.length
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
                 }
 
                 Expression x_0 = Expression.build(params[params.length - 2], vars_in_limits);
                 Expression x_1 = Expression.build(params[params.length - 1], vars_in_limits);
                 if (x_0.evaluate() >= x_1.evaluate()) {
-                    throw new ExpressionException("Der " + (params.length - 1) + ". Parameter im Befehl 'plot2d' muss kleiner sein als der "
-                            + (params.length) + ". Parameter.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+                            + (params.length - 1)
+                            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                            + params.length
+                            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
                 }
 
                 command_params = new Object[params.length];
@@ -615,21 +629,20 @@ public class MathCommandCompiler {
                 if (params[0].contains("=")) {
 
                     if (params.length != 5) {
-                        throw new ExpressionException("Beim Plotten impliziter Funktionen muss der Befehl 'plot2d' genau 5 Parameter enthalten: der erste ist die Gleichung, "
-                                + "die anderen vier sind die Grenzen, innerhalb derer der Graph geplottet wird.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
                     }
 
                     try {
                         Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet()).getContainedVars(vars);
                         Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet()).getContainedVars(vars);
                     } catch (ExpressionException e) {
-                        throw new ExpressionException("Der erste Parameter im Befehl 'plot2d' muss aus zwei gültigen Ausdrücken bestehen,"
-                                + " welche durch ein '=' verbunden sind. Gemeldeter Fehler: " + e.getMessage());
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
                     }
 
                     if (vars.size() > 2) {
-                        throw new ExpressionException("Die beiden Ausdrücke im Befehl 'plot2d' dürfen höchstens zwei Veränderliche enthalten. Diese enthalten jedoch "
-                                + String.valueOf(vars.size()) + " Veränderliche.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
+                                + String.valueOf(vars.size())
+                                + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
                     }
 
                     HashSet vars_in_limits = new HashSet();
@@ -637,10 +650,14 @@ public class MathCommandCompiler {
                         try {
                             Expression.build(params[i], new HashSet()).getContainedVars(vars_in_limits);
                             if (!vars_in_limits.isEmpty()) {
-                                throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
+                                        + (i + 1)
+                                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
                             }
                         } catch (ExpressionException e) {
-                            throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.");
+                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
+                                    + (i + 1)
+                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
                         }
                     }
 
@@ -651,10 +668,10 @@ public class MathCommandCompiler {
                     Expression y_0 = Expression.build(params[3], vars);
                     Expression y_1 = Expression.build(params[4], vars);
                     if (x_0.evaluate() >= x_1.evaluate()) {
-                        throw new ExpressionException("Der dritte Parameter im Befehl 'plot2d' muss größer sein als der zweite Parameter.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
                     }
                     if (y_0.evaluate() >= y_1.evaluate()) {
-                        throw new ExpressionException("Der fünfte Parameter im Befehl 'plot2d' muss größer sein als der vierte Parameter.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
                     }
 
                     command_params = new Object[6];

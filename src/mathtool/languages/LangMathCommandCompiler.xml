@@ -246,8 +246,8 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D">
-    <German>Der erste Parameter im Befehl 'plot2d' muss aus zwei gültigen Ausdrücken bestehen, welche durch ein '=' verbunden sind. Gemeldeter Fehler: </German>
-    <English>The first parameter in command 'plot2d' must consist of two valid expressions, connected by an '='. Reported eror: </English>
+    <German>Der 1. Parameter im Befehl 'plot2d' muss aus zwei gültigen Ausdrücken bestehen, welche durch ein '=' verbunden sind. Gemeldeter Fehler: </German>
+    <English>The 1. parameter in command 'plot2d' must consist of two valid expressions, connected by an '='. Reported eror: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -276,14 +276,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D">
-    <German>Der dritte Parameter im Befehl 'plot2d' muss größer sein als der zweite Parameter.</German>
-    <English>The third parameter in command 'plot2d' must be greater than the second parameter.</English>
+    <German>Der 3. Parameter im Befehl 'plot2d' muss größer sein als der 2. Parameter.</German>
+    <English>The 3. parameter in command 'plot2d' must be greater than the 2. parameter.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D">
-    <German>Der fünfte Parameter im Befehl 'plot2d' muss größer sein als der vierte Parameter.</German>
-    <English>The fifth parameter in command 'plot2d' must be greater than the fourth parameter.</English>
+    <German>Der 5. Parameter im Befehl 'plot2d' muss größer sein als der 4. Parameter.</German>
+    <English>The 5. parameter in command 'plot2d' must be greater than the 4. parameter.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
