@@ -1,4 +1,4 @@
-﻿<objects>
+<objects>
   <object id = "CC_AnalysisMethods_TAYLOR_POLYNOMIAL_OF_DEQ_CANNOT_BE_COMPUTED_1">
     <German>Das Taylorpolynom der Lösung der Differentialgleichung </German>
     <English>The taylor polynomial of the solution of the differential equation </English>
@@ -47,9 +47,9 @@
     <Ukainian>?</Ukainian>
     <Russian>?</Russian>
   </object>
-  <object id = "CC_ArithmeticMethods_SECOND_PARAMETER_IN_MOD_IS_ZERO">
-    <German>Der zweite Parameter im Operator 'mod' darf nicht 0 sein.</German>
-    <English>The second parameter in the operator 'mod' does not have to be 0.</English>
+  <object id = "CC_ArithmeticMethods_SECOND_PARAMETER_IN_MOD_IS_NON_POSITIVE">
+    <German>Der 2. Parameter im Operator 'mod' muss positiv sein.</German>
+    <English>The 2. parameter in operator 'mod' must be positive.</English>
     <Ukainian>?</Ukainian>
     <Russian>?</Russian>
   </object>

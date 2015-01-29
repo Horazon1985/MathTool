@@ -1,4 +1,4 @@
-﻿<objects>
+<objects>
   <object id = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX">
     <German>Im Befehl 'approx' muss genau ein Parameter stehen.</German>
     <English>The command 'approx' must contain exactly one parameter.</English>
@@ -170,8 +170,8 @@
   <object id = "MCC_WRONG_FORM_OF_PARAMETER_IN_PI">
     <German>Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.</German>
     <English>The parameter in command 'pi' must be a nonnegative integer.</English>
-    <Ukrainian>?</Ukrainian><
-    Russian>?</Russian>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
   </object>
   <object id = "MCC_ENTER_SMALLER_NUMBER_IN_PI">
     <German>Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.</German>
