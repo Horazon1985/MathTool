@@ -101,7 +101,7 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_RIGHT:SIDE_OF_DEF_CONTAINS_WRONG_VAR">
+  <object id = "MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR">
     <German>Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.</German>
     <English>The right side contains a variable, which does not occur in function parameters.</English>
     <Ukrainian>?</Ukrainian>

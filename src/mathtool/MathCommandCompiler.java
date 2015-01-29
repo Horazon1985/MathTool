@@ -19,6 +19,7 @@ import expressionbuilder.TypeBinary;
 import expressionbuilder.TypeSimplify;
 import LogicalExpressionBuilder.LogicalExpression;
 import LogicalExpressionBuilder.LogicalVariable;
+import Translator.Translator;
 import java.math.BigInteger;
 import java.math.BigDecimal;
 
@@ -129,14 +130,13 @@ public class MathCommandCompiler {
              * Prüft, ob der Befehl genau einen Parameter besitzt.
              */
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'approx' muss genau ein Parameter stehen, der einen gültigen Ausdruck darstellt.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX"));
             }
 
             try {
                 Expression.build(params[0], new HashSet());
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'approx' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: "
-                        + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
             }
 
             command_params = new Object[1];
@@ -157,7 +157,7 @@ public class MathCommandCompiler {
              * Prüft, ob der Befehl keine Parameter besitzt.
              */
             if (params.length > 0) {
-                throw new ExpressionException("Im Befehl 'clear' dürfen keine Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CLEAR"));
             }
 
             command_params = new Object[0];
@@ -177,11 +177,11 @@ public class MathCommandCompiler {
         if (command.equals("def")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'def' muss genau ein Parameter stehen, welcher aus einer Variablenzuweisung oder einer Funktionszuweisung besteht.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF"));
             }
 
             if (!params[0].contains("=")) {
-                throw new ExpressionException("Im Befehl 'def' muss ein Gleichheitszeichen als Zuweisungsoperator vorhanden sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_EQUAL_IN_DEF"));
             }
 
             String function_name_and_params = params[0].substring(0, params[0].indexOf("="));
@@ -197,13 +197,13 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(function_term, new HashSet());
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller Wert zugewiesen werden.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
                 }
                 Expression preciseExpression = Expression.build(function_term, new HashSet());
                 HashSet vars = new HashSet();
                 preciseExpression.getContainedVars(vars);
                 if (!vars.isEmpty()) {
-                    throw new ExpressionException("Bei einer Variablenzuweisung muss der Veränderlichen ein reeller konstanter Wert zugewiesen werden.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE"));
                 }
                 command_params = new Object[2];
                 command_params[0] = Variable.create(function_name_and_params);
@@ -221,7 +221,7 @@ public class MathCommandCompiler {
             try {
                 Expression.build(function_term, new HashSet());
             } catch (ExpressionException e) {
-                throw new ExpressionException("Ungültiger Ausdruck auf der rechten Seite. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
             }
 
             /**
@@ -250,7 +250,7 @@ public class MathCommandCompiler {
                 Expression.getOperatorAndArguments(function_name_and_params);
                 Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Ungültige Variablen- oder Funktionsdefinition.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
             }
 
             /**
@@ -265,7 +265,9 @@ public class MathCommandCompiler {
              */
             for (int i = 0; i < function_vars.length; i++) {
                 if (!Expression.isValidVariable(function_vars[i])) {
-                    throw new ExpressionException("'" + function_vars[i] + "' ist keine gültige Veränderliche.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
+                            + function_vars[i] 
+                            + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
                 }
             }
 
@@ -276,8 +278,9 @@ public class MathCommandCompiler {
             HashSet function_vars_as_hashset = new HashSet();
             for (int i = 0; i < function_vars.length; i++) {
                 if (function_vars_as_hashset.contains(function_vars[i])) {
-                    throw new ExpressionException("In der Funktionsdeklaration der Funktion " + function_name + " dürfen"
-                            + " nicht mehrmals dieselben Veränderlichen vorkommen.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_1")
+                            + function_name 
+                            + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_2"));
                 }
                 function_vars_as_hashset.add(function_vars[i]);
             }
@@ -298,15 +301,18 @@ public class MathCommandCompiler {
              * überschrieben werden.
              */
             if (!checkForbiddenNames(function_name)) {
-                throw new ExpressionException("Der Funktionsname '" + function_name + "' ist der Name einer geschützten Funktion, eines geschützten Operators "
-                        + "oder eines geschützten Befehls. Bitte wählen Sie einen anderen Namen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
+                        + function_name 
+                        + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
             }
 
             /**
              * Prüfen, ob keine Sonderzeichen vorkommen.
              */
             if (!checkForSpecialCharacters(function_name)) {
-                throw new ExpressionException("Der Funktionsname '" + function_name + "' enthält Sonderzeichen. Bitte wählen Sie einen anderen Namen, welcher nur aus Buchstaben und Ziffern besteht.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
+                        + function_name 
+                        + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
             }
 
             /**
@@ -325,7 +331,7 @@ public class MathCommandCompiler {
                 expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
                 var = var + "_ABSTRACT";
                 if (!function_vars_list.contains(var)) {
-                    throw new ExpressionException("Auf der rechten Seite taucht eine Veränderliche auf, die nicht als Funktionsparameter vorkommt.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR"));
                 }
             }
 
@@ -361,7 +367,7 @@ public class MathCommandCompiler {
              * Prüft, ob der Befehl keine Parameter besitzt.
              */
             if (params.length > 0) {
-                throw new ExpressionException("Im Befehl 'deffuncs' dürfen keine Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFFUNCS"));
             }
 
             command_params = new Object[0];
@@ -381,7 +387,7 @@ public class MathCommandCompiler {
              * Prüft, ob der Befehl keine Parameter besitzt.
              */
             if (params.length > 0) {
-                throw new ExpressionException("Im Befehl 'defvars' dürfen keine Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFVARS"));
             }
 
             command_params = new Object[0];
@@ -399,7 +405,7 @@ public class MathCommandCompiler {
         if (command.equals("euler")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'euler' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EULER"));
             }
 
             /**
@@ -409,23 +415,23 @@ public class MathCommandCompiler {
             try {
                 BigInteger number_of_digits = new BigInteger(params[0]);
                 if (number_of_digits.compareTo(BigInteger.ZERO) < 0) {
-                    throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
                 }
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
             }
 
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
                 if ((int) command_params[0] < 0) {
-                    throw new ExpressionException("Der Parameter im Befehl 'euler' muss eine nichtnegative ganze Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
                 }
                 result.setTypeCommand(TypeCommand.EULER);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_EULER"));
             }
 
         }
@@ -437,7 +443,7 @@ public class MathCommandCompiler {
         if (command.equals("expand")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'expand' muss genau ein Parameter stehen. Dieser muss ein gültiger Ausdruck sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EXPAND"));
             }
 
             try {
@@ -447,7 +453,7 @@ public class MathCommandCompiler {
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'expand' ist kein gültiger Ausdruck.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EXPAND"));
             }
 
         }
@@ -460,7 +466,7 @@ public class MathCommandCompiler {
         if (command.equals("latex")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'latex' muss genau ein Parameter stehen. Dieser muss aus gültigen Ausdrücken bestehen, die allesamt durch Gleichheitszeichen verbunden sind.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_LATEX"));
             }
 
             try {
@@ -491,7 +497,7 @@ public class MathCommandCompiler {
                 result.setParams(exprs);
                 return result;
             } catch (ExpressionException e) {
-                throw new ExpressionException("Fehler im Parameter des Befehls 'latex': " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
             }
 
         }
@@ -504,7 +510,7 @@ public class MathCommandCompiler {
         if (command.equals("pi")) {
 
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'pi' muss genau ein Parameter stehen. Dieser muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PI"));
             }
 
             /**
@@ -514,23 +520,23 @@ public class MathCommandCompiler {
             try {
                 BigInteger number_of_digits = new BigInteger(params[0]);
                 if (number_of_digits.compareTo(BigInteger.ZERO) < 0) {
-                    throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
                 }
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
             }
 
             try {
                 command_params = new Object[1];
                 command_params[0] = Integer.parseInt(params[0]);
                 if ((int) command_params[0] < 0) {
-                    throw new ExpressionException("Der Parameter im Befehl 'pi' muss eine nichtnegative ganze Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
                 }
                 result.setTypeCommand(TypeCommand.PI);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Bitte geben Sie eine kleinere Zahl für die Anzahl der gewünschten Stellen ein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_PI"));
             }
 
         }
