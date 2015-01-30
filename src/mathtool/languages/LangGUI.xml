@@ -6,79 +6,79 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_MENUE_QUIT">
     <German>Verlassen</German>
     <English>Quit</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_MENUE_MATHTOOL">
     <German>MathTool</German>
     <English>MathTool</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_MENUE_HELP">
     <German>Hilfe</German>
     <English>Help</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_MENUE_LANGUAGE">
     <German>Sprache</German>
     <English>Language</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_MENUE_ABOUT_MATHTOOL">
     <German>Über MathTool</German>
     <English>About MathTool</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_INPUT">
     <German>Eingabe</German>
     <English>Input</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_CANCEL">
     <German>Abbruch</German>
     <English>Cancel</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_LATEX_CODE">
     <German>LaTex-Code</German>
-    <English>LaTex-Code</English>
+    <English>LaTex code</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_OPERATOR">
     <German>Operator</German>
     <English>Operator</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_COMMAND">
     <German>Befehl</German>
     <English>Command</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_ROTATE_GRAPH">
     <German>Graphen rotieren lassen</German>
     <English>Rotate graph</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_STOP_ROTATION">
     <German>Rotation stoppen</German>
     <English>Stop rotation</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "GUI_MathToolForm_">
+  <object id = "GUI_MathToolForm_LEGEND">
     <German>Legende</German>
     <English>Legend</English>
     <Ukrainian>?</Ukrainian>

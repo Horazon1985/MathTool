@@ -213,6 +213,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
      */
     private void refreshInterface() {
 
+        /**
+         * Im Sprachmenü die gewählte Sprache fett hervorheben.
+         */
         if (Expression.getLanguage().equals(TypeLanguage.EN)) {
             menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
             menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
@@ -234,6 +237,18 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
             menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
         }
+        /**
+         * Restliche Komponenten aktualisieren.
+         */
+        latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
+        inputButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_INPUT"));
+        cancelButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CANCEL"));
+        if (startRotate) {
+            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION"));
+        } else {
+            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
+        }
+        legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
 
     }
 
@@ -454,6 +469,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         });
         menuItemLanguageMenu.add(menuItemLanguageEnglish);
 
+        menuItemLanguageGerman.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         menuItemLanguageGerman.setText("German");
         menuItemLanguageGerman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1055,8 +1071,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         /**
-         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen,
-         * falls diese aktiv ist.
+         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         * aktiv ist.
          */
         stopPossibleRotation();
         inputField.setText("clear()");
@@ -1129,7 +1145,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b><u>Legende</u></b></<html>");
+            legendLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</u></b></html>");
             validate();
             repaint();
         }
@@ -1138,7 +1154,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b>Legende</b></<html>");
+            legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
             validate();
             repaint();
         }
