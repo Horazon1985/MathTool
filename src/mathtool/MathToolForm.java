@@ -2,6 +2,7 @@ package mathtool;
 
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
+import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import graphic.GraphicMethods2D;
 import graphic.GraphicMethods3D;
@@ -795,8 +796,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
         /**
-         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
-         * falls diese aktiv ist.
+         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         * aktiv ist.
          */
         stopPossibleRotation();
         executeCommand();
@@ -840,8 +841,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
         /**
-         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
-         * falls diese aktiv ist.
+         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         * aktiv ist.
          */
         stopPossibleRotation();
         String line = inputField.getText();
@@ -851,8 +852,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
         /**
-         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
-         * falls diese aktiv ist.
+         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         * aktiv ist.
          */
         stopPossibleRotation();
         String line = inputField.getText();
@@ -1018,8 +1019,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 /**
-                 * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation
-                 * stoppen, falls diese aktiv ist.
+                 * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls
+                 * diese aktiv ist.
                  */
                 stopPossibleRotation();
                 executeCommand();
@@ -1054,7 +1055,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         /**
-         * Wichtig: Wenn command im Namen 'plot' enthält -> Rotation stoppen,
+         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen,
          * falls diese aktiv ist.
          */
         stopPossibleRotation();

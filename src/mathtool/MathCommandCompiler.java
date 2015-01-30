@@ -1042,22 +1042,20 @@ public class MathCommandCompiler {
          */
         if (command.equals("solvedeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
             }
 
             if (params.length >= 6) {
 
                 //Ermittelt die Ordnung der DGL
+                int ord;
                 try {
-                    Integer.parseInt(params[2]);
+                    ord = Integer.parseInt(params[2]);
+                    if (ord < 1) {
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
+                    }
                 } catch (NumberFormatException e) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.");
-                }
-
-                int ord = Integer.parseInt(params[2]);
-
-                if (ord < 1) {
-                    throw new ExpressionException("Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
                 }
 
                 /**
@@ -1069,7 +1067,7 @@ public class MathCommandCompiler {
                 try {
                     Expression.build(params[0], vars);
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der erste Parameter im Befehl 'solvedeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ") + e.getMessage());
                 }
                 Expression expr = Expression.build(params[0], vars);
 
@@ -1080,8 +1078,11 @@ public class MathCommandCompiler {
                     var_without_primes = (String) iter.next();
                     if (!var_without_primes.replaceAll("'", "").equals(params[1])) {
                         if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                            throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". "
-                                    + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_1")
+                                    + ord
+                                    + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_2")
+                                    + (ord - 1)
+                                    + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_3"));
                         }
                         var_without_primes = var_without_primes.replaceAll("'", "");
                     }
@@ -1089,24 +1090,26 @@ public class MathCommandCompiler {
                 }
 
                 if (vars_without_primes.size() > 2) {
-                    throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDEQ"));
                 }
 
                 if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
                     if (vars_without_primes.size() == 2) {
                         if (!vars.contains(params[1])) {
-                            throw new ExpressionException("Die Veränderliche " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_1")
+                                    + params[1]
+                                    + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_2"));
                         }
                     }
                 } else {
-                    throw new ExpressionException("Der zweite Parameter im Befehl 'solvedeq' muss eine gültige Veränderliche sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDEQ"));
                 }
 
                 if (params.length < ord + 5) {
-                    throw new ExpressionException("Zu wenig Parameter im Befehl 'solvedeq'.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
                 }
                 if (params.length > ord + 5) {
-                    throw new ExpressionException("Zu viele Parameter im Befehl 'solvedeq'.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDEQ"));
                 }
 
                 //Prüft, ob die AWP-Daten korrekt sind
@@ -1115,11 +1118,15 @@ public class MathCommandCompiler {
                     try {
                         Expression limit = Expression.build(params[i], vars_in_limits);
                         if (!vars_in_limits.isEmpty()) {
-                            throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein, deren Betrag höchstens 1.7E308 beträgt.");
+                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
+                                    + String.valueOf(i + 1)
+                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
                         }
                         limit.evaluate();
                     } catch (ExpressionException | EvaluationException e) {
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'solvedeq' muss eine reelle Zahl sein, deren Betrag höchstens 1.7E308 beträgt.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
+                                + String.valueOf(i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
                     }
                 }
 
@@ -1144,7 +1151,7 @@ public class MathCommandCompiler {
          */
         if (command.equals("table")) {
             if (params.length != 1) {
-                throw new ExpressionException("Im Befehl 'table' muss genau ein Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
             }
 
             HashSet vars = new HashSet();
@@ -1153,7 +1160,7 @@ public class MathCommandCompiler {
             try {
                 log_expr = LogicalExpression.build(params[0], vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der Parameter im Befehl 'table' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_TABLE") + e.getMessage());
             }
 
             command_params = new Object[1];
@@ -1173,13 +1180,13 @@ public class MathCommandCompiler {
          */
         if (command.equals("tangent")) {
             if (params.length < 2) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'tangent'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
             }
 
             try {
                 Expression.build(params[0], new HashSet());
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
             }
 
             HashSet vars = new HashSet();
@@ -1191,19 +1198,25 @@ public class MathCommandCompiler {
             HashMap<String, Expression> vars_contained_in_params = new HashMap<>();
             for (int i = 1; i < params.length; i++) {
                 if (!params[i].contains("=")) {
-                    throw new ExpressionException("Der " + (i + 1) + ". Parameter muss von der Form 'VARIABLE = WERT' sein, "
-                            + "wobei die Veränderliche VARIABLE im Ausdruck vorkommen muss.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
                 }
                 if (!Expression.isValidVariable(params[i].substring(0, params[i].indexOf("=")))) {
-                    throw new ExpressionException(params[i].substring(0, params[i].indexOf("=")) + " ist keine gültige Veränderliche.");
+                    throw new ExpressionException(params[i].substring(0, params[i].indexOf("="))
+                            + Translator.translateExceptionMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT"));
                 }
                 try {
                     Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet());
                     if (!point.isConstant()) {
-                        throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
                     }
                 } catch (ExpressionException e) {
-                    throw new ExpressionException("Der Veränderlichen im " + (i + 1) + ". Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
                 }
             }
 
@@ -1213,7 +1226,9 @@ public class MathCommandCompiler {
             for (int i = 1; i < params.length; i++) {
                 for (int j = i + 1; j < params.length; j++) {
                     if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
-                        throw new ExpressionException("Die Veränderliche " + params[i].substring(0, params[i].indexOf("=")) + " tritt doppelt auf.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_1")
+                                + params[i].substring(0, params[i].indexOf("="))
+                                + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_2"));
                     }
                 }
             }
@@ -1228,7 +1243,9 @@ public class MathCommandCompiler {
             for (int i = 0; i < vars.size(); i++) {
                 var = (String) iter.next();
                 if (!vars_contained_in_params.containsKey(var)) {
-                    throw new ExpressionException("Die Veränderliche " + var + " muss in den Parametern vorkommen.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_1")
+                            + var
+                            + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_2"));
                 }
             }
 
@@ -1251,20 +1268,18 @@ public class MathCommandCompiler {
          */
         if (command.equals("taylordeq")) {
             if (params.length < 6) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
             }
 
             //Ermittelt die Ordnung der DGL
+            int ord;
             try {
-                Integer.parseInt(params[2]);
+                ord = Integer.parseInt(params[2]);
+                if (ord < 1) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
+                }
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.");
-            }
-
-            int ord = Integer.parseInt(params[2]);
-
-            if (ord < 1) {
-                throw new ExpressionException("Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
             }
 
             /**
@@ -1276,7 +1291,7 @@ public class MathCommandCompiler {
             try {
                 Expression.build(params[0], vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException("Der erste Parameter im Befehl 'taylordeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: " + e.getMessage());
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ") + e.getMessage());
             }
             Expression expr = Expression.build(params[0], vars);
 
@@ -1287,8 +1302,11 @@ public class MathCommandCompiler {
                 var_without_primes = (String) iter.next();
                 if (!var_without_primes.replaceAll("'", "").equals(params[1])) {
                     if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                        throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". "
-                                + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_1")
+                                + ord
+                                + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_2")
+                                + (ord - 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_3"));
                     }
                     var_without_primes = var_without_primes.replaceAll("'", "");
                 }
@@ -1296,25 +1314,27 @@ public class MathCommandCompiler {
             }
 
             if (vars_without_primes.size() > 2) {
-                throw new ExpressionException("In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ"));
             }
 
             if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
                 if (vars_without_primes.size() == 2) {
                     if (!vars.contains(params[1])) {
-                        throw new ExpressionException("Die Veränderliche " + params[1] + " muss in der Differentialgleichung vorkommen.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_1")
+                                + params[1]
+                                + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_2"));
                     }
                 }
             } else {
-                throw new ExpressionException("Der zweite Parameter im Befehl 'taylordeq' muss eine gültige Veränderliche sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDEQ"));
             }
 
             if (params.length < ord + 5) {
-                throw new ExpressionException("Zu wenig Parameter im Befehl 'taylordeq'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
             }
 
             if (params.length > ord + 5) {
-                throw new ExpressionException("Zu viele Parameter im Befehl 'taylordeq'.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
             }
 
             //Prüft, ob die AWP-Daten korrekt sind
@@ -1323,17 +1343,21 @@ public class MathCommandCompiler {
                 try {
                     Expression limit = Expression.build(params[i], vars_in_limits).simplify();
                     if (!vars_in_limits.isEmpty()) {
-                        throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordeq' muss eine reelle Zahl sein.");
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
+                                + String.valueOf(i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
                     }
                 } catch (ExpressionException | EvaluationException e) {
-                    throw new ExpressionException("Der " + String.valueOf(i + 1) + ". Parameter im Befehl 'taylordeq' muss eine reelle Zahl sein.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
+                            + String.valueOf(i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
                 }
             }
 
             try {
                 Integer.parseInt(params[ord + 4]);
             } catch (NumberFormatException e) {
-                throw new ExpressionException("Der letzte Parameter im Befehl 'taylordeq' muss eine nichtnegative ganze Zahl sein.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDEQ"));
             }
 
             command_params = new Object[ord + 5];
@@ -1360,7 +1384,9 @@ public class MathCommandCompiler {
              */
             for (int i = 0; i < params.length; i++) {
                 if (!Expression.isValidVariable(params[i]) && !Expression.isPI(params[i])) {
-                    throw new ExpressionException("Der " + (i + 1) + ". Parameter im Befehl 'undef' ist keine gültige Veränderliche.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
                 }
             }
 
@@ -1383,7 +1409,7 @@ public class MathCommandCompiler {
              * Prüft, ob der Befehl keine Parameter besitzt.
              */
             if (params.length > 0) {
-                throw new ExpressionException("Im Befehl 'undefall' dürfen keine Parameter stehen.");
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_UNDEFALL"));
             }
 
             command_params = new Object[0];
@@ -1471,7 +1497,7 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
             executeUndefineAll(definedVars, definedVarsSet);
         } else {
-            throw new ExpressionException("Ungültiger Befehl.");
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
 
         /**
@@ -1539,9 +1565,17 @@ public class MathCommandCompiler {
             definedVarsSet.add(var);
             output = new String[1];
             if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
-                output[0] = "Der Wert der Veränderlichen " + var + " wurde auf " + preciseExpression.writeFormula(true) + " gesetzt. \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
+                        + preciseExpression.writeFormula(true)
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3");
             } else {
-                output[0] = "Der Wert der Veränderlichen " + var + " wurde auf " + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true) + " gesetzt. \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
+                        + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true)
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3");
             }
         } else {
             /**
@@ -1582,7 +1616,7 @@ public class MathCommandCompiler {
             function = function + f_for_output.writeFormula(true);
 
             output = new String[1];
-            output[0] = "Es wurde die folgende Funktion definiert: " + function + "\n \n";
+            output[0] = Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + "\n \n";
 
         }
 
@@ -1616,7 +1650,7 @@ public class MathCommandCompiler {
             function = function.substring(0, function.length() - 2);
         }
         output = new String[1];
-        output[0] = "Liste aller selbstdefinierten Funktionen: " + function + "\n \n";
+        output[0] = Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + function + "\n \n";
 
     }
 
@@ -1631,14 +1665,17 @@ public class MathCommandCompiler {
             result = result.substring(0, result.length() - 2);
         }
         output = new String[1];
-        output[0] = "Liste aller Veränderlichen mit vordefinierten Werten: " + result + "\n \n";
+        output[0] = Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES") + result + "\n \n";
 
     }
 
     private static void executeEuler(Command c) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         output = new String[1];
-        output[0] = "Eulersche Zahl e auf " + (int) c.getParams()[0] + " Stellen gerundet: " + e.toString() + "\n \n";
+        output[0] = Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
+                + (int) c.getParams()[0]
+                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
+                + e.toString() + "\n \n";
     }
 
     private static void executeExpand(Command c) throws ExpressionException, EvaluationException {
@@ -1668,7 +1705,7 @@ public class MathCommandCompiler {
 
     private static void executeLatex(Command c) throws ExpressionException {
         output = new String[1];
-        output[0] = "Latex-Code: ";
+        output[0] = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < c.getParams().length - 1; i++) {
             if (c.getParams()[i] == null) {
                 output[0] = output[0] + " = ";
@@ -1686,7 +1723,10 @@ public class MathCommandCompiler {
     private static void executePi(Command c) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
         output = new String[1];
-        output[0] = "Konstante pi auf " + (int) c.getParams()[0] + " Stellen gerundet: " + pi.toString() + "\n \n";
+        output[0] = Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
+                + (int) c.getParams()[0]
+                + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
+                + pi.toString() + "\n \n";
     }
 
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
@@ -1998,7 +2038,7 @@ public class MathCommandCompiler {
              */
             if (zeros.isEmpty()) {
                 output = new String[1];
-                output[0] = "Es konnten keine exakten Lösungen ermittelt werden. \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND");
                 return;
             }
 
@@ -2030,25 +2070,31 @@ public class MathCommandCompiler {
                 }
                 message_about_free_parameters = message_about_free_parameters.substring(0, message_about_free_parameters.length() - 2);
                 if (max_index == 1) {
-                    message_about_free_parameters = message_about_free_parameters + " ist eine beliebige ganze Zahl. \n \n";
+                    message_about_free_parameters = message_about_free_parameters
+                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER");
                 } else {
-                    message_about_free_parameters = message_about_free_parameters + " sind beliebige ganze Zahlen. \n \n";
+                    message_about_free_parameters = message_about_free_parameters
+                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS");
                 }
 
             }
 
             if (contains_free_parameter) {
                 output = new String[zeros.size() + 2];
-                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                        + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = "
+                        + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
                 for (int i = 0; i < zeros.size(); i++) {
                     output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
                 }
                 output[output.length - 1] = message_about_free_parameters;
             } else {
                 output = new String[zeros.size() + 1];
-                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                        + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = "
+                        + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
                 for (int i = 0; i < zeros.size(); i++) {
                     output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n";
                 }
@@ -2079,12 +2125,14 @@ public class MathCommandCompiler {
 
             if (expr instanceof Constant) {
                 output = new String[2];
-                output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                        + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+                output[0] = Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                        + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + " = "
+                        + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
                 if (expr.equals(Expression.ZERO)) {
-                    output[1] = "Alle reellen Zahlen. \n \n";
+                    output[1] = Translator.translateExceptionMessage("MCC_ALL_REALS");
                 } else {
-                    output[1] = "Die gegebene Gleichung besitzt keine Lösungen. \n \n";
+                    output[1] = Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS");
                 }
 
                 graphicMethods2D.setIsInitialized(true);
@@ -2105,14 +2153,16 @@ public class MathCommandCompiler {
             HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
 
             output = new String[Math.max(zeros.size() + 1, 2)];
-            output[0] = "Lösungen der Gleichung " + ((Expression) c.getParams()[0]).writeFormula(true)
-                    + " = " + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
+            output[0] = Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                    + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + " = "
+                    + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
             for (int i = 0; i < zeros.size(); i++) {
                 output[i + 1] = var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n";
             }
 
             if (zeros.isEmpty()) {
-                output[1] = "Es konnten keine Lösungen ermittelt werden. \n \n";
+                output[1] = Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND");
             }
 
             /**
@@ -2157,8 +2207,11 @@ public class MathCommandCompiler {
             var_without_primes = (String) iter.next();
             if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])) {
                 if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". "
-                            + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
+                            + ord
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
+                            + (ord - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
                 }
                 var_without_primes = var_without_primes.replaceAll("'", "");
             }
@@ -2217,8 +2270,9 @@ public class MathCommandCompiler {
          */
         if (solution.length < 1001) {
             output = new String[2 + solution.length];
-            output[output.length - 1] = "Die Lösung der Differentialgleichung ist nicht definiert an der Stelle "
-                    + (x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000) + ". \n \n";
+            output[output.length - 1] = Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
+                    + (x_0.evaluate() + (solution.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+                    + ". \n \n";
         } else {
             output = new String[1 + solution.length];
         }
@@ -2226,7 +2280,7 @@ public class MathCommandCompiler {
         /**
          * Formulierung und Ausgabe des AWP.
          */
-        output[0] = "Lösung der Differentialgleichung: " + var_2;
+        output[0] = Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ") + var_2;
         for (int i = 0; i < ord; i++) {
             output[0] = output[0] + "'";
         }
@@ -2241,7 +2295,7 @@ public class MathCommandCompiler {
             output[0] = output[0] + y_0[i].writeFormula(true);
         }
 
-        output[0] = output[0] + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + " \n \n";
+        output[0] = output[0] + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + ": \n \n";
 
         /**
          * Lösungen ausgeben.
@@ -2269,11 +2323,12 @@ public class MathCommandCompiler {
         log_expr.getContainedVars(vars);
         int n = vars.size();
         if (n > 20) {
-            throw new EvaluationException("Der logische Ausdruck " + log_expr.writeFormula() + " enthält mehr als 20 Veränderliche. Die Wertetabelle"
-                    + " ist damit zu groß für die Ausgabe.");
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")
+                    + log_expr.writeFormula()
+                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2"));
         }
 
-        String table_announcement = "Wertetabelle für den logischen Ausdruck " + log_expr.writeFormula() + ": \n \n";
+        String table_announcement = Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n";
 
         /**
          * Falls es sich um einen konstanten Ausdruck handelt.
@@ -2283,9 +2338,13 @@ public class MathCommandCompiler {
             output[0] = table_announcement;
             boolean value = log_expr.evaluate();
             if (value) {
-                output[1] = "Der logische Ausdruck " + log_expr.writeFormula() + " enthält keine logischen Veränderlichen und hat den Wert 1. \n \n";
+                output[1] = Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                        + log_expr.writeFormula()
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2");
             } else {
-                output[1] = "Der logische Ausdruck " + log_expr.writeFormula() + " enthält keine logischen Veränderlichen und hat den Wert 0. \n \n";
+                output[1] = Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                        + log_expr.writeFormula()
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3");
             }
             return;
         }
@@ -2309,7 +2368,7 @@ public class MathCommandCompiler {
         int table_length = BigInteger.valueOf(2).pow(n).intValue();
         output = new String[2 + table_length];
         output[0] = table_announcement;
-        output[1] = "Reihenfolge der logischen Veränderlichen in den Tupeln: ";
+        output[1] = Translator.translateExceptionMessage("MCC_ORDER_OF_VARIABLES_IN_TABLE");
         for (int i = 0; i < vars_enumerated.size(); i++) {
             output[1] = output[1] + vars_enumerated.get(i) + ", ";
         }
@@ -2360,7 +2419,9 @@ public class MathCommandCompiler {
         Expression expr = (Expression) c.getParams()[0];
         HashMap<String, Expression> vars = (HashMap<String, Expression>) c.getParams()[1];
 
-        String tangent_announcement = "Gleichung des Tangentialraumes an den Graphen von Y = " + expr.writeFormula(true) + " im Punkt ";
+        String tangent_announcement = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
+                + expr.writeFormula(true)
+                + Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
 
         for (String var : vars.keySet()) {
             tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
@@ -2370,7 +2431,7 @@ public class MathCommandCompiler {
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
         output = new String[2];
         output[0] = tangent_announcement;
-        output[1] = "Y=" + tangent.writeFormula(true) + "\n \n";
+        output[1] = "Y = " + tangent.writeFormula(true) + "\n \n";
 
         if (vars.size() == 1) {
 
@@ -2417,8 +2478,11 @@ public class MathCommandCompiler {
             var_without_primes = (String) iter.next();
             if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])) {
                 if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException("Die Differentialgleichung besitzt die Ordnung " + ord + ". "
-                            + "Es dürfen daher nur Ableitungen höchstens " + (ord - 1) + ". Ordnung auftreten.");
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
+                            + ord
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
+                            + (ord - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
                 }
                 var_without_primes = var_without_primes.replaceAll("'", "");
             }
@@ -2491,7 +2555,9 @@ public class MathCommandCompiler {
             if (definedVarsSet.contains(current_var)) {
                 definedVarsSet.remove(current_var);
                 definedVars.remove(current_var);
-                output[i] = "Die Veränderliche " + current_var + " ist wieder eine Unbestimmte. \n \n";
+                output[i] = Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
+                        + current_var
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2");
             }
         }
 
@@ -2506,7 +2572,7 @@ public class MathCommandCompiler {
         definedVarsSet.clear();
         definedVars.clear();
         output = new String[1];
-        output[0] = "Alle Veränderlichen sind wieder Unbestimmte. \n \n";
+        output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN");
 
     }
 

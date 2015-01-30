@@ -510,14 +510,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ">
-    <German>Der dritte Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.</German>
-    <English>The third parameter in command 'solvedeq' must be a positive integer.</English>
+    <German>Der 3. Parameter im Befehl 'solvedeq' muss eine positive ganze Zahl sein.</German>
+    <English>The 3. parameter in command 'solvedeq' must be a positive integer.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ">
-    <German>Der erste Parameter im Befehl 'solvedeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>The first parameter in command 'solvedeq' must be a valid expression. Reported error: </English>
+    <German>Der 1. Parameter im Befehl 'solvedeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>The 1. parameter in command 'solvedeq' must be a valid expression. Reported error: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -558,8 +558,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDEQ">
-    <German>Der zweite Parameter im Befehl 'solvedeq' muss eine gültige Veränderliche sein.</German>
-    <English>The second parameter in command 'solvedeq' must be a valid variable.</English>
+    <German>Der 2. Parameter im Befehl 'solvedeq' muss eine gültige Veränderliche sein.</German>
+    <English>The 2. parameter in command 'solvedeq' must be a valid variable.</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ">
+    <German>Zu wenig Parameter im Befehl 'solvedeq'.</German>
+    <English>Not enough parameters in command 'solvedeq'.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -600,8 +606,8 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT">
-    <German>Der erste Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>The first parameter in command 'tangent' must be a valid expression. Reported error: </English>
+    <German>Der 1. Parameter im Befehl 'tangent' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>The 1. parameter in command 'tangent' must be a valid expression. Reported error: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -630,8 +636,8 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2">
-    <German>. Parameter im Befehl 'tangent' muss eine reelle Zahl zugewiesen werden.</German>
-    <English>. parameter in command 'tangent' must be assigned a real number.</English>
+    <German>. Parameter im Befehl 'tangent' muss eine reeller Wert zugewiesen werden.</German>
+    <English>. parameter in command 'tangent' must be assigned a real value.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -666,14 +672,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ">
-    <German>Der dritte Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.</German>
-    <English>The third parameter in command 'taylordeq' must be a positive integer.</English>
+    <German>Der 3. Parameter im Befehl 'taylordeq' muss eine positive ganze Zahl sein.</German>
+    <English>The 3. parameter in command 'taylordeq' must be a positive integer.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ">
-    <German>Der erste Parameter im Befehl 'taylordeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
-    <English>The first parameter in command 'taylordeq' must be a valid expression. Reported error: </English>
+    <German>Der 1. Parameter im Befehl 'taylordeq' muss ein gültiger Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>The 1. parameter in command 'taylordeq' must be a valid expression. Reported error: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -695,7 +701,7 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ_1">
+  <object id = "MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ">
     <German>In der Differentialgleichung dürfen höchstens zwei Veränderliche auftreten.</German>
     <English>The differential equation must contain at most two variables.</English>
     <Ukrainian>?</Ukrainian>
@@ -714,8 +720,14 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDEQ">
-    <German>Der zweite Parameter im Befehl 'taylordeq' muss eine gültige Veränderliche sein.</German>
-    <English>The second parameter in command 'taylordeq' must be a valid variable.</English>
+    <German>Der 2. Parameter im Befehl 'taylordeq' muss eine gültige Veränderliche sein.</German>
+    <English>The 2. parameter in command 'taylordeq' must be a valid variable.</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ">
+    <German>Zu wenig Parameter im Befehl 'taylordeq'.</German>
+    <English>Not enough parameters in command 'taylordeq'.</English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -767,48 +779,6 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1">
-    <German>Die Differentialgleichung besitzt die Ordnung </German>
-    <English>The differential equation has order </English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2">
-    <German>. Es dürfen daher nur Ableitungen höchstens </German>
-    <English>. Hence only derivatives of order at most </English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3">
-    <German>. Ordnung auftreten.</German>
-    <English> are allowed.</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1">
-    <German>Der logische Ausdruck </German>
-    <English>The logical expression </English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2">
-    <German> enthält mehr als 20 Veränderliche. Die Wertetabelle ist damit zu groß für die Ausgabe.</German>
-    <English> contains more than 20 variables. The table of values is too big for output.</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION_1">
-    <German>Wertetabelle für den logischen Ausdruck </German>
-    <English>Table of values of the logical expression </English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
-  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION_2">
-    <German>: \n \n</German>
-    <English>: \n \n</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
-  </object>
  <!-- Übersetzungen der output-Nachrichten: -->  
   <object id = "MCC_VALUE_ASSIGNED_TO_VARIABLE_1">
     <German>Der Wert der Veränderlichen </German>
@@ -835,7 +805,7 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_LIST_OF_DEFINED_FUNCTIONS">
-    <German>Liste aller selbstdefinierten Funktionen: </German>
+    <German>Liste aller vom Benutzer definierten Funktionen: </German>
     <English>List of all functions defined by user: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
@@ -855,6 +825,12 @@
   <object id = "MCC_DIGITS_OF_E_2">
     <German> Stellen gerundet: </German>
     <English> digits: </English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_LATEX_CODE">
+    <German>LaTex-Code: </German>
+    <English>LaTex code: </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -912,15 +888,51 @@
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT_1">
+  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1">
+    <German>Die Differentialgleichung besitzt die Ordnung </German>
+    <English>The differential equation has order </English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2">
+    <German>. Es dürfen daher nur Ableitungen höchstens </German>
+    <English>. Hence only derivatives of order at most </English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3">
+    <German>. Ordnung auftreten.</German>
+    <English> are allowed.</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT">
     <German>Die Lösung der Differentialgleichung ist nicht definiert an der Stelle </German>
     <English>The solution of the differential equation is not defined in </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
-  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT_2">
-    <German>Lösung der Differentialgleichung: </German>
-    <English>Solution of the differential equation: </English>
+  <object id = "MCC_SOLUTION_OF_DEQ">
+    <German>Lösung der Differentialgleichung </German>
+    <English>Solution of the differential equation </English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1">
+    <German>Der logische Ausdruck </German>
+    <English>The logical expression </English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2">
+    <German> enthält mehr als 20 Veränderliche. Die Wertetabelle ist damit zu groß für die Ausgabe.</German>
+    <English> contains more than 20 variables. The table of values is too big for output.</English>
+    <Ukrainian>?</Ukrainian>
+    <Russian>?</Russian>
+  </object>
+  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION">
+    <German>Wertetabelle für den logischen Ausdruck </German>
+    <English>Table of values of the logical expression </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
   </object>
@@ -949,7 +961,7 @@
     <Russian>?</Russian>
   </object>
   <object id = "MCC_EQUATION_OF_TANGENT_SPACE_1">
-    <German>Gleichung des Tangentialraumes an den Graphen von Y = </German>
+    <German>Gleichung des Tangentialraumes an den Graphen von </German>
     <English>Equation of the tangent space to the graph of </English>
     <Ukrainian>?</Ukrainian>
     <Russian>?</Russian>
