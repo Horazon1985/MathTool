@@ -1,4 +1,4 @@
-<objects>
+﻿<objects>
   <object id = "GR_Graphic2D_HOLD_DOWN_LEFT_MOUSE_BUTTON">
     <German>Linke Maustaste gedrückt halten: Graphen verschieben</German>
     <English>Hold down the left mouse button: move graph</English>
@@ -14,7 +14,7 @@
   <object id = "GR_Graphic2D_MOVE_MOUSE_WHEEL">
     <German>Mausrad bewegen: hinein- und herauszoomen</German>
     <English>Move mouse wheel: zoom in and out</English>
-    <Ukrainian>Прокрутити колещатко миші: збільшувати, зменшувати</Ukrainian>
+    <Ukrainian>Прокрутити колесо миші: збільшувати, зменшувати</Ukrainian>
     <Russian>Прокрутить колёсико мыши: увеличивать, уменьшать</Russian>
   </object>
   <object id = "GR_Graphic2D_IMPOSSIBLE_MOVE_GRAPH">
@@ -27,18 +27,18 @@
     <German>Linke Maustaste gedrückt halten: Graphen horizontal rotieren</German>
     <English>Hold down the left mouse button: rotate graph horizontally</English>
     <Ukrainian>Затиснути ліву клавішу миші: обертати графік горизонтально</Ukrainian>
-    <Russian>Зажать левую клавишу миши: вращать график горизонтально</Russian>
+    <Russian>Зажать левую клавишу мыши: вращать график горизонтально</Russian>
   </object>
   <object id = "GR_Graphic3D_HOLD_DOWN_RIGHT_MOUSE_BUTTON">
     <German>Rechte Maustaste gedrückt halten: Graphen vertikal rotieren</German>
     <English>Hold down the right mouse button: rotate graph vertically</English>
     <Ukrainian>Затиснути праву клавішу миші: обертати графік вертикально</Ukrainian>
-    <Russian>Зажать правую клавишу миши: вращать график вертикально</Russian>
+    <Russian>Зажать правую клавишу мыши: вращать график вертикально</Russian>
   </object>
   <object id = "GR_Graphic3D_MOVE_MOUSE_WHEEL">
     <German>Mausrad bewegen: hinein- und herauszoomen</German>
     <English>Move mouse wheel: zoom in and out</English>
-    <Ukrainian>Прокрутити колещатко миші: збільшувати, зменшувати</Ukrainian>
+    <Ukrainian>Прокрутити колеcо миші: збільшувати, зменшувати</Ukrainian>
     <Russian>Прокрутить колёсико мыши: увеличивать, уменьшать</Russian>
   </object>
 </objects>
