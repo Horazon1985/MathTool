@@ -2031,7 +2031,7 @@ public class MathCommandCompiler {
                 }
             }
 
-            HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var, area);
+            HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(expr_1, expr_2, var);
 
             /**
              * Falls keine Lösungen ermittelt werden konnten, User informieren.
