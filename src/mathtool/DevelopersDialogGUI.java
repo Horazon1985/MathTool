@@ -1,6 +1,8 @@
 package mathtool;
 
 import Translator.Translator;
+import expressionbuilder.Expression;
+import expressionbuilder.TypeLanguage;
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.ImageIcon;
@@ -47,7 +49,18 @@ public class DevelopersDialogGUI extends JDialog {
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopers.html");
+        java.net.URL helpURL;
+        
+        if (Expression.getLanguage().equals(TypeLanguage.DE)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopersDE.html");
+        } else if (Expression.getLanguage().equals(TypeLanguage.EN)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopersEN.html");
+        } else if (Expression.getLanguage().equals(TypeLanguage.RU)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopersRU.html");
+        } else {
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolDevelopersUA.html");
+        } 
+        
         if (helpURL != null) {
             try {
                 developersArea.setPage(helpURL);

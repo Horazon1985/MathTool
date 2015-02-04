@@ -12,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import expressionbuilder.Expression;
+import expressionbuilder.TypeLanguage;
 
 public class HelpDialogGUI extends JDialog implements MouseListener {
 
@@ -101,7 +103,18 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileGeneralities() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralities.html");
+        java.net.URL helpURL;
+        
+        if (Expression.getLanguage().equals(TypeLanguage.DE)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralitiesDE.html");
+        } else if (Expression.getLanguage().equals(TypeLanguage.EN)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralitiesEN.html");
+        } else if (Expression.getLanguage().equals(TypeLanguage.RU)){
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralitiesRU.html");
+        } else {
+            helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralitiesUA.html");
+        } 
+
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -115,7 +128,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileFormulas() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpFormulas.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpFormulasDE.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -129,7 +142,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileLogicalExpressions() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpLogicalExpressions.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpLogicalExpressionsDE.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -143,7 +156,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileOperators() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpOperators.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpOperatorsDE.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -157,7 +170,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileCommands() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpCommands.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpCommandsDE.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -171,7 +184,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private void showHelpFileContact() {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpContact.html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpContactDE.html");
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
