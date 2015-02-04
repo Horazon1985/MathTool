@@ -1,6 +1,6 @@
 ﻿<font size="6"><strong>Commands:</strong></font><br><br>
 
-MathTool knows the following commands:<br><br>
+MathTool knows the following console commands:<br><br>
 
 <strong>approx(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Approximates the expression F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
@@ -10,7 +10,7 @@ MathTool knows the following commands:<br><br>
 
 <strong>clear():</strong> Clears the entire console. However, variables and functions defined by user stay in memory.<br><br>
 
-<strong>def(x = x<sub>0</sub>):</strong> Assigns the constant value x<sub>0</sub> to a variable x.<br><br>
+<strong>def(x = x<sub>0</sub>):</strong> Assigns to variable x the constant value x<sub>0</sub>.<br><br>
 
 <strong>def(F(x<sub>1</sub>, ..., x<sub>n</sub>) = G(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Defines a function F with variables x<sub>1</sub>, ..., x<sub>n</sub> by the expression G(x<sub>1</sub>, ..., x<sub>n</sub>). Of course, predefined functions like sin(), tan(), exp(), etc. cannot be overriden.<br><br>
 
@@ -26,15 +26,15 @@ MathTool knows the following commands:<br><br>
 
 <p style="text-align: center;">2.71828182845904523536</p><br>
 
-Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
+For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
-<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Löst alle enthaltenen Klammern bei Multiplikationen auf (multipliziert alle Terme aus).<br><br>
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Expands the expression F.<br><br>
 
-<em>Example:</em> expand(x+(a+b)*(c+d+e)) liefert die Ausgabe
+<em>Example:</em> expand(x+(a+b)*(c+d+e)) returns
 
 <p style="text-align: center;">x+a*c+a*d+a*e+b*c+b*d+b*e</p><br>
 
-<strong>latex(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generiert den Latex-Code f&uuml;r den mathematischen Ausdruck F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+<strong>latex(F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generates the Latex code for the mathematical expression F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
 <strong>pi(n):</strong> Returns the first n digits of the constant pi. The result is <em>not</em> roundet.<br><br>
 
@@ -42,19 +42,21 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
 <p style="text-align: center;">3.14159265358979323846</p><br>
 
-Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
+For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
-<strong>plot2d(F<sub>1</sub>(x), ..., F<sub>n</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Zeichnet den Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> im Intervall x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Der Zoomfaktor kann hier (fast) beliebig groß und beliebig klein werden.<br><br>
+<strong>plot2d(F<sub>1</sub>(x), ..., F<sub>n</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>, ..., F<sub>n</sub> for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. The zoom factor can be (almost) arbitrary.<br><br>
 
-<strong>plot2d(F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet die L&ouml;sungsmenge der Gleichung F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y) in zwei Variablen im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Hier kann in den Graphen weder hinein- noch herausgezoomt werden, ebenso kann das Koordinatensystem nicht verschoben werden.<br>
+<strong>plot2d(F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Plots the solution of the equation F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y) in two variables for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Here it is not possible to zoom in or to zoom out as well as to move the coordinate system.<br>
 <em>Wichtig:</em> Die Grenzen x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> sollen so angegeben werden, dass x, y die <em>alphabetische</em> Reihenfolge der Variablen ist.<br><br>
 
 <strong>plot3d(F(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet den Graphen der Funktion F(x, y) im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>.<br>
-<em> Wichtig:</em> Die Grenzen x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> sollen so angegeben werden, dass x, y die <em>alphabetische</em> Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+<em> Important:</em> The limits x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> have to be chosen in a way such that x, y is the <em>alphabetical</em> order of the variables. The zoom factor lies between 0.1 and 10.<br><br>
 
 <strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen F<sub>1</sub> und F<sub>2</sub> parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Manchmal kann es vorkommen (etwa beim Zeichnen von Kurven, welche sehr "ungl&uuml;cklich" parametrisiert wurden), dass nicht die ganze Kurve, sondern nur ein Teil von ihr gezeichnet werden (etwa f&uuml;r t<sub>1</sub> &lt;= t &lt;= t' f&uuml;r ein t' &lt;= t<sub>2</sub>).<br><br>
 
 <strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die r&auml;umliche Kurve, welche durch die Komponentenfunktionen F<sub>1</sub>, F<sub>2</sub> und F<sub>3</sub> parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Auch hier gilt dasselbe wie im Falle von plotcurve im Zweidimensionalen, dass manche "schlecht" parametrisierten Kurven nicht komplett gezeichnet werden k&ouml;nnen.<br><br>
+
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet den Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> für t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>.<br><br>
 
@@ -62,7 +64,7 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
 <strong>solvedeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Liefert eine numerische L&ouml;sung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>n-1</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub> im Bereich x_0 &lt;= x &lt;= x<sub>1</sub>. F&uuml;r die numerische Berechnung wird das Intervall [x<sub>0</sub>, x<sub>1</sub>] in 1000 gleiche Teile unterteilt und in der Konsole werden alle 1000 Funktionswerte an den betreffenden Stellen ausgegeben.<br><br>
 
-<em>Example:</em> solvedgl(-y,t,2,0,10,1,0) liefert eine numerische L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0 im Bereich 0 &lt;= t &lt;= 10. Hierbei werden 1000 Funktionswerte von y(t) ausgegeben; die Schrittweite betr&auml;gt daher 0.01.<br><br>
+<em>Example:</em> solvedeq(-y,t,2,0,10,1,0) liefert eine numerische L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0 im Bereich 0 &lt;= t &lt;= 10. Hierbei werden 1000 Funktionswerte von y(t) ausgegeben; die Schrittweite betr&auml;gt daher 0.01.<br><br>
 
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Liefert die Gleichung der Tangentialebene an den Graphen von F im Punkte (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Example:</em> tangent(x^3+x/2+3,x=2) liefert die folgende Gleichung:<br>
@@ -71,18 +73,18 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 20000 betragen.<br><br>
 
 Zus&auml;tzlich werden beide Graphen (der von x^3+x/2+3 und von 12+25*(x-2)/2) gezeichnet.<br><br>
 
-<strong>taylordeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Liefert das Taylorpolynom m-ten Grades von der L&ouml;sung der Diferentialgleichung y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+<strong>taylordeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
-<em>Example:</em> taylordeq(-y,t,2,0,1,0,10) liefert das Taylorpolynom 10. Grades von der L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0. Die exakte L&ouml;sung ist gegeben durch y(t) = cos(t), als Potenzreiche ausgedr&uuml;ckt also<br>
+<em>Example:</em> taylordeq(-y,t,2,0,1,0,10) returns the Taylor polynomial of degree 10 of the solution of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0. The exact solution is given by y(t) = cos(t), hence the power series is<br><br>
 
 <p style="text-align: center;">y(t) = cos(t) = 1 - t^2/2! + t^4/4! - t^6/6! + ...</p><br>
 
-Dementsprechend lautet die Ausgabe dann<br>
+Thus, MathTool returns<br>
 
 <p style="text-align: center;">1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).</p><br>
 
-<strong>undef(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Gibt die Variablen x<sub>1</sub>, ..., x<sub>n</sub> wieder frei.<br><br>
+<strong>undef(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> The variables x<sub>1</sub>, ..., x<sub>n</sub> are again indeterminates, that is, without value assigned.<br><br>
 
-<strong>undefall():</strong> Gibt alle Variablen wieder frei, denen im Laufe dieser Sitzung ein Wert zugewiesen wurde.<br><br>
+<strong>undefall():</strong> All variables, which are assigned a value during this session, are again indeterminates.<br><br>
 
-Alle Konsolenbefehle, die w&auml;hrend einer Sitzung eingegeben wurden, werden gespreichert und k&ouml;nnen mit Pfeiltasten abgerufen werden (Pfeiltaste UP = vorheriger Befehl, Pfeiltaste DOWN = n&auml;chster Befehl).
+All console commands that were entered during a session are stored and can be retrieved using the arrow keys (UP = last command, DOWN = next command).
