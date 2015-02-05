@@ -1,50 +1,51 @@
 ﻿<font size="6"><strong>Mathematische Ausdr&uuml;cke:</strong></font><br><br>
 
-MathTool versteht mathematische Ausdr&uuml;cke. Hierbei werden die vier Grundrechenarten mit +, -, * und / angegeben, Potenzen durch ^. Mathematische Funktionen tragen ihre &uuml;blichen Namen, z.B. sin(...), exp(...), ln(...), arctan(...) etc. Eine 
-Liste mit allen Funktionen finden Sie weiter unten.<br>
-<em>Wichtig:</em> Multiplikationen m&uuml;ssen stets durch ein * angegeben werden. MathTool versteht den Ausdruck 2*x, dagegen jedoch 2x nicht und gibt dementsprechend einen Fehler aus.<br>
-G&uuml;ltige Ausdr&uuml;cke sehen dann etwa wie folgt aus:<br><br>
+MathTool understands mathematical expressions. The basic arithmetic operations are denoted by +, -, * and /, and ^ denotes the power. Mathematical functions are denoted by their typical name, for example by sin(...), exp(...), ln(...), arctan(...) etc. 
+A list with all functions can be found below.<br>
+<em>Important:</em> Multiplications must be explicitly denoted by *. MathTool understands the expression 2*x, whereas it does not understand the expression 2x and hence returns an error.<br>
+Valid expressions look like<br><br>
 
 3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...<br><br>
 
-Ein eingegebener mathematischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies m&ouml;glich ist.<br><br>
+MathTool returns a mathematical expression immediately in a simplified form, if possible.<br><br>
 
-In MathTool k&ouml;nnen Ver&auml;nderliche mit einem einfachen Kleinbuchstaben oder mit einem Kleinbuchstaben mit Index bezeichnet werden. Ebenso sind im Anschluss beliebig viele ' erlaubt. 
-G&uuml;ltige Variablen sind demnach etwa<br><br>
+Variables can be denoted by a small letter or by a small letter with an index. Furthermore, arbitrary many ' can be appended. 
+Hence, valid variables are, for example, given by<br><br>
 
 a, b, c, ..., x, y, ..., a_1, x_18, ..., y', a_2', ... <br><br>
 
-nicht aber etwa xy, abc oder a'_1'. Der Apostroph suggeriert hierbei eine Ableitung, die aber nur dann zum Tragen kommt, wenn es um <i>Differentialgleichungen</i> geht. Ansonsten dient er zur Variablenunterscheidung. 
-Die Konstante pi bezeichnet die Kreiszahl Pi und kann selbstverst&auml;ndlich nicht mittels Befehl def() (s. Abschnitt Befehle) umdefiniert werden. Beachten Sie, dass MathTool beim Kompilieren eines 
-mathematischen Ausdrucks Leerzeichen beseitigt und Gro&szlig;buchstaben zu Kleinbuchstaben macht. Insofern ist beispielsweise die Ver&auml;nderliche A_3 dasselbe wie a_3.<br><br>
+but not by xy, abc or a'_1'. The apostrophe suggests a derivative, which only comes to fruition when dealing with <i>differential equations</i>. 
+Otherwise it serves simply for distinguishing variables. 
+The constant pi denotes the circle number Pi and, of course, cannot be overwritten with the command def() (see subsection Commands). 
+Note, that MathTool removes empty space as well as makes capital letters to small letters while compiling an expression. Hence, the variable A_3 will be the same variable as a_3.<br><br>
 
-<strong>Liste aller Funktionen:</strong><br><br>
-<strong>abs(x):</strong> Berechnet den Absolutbetrag von x.<br><br>
-<strong>arccosec(x):</strong> Berechnet den Arkuskosecans von x (in Bogenma&szlig;).<br><br>
-<strong>arccot(x):</strong> Berechnet den Arkuskotangens von x (in Bogenma&szlig;).<br><br>
-<strong>arcsec(x):</strong> Berechnet den Arkussecans von x (in Bogenma&szlig;).<br><br>
-<strong>arcsin(x):</strong> Berechnet den Arkussinus von x (in Bogenma&szlig;).<br><br>
-<strong>arctan(x):</strong> Berechnet den Arkustangens von x (in Bogenma&szlig;).<br><br>
-<strong>arcosh(x):</strong> Berechnet den Areakosinus Hyperbolicus von x.<br><br>
-<strong>arcosech(x):</strong> Berechnet den Areakosecans Hyperbolicus von x.<br><br>
-<strong>arcoth(x):</strong> Berechnet den Areakotangens Hyperbolicus von x.<br><br>
-<strong>arsech(x):</strong> Berechnet den Areasecans Hyperbolicus von x.<br><br>
-<strong>arsinh(x):</strong> Berechnet den Areasinus Hyperbolicus von x.<br><br>
-<strong>artanh(x):</strong> Berechnet den Areatangens Hyperbolicus von x.<br><br>
-<strong>cos(x):</strong> Berechnet den Kosinus von x (x in Bogenma&szlig;).<br><br>
-<strong>cosh(x):</strong> Berechnet den Kosinus Hyperbolicus von x.<br><br>
-<strong>cosec(x):</strong> Berechnet den Kosecans von x (x in Bogenma&szlig;).<br><br>
-<strong>cosech(x):</strong> Berechnet den Kosecans Hyperbolicus von x.<br><br>
-<strong>cot(x):</strong> Berechnet den Kotangens von x (x in Bogenma&szlig;).<br><br>
-<strong>coth(x):</strong> Berechnet den Kotangens Hyperbolucus von x.<br><br>
-<strong>exp(x):</strong> Berechnet die Exponentialfunktion von x.<br><br>
-<strong>lg(x):</strong> Berechnet den Logarithmus von x zur Basis 10.<br><br>
-<strong>ln(x):</strong> Berechnet den nat&uuml;rlichen Logarithmus von x.<br><br>
-<strong>sgn(x):</strong> Berechnet das Signum von x.<br><br>
-<strong>sin(x):</strong> Berechnet den Sinus von x (x in Bogenma&szlig;).<br><br>
-<strong>sinh(x):</strong> Berechnet den Sinus Hyperbolicus von x.<br><br>
-<strong>sec(x):</strong> Berechnet den Secans von x (x in Bogenma&szlig;).<br><br>
-<strong>sech(x):</strong> Berechnet den Secans Hyperbolicus von x.<br><br>
-<strong>tan(x):</strong> Berechnet den Tangens von x (x in Bogenma&szlig;).<br><br>
-<strong>tanh(x):</strong> Berechnet den Tangens Hyperbolicus von x.<br><br>
+<strong>List of all functions:</strong><br><br>
+<strong>abs(x):</strong> Computes the absolute value of x.<br><br>
+<strong>arccosec(x):</strong> Computes the arccosecans of x (in radians).<br><br>
+<strong>arccot(x):</strong> Computes the arccotangent of x (in radians).<br><br>
+<strong>arcsec(x):</strong> Computes the arcsecans of x (in radians).<br><br>
+<strong>arcsin(x):</strong> Computes the arcsine of x (in radians).<br><br>
+<strong>arctan(x):</strong> Computes the arctangent of x (in radians).<br><br>
+<strong>arcosh(x):</strong> Computes the area hyperbolic cosine of x.<br><br>
+<strong>arcosech(x):</strong> Computes the area hyperbolic cosecans of x.<br><br>
+<strong>arcoth(x):</strong> Computes the area hyperbolic cotangent of x.<br><br>
+<strong>arsech(x):</strong> Computes the area hyperbolic secans of x.<br><br>
+<strong>arsinh(x):</strong> Computes the area hyperbolic sine of x.<br><br>
+<strong>artanh(x):</strong> Computes the area hyperbolic tangent of x.<br><br>
+<strong>cos(x):</strong> Computes the cosine of x (x in radians).<br><br>
+<strong>cosh(x):</strong> Computes the hyperbolic cosine of x.<br><br>
+<strong>cosec(x):</strong> Computes the cosecans of x (x in radians).<br><br>
+<strong>cosech(x):</strong> Computes the hyperbolic cosecans of x.<br><br>
+<strong>cot(x):</strong> Computes the cotangent of x (x in radians).<br><br>
+<strong>coth(x):</strong> Computes the hyperbolic cotangent of x.<br><br>
+<strong>exp(x):</strong> Computes the exponential function of x.<br><br>
+<strong>lg(x):</strong> Computes the logarithm of x to base 10.<br><br>
+<strong>ln(x):</strong> Computes the natural logarithm of x.<br><br>
+<strong>sgn(x):</strong> Computes the signum function of x.<br><br>
+<strong>sin(x):</strong> Computes the sine of x (x in radians).<br><br>
+<strong>sinh(x):</strong> Computes the hyperbolic sine of x.<br><br>
+<strong>sec(x):</strong> Computes the secans of x (x in radians).<br><br>
+<strong>sech(x):</strong> Computes the hyperbolic secans of x.<br><br>
+<strong>tan(x):</strong> Computes the tangent of x (x in radians).<br><br>
+<strong>tanh(x):</strong> Computes the hyperbolic tangent of x.<br><br>
 

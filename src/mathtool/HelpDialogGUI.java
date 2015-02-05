@@ -27,7 +27,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         setResizable(false);
         setModal(true);
 
-        JLabel menue = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MENUE"));
+        JLabel menue = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MENU"));
         menue.setFont(menue.getFont().deriveFont(Font.BOLD));
         generalities = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_GENERALITIES"));
         mathFormulas = new JLabel(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MATH_FORMULAS"));

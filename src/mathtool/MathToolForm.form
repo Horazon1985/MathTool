@@ -39,7 +39,7 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="menuItemLanguageEnglish">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="English"/>
+                    <Property name="text" type="java.lang.String" value="Englisch"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLanguageEnglishActionPerformed"/>
@@ -50,7 +50,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="12" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="German"/>
+                    <Property name="text" type="java.lang.String" value="Deutsch"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLanguageGermanActionPerformed"/>
@@ -58,7 +58,7 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="menuItemLanguageRussian">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Russian"/>
+                    <Property name="text" type="java.lang.String" value="Russisch"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLanguageRussianActionPerformed"/>
@@ -66,7 +66,7 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="menuItemLanguageUkrainian">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Ukrainian"/>
+                    <Property name="text" type="java.lang.String" value="Ukrainisch"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLanguageUkrainianActionPerformed"/>

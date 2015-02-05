@@ -238,6 +238,21 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
         }
         /**
+         * Menüeinträge aktualisieren
+         */
+        menuFile.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_FILE"));
+        MenuItemQuit.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_QUIT"));
+        menuMathTool.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_MATHTOOL"));
+        menuItemHelp.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_HELP"));
+        menuItemLanguageMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_LANGUAGES"));
+        menuItemAbout.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_ABOUT"));
+        menuItemLanguageEnglish.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_ENGLISH"));
+        menuItemLanguageGerman.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_GERMAN"));
+        menuItemLanguageRussian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_RUSSIAN"));
+        menuItemLanguageUkrainian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_UKRAINIAN"));
+        
+        
+        /**
          * Restliche Komponenten aktualisieren.
          */
         latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
@@ -461,7 +476,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
         menuItemLanguageMenu.setText("Sprache");
 
-        menuItemLanguageEnglish.setText("English");
+        menuItemLanguageEnglish.setText("Englisch");
         menuItemLanguageEnglish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemLanguageEnglishActionPerformed(evt);
@@ -470,7 +485,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemLanguageMenu.add(menuItemLanguageEnglish);
 
         menuItemLanguageGerman.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        menuItemLanguageGerman.setText("German");
+        menuItemLanguageGerman.setText("Deutsch");
         menuItemLanguageGerman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemLanguageGermanActionPerformed(evt);
@@ -478,7 +493,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         });
         menuItemLanguageMenu.add(menuItemLanguageGerman);
 
-        menuItemLanguageRussian.setText("Russian");
+        menuItemLanguageRussian.setText("Russisch");
         menuItemLanguageRussian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemLanguageRussianActionPerformed(evt);
@@ -486,7 +501,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         });
         menuItemLanguageMenu.add(menuItemLanguageRussian);
 
-        menuItemLanguageUkrainian.setText("Ukrainian");
+        menuItemLanguageUkrainian.setText("Ukrainisch");
         menuItemLanguageUkrainian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemLanguageUkrainianActionPerformed(evt);

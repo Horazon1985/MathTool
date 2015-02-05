@@ -1,41 +1,5 @@
 <objects>
 <!-- MathToolForm -->    
-  <object id = "GUI_MathToolForm_MENUE_FILE">
-    <German>Datei</German>
-    <English>File</English>
-    <Ukrainian>Файл</Ukrainian>
-    <Russian>Файл</Russian>
-  </object>
-  <object id = "GUI_MathToolForm_MENUE_QUIT">
-    <German>Verlassen</German>
-    <English>Quit</English>
-    <Ukrainian>Вихід</Ukrainian>
-    <Russian>Выход</Russian>
-  </object>
-  <object id = "GUI_MathToolForm_MENUE_MATHTOOL">
-    <German>MathTool</German>
-    <English>MathTool</English>
-    <Ukrainian>MathTool</Ukrainian>
-    <Russian>MathTool</Russian>
-  </object>
-  <object id = "GUI_MathToolForm_MENUE_HELP">
-    <German>Hilfe</German>
-    <English>Help</English>
-    <Ukrainian>Допомога</Ukrainian>
-    <Russian>Помощь</Russian>
-  </object>
-  <object id = "GUI_MathToolForm_MENUE_LANGUAGE">
-    <German>Sprache</German>
-    <English>Language</English>
-    <Ukrainian>Мова</Ukrainian>
-    <Russian>Язык</Russian>
-  </object>
-  <object id = "GUI_MathToolForm_MENUE_ABOUT_MATHTOOL">
-    <German>Über MathTool</German>
-    <English>About MathTool</English>
-    <Ukrainian>Про MathTool</Ukrainian>
-    <Russian>О MathTool</Russian>
-  </object>
   <object id = "GUI_MathToolForm_INPUT">
     <German>Eingabe</German>
     <English>Input</English>
@@ -84,12 +48,73 @@
     <Ukrainian>Легенда</Ukrainian>
     <Russian>Легенда</Russian>
   </object>
+<!-- MathToolmenü -->
+  <object id = "GUI_MathToolForm_MENU_FILE">
+    <German>Datei</German>
+    <English>File</English>
+    <Russian>файл</Russian>
+    <Ukrainian>файл</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_QUIT">
+    <German>Verlassen</German>
+    <English>Quit</English>
+    <Russian>Выход</Russian>
+    <Ukrainian>Вихід</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_MATHTOOL">
+    <German>MathTool</German>
+    <English>MathTool</English>
+    <Russian>MathTool</Russian>
+    <Ukrainian>MathTool</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_HELP">
+    <German>Hilfe</German>
+    <English>Help</English>
+    <Russian>Помощь</Russian>
+    <Ukrainian>Допомога</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_LANGUAGES">
+    <German>Sprachen</German>
+    <English>Languages</English>
+    <Russian>Языки</Russian>
+    <Ukrainian>Мови</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_ABOUT">
+    <German>Über MathTool</German>
+    <English>About MathTool</English>
+    <Russian>О MathTool</Russian>
+    <Ukrainian>Про MathTool</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_ENGLISH">
+    <German>Englisch</German>
+    <English>English</English>
+    <Russian>Английский</Russian>
+    <Ukrainian>Англійська</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_GERMAN">
+    <German>Deutsch</German>
+    <English>German</English>
+    <Russian>Немецкий</Russian>
+    <Ukrainian>Украинский</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_RUSSIAN">
+    <German>Russisch</German>
+    <English>Russian</English>
+    <Russian>Русский</Russian>
+    <Ukrainian>Російська</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_UKRAINIAN">
+    <German>Ukrainisch</German>
+    <English>Ukrainian</English>
+    <Russian>Украинский</Russian>
+    <Ukrainian>Українська</Ukrainian>
+  </object>
 <!-- DevelopersDialogGUI -->    
   <object id = "GUI_DevelopersDialogGUI_ABOUT">
     <German>Über MathTool</German>
     <English>About MathTool</English>
-    <Ukrainian>Про MathTool</Ukrainian>
     <Russian>О MathTool</Russian>
+    <Ukrainian>Про MathTool</Ukrainian>
   </object>
 <!-- HelpDialogGUI -->    
   <object id = "GUI_HelpDialogGUI_HELP">
@@ -98,9 +123,9 @@
     <Ukrainian>Допомога</Ukrainian>
     <Russian>Помощь</Russian>
   </object>
-  <object id = "GUI_HelpDialogGUI_MENUE">
+  <object id = "GUI_HelpDialogGUI_MENU">
     <German>Menü</German>
-    <English>Menue</English>
+    <English>Menu</English>
     <Ukrainian>Меню</Ukrainian>
     <Russian>Меню</Russian>
   </object>
