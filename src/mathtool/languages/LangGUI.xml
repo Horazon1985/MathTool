@@ -3,8 +3,8 @@
   <object id = "GUI_MathToolForm_INPUT">
     <German>Eingabe</German>
     <English>Input</English>
-    <Ukrainian>Вхідні дані</Ukrainian>
-    <Russian>Входящие данные</Russian>
+    <Ukrainian>Пуск</Ukrainian>
+    <Russian>Ввод</Russian>
   </object>
   <object id = "GUI_MathToolForm_CANCEL">
     <German>Abbruch</German>
