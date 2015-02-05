@@ -2,7 +2,6 @@ package mathtool;
 
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
-import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import graphic.GraphicMethods2D;
 import graphic.GraphicMethods3D;
@@ -165,9 +164,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
                 mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
 
-                inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
-                inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
-                cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+                inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 150, 30);
+                inputButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, 140, 30);
+                cancelButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, 140, 30);
                 approxButton.setBounds(10, scrollPane.getHeight() + 60, 130, 30);
                 latexButton.setBounds(145, scrollPane.getHeight() + 60, 130, 30);
                 clearButton.setBounds(280, scrollPane.getHeight() + 60, 130, 30);
@@ -190,9 +189,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 if (!typeGraphic.equals(TypeGraphic.NONE)) {
                     scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
-                    inputField.setBounds(inputField.getX(), inputField.getY(), inputField.getWidth() - 510, 30);
-                    inputButton.setBounds(inputButton.getX() - 510, inputButton.getY(), 100, 30);
-                    cancelButton.setBounds(cancelButton.getX() - 510, cancelButton.getY(), 100, 30);
+                    inputField.setBounds(inputField.getX(), inputField.getY(), inputField.getWidth() - 550, 30);
+                    inputButton.setBounds(inputButton.getX() - 510, inputButton.getY(), inputButton.getWidth(), inputButton.getHeight());
+                    cancelButton.setBounds(cancelButton.getX() - 510, cancelButton.getY(), cancelButton.getWidth(), cancelButton.getHeight());
                 }
 
                 validate();
@@ -273,9 +272,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         scrollPane.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
         mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
-        inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
-        inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
-        cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+        inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 150, 30);
+        inputButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
+        cancelButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
 
         //Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
         graphicMethods2D.setVisible(false);
@@ -319,9 +318,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         } else {
             scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
             mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
-            inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 110, 30);
-            inputButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
-            cancelButton.setBounds(mathToolArea.getWidth() - 90, scrollPane.getHeight() + 20, 100, 30);
+            inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 150, 30);
+            inputButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
+            cancelButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
             typeGraphic = TypeGraphic.NONE;
         }
 
