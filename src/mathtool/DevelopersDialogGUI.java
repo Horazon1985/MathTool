@@ -2,7 +2,6 @@ package mathtool;
 
 import Translator.Translator;
 import expressionbuilder.Expression;
-import expressionbuilder.TypeLanguage;
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.ImageIcon;

@@ -1,5 +1,6 @@
 package mathtool;
 
+import Translator.Translator;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -15,14 +16,14 @@ public class ComputingDialogGUI extends JDialog {
 
     public ComputingDialogGUI(SwingWorker swingWorker, int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
 
-        setTitle("Info");
+        setTitle(Translator.translateExceptionMessage("GUI_ComputingDialogGUI_INFO"));
         setLayout(null);
         setResizable(false);
 
         this.setBounds((with_mathtoolform - 550) / 2 + x_mathtoolform, (heigth_mathtoolform - 100) / 2 + y_mathtoolform, 550, 100);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel computingLabel = new JLabel("Berechnung wird ausgeführt. Zum Abbrechen ESC-Taste drücken.");
+        JLabel computingLabel = new JLabel(Translator.translateExceptionMessage("GUI_ComputingDialogGUI_COMPUTING"));
         computingLabel.setBounds(70, 25, 450, 25);
         add(computingLabel);
 
@@ -34,6 +35,7 @@ public class ComputingDialogGUI extends JDialog {
         owlPanel.setVisible(true);
 
         this.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 computingKeyPressed(evt);
             }

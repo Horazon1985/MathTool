@@ -13,7 +13,6 @@ import java.io.IOException;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import expressionbuilder.Expression;
-import expressionbuilder.TypeLanguage;
 
 public class HelpDialogGUI extends JDialog implements MouseListener {
 
@@ -100,92 +99,16 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         repaint();
     }
 
-    private void showHelpFileGeneralities() {
+    private void showHelpFile(String helpType) {
         helpArea.setVisible(true);
         scrollPaneHelp.setVisible(true);
 
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpGeneralities" + Expression.getLanguage().toString() + ".html");
+        /**
+         * Der Parameter helpType gibt den (relevanten) Teil des Dateinamens an,
+         * aus welcher die Hilfe ausgelesen wird.
+         */
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelp" + helpType + Expression.getLanguage().toString() + ".html");
 
-        if (helpURL != null) {
-            try {
-                helpArea.setPage(helpURL);
-            } catch (IOException e) {
-            }
-        }
-        repaint();
-        validate();
-    }
-
-    private void showHelpFileFormulas() {
-        helpArea.setVisible(true);
-        scrollPaneHelp.setVisible(true);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpFormulas" + Expression.getLanguage().toString() + ".html");
-
-        if (helpURL != null) {
-            try {
-                helpArea.setPage(helpURL);
-            } catch (IOException e) {
-            }
-        }
-        repaint();
-        validate();
-    }
-
-    private void showHelpFileLogicalExpressions() {
-        helpArea.setVisible(true);
-        scrollPaneHelp.setVisible(true);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpLogicalExpressions" + Expression.getLanguage().toString() + ".html");
-
-        if (helpURL != null) {
-            try {
-                helpArea.setPage(helpURL);
-            } catch (IOException e) {
-            }
-        }
-        repaint();
-        validate();
-    }
-
-    private void showHelpFileOperators() {
-        helpArea.setVisible(true);
-        scrollPaneHelp.setVisible(true);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpOperators" + Expression.getLanguage().toString() + ".html");
-
-        if (helpURL != null) {
-            try {
-                helpArea.setPage(helpURL);
-            } catch (IOException e) {
-            }
-        }
-        repaint();
-        validate();
-    }
-
-    private void showHelpFileCommands() {
-        helpArea.setVisible(true);
-        scrollPaneHelp.setVisible(true);
-
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpCommands" + Expression.getLanguage().toString() + ".html");
-
-        if (helpURL != null) {
-            try {
-                helpArea.setPage(helpURL);
-            } catch (IOException e) {
-            }
-        }
-        repaint();
-        validate();
-    }
-
-    private void showHelpFileContact() {
-        helpArea.setVisible(true);
-        scrollPaneHelp.setVisible(true);
-        
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("help/MathToolHelpContact" + Expression.getLanguage().toString() + ".html");
-        
         if (helpURL != null) {
             try {
                 helpArea.setPage(helpURL);
@@ -206,7 +129,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
-            showHelpFileGeneralities();
+            showHelpFile("Generalities");
             validate();
             repaint();
         } else if (e.getSource() == mathFormulas) {
@@ -217,7 +140,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
-            showHelpFileFormulas();
+            showHelpFile("Formulas");
             validate();
             repaint();
         } else if (e.getSource() == logicalExpressions) {
@@ -228,7 +151,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
-            showHelpFileLogicalExpressions();
+            showHelpFile("LogicalExpressions");
             validate();
             repaint();
         } else if (e.getSource() == operators) {
@@ -239,7 +162,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.blue);
             commands.setForeground(Color.black);
             contact.setForeground(Color.black);
-            showHelpFileOperators();
+            showHelpFile("Operators");
             validate();
             repaint();
         } else if (e.getSource() == commands) {
@@ -250,7 +173,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.black);
             commands.setForeground(Color.blue);
             contact.setForeground(Color.black);
-            showHelpFileCommands();
+            showHelpFile("Commands");
             validate();
             repaint();
         } else if (e.getSource() == contact) {
@@ -261,7 +184,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
             operators.setForeground(Color.black);
             commands.setForeground(Color.black);
             contact.setForeground(Color.blue);
-            showHelpFileContact();
+            showHelpFile("Contact");
             validate();
             repaint();
         }

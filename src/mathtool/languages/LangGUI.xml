@@ -177,4 +177,16 @@
     <Ukrainian>Параметризована крива:</Ukrainian>
     <Russian>Параметризованная кривая:</Russian>
   </object>
+  <object id = "GUI_ComputingDialogGUI_COMPUTING">
+    <German>Berechnung wird ausgeführt. Zum Abbrechen ESC-Taste drücken.</German>
+    <English>Computation is running. Press ESC key to cancel cpmputation.</English>
+    <Ukrainian>Виконується обчислення. Для припинення натисніть ESC.</Ukrainian>
+    <Russian>Выполняется вычисление. Для прекращения нажмите ESC.</Russian>
+  </object>
+  <object id = "GUI_ComputingDialogGUI_INFO">
+    <German>Info</German>
+    <English>Information</English>
+    <Ukrainian>Інфо</Ukrainian>
+    <Russian>Инфо</Russian>
+  </object>
 </objects>
