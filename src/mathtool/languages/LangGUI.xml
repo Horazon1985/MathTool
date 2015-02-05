@@ -138,7 +138,7 @@
     <German>Kontakt/Bugs melden</German>
     <English>Contact/Report bugs</English>
     <Ukrainian>Контакт/Повідомити про баг</Ukrainian>
-    <Russian>Контакт/Сообщить о боге</Russian>
+    <Russian>Контакт/Сообщить о баге</Russian>
   </object>
  <!-- LegendGUI -->    
  <object id = "GUI_LegendGUI_LEGEND">
