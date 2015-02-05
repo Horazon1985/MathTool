@@ -77,7 +77,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         initComponents();
         this.setLayout(null);
         this.startRotate = false;
-//        computingDialog = new ComputingDialogGUI(computingSwingWorker, this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
         addWindowListener(new WindowAdapter() {
             @Override
