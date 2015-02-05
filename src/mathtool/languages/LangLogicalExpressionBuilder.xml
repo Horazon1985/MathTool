@@ -1,5 +1,5 @@
 ﻿<objects>
-  <object id = "LEB_BinaryOperation_COMPUTATION_ABORTED">
+  <object id = "LEB_LogicalBinaryOperation_COMPUTATION_ABORTED">
     <German>Berechnung abgebrochen.</German>
     <English>Computation aborted.</English>
     <Ukrainian>Обчислення припинено.</Ukrainian>
