@@ -431,7 +431,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "clear", "def", "deffuncs", "defvars", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "clear", "def", "deffuncs", "defvars", "dnf", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
@@ -939,6 +939,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         }
 
         if (s.equals("approx")) {
+            return 0;
+        }
+        if (s.equals("cdnf")) {
             return 0;
         }
         if (s.equals("clear")) {

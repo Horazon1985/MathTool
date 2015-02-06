@@ -37,7 +37,7 @@ public class MathCommandCompiler {
      * Liste aller gültiger Befehle. Dies benötigt das Hauptprogramm
      * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
      */
-    public static final String[] commands = {"approx", "clear", "def", "deffuncs", "defvars", "euler", "expand", "latex",
+    public static final String[] commands = {"approx", "cdnf", "clear", "def", "deffuncs", "defvars", "euler", "expand", "latex",
         "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall"};
 
     /**
@@ -394,6 +394,29 @@ public class MathCommandCompiler {
             result.setTypeCommand(TypeCommand.DEFVARS);
             result.setParams(command_params);
             return result;
+
+        }
+
+        //CDNF
+        /**
+         * Struktur: dnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
+         * logischer Ausdruck.
+         */
+        if (command.equals("cdnf")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CDNF"));
+            }
+
+            try {
+                command_params = new Object[1];
+                command_params[0] = LogicalExpression.build(params[0], new HashSet());
+                result.setTypeCommand(TypeCommand.CDNF);
+                result.setParams(command_params);
+                return result;
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CDNF"));
+            }
 
         }
 
@@ -1460,6 +1483,8 @@ public class MathCommandCompiler {
             executeDefFuncs(definedFunctions);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
             executeDefVars(definedVars);
+        } else if (c.getTypeCommand().equals(TypeCommand.CDNF)) {
+            executeCDNF(c);
         } else if (c.getTypeCommand().equals(TypeCommand.EULER)) {
             executeEuler(c);
         } else if (c.getTypeCommand().equals(TypeCommand.EXPAND)) {
@@ -1669,6 +1694,14 @@ public class MathCommandCompiler {
 
     }
 
+    private static void executeCDNF(Command c) throws ExpressionException, EvaluationException {
+        
+        LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
+        output = new String[1];
+        output[0] = log_expr.toCDNF().writeFormula() + " \n \n";
+
+    }
+    
     private static void executeEuler(Command c) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         output = new String[1];
@@ -2400,7 +2433,7 @@ public class MathCommandCompiler {
             } else {
                 output[2 + i] = output[2 + i] + "0 \n";
             }
-            vars_values = binaryCounter(vars_values);
+            vars_values = LogicalExpression.binaryCounter(vars_values);
 
             /**
              * Am Ende der Tabelle: Leerzeile lassen.
@@ -2573,21 +2606,6 @@ public class MathCommandCompiler {
         definedVars.clear();
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN");
-
-    }
-
-    private static boolean[] binaryCounter(boolean[] counter) {
-
-        boolean[] result = counter;
-        for (int i = 0; i < counter.length; i++) {
-            if (counter[i]) {
-                counter[i] = false;
-            } else {
-                counter[i] = true;
-                break;
-            }
-        }
-        return result;
 
     }
 
