@@ -821,17 +821,11 @@
     <Ukrainian> містить більше 20 змінних. Таблиця значень є завеликою для відображення.</Ukrainian>
     <Russian> содержит более 20 переменных. Таблица значений является слишком большой для отображения.</Russian>
   </object>
-  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION_1">
+  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION">
     <German>Wertetabelle für den logischen Ausdruck </German>
     <English>Table of values of the logical expression </English>
     <Ukrainian>Таблиця значень логічного виразу </Ukrainian>
     <Russian>Таблица значений логического выражения </Russian>
-  </object>
-  <object id = "MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION_2">
-    <German>: \n \n</German>
-    <English>: \n \n</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
   </object>
  <!-- Übersetzungen der output-Nachrichten: -->  
   <object id = "MCC_VALUE_ASSIGNED_TO_VARIABLE_1">
@@ -847,10 +841,10 @@
     <Russian> </Russian>
   </object>
   <object id = "MCC_VALUE_ASSIGNED_TO_VARIABLE_3">
-    <German> gesetzt. \n \n</German>
-    <English>. \n \n</English>
-    <Ukrainian>?</Ukrainian>
-    <Russian>?</Russian>
+    <German> gesetzt.</German>
+    <English>.</English>
+    <Ukrainian>.</Ukrainian>
+    <Russian>.</Russian>
   </object>
   <object id = "MCC_FUNCTION_WAS_DEFINED">
     <German>Es wurde die folgende Funktion definiert: </German>
@@ -895,22 +889,22 @@
     <Russian> знаков: </Russian>
   </object>
   <object id = "MCC_IS_ARBITRARY_INTEGER">
-    <German> ist eine beliebige ganze Zahl. \n \n</German>
-    <English> is an arbitrary integer. \n \n</English>
-    <Ukrainian> є довільним цілим числом. \n \n</Ukrainian>
-    <Russian> является произвольным целым числом. \n \n</Russian>
+    <German> ist eine beliebige ganze Zahl.</German>
+    <English> is an arbitrary integer.</English>
+    <Ukrainian> є довільним цілим числом.</Ukrainian>
+    <Russian> является произвольным целым числом.</Russian>
   </object>
   <object id = "MCC_ARE_ARBITRARY_INTEGERS">
-    <German> sind beliebige ganze Zahlen. \n \n</German>
-    <English> are arbitrary integers. \n \n</English>
-    <Ukrainian> - довільні цілі числа. \n \n</Ukrainian>
-    <Russian> - произвольные целые числа. \n \n</Russian>
+    <German> sind beliebige ganze Zahlen.</German>
+    <English> are arbitrary integers.</English>
+    <Ukrainian> - довільні цілі числа.</Ukrainian>
+    <Russian> - произвольные целые числа.</Russian>
   </object>
   <object id = "MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND">
-    <German>Es konnten keine exakten Lösungen ermittelt werden. \n \n</German>
-    <English>No precise solutions found. \n \n</English>
-    <Ukrainian>Точних розв'язків не знайдено. \n \n</Ukrainian>
-    <Russian>Точные решения не найдены. \n \n</Russian>
+    <German>Es konnten keine exakten Lösungen ermittelt werden.</German>
+    <English>No precise solutions found.</English>
+    <Ukrainian>Точних розв'язків не знайдено.</Ukrainian>
+    <Russian>Точные решения не найдены.</Russian>
   </object>
   <object id = "MCC_SOLUTIONS_OF_EQUATION">
     <German>Lösungen der Gleichung </German>
@@ -919,22 +913,22 @@
     <Russian>Решения уравнений </Russian>
   </object>
   <object id = "MCC_ALL_REALS">
-    <German>Alle reellen Zahlen. \n \n</German>
-    <English>All real numbers. \n \n</English>
-    <Ukrainian>Всі дійсні числа. \n \n</Ukrainian>
-    <Russian>Все вещественные числа. \n \n</Russian>
+    <German>Alle reellen Zahlen.</German>
+    <English>All real numbers.</English>
+    <Ukrainian>Всі дійсні числа.</Ukrainian>
+    <Russian>Все вещественные числа.</Russian>
   </object>
   <object id = "MCC_EQUATIONS_HAS_NO_SOLUTIONS">
-    <German>Die gegebene Gleichung besitzt keine Lösungen. \n \n</German>
-    <English>The given equation admits no solutions. \n \n</English>
-    <Ukrainian>Дане рівняння не має розв'язків. \n \n</Ukrainian>
-    <Russian>Данное уравнение не имеет решений. \n \n</Russian>
+    <German>Die gegebene Gleichung besitzt keine Lösungen.</German>
+    <English>The given equation admits no solutions.</English>
+    <Ukrainian>Дане рівняння не має розв'язків.</Ukrainian>
+    <Russian>Данное уравнение не имеет решений.</Russian>
   </object>
   <object id = "MCC_NO_SOLUTIONS_OF_EQUATION_FOUND">
-    <German>Es konnten keine Lösungen ermittelt werden. \n \n</German>
-    <English>No solutions found. \n \n</English>
-    <Ukrainian>Точних розв'язків не знайдено. \n \n</Ukrainian>
-    <Russian>Точные решения не найдены. \n \n</Russian>
+    <German>Es konnten keine Lösungen ermittelt werden.</German>
+    <English>No solutions found.</English>
+    <Ukrainian>Точних розв'язків не знайдено.</Ukrainian>
+    <Russian>Точные решения не найдены.</Russian>
   </object>
   <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT_1">
     <German>Die Lösung der Differentialgleichung ist nicht definiert an der Stelle </German>
@@ -955,16 +949,16 @@
     <Russian>Логическое выражение </Russian>
   </object>
   <object id = "MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2">
-    <German> enthält keine logischen Veränderlichen und hat den Wert 1. \n \n</German>
-    <English> contains no logical variables an has the value 1. \n \n</English>
-    <Ukrainian> не містить логічних змінних та має значення 1. \n \n</Ukrainian>
-    <Russian> не содержит логических переменных и имеет значение 1. \n \n</Russian>
+    <German> enthält keine logischen Veränderlichen und hat den Wert 1.</German>
+    <English> contains no logical variables an has the value 1.</English>
+    <Ukrainian> не містить логічних змінних та має значення 1.</Ukrainian>
+    <Russian> не содержит логических переменных и имеет значение 1.</Russian>
   </object>
   <object id = "MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3">
-    <German> enthält keine logischen Veränderlichen und hat den Wert 0. \n \n</German>
+    <German> enthält keine logischen Veränderlichen und hat den Wert 0.</German>
     <English> contains no logical variables an has the value 0.</English>
-    <Ukrainian> не містить логічних змінних та має значення 0. \n \n</Ukrainian>
-    <Russian> не содержит логических переменных и имеет значение 0. \n \n</Russian>
+    <Ukrainian> не містить логічних змінних та має значення 0.</Ukrainian>
+    <Russian> не содержит логических переменных и имеет значение 0.</Russian>
   </object>
   <object id = "MCC_ORDER_OF_VARIABLES_IN_TABLE">
     <German>Reihenfolge der logischen Veränderlichen in den Tupeln: </German>
@@ -991,13 +985,13 @@
     <Russian>Переменная </Russian>
   </object>
   <object id = "MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2">
-    <German> ist wieder eine Unbestimmte. \n \n</German>
-    <English> is again an indeterminate. \n \n</English>
-    <Ukrainian> знову невизначена. \n \n</Ukrainian>
-    <Russian> снова неопределена. \n \n</Russian>
+    <German> ist wieder eine Unbestimmte.</German>
+    <English> is again an indeterminate.</English>
+    <Ukrainian> знову невизначена.</Ukrainian>
+    <Russian> снова неопределена.</Russian>
   </object>
   <object id = "MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN">
-    <German>Alle Veränderlichen sind wieder Unbestimmte. \n \n</German>
+    <German>Alle Veränderlichen sind wieder Unbestimmte.</German>
     <English>All variables are again indeterminates.</English>
     <Ukrainian>Всі змінні знову невизначені.</Ukrainian>
     <Russian>Все переменные снова неопределены.</Russian>

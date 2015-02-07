@@ -1594,13 +1594,15 @@ public class MathCommandCompiler {
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
                         + preciseExpression.writeFormula(true)
-                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3");
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
+                        + " \n \n";
             } else {
                 output[0] = Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
                         + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true)
-                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3");
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
+                        + " \n \n";
             }
         } else {
             /**
@@ -2079,7 +2081,7 @@ public class MathCommandCompiler {
              */
             if (zeros.isEmpty()) {
                 output = new String[1];
-                output[0] = Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND");
+                output[0] = Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n";
                 return;
             }
 
@@ -2112,10 +2114,10 @@ public class MathCommandCompiler {
                 message_about_free_parameters = message_about_free_parameters.substring(0, message_about_free_parameters.length() - 2);
                 if (max_index == 1) {
                     message_about_free_parameters = message_about_free_parameters
-                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER");
+                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
                 } else {
                     message_about_free_parameters = message_about_free_parameters
-                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS");
+                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
                 }
 
             }
@@ -2171,9 +2173,9 @@ public class MathCommandCompiler {
                         + " = "
                         + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n";
                 if (expr.equals(Expression.ZERO)) {
-                    output[1] = Translator.translateExceptionMessage("MCC_ALL_REALS");
+                    output[1] = Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n";
                 } else {
-                    output[1] = Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS");
+                    output[1] = Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n";
                 }
 
                 graphicMethods2D.setIsInitialized(true);
@@ -2203,7 +2205,7 @@ public class MathCommandCompiler {
             }
 
             if (zeros.isEmpty()) {
-                output[1] = Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND");
+                output[1] = Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n";
             }
 
             /**
@@ -2381,11 +2383,11 @@ public class MathCommandCompiler {
             if (value) {
                 output[1] = Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + log_expr.writeFormula()
-                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2");
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n";
             } else {
                 output[1] = Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + log_expr.writeFormula()
-                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3");
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n";
             }
             return;
         }
@@ -2598,7 +2600,7 @@ public class MathCommandCompiler {
                 definedVars.remove(current_var);
                 output[i] = Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
                         + current_var
-                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2");
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n";
             }
         }
 
@@ -2613,7 +2615,7 @@ public class MathCommandCompiler {
         definedVarsSet.clear();
         definedVars.clear();
         output = new String[1];
-        output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN");
+        output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n";
 
     }
 
