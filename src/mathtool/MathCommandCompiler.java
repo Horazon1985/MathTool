@@ -1697,6 +1697,14 @@ public class MathCommandCompiler {
     private static void executeCDNF(Command c) throws ExpressionException, EvaluationException {
         
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
+        HashSet vars = new HashSet();
+        log_expr.getContainedVars(vars);
+        if (vars.size() > 20) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
+                    + log_expr.writeFormula()
+                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
+        }
+        
         output = new String[1];
         output[0] = log_expr.toCDNF().writeFormula() + " \n \n";
 
