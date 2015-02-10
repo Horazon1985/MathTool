@@ -6,6 +6,18 @@
     <Ukrainian>Пуск</Ukrainian>
     <Russian>Ввод</Russian>
   </object>
+  <object id = "GUI_MathToolForm_APPROX">
+    <German>Approx</German>
+    <English>Approx</English>
+    <Ukrainian>Наблизити</Ukrainian>
+    <Russian>Приблизить</Russian>
+  </object>
+  <object id = "GUI_MathToolForm_CLEAR">
+    <German>Leeren</German>
+    <English>Clear</English>
+    <Ukrainian>Очистити</Ukrainian>
+    <Russian>Очистить</Russian>
+  </object>
   <object id = "GUI_MathToolForm_CANCEL">
     <German>Abbruch</German>
     <English>Cancel</English>
@@ -52,8 +64,8 @@
   <object id = "GUI_MathToolForm_MENU_FILE">
     <German>Datei</German>
     <English>File</English>
-    <Russian>файл</Russian>
-    <Ukrainian>файл</Ukrainian>
+    <Russian>Файл</Russian>
+    <Ukrainian>Файл</Ukrainian>
   </object>
   <object id = "GUI_MathToolForm_MENU_QUIT">
     <German>Verlassen</German>
@@ -95,7 +107,7 @@
     <German>Deutsch</German>
     <English>German</English>
     <Russian>Немецкий</Russian>
-    <Ukrainian>Украинский</Ukrainian>
+    <Ukrainian>Німецька</Ukrainian>
   </object>
   <object id = "GUI_MathToolForm_MENU_RUSSIAN">
     <German>Russisch</German>

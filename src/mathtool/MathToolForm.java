@@ -253,7 +253,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Restliche Komponenten aktualisieren.
          */
+        approxButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_APPROX"));
         latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
+        clearButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CLEAR"));
         inputButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_INPUT"));
         cancelButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CANCEL"));
         if (startRotate) {
@@ -441,7 +443,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         commandChoice.setBounds(560, 370, 96, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        clearButton.setText("Clear");
+        clearButton.setText("Leeren");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
