@@ -12,6 +12,7 @@ import expressionbuilder.TypeGraphic;
 import LogicalExpressionBuilder.LogicalExpression;
 import Translator.Translator;
 import expressionbuilder.TypeLanguage;
+import graphic.GraphicPresentationOfFormula;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -55,6 +56,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     GraphicMethodsCurves2D graphicMethodsCurves2D;
     GraphicMethodsCurves3D graphicMethodsCurves3D;
     GraphicMethodsPolar2D graphicMethodsPolar2D;
+    GraphicPresentationOfFormula graphicPresentationOfFormula;
 
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
@@ -114,7 +116,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         scrollPane = new JScrollPane(mathToolArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mathToolArea.setCaretPosition(mathToolArea.getDocument().getLength());
-        add(scrollPane);
+//        add(scrollPane);
 
         /**
          * Buttons ausrichten
@@ -153,6 +155,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         repaint();
         graphicMethodsCurves3D.setVisible(false);
 
+        graphicPresentationOfFormula = new GraphicPresentationOfFormula();
+        add(graphicPresentationOfFormula);
+        repaint();
+        graphicPresentationOfFormula.setVisible(false);
+        
         /**
          * ComponentListener für das Ausrichten von Komponenten
          */
@@ -248,8 +255,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemLanguageGerman.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_GERMAN"));
         menuItemLanguageRussian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_RUSSIAN"));
         menuItemLanguageUkrainian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_UKRAINIAN"));
-        
-        
+
         /**
          * Restliche Komponenten aktualisieren.
          */
@@ -1057,7 +1063,18 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                  * diese aktiv ist.
                  */
                 stopPossibleRotation();
-                executeCommand();
+
+                try {
+                    Expression expr = Expression.build("x+y/z", new HashSet());
+                    graphicPresentationOfFormula.setExpr1(expr);
+                    graphicPresentationOfFormula.initialize(100, 100);
+//                    graphicPresentationOfFormula.drawFormula();
+                    graphicPresentationOfFormula.paintComponent(graphicPresentationOfFormula.getGraphics());
+
+                } catch (ExpressionException e) {
+                }
+
+//                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:
