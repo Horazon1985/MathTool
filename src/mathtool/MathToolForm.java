@@ -1065,7 +1065,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 stopPossibleRotation();
 
                 try {
-                    Expression expr = Expression.build("x+y/z", new HashSet());
+                    Expression expr = Expression.build("((x-y/z)*a)/b", new HashSet());
                     graphicPresentationOfFormula.setExpr1(expr);
                     graphicPresentationOfFormula.initialize(100, 100);
 //                    graphicPresentationOfFormula.drawFormula();

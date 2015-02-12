@@ -11,6 +11,18 @@
     <Ukrainian>Параметр команди 'approx' має бути діючим виразом. Повідомлення про помилку: </Ukrainian>
     <Russian>Параматр команды 'approx' должен быть действительным выражением. Сообщение об ошибке: </Russian>
   </object>
+  <object id = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CCNF">
+    <German>Im Befehl 'ccnf' muss genau ein Parameter stehen.</German>
+    <English>The command 'ccnf' must contain exactly one parameter.</English>
+    <Ukrainian>У команди 'ccnf' має бути рівно один параметр.</Ukrainian>
+    <Russian>У команды 'ccnf' должен быть ровно один параметр.</Russian>
+  </object>
+  <object id = "MCC_WRONG_FORM_OF_PARAMETER_IN_CCNF">
+    <German>Der Parameter im Befehl 'ccnf' muss ein gültiger logischer Ausdruck sein. Gemeldeter Fehler: </German>
+    <English>The parameter in command 'ccnf' must be a valid logical expression. Reported Error: </English>
+    <Ukrainian>Параметр команди 'ccnf' має бути діючим логічним виразом. Повідомлення про помилку: </Ukrainian>
+    <Russian>Параметр команды 'ccnf' должен быть действительным логическим выражением. Сообщение об ошибке: </Russian>
+  </object>
   <object id = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CDNF">
     <German>Im Befehl 'cdnf' muss genau ein Parameter stehen.</German>
     <English>The command 'cdnf' must contain exactly one parameter.</English>
@@ -796,6 +808,18 @@
     <English> are allowed.</English>
     <Ukrainian>. порядку.</Ukrainian>
     <Russian>. порядка.</Russian>
+  </object>
+  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1">
+    <German>Der logische Ausdruck </German>
+    <English>The logical expression </English>
+    <Ukrainian>Логічний вираз </Ukrainian>
+    <Russian>Логическое выражение </Russian>
+  </object>
+  <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2">
+    <German> enthält mehr als 20 Veränderliche. Die kanonische konjunktive Normalform ist damit zu groß für die Ausgabe.</German>
+    <English> contains more than 20 variables. The canonical conjunctive normal form is too big for output.</English>
+    <Ukrainian> містить більше 20 змінних. Канонічна диз'юнктивна нормальна форма завелика для виводу.</Ukrainian>
+    <Russian> содержит более 20 переменных. Каноническая дизъюнктивная нормальная форма слишком большая для вывода.</Russian>
   </object>
   <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1">
     <German>Der logische Ausdruck </German>
