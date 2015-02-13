@@ -360,6 +360,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemLanguageGerman = new javax.swing.JMenuItem();
         menuItemLanguageRussian = new javax.swing.JMenuItem();
         menuItemLanguageUkrainian = new javax.swing.JMenuItem();
+        menuItemRepresentationMenu = new javax.swing.JMenu();
+        menuItemRepresentationText = new javax.swing.JMenuItem();
+        menuItemRepresentationFormula = new javax.swing.JMenuItem();
         menuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -516,6 +519,16 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemLanguageMenu.add(menuItemLanguageUkrainian);
 
         menuMathTool.add(menuItemLanguageMenu);
+
+        menuItemRepresentationMenu.setText("Darstellungsmodus");
+
+        menuItemRepresentationText.setText("Textmodus");
+        menuItemRepresentationMenu.add(menuItemRepresentationText);
+
+        menuItemRepresentationFormula.setText("Formelmodus");
+        menuItemRepresentationMenu.add(menuItemRepresentationFormula);
+
+        menuMathTool.add(menuItemRepresentationMenu);
 
         menuItemAbout.setText("Über MathTool");
         menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -1065,10 +1078,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 stopPossibleRotation();
 
                 try {
-                    Expression expr = Expression.build("sin(x/y)", new HashSet());
+                    Expression expr = Expression.build(inputField.getText(), new HashSet());
                     graphicPresentationOfFormula.setExpr1(expr);
-                    graphicPresentationOfFormula.initialize(100, 100, 20);
-//                    graphicPresentationOfFormula.drawFormula();
+                    graphicPresentationOfFormula.initialize(100, 100, 40);
                     graphicPresentationOfFormula.paintComponent(graphicPresentationOfFormula.getGraphics());
 
                 } catch (ExpressionException e) {
@@ -1233,6 +1245,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JMenu menuItemLanguageMenu;
     private javax.swing.JMenuItem menuItemLanguageRussian;
     private javax.swing.JMenuItem menuItemLanguageUkrainian;
+    private javax.swing.JMenuItem menuItemRepresentationFormula;
+    private javax.swing.JMenu menuItemRepresentationMenu;
+    private javax.swing.JMenuItem menuItemRepresentationText;
     private javax.swing.JMenu menuMathTool;
     private javax.swing.JComboBox operatorChoice;
     private javax.swing.JButton rotateButton;

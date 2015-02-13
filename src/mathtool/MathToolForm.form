@@ -74,6 +74,23 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <Menu class="javax.swing.JMenu" name="menuItemRepresentationMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Darstellungsmodus"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemRepresentationText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Textmodus"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemRepresentationFormula">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Formelmodus"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemAbout">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xdc;ber MathTool"/>
