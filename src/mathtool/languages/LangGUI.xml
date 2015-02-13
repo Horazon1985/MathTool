@@ -91,6 +91,12 @@
     <Russian>Языки</Russian>
     <Ukrainian>Мови</Ukrainian>
   </object>
+  <object id = "GUI_MathToolForm_MENU_REPRESENTATION_MODE">
+    <German>Darstellungsmodus</German>
+    <English>Representation Mode</English>
+    <Russian></Russian>
+    <Ukrainian></Ukrainian>
+  </object>
   <object id = "GUI_MathToolForm_MENU_ABOUT">
     <German>Über MathTool</German>
     <English>About MathTool</English>
@@ -120,6 +126,18 @@
     <English>Ukrainian</English>
     <Russian>Украинский</Russian>
     <Ukrainian>Українська</Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_MENU_TEXT_MODE">
+    <German>Textmodus</German>
+    <English>Text mode</English>
+    <Russian></Russian>
+    <Ukrainian></Ukrainian>
+  </object>
+  <object id = "GUI_MathToolForm_FORMULA_MODE">
+    <German>Formelmodus</German>
+    <English>Formula mode</English>
+    <Russian></Russian>
+    <Ukrainian></Ukrainian>
   </object>
 <!-- DevelopersDialogGUI -->    
   <object id = "GUI_DevelopersDialogGUI_ABOUT">

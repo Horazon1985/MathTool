@@ -107,7 +107,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Ausgabefeld ausrichten
          */
         mathToolArea = new JTextArea();
-        Font mathToolAreaFont = new Font("Verdana", Font.PLAIN, 12);
+        Font mathToolAreaFont = new Font("Arial", Font.PLAIN, 12);
         mathToolArea.setFont(mathToolAreaFont);
         add(mathToolArea);
         mathToolArea.setEditable(false);
@@ -255,6 +255,9 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemLanguageGerman.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_GERMAN"));
         menuItemLanguageRussian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_RUSSIAN"));
         menuItemLanguageUkrainian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_UKRAINIAN"));
+        menuItemRepresentationMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_REPRESENTATION_MODE"));
+        menuItemRepresentationText.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_TEXT_MODE"));
+        menuItemRepresentationFormula.setText(Translator.translateExceptionMessage("GUI_MathToolForm_FORMULA_MODE"));
 
         /**
          * Restliche Komponenten aktualisieren.
