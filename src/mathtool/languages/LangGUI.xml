@@ -94,8 +94,8 @@
   <object id = "GUI_MathToolForm_MENU_REPRESENTATION_MODE">
     <German>Darstellungsmodus</German>
     <English>Representation Mode</English>
-    <Russian></Russian>
-    <Ukrainian></Ukrainian>
+    <Russian>Режим представления</Russian>
+    <Ukrainian>Режим зображення</Ukrainian>
   </object>
   <object id = "GUI_MathToolForm_MENU_ABOUT">
     <German>Über MathTool</German>
@@ -130,14 +130,14 @@
   <object id = "GUI_MathToolForm_MENU_TEXT_MODE">
     <German>Textmodus</German>
     <English>Text mode</English>
-    <Russian></Russian>
-    <Ukrainian></Ukrainian>
+    <Russian>Текстовый режим</Russian>
+    <Ukrainian>Текстовий режим</Ukrainian>
   </object>
   <object id = "GUI_MathToolForm_FORMULA_MODE">
     <German>Formelmodus</German>
     <English>Formula mode</English>
-    <Russian></Russian>
-    <Ukrainian></Ukrainian>
+    <Russian>Формульный режим</Russian>
+    <Ukrainian>Формульний режим</Ukrainian>
   </object>
 <!-- DevelopersDialogGUI -->    
   <object id = "GUI_DevelopersDialogGUI_ABOUT">
