@@ -122,7 +122,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         scrollPane = new JScrollPane(mathToolArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mathToolArea.setCaretPosition(mathToolArea.getDocument().getLength());
-//        add(scrollPane);
+        add(scrollPane);
         
         /**
          * Buttons ausrichten

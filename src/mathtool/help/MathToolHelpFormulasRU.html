@@ -1,51 +1,58 @@
-﻿<font size="6"><strong>Mathematical Expressions:</strong></font><br><br>
+﻿<font size="6"><strong>Математические выражения:</strong></font><br><br>
 
-MathTool understands mathematical expressions. The basic arithmetic operations are denoted by +, -, * and /, and ^ denotes the power. Mathematical functions are denoted by their typical name, for example by sin(...), exp(...), ln(...), arctan(...) etc. 
-A list with all functions can be found below.<br>
-<em>Important:</em> Multiplications must be explicitly denoted by *. MathTool understands the expression 2*x, whereas it does not understand the expression 2x and hence returns an error.<br>
-Valid expressions look like<br><br>
+MathTool понимает математические выражения. Базовие арифметические операции обозначаются +, -, * и /, а ^ обозначает степень. 
+Математические функции обозначаются их типичными именами, например sin(...), exp(...), ln(...), arctan(...) и т.д.
+Перечень всех функций можно найти ниже.<br>
+
+
+<em>Важно:</em>Умножение необходимо обязательно обозначать *. MathTool понимает выражение 2*x, но не понимает выражение 2x и, поэтому, возвращает ошибку.<br>
+Действительные выражения выглядят так:<br><br><br><br>
 
 3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...<br><br>
 
-MathTool returns a mathematical expression immediately in a simplified form, if possible.<br><br>
+MathTool немедленно возвращает логическое выражение в упрощённой форме, если это возможно. Тем не менее, время ожидания может увеличиться, если выражение слишком сложное, и упрощение занимает больше времени.<br><br>
 
-Variables can be denoted by a small letter or by a small letter with an index. Furthermore, arbitrary many ' can be appended. 
-Hence, valid variables are, for example, given by<br><br>
+Переменные можно обозначать маленькими латинскими буквами или маленькими латинскими буквами с индексом. В конце выражения можно также использовать сколько угодно '.
+
+Итак, действительные переменные выглядят, например, так:<br><br>
 
 a, b, c, ..., x, y, ..., a_1, x_18, ..., y', a_2', ... <br><br>
 
-but not by xy, abc or a'_1'. The apostrophe suggests a derivative, which only comes to fruition when dealing with <i>differential equations</i>. 
-Otherwise it serves simply for distinguishing variables. 
-The constant pi denotes the circle number Pi and, of course, cannot be overwritten with the command def() (see subsection Commands). 
-Note, that MathTool removes empty space as well as makes capital letters to small letters while compiling an expression. Hence, the variable A_3 will be the same variable as a_3.<br><br>
+но не xy, abc or a'_1'.
 
-<strong>List of all functions:</strong><br><br>
-<strong>abs(x):</strong> Computes the absolute value of x.<br><br>
-<strong>arccosec(x):</strong> Computes the arccosecans of x (in radians).<br><br>
-<strong>arccot(x):</strong> Computes the arccotangent of x (in radians).<br><br>
-<strong>arcsec(x):</strong> Computes the arcsecans of x (in radians).<br><br>
-<strong>arcsin(x):</strong> Computes the arcsine of x (in radians).<br><br>
-<strong>arctan(x):</strong> Computes the arctangent of x (in radians).<br><br>
-<strong>arcosh(x):</strong> Computes the area hyperbolic cosine of x.<br><br>
-<strong>arcosech(x):</strong> Computes the area hyperbolic cosecans of x.<br><br>
-<strong>arcoth(x):</strong> Computes the area hyperbolic cotangent of x.<br><br>
-<strong>arsech(x):</strong> Computes the area hyperbolic secans of x.<br><br>
-<strong>arsinh(x):</strong> Computes the area hyperbolic sine of x.<br><br>
-<strong>artanh(x):</strong> Computes the area hyperbolic tangent of x.<br><br>
-<strong>cos(x):</strong> Computes the cosine of x (x in radians).<br><br>
-<strong>cosh(x):</strong> Computes the hyperbolic cosine of x.<br><br>
-<strong>cosec(x):</strong> Computes the cosecans of x (x in radians).<br><br>
-<strong>cosech(x):</strong> Computes the hyperbolic cosecans of x.<br><br>
-<strong>cot(x):</strong> Computes the cotangent of x (x in radians).<br><br>
-<strong>coth(x):</strong> Computes the hyperbolic cotangent of x.<br><br>
-<strong>exp(x):</strong> Computes the exponential function of x.<br><br>
-<strong>lg(x):</strong> Computes the logarithm of x to base 10.<br><br>
-<strong>ln(x):</strong> Computes the natural logarithm of x.<br><br>
-<strong>sgn(x):</strong> Computes the signum function of x.<br><br>
-<strong>sin(x):</strong> Computes the sine of x (x in radians).<br><br>
-<strong>sinh(x):</strong> Computes the hyperbolic sine of x.<br><br>
-<strong>sec(x):</strong> Computes the secans of x (x in radians).<br><br>
-<strong>sech(x):</strong> Computes the hyperbolic secans of x.<br><br>
-<strong>tan(x):</strong> Computes the tangent of x (x in radians).<br><br>
-<strong>tanh(x):</strong> Computes the hyperbolic tangent of x.<br><br>
+Апостроф означает производную только при работе с <i>дифференциальными уравнениями</i>. 
+Иначеон служит для различения переменных.
+Константа pi обозначает математическую константу &#960; и, конечно, не может быть переопределена командой def() (смотрите подраздел Команды).
+MathTool удаляет пробелы и преобразовывает большие буквы в маленькие во время компиляции выражения. Таким образом, A_3 и a_3 являются одной и той же переменной.
+
+
+<strong>Перечень всех функций:</strong><br><br>
+<strong>abs(x):</strong> Вычисляет модуль x.<br><br>
+<strong>arccosec(x):</strong> Вычисляет арккосеканс x (в радианах).<br><br>
+<strong>arccot(x):</strong> Вычисляет арккотангенс x (в радианах).<br><br>
+<strong>arcsec(x):</strong> Вычисляет арксеканс x (в радианах).<br><br>
+<strong>arcsin(x):</strong> Вычисляет арксинус x (в радианах).<br><br>
+<strong>arctan(x):</strong> Вычисляет арктангенс x (в радианах).<br><br>
+<strong>arcosh(x):</strong> Вычисляет гиперболический ареакосинус x.<br><br>
+<strong>arcosech(x):</strong> Вычисляет гиперболический ареакосеканс x.<br><br>
+<strong>arcoth(x):</strong> Вычисляет гиперболический ареакотангенс x.<br><br>
+<strong>arsech(x):</strong> Вычисляет гиперболический ареасеканс x.<br><br>
+<strong>arsinh(x):</strong> Вычисляет гиперболический ареасинус x.<br><br>
+<strong>artanh(x):</strong> Вычисляет гиперболический ареатангенс x.<br><br>
+<strong>cos(x):</strong> Вычисляет косинус x (x в радианах).<br><br>
+<strong>cosh(x):</strong> Вычисляет гиперболический косинус x.<br><br>
+<strong>cosec(x):</strong> Вычисляет косеканс x (x в радианах).<br><br>
+<strong>cosech(x):</strong> Вычисляет гиперболический косеканс x.<br><br>
+<strong>cot(x):</strong> Вычисляет котангенс x (x в радианах).<br><br>
+<strong>coth(x):</strong> Вычисляет гиперболический котангенс x.<br><br>
+<strong>exp(x):</strong> Вычисляет експоненциальную функцию x.<br><br>
+<strong>lg(x):</strong> Вычисляет логарифм x за основою 10.<br><br>
+<strong>ln(x):</strong> Вычисляет натуральний логарифм x.<br><br>
+<strong>sgn(x):</strong> Вычисляет сигнум функцию x.<br><br>
+<strong>sin(x):</strong> Вычисляет синус x (x в радианах).<br><br>
+<strong>sinh(x):</strong> Вычисляет гиперболический синус x.<br><br>
+<strong>sec(x):</strong> Вычисляет секанс x (x в радианах).<br><br>
+<strong>sech(x):</strong> Вычисляет гиперболический секанс x.<br><br>
+<strong>tan(x):</strong> Вычисляет тангенс x (x в радианах).<br><br>
+<strong>tanh(x):</strong> Вычисляет гиперболический тангерс x.<br><br>
 

@@ -1,53 +1,53 @@
-﻿<font size="6"><b>Operators:</b></font><br><br>
+﻿<font size="6"><b>Оператори:</b></font><br><br>
 
-MathTool knows the following operators:<br><br>
+MathTool знає такі оператори:<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Computes the partial derivative ∂F/∂x<sub>i</sub> of the function F with respect to the variable x<sub>i</sub>.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Обчислює часткову похідну ∂F/∂x<sub>i</sub> функції F по змінній x<sub>i</sub>.<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Computes the k-th partial derivative ∂<sup>k</sup>F/∂x<sub>i</sub><sup>k</sup> of the function F with respect to the variable x<sub>i</sub>.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Обчислює k-ту часткову похідну ∂<sup>k</sup>F/∂x<sub>i</sub><sup>k</sup> функції F по змінній x<sub>i</sub>.<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Computes the partial derivative ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> of the function F with respect to the variables x<sub>i</sub>, ..., x<sub>j</sub>. The variables x<sub>i</sub>, ..., x<sub>j</sub> do not have to be different.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Обчислює часткову похідну ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> функції F по зміннійs x<sub>i</sub>, ..., x<sub>j</sub>. Змінні x<sub>i</sub>, ..., x<sub>j</sub> не мають бути різними.<br><br>
 
-<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Computes the divergence div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> of the function F.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Обчислює дивергенцію div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> функції F.<br><br>
 
-<strong>fac(n) oder n!:</strong> Computes the factorial of n. For nonnegative integers n it returns the well-known factorial n! = 1·2· ··· ·n of n. Factorials of negative integers return errors and for factorials of non-integers it returns the value &#915;(n + 1) of the <em>Gamma function</em> in approximation mode. Factorials of integers will be computed explicitly only if n &lt;= 10000.<br><br>
+<strong>fac(n) oder n!:</strong> Обчислює факторіал n. Для невід'ємного n вона повертає добре відомий факторіал n! = 1·2· ··· ·n від n. Факторіали від від'ємних чисел повертають помилки, а факторіла від нецілих чисел, повертають значення &#915;(n + 1)  <em>Гама функції</em> у наближеному вигляді. Факторіали цілих чисел будуть обчислені точно тільки для n &lt;= 10000.<br><br>
 
-<em>Example:</em> The expression 5! is simplified to<br>
+<em>Приклад:</em> Вираз 5! буде спрощено до<br>
 
 <p style="text-align: center;">120,</p><br>
 
-while approx(0.5!) returns<br>
+в той час як approx(0.5!) повертає<br>
 
 <p style="text-align: center;">0.8862266958197873</p><br>
 
-<strong>gcd(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Computes the greatest common divisor of the integers n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
+<strong>gcd(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Обчислює найбільший спільний дільник цілих чисел n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
-<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Computes the indefinite integral ∫F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx of the function F(x, a<sub>1</sub>, ..., a<sub>n</sub>) (with respect to x).<br><br>
+<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Обчислює невизначений інтеграл ∫F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx функції F(x, a<sub>1</sub>, ..., a<sub>n</sub>) (по x).<br><br>
 
-<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Computes the definite integral ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx of the function F(x, a<sub>1</sub>, ..., a<sub>n</sub>) from b<sub>1</sub> to b<sub>2</sub> (with respect to x).<br><br>
+<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Обчислює визначений інтеграл ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx функції F(x, a<sub>1</sub>, ..., a<sub>n</sub>) від b<sub>1</sub> до b<sub>2</sub> (по x).<br><br>
 
-<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Computes the Laplace operator ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> of the function F.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Обчислює оператор Лапласа ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> функції F.<br><br>
 
-<strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Computes the least common multiple of the integers n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
+<strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Обчислює найменше спільне кратне цілих чисел n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
-<strong>mod(a, b):</strong> If a and b are integers, it returns the remainder r of the division of a by b.<br><br>
+<strong>mod(a, b):</strong> Якщо a та b - цілі числа, то вона повертає остачу r від ділення a на b.<br><br>
 
-<em>Example:</em> mod(25, 7) returns<br>
+<em>Приклад:</em> mod(25, 7) повертає<br>
 
 <p style="text-align: center;">4</p><br>
 
-<strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Computes the produkt F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). If k<sub>1</sub> &gt; k<sub>2</sub>, then the result is 1.<br><br>
+<strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Обчислює добуток F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Якщо k<sub>1</sub> &gt; k<sub>2</sub>, тоді результат дорівнює 1.<br><br>
 
-<strong>sum(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Computes the sum F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>) + F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>) + ··· + F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). If k<sub>1</sub> &gt; k<sub>2</sub>, then the result is 0.<br><br>
+<strong>sum(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Обчислює суму F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>) + F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>) + ··· + F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). If k<sub>1</sub> &gt; k<sub>2</sub>, тоді результат дорівнює 0.<br><br>
 
-<strong>taylor(F(x, y<sub>1</sub>, ..., y<sub>n</sub>), x, x<sub>0</sub>, k):</strong> Computes the Taylor polynomial of degree k of the function F(x, y<sub>1</sub>, ..., y<sub>n</sub>) with respect to the variable x at the point x = x<sub>0</sub>.<br><br>
+<strong>taylor(F(x, y<sub>1</sub>, ..., y<sub>n</sub>), x, x<sub>0</sub>, k):</strong> Обчислює поліном Тейлора степеня k функції F(x, y<sub>1</sub>, ..., y<sub>n</sub>) по змінній x у точці x = x<sub>0</sub>.<br><br>
 
-Operators can occur, in contrast to commands, in other mathematical expressions.<br><br>
+Оператор, на відміну від команди, може використовуватися у інших математичних виразах.<br><br>
 
-<em>Example:</em> The expression<br>
+<em>Приклад:</em> Вираз<br>
 
 <p style="text-align: center;">x^2*diff(y^5,y,3) + 6</p><br>
 
-will be simplified to<br>
+буде спрощено до<br>
 
 <p style="text-align: center;">60*x^2*y^2+6.</p>
