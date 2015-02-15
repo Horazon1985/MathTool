@@ -77,6 +77,12 @@
     <Ukrainian>Неправильне визначення змінної або функції.</Ukrainian>
     <Russian>Неправильное определение переменной или функции.</Russian>
   </object>
+  <object id = "MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION">
+    <German>Die zu definierende Funktion muss mindestens eine Variable als Parameter enthalten.</German>
+    <English>The function to be defined must contains at least one variable as a parameter.</English>
+    <Ukrainian>Функція, що визначається, має містить щонайменше одну змінну як параметр.</Ukrainian>
+    <Russian>Определяемая функция должна содержать минимум одну переменную как параметр.</Russian>
+  </object>
   <object id = "MCC_IS_NOT_VALID_VARIABLE_1">
     <German>'</German>
     <English>'</English>

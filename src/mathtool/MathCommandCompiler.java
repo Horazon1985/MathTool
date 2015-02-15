@@ -161,7 +161,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = LogicalExpression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.CDNF);
+                result.setTypeCommand(TypeCommand.CCNF);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -169,7 +169,7 @@ public class MathCommandCompiler {
             }
 
         }
-        
+
         //CDNF
         /**
          * Struktur: cdnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
@@ -192,7 +192,7 @@ public class MathCommandCompiler {
             }
 
         }
-        
+
         //CLEAR
         /**
          * Struktur: clear()
@@ -239,7 +239,7 @@ public class MathCommandCompiler {
              * Beispiel: def(x = 2) liefert: result.name = "def" result.params =
              * {"x"} result.left = 2 (als Expression)
              */
-            if (Expression.isValidVariable(function_name_and_params) && !Expression.isPI(function_name_and_params)) {
+            if (Expression.isValidDerivateOfVariable(function_name_and_params) && !Expression.isPI(function_name_and_params)) {
                 try {
                     Expression.build(function_term, new HashSet());
                 } catch (ExpressionException e) {
@@ -259,25 +259,22 @@ public class MathCommandCompiler {
                 return result;
             }
 
+            HashSet vars = new HashSet();
+            Expression expr;
             /**
              * Nun wird geprüft, ob es sich um eine Funktionsdeklaration
              * handelt. Zunächst wird versucht, den rechten Teilstring vom "="
              * in einen Ausdruck umzuwandeln.
              */
             try {
-                Expression.build(function_term, new HashSet());
+                expr = Expression.build(function_term, vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
             }
 
             /**
              * Falls man hier ankommt, muss das obige try funktioniert haben.
-             * Jetzt wird die rechte Seite gelesen (durch den die Funktion auf
-             * der linken Seite von "=" definiert wird).
              */
-            HashSet vars = new HashSet();
-            Expression expr = Expression.build(function_term, new HashSet());
-
             /**
              * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
              * enthält (der Benutzer kann beispielsweise eine weitere Funktion
@@ -286,8 +283,6 @@ public class MathCommandCompiler {
              * Funktionen ersetzt.
              */
             expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
-
-            expr.getContainedVars(vars);
 
             try {
                 /**
@@ -306,11 +301,19 @@ public class MathCommandCompiler {
             String[] function_vars = Expression.getArguments(Expression.getOperatorAndArguments(function_name_and_params)[1]);
 
             /**
+             * Falls functions_vars leer ist -> Fehler ausgeben (es muss
+             * mindestens eine Variable vorhanden sein).
+             */
+            if (function_vars.length == 0){
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION"));
+            }
+            
+            /**
              * Nun wird geprüft, ob die einzelnen Parameter in der
              * Funktionsklammer gültige Variablen sind
              */
             for (int i = 0; i < function_vars.length; i++) {
-                if (!Expression.isValidVariable(function_vars[i])) {
+                if (!Expression.isValidDerivateOfVariable(function_vars[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
                             + function_vars[i]
                             + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
@@ -999,7 +1002,7 @@ public class MathCommandCompiler {
                 }
 
                 if (params.length == 2) {
-                    if (!Expression.isValidVariable(params[1])) {
+                    if (!Expression.isValidDerivateOfVariable(params[1])) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVE"));
                     }
                 }
@@ -1248,7 +1251,7 @@ public class MathCommandCompiler {
                             + (i + 1)
                             + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
                 }
-                if (!Expression.isValidVariable(params[i].substring(0, params[i].indexOf("=")))) {
+                if (!Expression.isValidDerivateOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
                     throw new ExpressionException(params[i].substring(0, params[i].indexOf("="))
                             + Translator.translateExceptionMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT"));
                 }
@@ -1429,7 +1432,7 @@ public class MathCommandCompiler {
              * Prüft, ob alle Parameter gültige Variablen sind.
              */
             for (int i = 0; i < params.length; i++) {
-                if (!Expression.isValidVariable(params[i]) && !Expression.isPI(params[i])) {
+                if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
                             + (i + 1)
                             + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
@@ -1466,6 +1469,7 @@ public class MathCommandCompiler {
         }
 
         return result;
+        
     }
 
     //Führt den Befehl aus.
@@ -1722,7 +1726,7 @@ public class MathCommandCompiler {
     }
 
     private static void executeCCNF(Command c) throws ExpressionException, EvaluationException {
-        
+
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
         HashSet vars = new HashSet();
         log_expr.getContainedVars(vars);
@@ -1731,14 +1735,14 @@ public class MathCommandCompiler {
                     + log_expr.writeFormula()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
         }
-        
+
         output = new String[1];
         output[0] = log_expr.toCCNF().writeFormula() + " \n \n";
 
     }
-    
+
     private static void executeCDNF(Command c) throws ExpressionException, EvaluationException {
-        
+
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
         HashSet vars = new HashSet();
         log_expr.getContainedVars(vars);
@@ -1747,12 +1751,12 @@ public class MathCommandCompiler {
                     + log_expr.writeFormula()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
         }
-        
+
         output = new String[1];
         output[0] = log_expr.toCDNF().writeFormula() + " \n \n";
 
     }
-    
+
     private static void executeEuler(Command c) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         output = new String[1];

@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
@@ -117,7 +118,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mathToolArea.setCaretPosition(mathToolArea.getDocument().getLength());
 //        add(scrollPane);
-
+        
         /**
          * Buttons ausrichten
          */
