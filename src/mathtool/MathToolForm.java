@@ -33,12 +33,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
+    private boolean textMode;
     private Thread threadRotate;
     private boolean startRotate;
     private TypeGraphic typeGraphic;
@@ -87,6 +87,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             }
         });
 
+        /**
+         * Textmodus ist am Anfang aktiviert
+         */
+        this.textMode = true;
+        
         /**
          * Standardsprache = DE
          */
@@ -243,6 +248,18 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
             menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
             menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
         }
+        
+        /**
+         * Im Darstellungsmenü den gewählten Modus fett hervorheben.
+         */
+        if (this.textMode) {
+            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
+            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.PLAIN, 12));
+        } else {
+            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.BOLD, 12));
+        }
+        
         /**
          * Menüeinträge aktualisieren
          */
@@ -1090,7 +1107,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 } catch (ExpressionException e) {
                 }
 
-//                executeCommand();
+                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:

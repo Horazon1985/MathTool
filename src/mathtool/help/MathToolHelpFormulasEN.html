@@ -1,13 +1,13 @@
 ﻿<font size="6"><strong>Mathematical Expressions:</strong></font><br><br>
 
-MathTool understands mathematical expressions. The basic arithmetic operations are denoted by +, -, * and /, and ^ denotes the power. Mathematical functions are denoted by their typical name, for example by sin(...), exp(...), ln(...), arctan(...) etc. 
+MathTool understands mathematical expressions. The basic arithmetic operations are denoted by +, -, * and /, and ^ denotes the power. Mathematical functions are denoted by their typical names, for example by sin(...), exp(...), ln(...), arctan(...) etc. 
 A list with all functions can be found below.<br>
 <em>Important:</em> Multiplications must be explicitly denoted by *. MathTool understands the expression 2*x, whereas it does not understand the expression 2x and hence returns an error.<br>
 Valid expressions look like<br><br>
 
 3*x + y^5, -a + 6*exp(2 + cos(z^4)), ...<br><br>
 
-MathTool returns a mathematical expression immediately in a simplified form, if possible.<br><br>
+MathTool returns a mathematical expression immediately in a simplified form, if possible. However, this may lead to increased waiting times, if the expression is too complicated and the simplification takes far too long.<br><br>
 
 Variables can be denoted by a small letter or by a small letter with an index. Furthermore, arbitrary many ' can be appended. 
 Hence, valid variables are, for example, given by<br><br>
@@ -16,7 +16,7 @@ a, b, c, ..., x, y, ..., a_1, x_18, ..., y', a_2', ... <br><br>
 
 but not by xy, abc or a'_1'. The apostrophe suggests a derivative, which only comes to fruition when dealing with <i>differential equations</i>. 
 Otherwise it serves simply for distinguishing variables. 
-The constant pi denotes the circle number Pi and, of course, cannot be overwritten with the command def() (see subsection Commands). 
+The constant pi denotes the well-known constant &#960; and, of course, cannot be overwritten with the command def() (see subsection Commands). 
 Note, that MathTool removes empty space as well as makes capital letters to small letters while compiling an expression. Hence, the variable A_3 will be the same variable as a_3.<br><br>
 
 <strong>List of all functions:</strong><br><br>
