@@ -3,15 +3,16 @@ package mathtool;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
+import expressionbuilder.TypeGraphic;
+import expressionbuilder.TypeLanguage;
+import LogicalExpressionBuilder.LogicalExpression;
+import Translator.Translator;
 import graphic.GraphicMethods2D;
 import graphic.GraphicMethods3D;
 import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
-import expressionbuilder.TypeGraphic;
-import LogicalExpressionBuilder.LogicalExpression;
-import Translator.Translator;
-import expressionbuilder.TypeLanguage;
+import graphic.GraphicArea;
 import graphic.GraphicPresentationOfFormula;
 
 import java.awt.*;
@@ -23,11 +24,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,6 +31,11 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
@@ -51,6 +52,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     JTextArea mathToolArea;
     JEditorPane helpArea;
     JScrollPane scrollPane;
+    GraphicArea graphicArea;
 
     GraphicMethods2D graphicMethods2D;
     GraphicMethods3D graphicMethods3D;
@@ -67,6 +69,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     static HashSet definedVarsSet = new HashSet();
     static HashMap<String, Expression> definedFunctions = new HashMap<>();
     public HashMap<Integer, String> listOfCommands = new HashMap<>();
+    
+    public HashMap<Integer, GraphicPresentationOfFormula> listOfFormulas = new HashMap<>();
     /**
      * Variablen, die eine Rolle beim Loggen der Befehle spielen. command_count
      * = Anzahl der insgesamt geloggten Befehle (gültige UND ungültige!)
@@ -544,9 +548,19 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         menuItemRepresentationMenu.setText("Darstellungsmodus");
 
         menuItemRepresentationText.setText("Textmodus");
+        menuItemRepresentationText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRepresentationTextActionPerformed(evt);
+            }
+        });
         menuItemRepresentationMenu.add(menuItemRepresentationText);
 
         menuItemRepresentationFormula.setText("Formelmodus");
+        menuItemRepresentationFormula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRepresentationFormulaActionPerformed(evt);
+            }
+        });
         menuItemRepresentationMenu.add(menuItemRepresentationFormula);
 
         menuMathTool.add(menuItemRepresentationMenu);
@@ -1102,12 +1116,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     Expression expr = Expression.build(inputField.getText(), new HashSet());
                     graphicPresentationOfFormula.setExpr1(expr);
                     graphicPresentationOfFormula.initialize(100, 100, 40);
-                    graphicPresentationOfFormula.paintComponent(graphicPresentationOfFormula.getGraphics());
+                    graphicPresentationOfFormula.drawFormula();
+//                    graphicPresentationOfFormula.paintComponent(graphicPresentationOfFormula.getGraphics());
 
                 } catch (ExpressionException e) {
+                    System.out.println("Fehler");
                 }
 
-                executeCommand();
+//                executeCommand();
                 break;
 
             case KeyEvent.VK_UP:
@@ -1166,6 +1182,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         Expression.setLanguage(TypeLanguage.UA);
         refreshInterface();
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
+
+    private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
+        this.textMode = true;
+    }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
+
+    private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
+        this.textMode = false;
+    }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     @Override
     public void mouseClicked(MouseEvent e) {
