@@ -34,15 +34,16 @@ import javax.swing.UIManager;
 
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
-    private boolean textMode;
     private Thread threadRotate;
     private boolean startRotate;
     private TypeGraphic typeGraphic;
+    private TypeModus typeModus;
     private boolean computing = false;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
@@ -59,6 +60,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     GraphicMethodsCurves2D graphicMethodsCurves2D;
     GraphicMethodsCurves3D graphicMethodsCurves3D;
     GraphicMethodsPolar2D graphicMethodsPolar2D;
+    ArrayList<GraphicPresentationOfFormula> ListOfFormulas;
     GraphicPresentationOfFormula graphicPresentationOfFormula;
 
     /**
@@ -94,7 +96,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Textmodus ist am Anfang aktiviert
          */
-        this.textMode = true;
+        typeModus = TypeModus.TEXT;
         
         /**
          * Standardsprache = DE
@@ -129,6 +131,12 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 //        add(scrollPane);
         
         /**
+         * Graphisches Ausgabefeld ausrichten
+         */
+//        graphicArea = new GraphicArea(10, 10, getWidth() - 40, getHeight() - 170);
+//        add(graphicArea);
+        
+        /**
          * Buttons ausrichten
          */
         rotateButton.setVisible(false);
@@ -139,17 +147,14 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         graphicMethods2D = new GraphicMethods2D();
         add(graphicMethods2D);
-        repaint();
         graphicMethods2D.setVisible(false);
 
         graphicMethodsCurves2D = new GraphicMethodsCurves2D();
         add(graphicMethodsCurves2D);
-        repaint();
         graphicMethodsCurves2D.setVisible(false);
 
         graphicMethodsPolar2D = new GraphicMethodsPolar2D();
         add(graphicMethodsPolar2D);
-        repaint();
         graphicMethodsPolar2D.setVisible(false);
 
         /**
@@ -157,18 +162,18 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          */
         graphicMethods3D = new GraphicMethods3D();
         add(graphicMethods3D);
-        repaint();
         graphicMethods3D.setVisible(false);
 
         graphicMethodsCurves3D = new GraphicMethodsCurves3D();
         add(graphicMethodsCurves3D);
-        repaint();
         graphicMethodsCurves3D.setVisible(false);
 
+        ListOfFormulas = new ArrayList<>();
         graphicPresentationOfFormula = new GraphicPresentationOfFormula();
         add(graphicPresentationOfFormula);
+        graphicPresentationOfFormula.setVisible(true);
+        
         repaint();
-        graphicPresentationOfFormula.setVisible(false);
         
         /**
          * ComponentListener für das Ausrichten von Komponenten
@@ -180,6 +185,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
                 scrollPane.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
                 mathToolArea.setBounds(0, 0, scrollPane.getWidth(), scrollPane.getHeight());
+//                graphicArea.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
 
                 inputField.setBounds(10, scrollPane.getHeight() + 20, scrollPane.getWidth() - 150, 30);
                 inputButton.setBounds(mathToolArea.getWidth() - 130, scrollPane.getHeight() + 20, 140, 30);
@@ -256,10 +262,10 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         /**
          * Im Darstellungsmenü den gewählten Modus fett hervorheben.
          */
-        if (this.textMode) {
+        if (typeModus.equals(typeModus.TEXT)) {
             menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
             menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.PLAIN, 12));
-        } else {
+        } else if (typeModus.equals(typeModus.GRAPHIC)) {
             menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.PLAIN, 12));
             menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.BOLD, 12));
         }
@@ -1113,11 +1119,17 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 stopPossibleRotation();
 
                 try {
-                    Expression expr = Expression.build(inputField.getText(), new HashSet());
-                    graphicPresentationOfFormula.setExpr1(expr);
-                    graphicPresentationOfFormula.initialize(100, 100, 40);
+                    graphicPresentationOfFormula.setExpr1(Expression.build(inputField.getText(), new HashSet()));
+                    graphicPresentationOfFormula.initialize(20);
                     graphicPresentationOfFormula.drawFormula();
 //                    graphicPresentationOfFormula.paintComponent(graphicPresentationOfFormula.getGraphics());
+//                    GraphicPresentationOfFormula formula = new GraphicPresentationOfFormula();
+//                    formula.setExpr1(Expression.build(inputField.getText(), new HashSet()));
+//                    formula.initialize(20);
+//                    ListOfFormulas.add(formula);
+//                    formula.paintComponent(formula.getGraphics());
+//                    repaint();
+//                    validate();
 
                 } catch (ExpressionException e) {
                     System.out.println("Fehler");
@@ -1184,11 +1196,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
-        this.textMode = true;
+        typeModus = TypeModus.TEXT;
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
-        this.textMode = false;
+        typeModus = TypeModus.GRAPHIC;
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     @Override
