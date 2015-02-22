@@ -63,6 +63,11 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     GraphicMethodsPolar2D graphicMethodsPolar2D;
     ArrayList<GraphicPresentationOfFormula> ListOfFormulas;
 
+    
+    private final ArrayList<GraphicPresentationOfFormula> formulas = new ArrayList<>();
+    private final ArrayList<Point> formulas_coordinates = new ArrayList<>();
+    
+    
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
      * im Laufe des Programms definierten Variablen und Funktionen.
@@ -122,8 +127,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         mathToolAreaText = new JTextArea();
         Font mathToolAreaFont = new Font("Arial", Font.BOLD, 12);
         mathToolAreaText.setFont(mathToolAreaFont);
-        add(mathToolAreaText);
-        mathToolAreaText.setEditable(false);
+        mathToolAreaText.setEditable(true);
         mathToolAreaText.setLineWrap(true);
         mathToolAreaText.setWrapStyleWord(true);
         scrollPaneText = new JScrollPane(mathToolAreaText,
@@ -135,7 +139,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
          * Graphisches Ausgabefeld ausrichten
          */
         mathToolAreaGraphic = new GraphicArea(10, 10, this.getWidth() - 40, this.getHeight() - 170);
-        add(mathToolAreaGraphic);
         scrollPaneGraphic = new JScrollPane(mathToolAreaGraphic,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
@@ -1126,13 +1129,13 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                 stopPossibleRotation();
 
                 try {
-                    GraphicPresentationOfFormula formula = new GraphicPresentationOfFormula();
-                    mathToolAreaGraphic.add(formula);
-                    formula.setExpr1(Expression.build(inputField.getText(), new HashSet()));
-                    formula.initialize(16);
-                    ListOfFormulas.add(formula);
-                    formula.drawFormula();
-                    mathToolAreaGraphic.setPosition(formula);
+                    GraphicPresentationOfFormula f = new GraphicPresentationOfFormula();
+                    mathToolAreaGraphic.add(f);
+                    f.setExpr1(Expression.build(inputField.getText(), new HashSet()));
+                    f.initialize(16);
+                    ListOfFormulas.add(f);
+                    f.drawFormula();
+                    mathToolAreaGraphic.setPosition(f);
                     validate();
                     repaint();
 
