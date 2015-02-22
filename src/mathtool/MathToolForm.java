@@ -62,11 +62,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
     GraphicMethodsCurves3D graphicMethodsCurves3D;
     GraphicMethodsPolar2D graphicMethodsPolar2D;
     ArrayList<GraphicPresentationOfFormula> ListOfFormulas;
-
-    
-    private final ArrayList<GraphicPresentationOfFormula> formulas = new ArrayList<>();
-    private final ArrayList<Point> formulas_coordinates = new ArrayList<>();
-    
     
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
@@ -133,7 +128,8 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         scrollPaneText = new JScrollPane(mathToolAreaText,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mathToolAreaText.setCaretPosition(mathToolAreaText.getDocument().getLength());
-//        add(scrollPaneText);
+        add(scrollPaneText);
+        scrollPaneText.setVisible(false);
         
         /**
          * Graphisches Ausgabefeld ausrichten
@@ -1205,11 +1201,15 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
         typeModus = TypeModus.TEXT;
+        scrollPaneGraphic.setVisible(false);
+        scrollPaneText.setVisible(true);
         refreshInterface();
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
         typeModus = TypeModus.GRAPHIC;
+        scrollPaneGraphic.setVisible(true);
+        scrollPaneText.setVisible(false);
         refreshInterface();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
