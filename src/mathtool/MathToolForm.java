@@ -15,6 +15,7 @@ import graphic.GraphicMethodsPolar2D;
 import graphic.GraphicArea;
 import graphic.GraphicPresentationOfFormula;
 import command.Command;
+import graphic.TypeGraphicFormula;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -139,7 +140,6 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         scrollPaneGraphic = new JScrollPane(mathToolAreaGraphic,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
-//        mathToolAreaGraphic.fillBackground();
         
         /**
          * Buttons ausrichten
@@ -421,6 +421,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("int(y^2/2,y,0,1)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -1129,6 +1130,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     GraphicPresentationOfFormula f = new GraphicPresentationOfFormula();
                     mathToolAreaGraphic.add(f);
                     f.setExpr1(Expression.build(inputField.getText(), new HashSet()));
+                    f.setTypeGraphicFormula(TypeGraphicFormula.SINGLE_EXPRESSION);
                     f.initialize(30);
                     ListOfFormulas.add(f);
                     f.drawFormula();

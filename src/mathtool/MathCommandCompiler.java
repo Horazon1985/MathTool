@@ -399,7 +399,7 @@ public class MathCommandCompiler {
 
             /**
              * Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
-             * result.name = "def" result.params = {"f", "x_ABSTRACT",
+             * result.type = TypeCommand.DEF result.params = {"f", "x_ABSTRACT",
              * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
              * Expression).
              */
