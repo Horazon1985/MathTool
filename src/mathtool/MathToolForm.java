@@ -14,6 +14,7 @@ import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import graphic.GraphicArea;
 import graphic.GraphicPresentationOfFormula;
+import command.Command;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -122,7 +123,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
         mathToolAreaText = new JTextArea();
         Font mathToolAreaFont = new Font("Arial", Font.BOLD, 12);
         mathToolAreaText.setFont(mathToolAreaFont);
-        mathToolAreaText.setEditable(true);
+        mathToolAreaText.setEditable(false);
         mathToolAreaText.setLineWrap(true);
         mathToolAreaText.setWrapStyleWord(true);
         scrollPaneText = new JScrollPane(mathToolAreaText,
@@ -1128,7 +1129,7 @@ public class MathToolForm extends javax.swing.JFrame implements MouseListener {
                     GraphicPresentationOfFormula f = new GraphicPresentationOfFormula();
                     mathToolAreaGraphic.add(f);
                     f.setExpr1(Expression.build(inputField.getText(), new HashSet()));
-                    f.initialize(16);
+                    f.initialize(30);
                     ListOfFormulas.add(f);
                     f.drawFormula();
                     mathToolAreaGraphic.setPosition(f);
