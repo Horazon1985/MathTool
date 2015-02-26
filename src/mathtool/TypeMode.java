@@ -1,6 +1,6 @@
 package mathtool;
 
-public enum TypeModus {
+public enum TypeMode {
     
     TEXT, GRAPHIC;
     

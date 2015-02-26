@@ -60,9 +60,9 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functions. In these cases, MathTool will not return any (exact) solution.
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functions. In these cases, MathTool will not return any (exact) solution.<br><br>
 
-<span style="color: #3366ff;"><em>Example:</em></span> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
+<em>Example:</em> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
 <p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
 <p style="text-align: center;">x_2 = -((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6).</p>
 If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. This is also returned by the solve command with suitable interval (see below).<br><br>

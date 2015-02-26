@@ -60,9 +60,9 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> für t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Bestimmt die algebraischen Lösungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, falls möglich. Beachten Sie, dass sich nicht jede Gleichung algebraisch lösen lässt. Gleichungen der Form exp(x) - x = 3 besitzen beispielsweise keine Lösung, die sich mittels algebraischer Ausdrücke oder elementarer Funktionen in geschlossener Form hinschreiben lässt. Bei solchen Eingaben würde MathTool keine (exakte) Lösung liefern.
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Bestimmt die algebraischen Lösungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, falls möglich. Beachten Sie, dass sich nicht jede Gleichung algebraisch lösen lässt. Gleichungen der Form exp(x) - x = 3 besitzen beispielsweise keine Lösung, die sich mittels algebraischer Ausdrücke oder elementarer Funktionen in geschlossener Form hinschreiben lässt. Bei solchen Eingaben würde MathTool keine (exakte) Lösung liefern.<br><br>
 
-<span style="color: #3366ff;"><em>Beispiel:</em></span> Die Gleichung x^18 - 3*x^6 - 11 = 0 soll gelöst werden. Der Befehl solve(x^18 - 3*x^6 - 11 = 0) liefert die Lösungen
+<em>Beispiel:</em> Die Gleichung x^18 - 3*x^6 - 11 = 0 soll gelöst werden. Der Befehl solve(x^18 - 3*x^6 - 11 = 0) liefert die Lösungen
 <p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
 <p style="text-align: center;">x_2 = -((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6).</p>
 Approximiert lauten diese x<sub>1, 2</sub> ≈ ±1.1777403511345441. Letzteres wird durch den Befehl solve mit entsprechendem Suchbereich geliefert (siehe weiter unten).

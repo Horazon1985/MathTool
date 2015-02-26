@@ -14,6 +14,9 @@ import graphic.GraphicMethodsCurves2D;
 import graphic.GraphicMethods3D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
+import graphic.GraphicPresentationOfFormula;
+import graphic.GraphicArea;
+import graphic.TypeGraphicFormula;
 import ComputationalClasses.AnalysisMethods;
 import ComputationalClasses.NumericalMethods;
 import SolveEquationsMethods.SolveMethods;
@@ -243,23 +246,24 @@ public class MathCommandCompiler {
              * {"x"} result.left = 2 (als Expression)
              */
             if (Expression.isValidDerivateOfVariable(function_name_and_params) && !Expression.isPI(function_name_and_params)) {
+
+                Expression preciseExpression;
+                HashSet vars = new HashSet();
                 try {
-                    Expression.build(function_term, new HashSet());
+                    preciseExpression = Expression.build(function_term, vars);
                 } catch (ExpressionException e) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
                 }
-                Expression preciseExpression = Expression.build(function_term, new HashSet());
-                HashSet vars = new HashSet();
-                preciseExpression.getContainedVars(vars);
                 if (!vars.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE"));
                 }
                 command_params = new Object[2];
-                command_params[0] = Variable.create(function_name_and_params);
+                command_params[0] = function_name_and_params;
                 command_params[1] = preciseExpression;
                 result.setTypeCommand(TypeCommand.DEF);
                 result.setParams(command_params);
                 return result;
+
             }
 
             HashSet vars = new HashSet();
@@ -307,10 +311,10 @@ public class MathCommandCompiler {
              * Falls functions_vars leer ist -> Fehler ausgeben (es muss
              * mindestens eine Variable vorhanden sein).
              */
-            if (function_vars.length == 0){
+            if (function_vars.length == 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION"));
             }
-            
+
             /**
              * Nun wird geprüft, ob die einzelnen Parameter in der
              * Funktionsklammer gültige Variablen sind
@@ -393,7 +397,7 @@ public class MathCommandCompiler {
             command_params = new Object[2 + function_vars.length];
             command_params[0] = function_name;
             for (int i = 1; i <= function_vars.length; i++) {
-                command_params[i] = Variable.create(function_vars[i - 1]);
+                command_params[i] = function_vars[i - 1];
             }
             command_params[1 + function_vars.length] = expr;
 
@@ -1235,14 +1239,13 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
             }
 
+            HashSet vars = new HashSet();
+            Expression expr;
             try {
-                Expression.build(params[0], new HashSet());
+                expr = Expression.build(params[0], vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
             }
-
-            HashSet vars = new HashSet();
-            Expression expr = Expression.build(params[0], vars);
 
             /**
              * Ermittelt die Anzahl der einzugebenen Parameter.
@@ -1285,11 +1288,20 @@ public class MathCommandCompiler {
                 }
             }
 
+            /**
+             * Einzelne Punktkoordinaten werden in der HashMap
+             * vars_contained_in_params gespeichert.
+             */
             for (int i = 1; i < params.length; i++) {
                 vars_contained_in_params.put(params[i].substring(0, params[i].indexOf("=")),
                         Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet()));
             }
 
+            /**
+             * Es wird geprüft, ob allen Variablen, welche in der
+             * Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
+             * wurde.
+             */
             Iterator iter = vars.iterator();
             String var;
             for (int i = 0; i < vars.size(); i++) {
@@ -1323,7 +1335,9 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
             }
 
-            //Ermittelt die Ordnung der DGL
+            /**
+             * Ermittelt die Ordnung der DGL
+             */
             int ord;
             try {
                 ord = Integer.parseInt(params[2]);
@@ -1389,11 +1403,13 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
             }
 
-            //Prüft, ob die AWP-Daten korrekt sind
+            /**
+             * Prüft, ob die AWP-Daten korrekt sind
+             */
             HashSet vars_in_limits = new HashSet();
             for (int i = 3; i < ord + 4; i++) {
                 try {
-                    Expression limit = Expression.build(params[i], vars_in_limits).simplify();
+                    Expression.build(params[i], vars_in_limits).simplify();
                     if (!vars_in_limits.isEmpty()) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
                                 + String.valueOf(i + 1)
@@ -1444,7 +1460,7 @@ public class MathCommandCompiler {
 
             command_params = new Object[params.length];
             for (int i = 0; i < params.length; i++) {
-                command_params[i] = Variable.create(params[i]);
+                command_params[i] = params[i];
             }
 
             result.setTypeCommand(TypeCommand.UNDEF);
@@ -1472,13 +1488,16 @@ public class MathCommandCompiler {
         }
 
         return result;
-        
+
     }
 
-    //Führt den Befehl aus.
-    public static void executeCommand(String commandLine, JTextArea area, GraphicMethods2D graphicMethods2D,
-            GraphicMethods3D graphicMethods3D, GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
-            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
+    /**
+     * Hauptmethode zum Ausführen des Befehls.
+     */
+    public static void executeCommand(String commandLine, GraphicArea graphicArea,
+            JTextArea textArea, GraphicMethods2D graphicMethods2D, GraphicMethods3D graphicMethods3D,
+            GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
+            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output = new String[0];
@@ -1492,7 +1511,8 @@ public class MathCommandCompiler {
         for (int i = 0; i < n; i++) {
             part = commandLine.charAt(i);
             if (((int) part >= 65) && ((int) part <= 90)) {
-                part = (char) ((int) part + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
+                //Macht Großbuchstaben zu Kleinbuchstaben
+                part = (char) ((int) part + 32);
                 commandLine = commandLine.substring(0, i) + part + commandLine.substring(i + 1, n);
             }
         }
@@ -1501,8 +1521,15 @@ public class MathCommandCompiler {
         String command = command_and_params[0];
         String[] params = Expression.getArguments(command_and_params[1]);
 
+        /**
+         * Zunächst muss der entsprechende Befehl ermittelt und in ein Objekt
+         * der Klasse Command umgewandelt werdeb.
+         */
         Command c = getCommand(command, params);
 
+        /**
+         * Abhängig vom Typ von c wird der Befehl ausgeführt.
+         */
         if (c.getTypeCommand().equals(TypeCommand.APPROX)) {
             executeApprox(c, definedVars);
         } else if (c.getTypeCommand().equals(TypeCommand.CCNF)) {
@@ -1510,9 +1537,9 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.CDNF)) {
             executeCDNF(c);
         } else if (c.getTypeCommand().equals(TypeCommand.CLEAR)) {
-            executeClear(c, area);
+            executeClear(c, textArea);
         } else if ((c.getTypeCommand().equals(TypeCommand.DEF)) && c.getParams().length >= 1) {
-            executeDefine(c, definedVars, definedVarsSet, definedFunctions);
+            executeDefine(c, definedVars, definedFunctions);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFFUNCS)) {
             executeDefFuncs(definedFunctions);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
@@ -1540,7 +1567,7 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.PLOTPOLAR)) {
             executePlotPolar2D(c, graphicMethodsPolar2D);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVE)) {
-            executeSolve(c, area, graphicMethods2D);
+            executeSolve(c, textArea, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
             executeSolveDEQ(c, graphicMethods2D);
         } else if (c.getTypeCommand().equals(TypeCommand.TABLE)) {
@@ -1550,20 +1577,34 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
             executeTaylorDEQ(c);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEF)) {
-            executeUndefine(c, definedVars, definedVarsSet);
+            executeUndefine(c, definedVars);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
-            executeUndefineAll(definedVars, definedVarsSet);
+            executeUndefineAll(definedVars);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
 
         /**
-         * Zusätzliche Hinweise/Meldungen ausgeben.
+         * Zusätzliche Hinweise/Meldungen sowohl in die textliche als auch in
+         * die graphische Ausgabe einfügen.
          */
         if (output.length > 0) {
-            for (int i = 0; i < output.length; i++) {
-                area.append(output[i]);
+
+            for (String out : output) {
+                textArea.append(out);
             }
+
+            GraphicPresentationOfFormula f;
+            for (String out : output) {
+                f = new GraphicPresentationOfFormula();
+                graphicArea.add(f);
+                f.setText(out);
+                f.setTypeGraphicFormula(TypeGraphicFormula.TEXT);
+                f.initialize(MathToolForm.getFontSize());
+                f.drawFormula();
+                graphicArea.setPosition(f);
+            }
+
         }
 
     }
@@ -1608,18 +1649,17 @@ public class MathCommandCompiler {
         area.setText("");
     }
 
-    private static void executeDefine(Command c, HashMap<String, Expression> definedVars, HashSet definedVarsSet,
+    private static void executeDefine(Command c, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         /**
          * Falls ein Variablenwert definiert wird.
          */
         if (c.getParams().length == 2) {
-            String var = ((Variable) c.getParams()[0]).getName();
+            String var = (String) c.getParams()[0];
             Expression preciseExpression = ((Expression) c.getParams()[1]).simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             definedVars.put(var, preciseExpression);
-            definedVarsSet.add(var);
             output = new String[1];
             if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
                 output[0] = Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
@@ -1640,12 +1680,13 @@ public class MathCommandCompiler {
             /**
              * Falls eine Funktion definiert wird.
              */
-            String function_name = (String) (c.getParams()[0]);
-            String[] vars = new String[c.getParams().length - 2];
-            Expression[] exprs_for_vars = new Expression[c.getParams().length - 2];
-            for (int i = 0; i < c.getParams().length - 2; i++) {
-                vars[i] = ((Variable) c.getParams()[i + 1]).getName();
-                exprs_for_vars[i] = (Variable) c.getParams()[i + 1];
+            Object[] params = c.getParams();
+            String function_name = (String) params[0];
+            String[] vars = new String[params.length - 2];
+            Expression[] exprs_for_vars = new Expression[params.length - 2];
+            for (int i = 0; i < params.length - 2; i++) {
+                vars[i] = (String) params[i + 1];
+                exprs_for_vars[i] = Variable.create((String) params[i + 1]);
             }
             SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(function_name, (Expression) c.getParams()[c.getParams().length - 1]);
             SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(function_name, exprs_for_vars);
@@ -1656,21 +1697,23 @@ public class MathCommandCompiler {
              * Ausgabe an den Benutzer.
              */
             String function;
-            SelfDefinedFunction f;
-            Expression[] vars_for_output;
+            SelfDefinedFunction f = (SelfDefinedFunction) definedFunctions.get(function_name);
+            String[] f_arguments = f.getArguments();
+            Expression[] vars_for_output = new Expression[f.getArguments().length];
             Expression f_for_output;
 
-            f = (SelfDefinedFunction) definedFunctions.get(function_name);
             function = f.getName() + "(";
-            for (int i = 0; i < f.getArguments().length; i++) {
-                function = function + "X_" + (i + 1) + ",";
+            for (int i = 0; i < f_arguments.length; i++) {
+                /**
+                 * Die Argumente in f haben alle "_ABSTRACT" als Anhängsel.
+                 * Dieses wird nun beseitigt, um die Originalnamen
+                 * wiederzubekommen. Die Variablen mit den Originalnamen werden
+                 * im Array vars_for_output abgespechert.
+                 */
+                vars_for_output[i] = Variable.create(f_arguments[i].substring(0, f_arguments[i].indexOf("_ABSTRACT")));
+                function = function + ((Variable) vars_for_output[i]).getName() + ",";
             }
             function = function.substring(0, function.length() - 1) + ") = ";
-
-            vars_for_output = new Expression[f.getArguments().length];
-            for (int i = 0; i < f.getArguments().length; i++) {
-                vars_for_output[i] = Variable.create("X_" + (i + 1));
-            }
             f_for_output = f.replaceAllVariables(vars_for_output);
             function = function + f_for_output.writeFormula(true);
 
@@ -1708,8 +1751,9 @@ public class MathCommandCompiler {
             }
             function = function.substring(0, function.length() - 2);
         }
-        output = new String[1];
-        output[0] = Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + function + "\n \n";
+        output = new String[2];
+        output[0] = Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n";
+        output[1] = function + "\n \n";
 
     }
 
@@ -2626,41 +2670,34 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeUndefine(Command c, HashMap definedVars, HashSet definedVarsSet)
+    private static void executeUndefine(Command c, HashMap definedVars)
             throws ExpressionException, EvaluationException {
 
         /**
          * Falls ein Variablenwert freigegeben wird.
          */
-        String current_var;
+        Object[] vars = c.getParams();
         int vars_count = 0;
-        for (int i = 0; i < c.getParams().length; i++) {
-            current_var = ((Variable) c.getParams()[i]).getName();
-            if (definedVarsSet.contains(current_var)) {
+        for (Object var : vars) {
+            if (definedVars.containsKey((String) var)) {
                 vars_count++;
             }
         }
         output = new String[vars_count];
-        for (int i = 0; i < c.getParams().length; i++) {
-            current_var = ((Variable) c.getParams()[i]).getName();
-            if (definedVarsSet.contains(current_var)) {
-                definedVarsSet.remove(current_var);
-                definedVars.remove(current_var);
+        for (int i = 0; i < vars.length; i++) {
+            if (definedVars.containsKey((String) vars[i])) {
+                definedVars.remove((String) vars[i]);
                 output[i] = Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
-                        + current_var
+                        + (String) vars[i]
                         + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n";
             }
         }
 
     }
 
-    private static void executeUndefineAll(HashMap definedVars, HashSet definedVarsSet)
+    private static void executeUndefineAll(HashMap definedVars)
             throws ExpressionException, EvaluationException {
 
-        /**
-         * Entleert definedVarsSet und definedVars
-         */
-        definedVarsSet.clear();
         definedVars.clear();
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n";
