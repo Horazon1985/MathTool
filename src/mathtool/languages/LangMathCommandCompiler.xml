@@ -623,7 +623,7 @@
     <Ukrainian>Параметр команди 'table' має бути діючим логічним виразом. Повідомлення про помилку: </Ukrainian>
     <Russian>Параметр команды 'table' должен быть действительным логическим выражением. Сообщение об ошибке: </Russian>
   </object>
-  <object id = "MCC_NOT ENOUGH_PARAMETERS_IN_TANGENT">
+  <object id = "MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT">
     <German>Zu wenig Parameter im Befehl 'tangent'.</German>
     <English>Not enough parameters in command 'tangent'.</English>
     <Ukrainian>Недостатньо параметрів у команди 'tangent'.</Ukrainian>

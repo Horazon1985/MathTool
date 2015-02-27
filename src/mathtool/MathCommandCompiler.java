@@ -1600,7 +1600,7 @@ public class MathCommandCompiler {
                 graphicArea.add(f);
                 f.setText(out);
                 f.setTypeGraphicFormula(TypeGraphicFormula.TEXT);
-                f.initialize(MathToolForm.getFontSize());
+                f.initialize(GraphicArea.getFontSize());
                 f.drawFormula();
                 graphicArea.setPosition(f);
             }
