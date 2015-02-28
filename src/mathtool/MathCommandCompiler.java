@@ -1594,15 +1594,8 @@ public class MathCommandCompiler {
                 textArea.append(out);
             }
 
-            GraphicPresentationOfFormula f;
             for (String out : output) {
-                f = new GraphicPresentationOfFormula();
-                graphicArea.add(f);
-                f.setText(out);
-                f.setTypeGraphicFormula(TypeGraphicFormula.TEXT);
-                f.initialize(GraphicArea.getFontSize());
-                f.drawFormula();
-                graphicArea.setPosition(f);
+                graphicArea.addComponent(out);
             }
 
         }
@@ -2366,10 +2359,11 @@ public class MathCommandCompiler {
         }
 
         /**
-         * zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
-         * werden.
+         * Zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
+         * werden. Falls dieser nicht eindeutig ist, wird er kanonisch als "y"
+         * vergeben.
          */
-        String var_2 = "";
+        String var_2;
 
         if (vars_without_primes.isEmpty()) {
             if (var_1.equals("y")) {
@@ -2430,7 +2424,7 @@ public class MathCommandCompiler {
             output[0] = output[0] + y_0[i].writeFormula(true);
         }
 
-        output[0] = output[0] + ", " + x_0.writeFormula(true) + " <= " + var_1 + " <= " + x_1.writeFormula(true) + ": \n \n";
+        output[0] = output[0] + ", " + x_0.writeFormula(true) + " \u2264 " + var_1 + " \u2264 " + x_1.writeFormula(true) + ": \n \n";
 
         /**
          * Lösungen ausgeben.

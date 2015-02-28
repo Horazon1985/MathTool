@@ -960,17 +960,17 @@
     <Ukrainian>Точних розв'язків не знайдено.</Ukrainian>
     <Russian>Точные решения не найдены.</Russian>
   </object>
-  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT_1">
+  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT">
     <German>Die Lösung der Differentialgleichung ist nicht definiert an der Stelle </German>
     <English>The solution of the differential equation is not defined in </English>
     <Ukrainian>Розв'язок рівняння не визначено в точці </Ukrainian>
     <Russian>Решение уравнения не определено в точке </Russian>
   </object>
-  <object id = "MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT_2">
-    <German>Lösung der Differentialgleichung: </German>
-    <English>Solution of the differential equation: </English>
-    <Ukrainian>Розв'язок диференціального рівняння: </Ukrainian>
-    <Russian>Решение дифференциального уравнения: </Russian>
+  <object id = "MCC_SOLUTION_OF_DEQ">
+    <German>Lösung der Differentialgleichung </German>
+    <English>Solution of the differential equation </English>
+    <Ukrainian>Розв'язок диференціального рівняння </Ukrainian>
+    <Russian>Решение дифференциального уравнения </Russian>
   </object>
   <object id = "MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1">
     <German>Der logische Ausdruck </German>

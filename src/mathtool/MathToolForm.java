@@ -139,7 +139,7 @@ public class MathToolForm extends JFrame implements MouseListener {
          * Graphisches Ausgabefeld ausrichten
          */
         mathToolGraphicArea = new GraphicArea(10, 10, this.getWidth() - 40, this.getHeight() - 170);
-        mathToolGraphicArea.setFontSize(18);
+        mathToolGraphicArea.setFontSize(16);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
@@ -447,7 +447,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("tangent(x+y,x=1/2,y=2^3)");
+        inputField.setText("solvedeq(-y/2,t,2,0,10,1,0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
