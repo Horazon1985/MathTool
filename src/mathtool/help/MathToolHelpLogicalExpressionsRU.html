@@ -1,16 +1,16 @@
-﻿<font size="6"><strong>Logical Expressions:</strong></font><br><br>
+﻿<font size="6"><strong>Лигические выражения:</strong></font><br><br>
 
-MathTool can also understand and evaluate logical expressions. 
-The operators !, &, |, > and = correspond to the logical operators NEGATION, AND, OR, IMPLICATION and EQUIVALENCE.<br>
-<i>Important:</i> Disregarding the fact that the AND and OR operators, respectively, are often denoted by * and +, respectively, MathTool does not accept this. 
-This serves to prevent misunderstandings when compiling. Otherwise, MathTool would not know, if<br><br>
+MathTool может также понимать логические выражения а также вычислять их значения. 
+Операторы !, &, |, > и = соответствуют логическим операторам NEGATION, AND, OR, IMPLICATION и EQUIVALENCE.<br>
+<i>Важно:</i> Несмотря на то, что операторы AND и OR часто обозначают * и +, соответственно, MathTool не допускает этого для логических выражений. 
+Это предотвращает недоразумения при компиляции. Иначе MathTool не знал бы, является ли<br><br>
 
 a + 1<br><br>
 
-is an arithmetic or a logical expression. Valid logical expressions look like<br><br>
+арифметическим или логическим выражением. Действительное логическое выражение выглядит так:<br><br>
 
 a&!b, !(a&b|c)>1|d, ...<br><br>
 
-MathTool returns a logical expression immediately in a simplified form, if possible. However, this may lead to increased waiting times, if the expression is too complicated and the simplification takes far too long. 
-Variables can be denoted by a small letter or by a small letter with an index. In contrast to variables in arithmetic expressions, apostrophes are not allowed. 
-Note, that MathTool removes empty space as well as makes capital letters to small letters while compiling a logical expression. Hence, the variable A_3 will be the same variable as a_3.
+MathTool немедленно возвращает логическое выражение в упрощённой форме, если это возможно. Тем не менее, время ожидания может увеличиться, если выражение слишком сложное, и упрощение занимает больше времени.
+Переменные можно обозначать маленькими латинскими буквами или маленькими латинскими буквами с индексом. В отличие от арифметических выражений, апострофы запрещены.
+MathTool удаляет пробелы и преобразовывает большие буквы в маленькие во время компиляции логического выражения. Таким образом, A_3 и a_3 являются одной и той же переменной.

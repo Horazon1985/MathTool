@@ -1484,7 +1484,6 @@ public class MathCommandCompiler {
             result.setTypeCommand(TypeCommand.UNDEFALL);
             result.setParams(command_params);
             return result;
-
         }
 
         return result;
@@ -1531,27 +1530,27 @@ public class MathCommandCompiler {
          * Abhängig vom Typ von c wird der Befehl ausgeführt.
          */
         if (c.getTypeCommand().equals(TypeCommand.APPROX)) {
-            executeApprox(c, definedVars);
+            executeApprox(c, definedVars, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.CCNF)) {
-            executeCCNF(c);
+            executeCCNF(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.CDNF)) {
-            executeCDNF(c);
+            executeCDNF(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.CLEAR)) {
-            executeClear(c, textArea);
+            executeClear(c, textArea, graphicArea);
         } else if ((c.getTypeCommand().equals(TypeCommand.DEF)) && c.getParams().length >= 1) {
-            executeDefine(c, definedVars, definedFunctions);
+            executeDefine(c, definedVars, definedFunctions, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFFUNCS)) {
-            executeDefFuncs(definedFunctions);
+            executeDefFuncs(definedFunctions, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
-            executeDefVars(definedVars);
+            executeDefVars(definedVars, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.EULER)) {
-            executeEuler(c);
+            executeEuler(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.EXPAND)) {
-            executeExpand(c);
+            executeExpand(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.LATEX)) {
-            executeLatex(c);
+            executeLatex(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.PI)) {
-            executePi(c);
+            executePi(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.PLOT2D)) {
             if (params[0].contains("=")) {
                 executeImplicitPlot2D(c, graphicMethods2D);
@@ -1567,37 +1566,25 @@ public class MathCommandCompiler {
         } else if (c.getTypeCommand().equals(TypeCommand.PLOTPOLAR)) {
             executePlotPolar2D(c, graphicMethodsPolar2D);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVE)) {
-            executeSolve(c, textArea, graphicMethods2D);
+            executeSolve(c, graphicMethods2D, textArea, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
-            executeSolveDEQ(c, graphicMethods2D);
+            executeSolveDEQ(c, graphicMethods2D, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.TABLE)) {
-            executeTable(c);
+            executeTable(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.TANGENT)) {
-            executeTangent(c, graphicMethods2D);
+            executeTangent(c, graphicMethods2D, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
-            executeTaylorDEQ(c);
+            executeTaylorDEQ(c, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEF)) {
-            executeUndefine(c, definedVars);
+            executeUndefine(c, definedVars, graphicArea);
         } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
-            executeUndefineAll(definedVars);
+            executeUndefineAll(definedVars, graphicArea);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
 
-        /**
-         * Zusätzliche Hinweise/Meldungen sowohl in die textliche als auch in
-         * die graphische Ausgabe einfügen.
-         */
-        if (output.length > 0) {
-
-            for (String out : output) {
-                textArea.append(out);
-            }
-
-            for (String out : output) {
-                graphicArea.addComponent(out);
-            }
-
+        for (String out : output) {
+            textArea.append(out);
         }
 
     }
@@ -1606,7 +1593,7 @@ public class MathCommandCompiler {
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
-    private static void executeApprox(Command c, HashMap<String, Expression> definedVars)
+    private static void executeApprox(Command c, HashMap<String, Expression> definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -1625,8 +1612,15 @@ public class MathCommandCompiler {
         }
 
         expr = expr.turnToIrrationals().simplify();
+
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
         output[0] = expr.writeFormula(true) + " \n \n";
+        /**
+         * Graphische Ausgabe
+         */
 
         /**
          * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
@@ -1637,13 +1631,14 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeClear(Command c, JTextArea area)
+    private static void executeClear(Command c, JTextArea area, GraphicArea graphicArea)
             throws ExpressionException {
         area.setText("");
+        graphicArea.clearArea();
     }
 
     private static void executeDefine(Command c, HashMap<String, Expression> definedVars,
-            HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
+            HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
 
         /**
          * Falls ein Variablenwert definiert wird.
@@ -1717,7 +1712,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefFuncs(HashMap<String, Expression> definedFunctions)
+    private static void executeDefFuncs(HashMap<String, Expression> definedFunctions, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         String function = "";
@@ -1750,7 +1745,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeDefVars(HashMap<String, Expression> definedVars)
+    private static void executeDefVars(HashMap<String, Expression> definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         String result = "";
@@ -1765,7 +1760,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeCCNF(Command c) throws ExpressionException, EvaluationException {
+    private static void executeCCNF(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
 
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
         HashSet vars = new HashSet();
@@ -1781,7 +1776,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeCDNF(Command c) throws ExpressionException, EvaluationException {
+    private static void executeCDNF(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
 
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
         HashSet vars = new HashSet();
@@ -1797,7 +1792,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeEuler(Command c) throws ExpressionException {
+    private static void executeEuler(Command c, GraphicArea graphicArea) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
@@ -1806,7 +1801,7 @@ public class MathCommandCompiler {
                 + e.toString() + "\n \n";
     }
 
-    private static void executeExpand(Command c) throws ExpressionException, EvaluationException {
+    private static void executeExpand(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
         /**
          * Es wird definiert, welche Arten von Vereinfachungen durchgeführt
          * werden müssen.
@@ -1831,7 +1826,7 @@ public class MathCommandCompiler {
         output[0] = expr.writeFormula(true) + "\n \n";
     }
 
-    private static void executeLatex(Command c) throws ExpressionException {
+    private static void executeLatex(Command c, GraphicArea graphicArea) throws ExpressionException {
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < c.getParams().length - 1; i++) {
@@ -1848,7 +1843,7 @@ public class MathCommandCompiler {
         }
     }
 
-    private static void executePi(Command c) throws ExpressionException {
+    private static void executePi(Command c, GraphicArea graphicArea) throws ExpressionException {
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
@@ -2135,7 +2130,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolve(Command c, JTextArea area, GraphicMethods2D graphicMethods2D)
+    private static void executeSolve(Command c, GraphicMethods2D graphicMethods2D, JTextArea area, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         HashSet vars = new HashSet();
@@ -2320,7 +2315,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDEQ(Command c, GraphicMethods2D graphicMethods2D)
+    private static void executeSolveDEQ(Command c, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
@@ -2445,7 +2440,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTable(Command c) throws EvaluationException {
+    private static void executeTable(Command c, GraphicArea graphicArea) throws EvaluationException {
 
         LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
         HashSet vars = new HashSet();
@@ -2542,7 +2537,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command c, GraphicMethods2D graphicMethods2D)
+    private static void executeTangent(Command c, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         Expression expr = (Expression) c.getParams()[0];
@@ -2592,7 +2587,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTaylorDEQ(Command c) throws ExpressionException, EvaluationException {
+    private static void executeTaylorDEQ(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
 
         int ord = (int) c.getParams()[2];
         HashSet vars = new HashSet();
@@ -2659,12 +2654,19 @@ public class MathCommandCompiler {
         }
 
         Expression result = AnalysisMethods.getTaylorPolynomialFromDEq(expr, var_1, var_2, ord, x_0, y_0, k);
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
         output[0] = var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(var_2 + "(" + var_1 + ") = ", result);
 
     }
 
-    private static void executeUndefine(Command c, HashMap definedVars)
+    private static void executeUndefine(Command c, HashMap definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         /**
@@ -2681,20 +2683,36 @@ public class MathCommandCompiler {
         for (int i = 0; i < vars.length; i++) {
             if (definedVars.containsKey((String) vars[i])) {
                 definedVars.remove((String) vars[i]);
+                /**
+                 * Textliche Ausgabe
+                 */
                 output[i] = Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
                         + (String) vars[i]
                         + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n";
+                /**
+                 * Graphische Ausgabe
+                 */
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
+                        + (String) vars[i]
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
             }
         }
 
     }
 
-    private static void executeUndefineAll(HashMap definedVars)
+    private static void executeUndefineAll(HashMap definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
         definedVars.clear();
         output = new String[1];
+        /**
+         * Textliche Ausgabe
+         */
         output[0] = Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN"));
 
     }
 

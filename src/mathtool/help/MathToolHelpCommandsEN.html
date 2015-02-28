@@ -8,13 +8,11 @@ MathTool knows the following console commands:<br><br>
 
 <p style="text-align: center;">1.7320508075688772</p><br>
 
-<strong>cdnf(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Returns the canonical disjunctive normal form of the logical expression F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
-
 <strong>clear():</strong> Clears the entire console. However, variables and functions defined by user stay in memory.<br><br>
 
 <strong>def(x = x<sub>0</sub>):</strong> Assigns to variable x the constant value x<sub>0</sub>.<br><br>
 
-<strong>def(F(x<sub>1</sub>, ..., x<sub>n</sub>) = G(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Defines a function F with variables x<sub>1</sub>, ..., x<sub>n</sub> by the expression G(x<sub>1</sub>, ..., x<sub>n</sub>). Of course, predefined functions like sin(), tan(), exp(), etc. cannot be overwritten.<br><br>
+<strong>def(F(x<sub>1</sub>, ..., x<sub>n</sub>) = G(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Defines a function F with variables x<sub>1</sub>, ..., x<sub>n</sub> by the expression G(x<sub>1</sub>, ..., x<sub>n</sub>). Of course, predefined functions like sin(), tan(), exp(), etc. cannot be overriden.<br><br>
 
 <em>Example:</em> After the input def(f(x, y) = x^2 + sin(x*y)), MathTool knows the function f. The input f(u^3, u*v^4) then returns<br>
 
@@ -22,7 +20,7 @@ MathTool knows the following console commands:<br><br>
 
 <strong>defvars():</strong> Returns the list of all variables with predefined values using command def().<br><br>
 
-<strong>euler(n):</strong> Returns the first n digits of Eulers constant e. The result is <em>not</em> rounded.<br><br>
+<strong>euler(n):</strong> Returns the first n digits of Eulers constant e. The result is <em>not</em> roundet.<br><br>
 
 <em>Example:</em> euler(20) returns<br>
 
@@ -38,7 +36,7 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>latex(F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generates the Latex code for the mathematical expression F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
-<strong>pi(n):</strong> Returns the first n digits of the constant &#960;. The result is <em>not</em> rounded.<br><br>
+<strong>pi(n):</strong> Returns the first n digits of the constant pi. The result is <em>not</em> roundet.<br><br>
 
 <em>Example:</em> pi(20) returns<br>
 
@@ -51,18 +49,18 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 <strong>plot2d(F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Plots the solution of the equation F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y) in two variables for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Here it is not possible to zoom in or to zoom out as well as to move the coordinate system.<br>
 <em>Important:</em> The limits x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> have to be chosen in a way such that x, y is the <em>alphabetical</em> order of the variables.<br><br>
 
-<strong>plot3d(F(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Plots the graph of the function F(x, y) for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>.<br>
+<strong>plot3d(F(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet den Graphen der Funktion F(x, y) im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>.<br>
 <em> Important:</em> The limits x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> have to be chosen in a way such that x, y is the <em>alphabetical</em> order of the variables. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
-<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the plane curve which is given by the component functions x = F<sub>1</sub>(t) and y = F<sub>2</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. The zoom factor can attain all values between 0.1 and 10. Sometimes it may happen (if choosing "bad" curves) that only a part of the curve is drawn (that is, for t<sub>1</sub> &lt;= t &lt;= t' for some t' &lt;= t<sub>2</sub>).<br><br>
+<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the plane curve which is given by the component functions x = F<sub>1</sub>(t) and y = F<sub>2</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. The zoom factor can attain all values between 0.1 and 10. Sometimes it may happen (if choosing "bad" curves) that only a part of the is drawn (that is, for t<sub>1</sub> &lt;= t &lt;= t' for some t' &lt;= t<sub>2</sub>).<br><br>
 
-<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the curve which is given by the component functions x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) and z = F<sub>3</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. The zoom factor can attain all values between 0.1 and 10. Sometimes it may happen (if choosing "bad" curves), just as in the case of plane curves, that only a part of the curve is drawn.<br><br>
+<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the curve which is given by the component functions x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) and z = F<sub>3</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. The zoom factor can attain all values between 0.1 and 10. Sometimes it may happen (if choosing "bad" curves), just as in the case of plane curves, that only a part of the is drawn.<br><br>
 
-<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graph of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functions. In these cases, MathTool will not return any (exact) solution.<br><br>
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functionsl. In these cases, MathTool will not return any (exact) solution.
 
-<em>Example:</em> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
+<span style="color: #3366ff;"><em>Example:</em></span> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
 <p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
 <p style="text-align: center;">x_2 = -((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6).</p>
 If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. This is also returned by the solve command with suitable interval (see below).<br><br>
@@ -71,9 +69,9 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Returns the numerical solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in the interval x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Returns the numerical solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in the interval x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Here, the interval [x<sub>1</sub>, x<sub>2</sub>] is subdivided in n equal subintervals and in every subinterval at most one solution can be found. Higher n may potentially yield more solutions, but it increases the computation time. This function can be useful if the user has specific knowledge of the solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x).<br><br>
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Returns the numerical solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in the interval x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Here, the interval [x<sub>1</sub>, x<sub>2</sub>] is subdivided in n equal subintervals and in every subinterval at most one solution can be found. Higher n may potentially yield more solutions, but it increases the computation time. This function can be useful if the user has specific knowlegde of the solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x).<br><br>
 
-<strong>solvedeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Returns the numerical solution of the differential equation y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>n-1</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub> in the interval x_0 &lt;= x &lt;= x<sub>1</sub>. For the numerical computation, the interval [x<sub>0</sub>, x<sub>1</sub>] is subdivided in 1000 subintervals and MathTool returns all 1001 function values in the corresponding points.<br><br>
+<strong>solvedeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Returns the numerical solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> in the interval x_0 &lt;= x &lt;= x<sub>1</sub>. For the numerical computation, the interval [x<sub>0</sub>, x<sub>1</sub>] is subdivided in 1000 subintervals and MathTool returns all 1001 function values in the corresponding points.<br><br>
 
 <em>Example:</em> solvedeq(-y,t,2,0,10,1,0) returns the numerical solutions of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0 for 0 &lt;= t &lt;= 10. Here, MathTool returns 1001 values of y(t), hence the increment is 0.01.<br><br>
 
@@ -84,7 +82,7 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 
 In addition, MathTool plots both graphs (those of x^3+x/2+3 and of 12+25*(x-2)/2).<br><br>
 
-<strong>taylordeq(F(x, y, y', y'', ..., y<sup>n-1</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>n</sup> = F(x, y, y', y'', ..., y<sup>k</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>n-1</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+<strong>taylordeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
 <em>Example:</em> taylordeq(-y,t,2,0,1,0,10) returns the Taylor polynomial of degree 10 of the solution of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0. The exact solution is given by y(t) = cos(t), hence the power series is<br><br>
 
