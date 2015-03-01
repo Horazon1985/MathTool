@@ -1621,6 +1621,7 @@ public class MathCommandCompiler {
         /**
          * Graphische Ausgabe
          */
+        graphicArea.addComponent(expr);
 
         /**
          * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
@@ -1771,8 +1772,16 @@ public class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
         }
 
+        LogicalExpression log_expr_in_ccnf = log_expr.toCCNF();
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
-        output[0] = log_expr.toCCNF().writeFormula() + " \n \n";
+        output[0] = log_expr_in_ccnf.writeFormula() + " \n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(log_expr_in_ccnf);
 
     }
 
@@ -1787,18 +1796,36 @@ public class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
         }
 
+        LogicalExpression log_expr_in_cdnf = log_expr.toCDNF();
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
-        output[0] = log_expr.toCDNF().writeFormula() + " \n \n";
+        output[0] = log_expr_in_cdnf.writeFormula() + " \n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(log_expr_in_cdnf);
 
     }
 
     private static void executeEuler(Command c, GraphicArea graphicArea) throws ExpressionException {
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
         output[0] = Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
                 + (int) c.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString() + "\n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
+                + (int) c.getParams()[0]
+                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
+                + e.toString());
     }
 
     private static void executeExpand(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
@@ -1822,25 +1849,41 @@ public class MathCommandCompiler {
 
         Expression expr = (Expression) c.getParams()[0];
         expr = expr.simplify(simplify);
+        /**
+         * Textliche Ausgabe
+         */
         output = new String[1];
         output[0] = expr.writeFormula(true) + "\n \n";
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(expr);
     }
 
     private static void executeLatex(Command c, GraphicArea graphicArea) throws ExpressionException {
         output = new String[1];
-        output[0] = Translator.translateExceptionMessage("MCC_LATEX_CODE");
+        String latex_code = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < c.getParams().length - 1; i++) {
             if (c.getParams()[i] == null) {
-                output[0] = output[0] + " = ";
+                latex_code = latex_code + " = ";
             } else {
-                output[0] = output[0] + ((Expression) c.getParams()[i]).expressionToLatex(true) + " = ";
+                latex_code = latex_code + ((Expression) c.getParams()[i]).expressionToLatex(true) + " = ";
             }
         }
         if (c.getParams()[c.getParams().length - 1] == null) {
-            output[0] = output[0] + "\n \n";
+            latex_code = latex_code + "\n \n";
         } else {
-            output[0] = output[0] + ((Expression) c.getParams()[c.getParams().length - 1]).expressionToLatex(true) + "\n \n";
+            latex_code = latex_code + ((Expression) c.getParams()[c.getParams().length - 1]).expressionToLatex(true) + "\n \n";
         }
+        
+        /**
+         * Texttliche Ausgabe
+         */
+        output[0] = latex_code;
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(latex_code);
     }
 
     private static void executePi(Command c, GraphicArea graphicArea) throws ExpressionException {

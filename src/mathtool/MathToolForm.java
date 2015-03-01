@@ -341,6 +341,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         scrollPaneText.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
+        scrollPaneGraphic.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
         mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
         mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
         inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
@@ -388,6 +389,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             typeGraphic = TypeGraphic.GRAPH2D;
         } else {
             scrollPaneText.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
+            scrollPaneGraphic.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
             mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
             mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
             inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
@@ -707,7 +709,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                     for (String c : MathCommandCompiler.commands) {
                         valid_command = valid_command || command_name[0].equals(c);
-                        if (valid_command){
+                        if (valid_command) {
                             break;
                         }
                     }
@@ -718,12 +720,10 @@ public class MathToolForm extends JFrame implements MouseListener {
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
                         mathToolTextArea.append(command + "\n \n");
-                        
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(command_name[0], params));
-                        
                         /**
                          * Befehl verarbeiten.
                          */
@@ -749,6 +749,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                      */
                     if (valid_command) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
                     }
                 }
@@ -785,15 +786,27 @@ public class MathToolForm extends JFrame implements MouseListener {
                      * beim Auswerten einen Fehler.
                      */
                     try {
+
                         Expression expr_simplified = expr.evaluate(new HashSet(definedVars.keySet()));
                         expr_simplified = expr_simplified.simplify();
+                        /**
+                         * Hinzufügen zum textlichen Ausgabefeld.
+                         */
                         mathToolTextArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
+                        /**
+                         * Hinzufügen zum graphischen Ausgabefeld.
+                         */
+                        mathToolGraphicArea.addComponent(expr, " = ", expr_simplified);
                         inputField.setText("");
                         return null;
+
                     } catch (EvaluationException e) {
                         if (input_is_arithmetic_expression) {
                             mathToolTextArea.append(expr.writeFormula(true) + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                            mathToolGraphicArea.addComponent(expr);
+                            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                            inputField.setText("");
                             return null;
                         }
                     }
@@ -806,6 +819,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                          * arithmetischen Ausdrücken geworfen wurde.
                          */
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
                     }
                 }
@@ -815,14 +829,22 @@ public class MathToolForm extends JFrame implements MouseListener {
                  * logischen Ausdruck handelt. Ja -> vereinfachen und ausgeben.
                  */
                 try {
-                    
+
                     LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
                     LogicalExpression log_expr_simplified = log_expr.simplify();
+                    /**
+                     * Hinzufügen zum textlichen Ausgabefeld.
+                     */
                     mathToolTextArea.append(log_expr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + log_expr_simplified.writeFormula() + " \n \n");
+                    /**
+                     * Hinzufügen zum graphischen Ausgabefeld.
+                     */
+                    mathToolGraphicArea.addComponent(log_expr.writeFormula(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), log_expr_simplified);
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
                     mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                    mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                 }
 
                 return null;
