@@ -1737,8 +1737,14 @@ public class MathCommandCompiler {
             function = function.substring(0, function.length() - 2);
         }
 
+        /**
+         * Textliche Ausgabe
+         */
         output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
         output.add(function + "\n \n");
+        /**
+         * Grafische Ausgabe
+         */
 
     }
 
