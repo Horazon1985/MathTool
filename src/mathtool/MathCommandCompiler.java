@@ -1824,6 +1824,7 @@ public class MathCommandCompiler {
                 + (int) c.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString());
+
     }
 
     private static void executeExpand(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
