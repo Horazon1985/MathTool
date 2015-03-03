@@ -1611,6 +1611,12 @@ public class MathCommandCompiler {
         }
 
         expr = expr.turnToIrrationals().simplify();
+        /**
+         * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
+         * werden nur dann approximativ ausgegeben, wenn sie nicht präzise
+         * (precise = false) sind.
+         */
+        Variable.setAllPrecise(true);
 
         /**
          * Textliche Ausgabe
@@ -1620,13 +1626,6 @@ public class MathCommandCompiler {
          * Graphische Ausgabe
          */
         graphicArea.addComponent(expr);
-
-        /**
-         * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
-         * werden nur dann approximativ ausgegeben, wenn sie nicht präzise
-         * (precise = false) sind.
-         */
-        Variable.setAllPrecise(true);
 
     }
 
@@ -1648,19 +1647,40 @@ public class MathCommandCompiler {
             Variable.setPreciseExpression(var, preciseExpression);
             definedVars.put(var, preciseExpression);
             if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
+                /**
+                 * Textliche Ausgabe
+                 */
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
                         + preciseExpression.writeFormula(true)
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
+                        preciseExpression, Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             } else {
+                /**
+                 * Textliche Ausgabe
+                 */
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
                         + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true)
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
+                        (Expression) c.getParams()[1], " = ", preciseExpression,
+                        Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             }
         } else {
             /**
@@ -1699,11 +1719,19 @@ public class MathCommandCompiler {
                 vars_for_output[i] = Variable.create(f_arguments[i].substring(0, f_arguments[i].indexOf("_ABSTRACT")));
                 function = function + ((Variable) vars_for_output[i]).getName() + ",";
             }
-            function = function.substring(0, function.length() - 1) + ") = ";
+            function = function.substring(0, function.length() - 1) + ")";
             f_for_output = f.replaceAllVariables(vars_for_output);
-            function = function + f_for_output.writeFormula(true);
 
-            output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + "\n \n");
+            /**
+             * Textliche Ausgabe
+             */
+            output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + " = "
+                    + f_for_output.writeFormula(true) + "\n \n");
+            /**
+             * Grafische Ausgabe
+             */
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED"),
+                    function, " = ", f_for_output);
 
         }
 
@@ -1712,53 +1740,70 @@ public class MathCommandCompiler {
     private static void executeDefFuncs(HashMap<String, Expression> definedFunctions, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
-        String function = "";
+        String function;
         SelfDefinedFunction f;
         Expression[] vars_for_output;
         Expression f_for_output;
+
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
+
+        /**
+         * Alle selbstdefinierten Funktionen nacheinander ausgeben.
+         */
         if (!definedFunctions.isEmpty()) {
             for (String function_name : definedFunctions.keySet()) {
 
+                function = "";
                 f = (SelfDefinedFunction) definedFunctions.get(function_name);
                 function = function + f.getName() + "(";
                 for (int i = 0; i < f.getArguments().length; i++) {
                     function = function + "X_" + (i + 1) + ",";
                 }
-                function = function.substring(0, function.length() - 1) + ") = ";
+                function = function.substring(0, function.length() - 1) + ")";
 
                 vars_for_output = new Expression[f.getArguments().length];
                 for (int i = 0; i < f.getArguments().length; i++) {
                     vars_for_output[i] = Variable.create("X_" + (i + 1));
                 }
                 f_for_output = f.replaceAllVariables(vars_for_output);
-                function = function + f_for_output.writeFormula(true) + ", ";
+
+                /**
+                 * Textliche Ausgabe
+                 */
+                output.add(function + " = " + f_for_output.writeFormula(true) + "\n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(function, " = ", f_for_output);
 
             }
-            function = function.substring(0, function.length() - 2);
         }
-
-        /**
-         * Textliche Ausgabe
-         */
-        output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
-        output.add(function + "\n \n");
-        /**
-         * Grafische Ausgabe
-         */
 
     }
 
     private static void executeDefVars(HashMap<String, Expression> definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
-        String result = "";
         if (!definedVars.isEmpty()) {
             for (String var : definedVars.keySet()) {
-                result += var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + ", ";
+                /**
+                 * Textliche Ausgabe
+                 */
+                output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES")
+                        + var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + "\n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(var, " = ", (Expression) definedVars.get(var));
             }
-            result = result.substring(0, result.length() - 2);
         }
-        output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES") + result + "\n \n");
 
     }
 
@@ -1809,6 +1854,7 @@ public class MathCommandCompiler {
     }
 
     private static void executeEuler(Command c, GraphicArea graphicArea) throws ExpressionException {
+
         BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
         /**
          * Textliche Ausgabe
@@ -1859,6 +1905,7 @@ public class MathCommandCompiler {
     }
 
     private static void executeLatex(Command c, GraphicArea graphicArea) throws ExpressionException {
+
         String latex_code = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < c.getParams().length - 1; i++) {
             if (c.getParams()[i] == null) {
@@ -1881,9 +1928,11 @@ public class MathCommandCompiler {
          * Graphische Ausgabe
          */
         graphicArea.addComponent(latex_code);
+
     }
 
     private static void executePi(Command c, GraphicArea graphicArea) throws ExpressionException {
+
         BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
         /**
          * Textliche Ausgabe
@@ -1899,6 +1948,7 @@ public class MathCommandCompiler {
                 + (int) c.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
                 + pi.toString());
+
     }
 
     private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
@@ -2509,11 +2559,16 @@ public class MathCommandCompiler {
             for (int j = 0; j < i; j++) {
                 formulation_of_AWP = formulation_of_AWP + "'";
             }
+
             formulation_of_AWP = formulation_of_AWP + "(" + x_0.writeFormula(true) + ") = ";
             formulation_of_AWP = formulation_of_AWP + y_0[i].writeFormula(true);
         }
 
         formulation_of_AWP = formulation_of_AWP + ", " + x_0.writeFormula(true) + " \u2264 " + var_1 + " \u2264 " + x_1.writeFormula(true) + ": \n \n";
+
+        /**
+         * Textliche Ausgabe
+         */
         output.add(formulation_of_AWP);
 
         /**
@@ -2559,22 +2614,46 @@ public class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2"));
         }
 
-        String table_announcement = Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n";
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n");
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), log_expr);
 
         /**
          * Falls es sich um einen konstanten Ausdruck handelt.
          */
         if (n == 0) {
-            output.add(table_announcement);
             boolean value = log_expr.evaluate();
             if (value) {
+                /**
+                 * Textliche Ausgabe
+                 */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + log_expr.writeFormula()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                        + log_expr.writeFormula()
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
+                /**
+                 * Textliche Ausgabe
+                 */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + log_expr.writeFormula()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
+                /**
+                 * Grafische Ausgabe
+                 */
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                        + log_expr.writeFormula()
+                        + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
             return;
         }
@@ -2596,13 +2675,30 @@ public class MathCommandCompiler {
         }
 
         int table_length = BigInteger.valueOf(2).pow(n).intValue();
-        output.add(table_announcement);
+
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n");
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), log_expr);
+
         String vars_ordered = Translator.translateExceptionMessage("MCC_ORDER_OF_VARIABLES_IN_TABLE");
         for (int i = 0; i < vars_enumerated.size(); i++) {
             vars_ordered = vars_ordered + vars_enumerated.get(i) + ", ";
         }
         vars_ordered = vars_ordered.substring(0, vars_ordered.length() - 2) + " \n \n";
+
+        /**
+         * Textliche Ausgabe
+         */
         output.add(vars_ordered);
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(vars_ordered);
 
         /**
          * Erstellung eines Binärcounters zum Durchlaufen aller möglichen
@@ -2631,7 +2727,16 @@ public class MathCommandCompiler {
             } else {
                 binary_counter = binary_counter + "0 \n";
             }
+
+            /**
+             * Textliche Ausgabe
+             */
             output.add(binary_counter);
+            /**
+             * Grafische Ausgabe
+             */
+            graphicArea.addComponent(binary_counter);
+
             vars_values = LogicalExpression.binaryCounter(vars_values);
 
             /**
@@ -2654,15 +2759,37 @@ public class MathCommandCompiler {
         String tangent_announcement = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
                 + expr.writeFormula(true)
                 + Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
+        ArrayList tangent_announcement_for_graphicArea = new ArrayList();
+        tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
+        tangent_announcement_for_graphicArea.add(expr);
+        tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
             tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
+            tangent_announcement_for_graphicArea.add(var + " = ");
+            tangent_announcement_for_graphicArea.add(vars.get(var));
+            tangent_announcement_for_graphicArea.add(", ");
         }
+        /**
+         * In der textlichen und in der grafischen Ausgabe das letzte
+         * (überflüssige) Komma entfernen.
+         */
         tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
+        tangent_announcement_for_graphicArea.remove(tangent_announcement_for_graphicArea.size() - 1);
+        tangent_announcement_for_graphicArea.add(":");
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
+
+        /**
+         * Textliche Ausgabe
+         */
         output.add(tangent_announcement);
         output.add("Y = " + tangent.writeFormula(true) + "\n \n");
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(tangent_announcement_for_graphicArea);
+        graphicArea.addComponent("Y = ", tangent);
 
         if (vars.size() == 1) {
 
