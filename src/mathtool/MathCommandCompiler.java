@@ -2906,16 +2906,7 @@ public class MathCommandCompiler {
     private static void executeUndefine(Command c, HashMap definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
-        /**
-         * Falls ein Variablenwert freigegeben wird.
-         */
         Object[] vars = c.getParams();
-        int vars_count = 0;
-        for (Object var : vars) {
-            if (definedVars.containsKey((String) var)) {
-                vars_count++;
-            }
-        }
         for (int i = 0; i < vars.length; i++) {
             if (definedVars.containsKey((String) vars[i])) {
                 definedVars.remove((String) vars[i]);
