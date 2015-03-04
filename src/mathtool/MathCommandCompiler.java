@@ -2550,33 +2550,65 @@ public class MathCommandCompiler {
          * Formulierung und Ausgabe des AWP.
          */
         String formulation_of_AWP = Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ") + var_2;
+        ArrayList formulation_of_AWP_for_graphicArea = new ArrayList();
+
         for (int i = 0; i < ord; i++) {
             formulation_of_AWP = formulation_of_AWP + "'";
         }
 
+        formulation_of_AWP_for_graphicArea.add(formulation_of_AWP + "(" + var_1 + ") = ");
+        formulation_of_AWP_for_graphicArea.add(expr);
         formulation_of_AWP = formulation_of_AWP + "(" + var_1 + ") = " + expr.writeFormula(true);
+
+        String var_2_with_primes;
         for (int i = 0; i < ord; i++) {
             formulation_of_AWP = formulation_of_AWP + ", " + var_2;
+            formulation_of_AWP_for_graphicArea.add(", ");
+            var_2_with_primes = var_2;
             for (int j = 0; j < i; j++) {
                 formulation_of_AWP = formulation_of_AWP + "'";
+                var_2_with_primes = var_2_with_primes + "'";
             }
 
             formulation_of_AWP = formulation_of_AWP + "(" + x_0.writeFormula(true) + ") = ";
             formulation_of_AWP = formulation_of_AWP + y_0[i].writeFormula(true);
+            formulation_of_AWP_for_graphicArea.add(var_2_with_primes);
+            formulation_of_AWP_for_graphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+            formulation_of_AWP_for_graphicArea.add(x_0);
+            formulation_of_AWP_for_graphicArea.add(" = ");
+            formulation_of_AWP_for_graphicArea.add(y_0[i]);
         }
 
         formulation_of_AWP = formulation_of_AWP + ", " + x_0.writeFormula(true) + " \u2264 " + var_1 + " \u2264 " + x_1.writeFormula(true) + ": \n \n";
+        formulation_of_AWP_for_graphicArea.add(", ");
+        formulation_of_AWP_for_graphicArea.add(x_0);
+        formulation_of_AWP_for_graphicArea.add(" \u2264 ");
+        formulation_of_AWP_for_graphicArea.add(var_1);
+        formulation_of_AWP_for_graphicArea.add(" \u2264 ");
+        formulation_of_AWP_for_graphicArea.add(x_1);
+        formulation_of_AWP_for_graphicArea.add(":");
 
         /**
          * Textliche Ausgabe
          */
         output.add(formulation_of_AWP);
+        /**
+         * Grafische Ausgabe
+         */
+        graphicArea.addComponent(formulation_of_AWP_for_graphicArea);
 
         /**
          * Lösungen ausgeben.
          */
         for (double[] solution : solution_of_deq) {
+            /**
+             * Textliche Ausgabe
+             */
             output.add(var_1 + " = " + solution[0] + "; " + var_2 + " = " + solution[1] + "\n \n");
+            /**
+             * Grafische Ausgabe
+             */
+            graphicArea.addComponent(var_1 + " = " + solution[0] + "; " + var_2 + " = " + solution[1]);
         }
         if (solution_of_deq.length < 1001) {
             /**
@@ -2586,6 +2618,9 @@ public class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
                     + (x_0.evaluate() + (solution_of_deq.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ". \n \n");
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
+                    + (x_0.evaluate() + (solution_of_deq.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+                    + ".");
         }
 
         /**
