@@ -15,6 +15,7 @@ import graphic.GraphicMethods3D;
 import graphic.GraphicMethodsCurves3D;
 import graphic.GraphicMethodsPolar2D;
 import graphic.GraphicArea;
+import graphic.TypeBracket;
 import ComputationalClasses.AnalysisMethods;
 import ComputationalClasses.NumericalMethods;
 import SolveEquationsMethods.SolveMethods;
