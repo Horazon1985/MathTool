@@ -15,7 +15,6 @@ import graphic.GraphicMethodsPolar2D;
 import graphic.GraphicArea;
 import graphic.GraphicPresentationOfFormula;
 import command.Command;
-import graphic.TypeGraphicFormula;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -250,7 +249,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void showLoggedCommand(int i) {
         inputField.setText(listOfCommands.get(i));
     }
-
+    
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
@@ -312,6 +311,27 @@ public class MathToolForm extends JFrame implements MouseListener {
         /**
          * Restliche Komponenten aktualisieren.
          */
+        //Operatorbox aktualisieren.
+        ArrayList<String> new_entries = new ArrayList<>();
+        new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
+        for (int i = 1; i < operatorChoice.getModel().getSize(); i++){
+            new_entries.add((String) operatorChoice.getItemAt(i));
+        }
+        operatorChoice.removeAllItems();
+        for (String op : new_entries){
+            operatorChoice.addItem(op);
+        }
+        //Befehlbox aktualisieren.
+        new_entries.clear();
+        new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
+        for (int i = 1; i < commandChoice.getModel().getSize(); i++){
+            new_entries.add((String) commandChoice.getItemAt(i));
+        }
+        commandChoice.removeAllItems();
+        for (String c : new_entries){
+            commandChoice.addItem(c);
+        }
+        //Buttons aktualisieren
         approxButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_APPROX"));
         latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
         clearButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CLEAR"));
