@@ -1404,13 +1404,47 @@ public class MathCommandCompiler {
             }
 
             /**
-             * Prüft, ob die AWP-Daten korrekt sind
+             * Nun wird vars_without_primes, falls nötig, soweit ergänzt, dass
+             * es alle in der DGL auftretenden Variablen enthält (max. 2). Dies
+             * wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
+             * SWP-Daten korrekt sind.
+             */
+            if (vars_without_primes.isEmpty()) {
+                vars_without_primes.add(params[1]);
+                if (params[1].equals("y")) {
+                    vars_without_primes.add("z");
+                } else {
+                    vars_without_primes.add("y");
+                }
+            } else if (vars_without_primes.size() == 1) {
+
+                if (vars_without_primes.contains(params[1])) {
+                    if (params[1].equals("y")) {
+                        vars_without_primes.add("z");
+                    } else {
+                        vars_without_primes.add("y");
+                    }
+                } else {
+                    vars_without_primes.add(params[1]);
+                }
+
+            }
+
+            /**
+             * Prüft, ob die AWP-Daten korrekt sind.
              */
             HashSet vars_in_limits = new HashSet();
             for (int i = 3; i < ord + 4; i++) {
                 try {
                     Expression.build(params[i], vars_in_limits).simplify();
-                    if (!vars_in_limits.isEmpty()) {
+                    iter = vars_without_primes.iterator();
+                    /**
+                     * Im Folgenden wird geprüft, ob in den Anfangsbedingungen
+                     * die Variablen aus der eigentlichen DGL nicht auftreten
+                     * (diese beiden Variablen sind im HashSet
+                     * vars_without_primes gespeichert).
+                     */
+                    if (vars_in_limits.contains(iter.next()) || vars_in_limits.contains(iter.next())) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
                                 + String.valueOf(i + 1)
                                 + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
@@ -1492,6 +1526,9 @@ public class MathCommandCompiler {
 
     /**
      * Hauptmethode zum Ausführen des Befehls.
+     *
+     * @throws ExpressionException
+     * @throws EvaluationException
      */
     public static void executeCommand(String commandLine, GraphicArea graphicArea,
             JTextArea textArea, GraphicMethods2D graphicMethods2D, GraphicMethods3D graphicMethods3D,
