@@ -1493,9 +1493,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[params.length];
-            for (int i = 0; i < params.length; i++) {
-                command_params[i] = params[i];
-            }
+            System.arraycopy(params, 0, command_params, 0, params.length);
 
             result.setTypeCommand(TypeCommand.UNDEF);
             result.setParams(command_params);

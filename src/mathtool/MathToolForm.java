@@ -470,7 +470,6 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("5*[a,b,1;c,d,e+f]+[x, y]");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -1165,7 +1164,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 
             case KeyEvent.VK_0:
                 try{
-                    MatrixExpression matexpr = MatrixExpression.build(inputField.getText(), new HashSet<String>());
+                    MatrixExpression mat_expr = MatrixExpression.build(inputField.getText(), new HashSet<String>());
                     double x = 1;
                 } catch (ExpressionException e){
                     System.out.println("Fehler.");
