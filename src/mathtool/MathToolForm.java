@@ -1165,7 +1165,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             case KeyEvent.VK_0:
                 try{
                     MatrixExpression mat_expr = MatrixExpression.build(inputField.getText(), new HashSet<String>());
-                    double x = 1;
+                    mathToolGraphicArea.addComponent(mat_expr);
                 } catch (ExpressionException e){
                     System.out.println("Fehler.");
                 }
