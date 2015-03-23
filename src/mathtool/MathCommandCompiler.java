@@ -42,15 +42,9 @@ import java.util.ArrayList;
 public class MathCommandCompiler {
 
     /**
-     * Liste aller gültiger Befehle. Dies benötigt das Hauptprogramm
-     * MathToolForm, um zu prüfen, ob es sich um einen gültigen Befehl handelt.
-     */
-    public static final String[] commands = {"approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "euler", "expand", "latex",
-        "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall"};
-
-    /**
-     * Hier werden zusätzliche Hinweise/Meldungen/Warnungen etc. gespeichert,
-     * die dem Benutzer nach Beenden der Befehlsausführung mitgeteilt werden.
+     * Hier werden Berechnungsergebnisse/zusätzliche
+     * Hinweise/Meldungen/Warnungen etc. gespeichert, die dem Benutzer nach
+     * Beenden der Befehlsausführung mitgeteilt werden.
      */
     private static ArrayList<String> output = new ArrayList<>();
 
@@ -77,7 +71,7 @@ public class MathCommandCompiler {
          */
         String op_name;
         for (TypeOperator protected_operator : TypeOperator.values()) {
-            if (protected_operator.equals(TypeOperator.integral)){
+            if (protected_operator.equals(TypeOperator.integral)) {
                 op_name = "int";
             } else {
                 op_name = protected_operator.toString();

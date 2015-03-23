@@ -15,6 +15,7 @@ import graphic.GraphicMethodsPolar2D;
 import graphic.GraphicArea;
 import graphic.GraphicPresentationOfFormula;
 import command.Command;
+import command.TypeCommand;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -727,8 +728,8 @@ public class MathToolForm extends JFrame implements MouseListener {
                     String[] command_name = Expression.getOperatorAndArguments(command);
                     String[] params = Expression.getArguments(command_name[1]);
 
-                    for (String c : MathCommandCompiler.commands) {
-                        valid_command = valid_command || command_name[0].equals(c);
+                    for (TypeCommand c : TypeCommand.values()) {
+                        valid_command = valid_command || command_name[0].equals(c.toString());
                         if (valid_command) {
                             break;
                         }
