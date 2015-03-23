@@ -24,6 +24,8 @@ import LogicalExpressionBuilder.LogicalVariable;
 import Translator.Translator;
 import command.Command;
 import command.TypeCommand;
+import expressionbuilder.TypeFunction;
+import expressionbuilder.TypeOperator;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
@@ -64,8 +66,8 @@ public class MathCommandCompiler {
          * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
          * überschrieben werden.
          */
-        for (String protected_function : Expression.functions) {
-            if (protected_function.equals(name)) {
+        for (TypeFunction protected_function : TypeFunction.values()) {
+            if (protected_function.toString().equals(name)) {
                 return false;
             }
         }
@@ -73,8 +75,14 @@ public class MathCommandCompiler {
          * Prüfen, ob nicht geschützte Operatoren (wie z.B. taylor, int etc.)
          * überschrieben werden.
          */
-        for (String protected_operator : Expression.operators) {
-            if (protected_operator.equals(name)) {
+        String op_name;
+        for (TypeOperator protected_operator : TypeOperator.values()) {
+            if (protected_operator.equals(TypeOperator.integral)){
+                op_name = "int";
+            } else {
+                op_name = protected_operator.toString();
+            }
+            if (op_name.equals(name)) {
                 return false;
             }
         }
@@ -82,8 +90,8 @@ public class MathCommandCompiler {
          * Prüfen, ob nicht geschützte Befehle (wie z.B. approx etc.)
          * überschrieben werden.
          */
-        for (String protected_command : commands) {
-            if (protected_command.equals(name)) {
+        for (TypeCommand protected_command : TypeCommand.values()) {
+            if (protected_command.toString().equals(name)) {
                 return false;
             }
         }
@@ -147,7 +155,7 @@ public class MathCommandCompiler {
 
             command_params = new Object[1];
             command_params[0] = Expression.build(params[0], new HashSet());
-            result.setTypeCommand(TypeCommand.APPROX);
+            result.setTypeCommand(TypeCommand.approx);
             result.setParams(command_params);
             return result;
 
@@ -167,7 +175,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = LogicalExpression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.CCNF);
+                result.setTypeCommand(TypeCommand.ccnf);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -190,7 +198,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = LogicalExpression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.CDNF);
+                result.setTypeCommand(TypeCommand.cdnf);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -213,7 +221,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.CLEAR);
+            result.setTypeCommand(TypeCommand.clear);
             result.setParams(command_params);
             return result;
 
@@ -260,7 +268,7 @@ public class MathCommandCompiler {
                 command_params = new Object[2];
                 command_params[0] = function_name_and_params;
                 command_params[1] = preciseExpression;
-                result.setTypeCommand(TypeCommand.DEF);
+                result.setTypeCommand(TypeCommand.def);
                 result.setParams(command_params);
                 return result;
 
@@ -407,7 +415,7 @@ public class MathCommandCompiler {
              * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
              * Expression).
              */
-            result.setTypeCommand(TypeCommand.DEF);
+            result.setTypeCommand(TypeCommand.def);
             result.setParams(command_params);
             return result;
 
@@ -427,7 +435,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.DEFFUNCS);
+            result.setTypeCommand(TypeCommand.deffuncs);
             result.setParams(command_params);
             return result;
 
@@ -447,7 +455,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.DEFVARS);
+            result.setTypeCommand(TypeCommand.defvars);
             result.setParams(command_params);
             return result;
 
@@ -483,7 +491,7 @@ public class MathCommandCompiler {
                 if ((int) command_params[0] < 0) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
                 }
-                result.setTypeCommand(TypeCommand.EULER);
+                result.setTypeCommand(TypeCommand.euler);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -505,7 +513,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = Expression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.EXPAND);
+                result.setTypeCommand(TypeCommand.expand);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -549,7 +557,7 @@ public class MathCommandCompiler {
                 } else {
                     exprs[n] = Expression.build(expressions, vars);
                 }
-                result.setTypeCommand(TypeCommand.LATEX);
+                result.setTypeCommand(TypeCommand.latex);
                 result.setParams(exprs);
                 return result;
             } catch (ExpressionException e) {
@@ -588,7 +596,7 @@ public class MathCommandCompiler {
                 if ((int) command_params[0] < 0) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
                 }
-                result.setTypeCommand(TypeCommand.PI);
+                result.setTypeCommand(TypeCommand.pi);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -676,7 +684,7 @@ public class MathCommandCompiler {
                 }
                 command_params[params.length - 2] = x_0;
                 command_params[params.length - 1] = x_1;
-                result.setTypeCommand(TypeCommand.PLOT2D);
+                result.setTypeCommand(TypeCommand.plot2d);
                 result.setParams(command_params);
                 return result;
 
@@ -737,7 +745,7 @@ public class MathCommandCompiler {
                     command_params[3] = x_1;
                     command_params[4] = y_0;
                     command_params[5] = y_1;
-                    result.setTypeCommand(TypeCommand.PLOT2D);
+                    result.setTypeCommand(TypeCommand.plot2d);
                     result.setParams(command_params);
                     return result;
 
@@ -806,7 +814,7 @@ public class MathCommandCompiler {
             command_params[2] = x_1;
             command_params[3] = y_0;
             command_params[4] = y_1;
-            result.setTypeCommand(TypeCommand.PLOT3D);
+            result.setTypeCommand(TypeCommand.plot3d);
             result.setParams(command_params);
             return result;
 
@@ -886,7 +894,7 @@ public class MathCommandCompiler {
                 command_params[4] = Expression.build(params[2], vars);
             }
 
-            result.setTypeCommand(TypeCommand.PLOTCURVE);
+            result.setTypeCommand(TypeCommand.plotcurve);
             result.setParams(command_params);
             return result;
         }
@@ -968,7 +976,7 @@ public class MathCommandCompiler {
             }
             command_params[params.length - 2] = x_0;
             command_params[params.length - 1] = x_1;
-            result.setTypeCommand(TypeCommand.PLOTPOLAR);
+            result.setTypeCommand(TypeCommand.plotpolar);
             result.setParams(command_params);
             return result;
         }
@@ -1025,7 +1033,7 @@ public class MathCommandCompiler {
                     command_params[2] = params[1];
                 }
 
-                result.setTypeCommand(TypeCommand.SOLVE);
+                result.setTypeCommand(TypeCommand.solve);
                 result.setParams(command_params);
                 return result;
 
@@ -1081,7 +1089,7 @@ public class MathCommandCompiler {
                     command_params[4] = n;
                 }
 
-                result.setTypeCommand(TypeCommand.SOLVE);
+                result.setTypeCommand(TypeCommand.solve);
                 result.setParams(command_params);
                 return result;
 
@@ -1194,7 +1202,7 @@ public class MathCommandCompiler {
                     command_params[i] = Expression.build(params[i], vars);
                 }
 
-                result.setTypeCommand(TypeCommand.SOLVEDEQ);
+                result.setTypeCommand(TypeCommand.solvedeq);
                 result.setParams(command_params);
                 return result;
             }
@@ -1222,7 +1230,7 @@ public class MathCommandCompiler {
             command_params = new Object[1];
             command_params[0] = log_expr;
 
-            result.setTypeCommand(TypeCommand.TABLE);
+            result.setTypeCommand(TypeCommand.table);
             result.setParams(command_params);
             return result;
         }
@@ -1317,7 +1325,7 @@ public class MathCommandCompiler {
             command_params[0] = expr;
             command_params[1] = vars_contained_in_params;
 
-            result.setTypeCommand(TypeCommand.TANGENT);
+            result.setTypeCommand(TypeCommand.tangent);
             result.setParams(command_params);
             return result;
         }
@@ -1471,7 +1479,7 @@ public class MathCommandCompiler {
             }
             command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
 
-            result.setTypeCommand(TypeCommand.TAYLORDEQ);
+            result.setTypeCommand(TypeCommand.taylordeq);
             result.setParams(command_params);
             return result;
         }
@@ -1495,7 +1503,7 @@ public class MathCommandCompiler {
             command_params = new Object[params.length];
             System.arraycopy(params, 0, command_params, 0, params.length);
 
-            result.setTypeCommand(TypeCommand.UNDEF);
+            result.setTypeCommand(TypeCommand.undef);
             result.setParams(command_params);
             return result;
         }
@@ -1513,7 +1521,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.UNDEFALL);
+            result.setTypeCommand(TypeCommand.undefall);
             result.setParams(command_params);
             return result;
         }
@@ -1564,55 +1572,55 @@ public class MathCommandCompiler {
         /**
          * Abhängig vom Typ von c wird der Befehl ausgeführt.
          */
-        if (c.getTypeCommand().equals(TypeCommand.APPROX)) {
+        if (c.getTypeCommand().equals(TypeCommand.approx)) {
             executeApprox(c, definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.CCNF)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.ccnf)) {
             executeCCNF(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.CDNF)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.cdnf)) {
             executeCDNF(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.CLEAR)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(c, textArea, graphicArea);
-        } else if ((c.getTypeCommand().equals(TypeCommand.DEF)) && c.getParams().length >= 1) {
+        } else if ((c.getTypeCommand().equals(TypeCommand.def)) && c.getParams().length >= 1) {
             executeDefine(c, definedVars, definedFunctions, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.DEFFUNCS)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.deffuncs)) {
             executeDefFuncs(definedFunctions, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.DEFVARS)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.defvars)) {
             executeDefVars(definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.EULER)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.euler)) {
             executeEuler(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.EXPAND)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.expand)) {
             executeExpand(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.LATEX)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.latex)) {
             executeLatex(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.PI)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.pi)) {
             executePi(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.PLOT2D)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             if (params[0].contains("=")) {
                 executeImplicitPlot2D(c, graphicMethods2D);
             } else {
                 executePlot2D(c, graphicMethods2D);
             }
-        } else if (c.getTypeCommand().equals(TypeCommand.PLOT3D)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plot3d)) {
             executePlot3D(c, graphicMethods3D);
-        } else if (c.getTypeCommand().equals(TypeCommand.PLOTCURVE) && c.getParams().length == 4) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 4) {
             executePlotCurve2D(c, graphicMethodsCurves2D);
-        } else if (c.getTypeCommand().equals(TypeCommand.PLOTCURVE) && c.getParams().length == 5) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 5) {
             executePlotCurve3D(c, graphicMethodsCurves3D);
-        } else if (c.getTypeCommand().equals(TypeCommand.PLOTPOLAR)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             executePlotPolar2D(c, graphicMethodsPolar2D);
-        } else if (c.getTypeCommand().equals(TypeCommand.SOLVE)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.solve)) {
             executeSolve(c, graphicMethods2D, textArea, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.SOLVEDEQ)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.solvedeq)) {
             executeSolveDEQ(c, graphicMethods2D, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.TABLE)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.table)) {
             executeTable(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.TANGENT)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.tangent)) {
             executeTangent(c, graphicMethods2D, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.TAYLORDEQ)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.UNDEF)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.undef)) {
             executeUndefine(c, definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.UNDEFALL)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.undefall)) {
             executeUndefineAll(definedVars, graphicArea);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
