@@ -1,6 +1,6 @@
 package mathtool;
 
-import Translator.Translator;
+import translator.Translator;
 import expressionbuilder.Expression;
 import java.awt.Color;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package mathtool;
 
-import Translator.Translator;
+import translator.Translator;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
