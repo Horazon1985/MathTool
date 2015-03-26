@@ -251,7 +251,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void showLoggedCommand(int i) {
         inputField.setText(listOfCommands.get(i));
     }
-    
+
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
@@ -316,21 +316,21 @@ public class MathToolForm extends JFrame implements MouseListener {
         //Operatorbox aktualisieren.
         ArrayList<String> new_entries = new ArrayList<>();
         new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
-        for (int i = 1; i < operatorChoice.getModel().getSize(); i++){
+        for (int i = 1; i < operatorChoice.getModel().getSize(); i++) {
             new_entries.add((String) operatorChoice.getItemAt(i));
         }
         operatorChoice.removeAllItems();
-        for (String op : new_entries){
+        for (String op : new_entries) {
             operatorChoice.addItem(op);
         }
         //Befehlbox aktualisieren.
         new_entries.clear();
         new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
-        for (int i = 1; i < commandChoice.getModel().getSize(); i++){
+        for (int i = 1; i < commandChoice.getModel().getSize(); i++) {
             new_entries.add((String) commandChoice.getItemAt(i));
         }
         commandChoice.removeAllItems();
-        for (String c : new_entries){
+        for (String c : new_entries) {
             commandChoice.addItem(c);
         }
         //Buttons aktualisieren
@@ -471,7 +471,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("det([2,5;0,3]^2)");
+        inputField.setText("(([2,5;0,3]^2)^3)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -792,11 +792,12 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 /**
                  * input_is_arithmetic_expression besagt, dass Eingabe, wenn
-                 * überhaupt, nur ein gültiger arithmetischer (und kein
-                 * logischer) Ausdruck sein kann.
+                 * überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
+                 * logischer und kein Matrizenausdruck) sein kann.
                  */
                 boolean input_is_arithmetic_expression = !command.contains("&") && !command.contains("|")
-                        && !command.contains(">") && !command.contains("=");
+                        && !command.contains(">") && !command.contains("=") && !command.contains("[")
+                        && !command.contains("]");
 
                 try {
 
@@ -847,8 +848,63 @@ public class MathToolForm extends JFrame implements MouseListener {
                 }
 
                 /**
-                 * Nun wird geprüft, ob es sich bei s um einen gültigen
-                 * logischen Ausdruck handelt. Ja -> vereinfachen und ausgeben.
+                 * 3. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                 * Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
+                 * Nein -> Weitere Möglichkeiten prüfen.
+                 */
+                boolean input_is_matrix_expression = !command.contains("&") && !command.contains("|")
+                        && !command.contains(">") && !command.contains("=");
+
+                try {
+
+                    MatrixExpression mat_expr = MatrixExpression.build(command, new HashSet());
+
+                    /**
+                     * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+                     * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber
+                     * beim Auswerten einen Fehler.
+                     */
+                    try {
+
+                        MatrixExpression mat_expr_simplified = mat_expr.simplify();
+                        /**
+                         * Hinzufügen zum textlichen Ausgabefeld.
+                         */
+//                        mathToolTextArea.append(mat_expr.writeFormula(true) + " = " + mat_expr_simplified.writeFormula(true) + "\n \n");
+                        /**
+                         * Hinzufügen zum graphischen Ausgabefeld.
+                         */
+                        mathToolGraphicArea.addComponent(mat_expr, "  =  ", mat_expr_simplified.convertToOneTimesOneMatrixToExpression());
+                        inputField.setText("");
+                        return null;
+
+                    } catch (EvaluationException e) {
+                        if (input_is_matrix_expression) {
+//                            mathToolTextArea.append(mat_expr.writeFormula(true) + "\n \n");
+                            mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                            mathToolGraphicArea.addComponent(mat_expr);
+                            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                            inputField.setText("");
+                            return null;
+                        }
+                    }
+
+                } catch (ExpressionException e) {
+                    if (input_is_arithmetic_expression) {
+                        /**
+                         * Dann ist der Ausdruck zumindest kein logischer
+                         * Ausdruck -> Fehler ausgeben, welcher soeben bei
+                         * arithmetischen Ausdrücken geworfen wurde.
+                         */
+                        mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                        return null;
+                    }
+                }
+
+                /**
+                 * 4. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                 * logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
                  */
                 try {
 
@@ -1162,15 +1218,6 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 stopPossibleRotation();
                 executeCommand();
-                break;
-                
-            case KeyEvent.VK_0:
-                try{
-                    MatrixExpression mat_expr = MatrixExpression.build(inputField.getText(), new HashSet<String>());
-                    mathToolGraphicArea.addComponent(mat_expr, " = ", mat_expr.simplify().convertToOneTimesOneMatrixToExpression());
-                } catch (ExpressionException | EvaluationException e){
-                    System.out.println("Fehler.");
-                }
                 break;
 
             case KeyEvent.VK_UP:
