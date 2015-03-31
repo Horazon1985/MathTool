@@ -1,4 +1,4 @@
-﻿<font size="6"><strong>Mathematical Expressions:</strong></font><br><br>
+<font size="6"><strong>Mathematical Expressions:</strong></font><br><br>
 
 MathTool understands mathematical expressions. The basic arithmetic operations are denoted by +, -, * and /, and ^ denotes the power. Mathematical functions are denoted by their typical names, for example by sin(...), exp(...), ln(...), arctan(...) etc. 
 A list with all functions can be found below.<br>
@@ -49,3 +49,24 @@ Note, that MathTool removes empty space as well as makes capital letters to smal
 <strong>tan(x):</strong> Computes the tangent of x (x in radians).<br><br>
 <strong>tanh(x):</strong> Computes the hyperbolic tangent of x.<br><br>
 
+<font size="6"><strong>Matrices and vectors:</strong></font><br><br>
+
+MathTool is also able to understand matrices and vectors. In principle, they can be expressed
+by the same language and indeed, MathTool makes no difference between matrices and vectors.
+Vectors are always interpreted as matrices with only one column.<br>
+To define a matrix one uses the brackets '[' and ']', where entries in the same line are
+separated by a comma and rows are separated by a semicolon. For example, the expression<br><br>
+
+[1,2,5+x;0,-2/5,cos(3)]<br><br>
+
+defines a matrix with two rows and three columns. Analogously, the input<br><br> 
+
+[5;-2;0;1]<br><br>
+
+defines a vector with four entries. To express sums, differences, products and powers of 
+matrices one uses the same operators as for common expressions.<br><br>
+
+<strong>List of all matrix functions:</strong><br><br>
+<strong>det(a):</strong> Computes the determinant of a (square) matrix a.<br><br>
+<strong>tr(a):</strong> Computes the trace of a (square) matrix a.<br><br>
+<strong>trans(a):</strong> Computes the transpose of a matrix a.<br><br>
