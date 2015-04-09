@@ -1295,7 +1295,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
                 LegendGUI legendGUI;
-                if (graphicMethods2D.getGraphIsExplicit()) {
+                if (graphicMethods2D.getIsExplicit()) {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             graphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
                 } else {

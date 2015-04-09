@@ -149,7 +149,7 @@ public class MathCommandCompiler {
 
             command_params = new Object[1];
             command_params[0] = Expression.build(params[0], new HashSet());
-            result.setTypeCommand(TypeCommand.approx);
+            result.setType(TypeCommand.approx);
             result.setParams(command_params);
             return result;
 
@@ -169,7 +169,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = LogicalExpression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.ccnf);
+                result.setType(TypeCommand.ccnf);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -192,7 +192,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = LogicalExpression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.cdnf);
+                result.setType(TypeCommand.cdnf);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -215,7 +215,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.clear);
+            result.setType(TypeCommand.clear);
             result.setParams(command_params);
             return result;
 
@@ -262,7 +262,7 @@ public class MathCommandCompiler {
                 command_params = new Object[2];
                 command_params[0] = function_name_and_params;
                 command_params[1] = preciseExpression;
-                result.setTypeCommand(TypeCommand.def);
+                result.setType(TypeCommand.def);
                 result.setParams(command_params);
                 return result;
 
@@ -291,7 +291,7 @@ public class MathCommandCompiler {
              * hier alle neu definierten Funktionen durch vordefinierte
              * Funktionen ersetzt.
              */
-            expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
+            expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
 
             try {
                 /**
@@ -409,7 +409,7 @@ public class MathCommandCompiler {
              * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
              * Expression).
              */
-            result.setTypeCommand(TypeCommand.def);
+            result.setType(TypeCommand.def);
             result.setParams(command_params);
             return result;
 
@@ -429,7 +429,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.deffuncs);
+            result.setType(TypeCommand.deffuncs);
             result.setParams(command_params);
             return result;
 
@@ -449,7 +449,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.defvars);
+            result.setType(TypeCommand.defvars);
             result.setParams(command_params);
             return result;
 
@@ -485,7 +485,7 @@ public class MathCommandCompiler {
                 if ((int) command_params[0] < 0) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
                 }
-                result.setTypeCommand(TypeCommand.euler);
+                result.setType(TypeCommand.euler);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -507,7 +507,7 @@ public class MathCommandCompiler {
             try {
                 command_params = new Object[1];
                 command_params[0] = Expression.build(params[0], new HashSet());
-                result.setTypeCommand(TypeCommand.expand);
+                result.setType(TypeCommand.expand);
                 result.setParams(command_params);
                 return result;
             } catch (ExpressionException e) {
@@ -551,7 +551,7 @@ public class MathCommandCompiler {
                 } else {
                     exprs[n] = Expression.build(expressions, vars);
                 }
-                result.setTypeCommand(TypeCommand.latex);
+                result.setType(TypeCommand.latex);
                 result.setParams(exprs);
                 return result;
             } catch (ExpressionException e) {
@@ -590,7 +590,7 @@ public class MathCommandCompiler {
                 if ((int) command_params[0] < 0) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
                 }
-                result.setTypeCommand(TypeCommand.pi);
+                result.setType(TypeCommand.pi);
                 result.setParams(command_params);
                 return result;
             } catch (NumberFormatException e) {
@@ -678,7 +678,7 @@ public class MathCommandCompiler {
                 }
                 command_params[params.length - 2] = x_0;
                 command_params[params.length - 1] = x_1;
-                result.setTypeCommand(TypeCommand.plot2d);
+                result.setType(TypeCommand.plot2d);
                 result.setParams(command_params);
                 return result;
 
@@ -739,7 +739,7 @@ public class MathCommandCompiler {
                     command_params[3] = x_1;
                     command_params[4] = y_0;
                     command_params[5] = y_1;
-                    result.setTypeCommand(TypeCommand.plot2d);
+                    result.setType(TypeCommand.plot2d);
                     result.setParams(command_params);
                     return result;
 
@@ -808,7 +808,7 @@ public class MathCommandCompiler {
             command_params[2] = x_1;
             command_params[3] = y_0;
             command_params[4] = y_1;
-            result.setTypeCommand(TypeCommand.plot3d);
+            result.setType(TypeCommand.plot3d);
             result.setParams(command_params);
             return result;
 
@@ -888,7 +888,7 @@ public class MathCommandCompiler {
                 command_params[4] = Expression.build(params[2], vars);
             }
 
-            result.setTypeCommand(TypeCommand.plotcurve);
+            result.setType(TypeCommand.plotcurve);
             result.setParams(command_params);
             return result;
         }
@@ -970,7 +970,7 @@ public class MathCommandCompiler {
             }
             command_params[params.length - 2] = x_0;
             command_params[params.length - 1] = x_1;
-            result.setTypeCommand(TypeCommand.plotpolar);
+            result.setType(TypeCommand.plotpolar);
             result.setParams(command_params);
             return result;
         }
@@ -1027,7 +1027,7 @@ public class MathCommandCompiler {
                     command_params[2] = params[1];
                 }
 
-                result.setTypeCommand(TypeCommand.solve);
+                result.setType(TypeCommand.solve);
                 result.setParams(command_params);
                 return result;
 
@@ -1083,7 +1083,7 @@ public class MathCommandCompiler {
                     command_params[4] = n;
                 }
 
-                result.setTypeCommand(TypeCommand.solve);
+                result.setType(TypeCommand.solve);
                 result.setParams(command_params);
                 return result;
 
@@ -1196,7 +1196,7 @@ public class MathCommandCompiler {
                     command_params[i] = Expression.build(params[i], vars);
                 }
 
-                result.setTypeCommand(TypeCommand.solvedeq);
+                result.setType(TypeCommand.solvedeq);
                 result.setParams(command_params);
                 return result;
             }
@@ -1224,7 +1224,7 @@ public class MathCommandCompiler {
             command_params = new Object[1];
             command_params[0] = log_expr;
 
-            result.setTypeCommand(TypeCommand.table);
+            result.setType(TypeCommand.table);
             result.setParams(command_params);
             return result;
         }
@@ -1319,7 +1319,7 @@ public class MathCommandCompiler {
             command_params[0] = expr;
             command_params[1] = vars_contained_in_params;
 
-            result.setTypeCommand(TypeCommand.tangent);
+            result.setType(TypeCommand.tangent);
             result.setParams(command_params);
             return result;
         }
@@ -1473,7 +1473,7 @@ public class MathCommandCompiler {
             }
             command_params[ord + 4] = Integer.parseInt(params[ord + 4]);
 
-            result.setTypeCommand(TypeCommand.taylordeq);
+            result.setType(TypeCommand.taylordeq);
             result.setParams(command_params);
             return result;
         }
@@ -1497,7 +1497,7 @@ public class MathCommandCompiler {
             command_params = new Object[params.length];
             System.arraycopy(params, 0, command_params, 0, params.length);
 
-            result.setTypeCommand(TypeCommand.undef);
+            result.setType(TypeCommand.undef);
             result.setParams(command_params);
             return result;
         }
@@ -1515,7 +1515,7 @@ public class MathCommandCompiler {
             }
 
             command_params = new Object[0];
-            result.setTypeCommand(TypeCommand.undefall);
+            result.setType(TypeCommand.undefall);
             result.setParams(command_params);
             return result;
         }
@@ -1639,7 +1639,7 @@ public class MathCommandCompiler {
          * Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so
          * darstellen, dass es nur vordefinierte Funktionen beinhaltet.
          */
-        expr = expr.replaceOperatorsAndSelfDefinedFunctionsByPredefinedFunctions();
+        expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
         /**
          * Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck
          * ersetzt werden.
@@ -1648,7 +1648,7 @@ public class MathCommandCompiler {
             expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
         }
 
-        expr = expr.turnToIrrationals().simplify();
+        expr = expr.turnToApproximate().simplify();
         /**
          * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
          * werden nur dann approximativ ausgegeben, wenn sie nicht präzise
@@ -2012,8 +2012,8 @@ public class MathCommandCompiler {
         String var = (String) iter.next();
 
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setGraphIsExplicit(true);
-        graphicMethods2D.setGraphIsFixed(false);
+        graphicMethods2D.setIsExplicit(true);
+        graphicMethods2D.setIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         for (int i = 0; i < c.getParams().length - 2; i++) {
             graphicMethods2D.addExpression(exprs[i]);
@@ -2021,7 +2021,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setVar(var);
         graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-        graphicMethods2D.setDrawSpecialPoints(false);
+        graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
 
     }
@@ -2151,13 +2151,13 @@ public class MathCommandCompiler {
         }
 
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setGraphIsExplicit(false);
-        graphicMethods2D.setGraphIsFixed(false);
+        graphicMethods2D.setIsExplicit(false);
+        graphicMethods2D.setIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr);
         graphicMethods2D.setVars(var1_alphabetical, var2_alphabetical);
         graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        graphicMethods2D.setDrawSpecialPoints(false);
+        graphicMethods2D.setSpecialPointsOccur(false);
         HashMap<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setImplicitGraph(implicit_graph);
@@ -2429,21 +2429,21 @@ public class MathCommandCompiler {
                  * Graphen der linken und der rechten Seite zeichnen.
                  */
                 graphicMethods2D.setIsInitialized(true);
-                graphicMethods2D.setGraphIsExplicit(true);
-                graphicMethods2D.setGraphIsFixed(false);
+                graphicMethods2D.setIsExplicit(true);
+                graphicMethods2D.setIsFixed(false);
                 graphicMethods2D.clearExpressionAndGraph();
                 graphicMethods2D.addExpression(expr_1);
                 graphicMethods2D.addExpression(expr_2);
                 graphicMethods2D.setVar(var);
                 graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
                 graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-                graphicMethods2D.setDrawSpecialPoints(false);
+                graphicMethods2D.setSpecialPointsOccur(false);
                 graphicMethods2D.drawGraph2D();
                 return;
 
             }
 
-            HashMap<Integer, Double> zeros = NumericalMethods.solve(expr, var, x_0.evaluate(), x_1.evaluate(), n);
+            HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(expr, var, x_0.evaluate(), x_1.evaluate(), n);
 
             /**
              * Textliche Ausgabe
@@ -2495,15 +2495,15 @@ public class MathCommandCompiler {
              * Lösungen (als rot markierte Punkte).
              */
             graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setGraphIsExplicit(true);
-            graphicMethods2D.setGraphIsFixed(false);
+            graphicMethods2D.setIsExplicit(true);
+            graphicMethods2D.setIsFixed(false);
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr_1);
             graphicMethods2D.addExpression(expr_2);
             graphicMethods2D.setVar(var);
             graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
             graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
-            graphicMethods2D.setDrawSpecialPoints(true);
+            graphicMethods2D.setSpecialPointsOccur(true);
             graphicMethods2D.setSpecialPoints(zeros_as_array);
             graphicMethods2D.drawGraph2D();
 
@@ -2581,7 +2581,7 @@ public class MathCommandCompiler {
             }
         }
 
-        double[][] solution_of_deq = NumericalMethods.solveDEQ(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
+        double[][] solution_of_deq = NumericalMethods.solveDifferentialEquation(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
 
         /**
          * Formulierung und Ausgabe des AWP.
@@ -2664,13 +2664,13 @@ public class MathCommandCompiler {
          * Lösungsgraphen zeichnen.
          */
         graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setGraphIsExplicit(true);
-        graphicMethods2D.setGraphIsFixed(true);
+        graphicMethods2D.setIsExplicit(true);
+        graphicMethods2D.setIsFixed(true);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addGraph(solution_of_deq);
         graphicMethods2D.setVars(var_1, var_2);
         graphicMethods2D.computeScreenSizes();
-        graphicMethods2D.setDrawSpecialPoints(false);
+        graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
 
     }
@@ -2882,15 +2882,15 @@ public class MathCommandCompiler {
              * Tangente zeichnen.
              */
             graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setGraphIsExplicit(true);
-            graphicMethods2D.setGraphIsFixed(false);
+            graphicMethods2D.setIsExplicit(true);
+            graphicMethods2D.setIsFixed(false);
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr);
             graphicMethods2D.addExpression(tangent);
             graphicMethods2D.setVar(var);
             graphicMethods2D.computeScreenSizes(x_0, x_1);
             graphicMethods2D.expressionToGraph(var, x_0, x_1);
-            graphicMethods2D.setDrawSpecialPoints(true);
+            graphicMethods2D.setSpecialPointsOccur(true);
             graphicMethods2D.setSpecialPoints(tangent_point);
             graphicMethods2D.drawGraph2D();
 
@@ -2964,7 +2964,7 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDEq(expr, var_1, var_2, ord, x_0, y_0, k);
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, var_1, var_2, ord, x_0, y_0, k);
         /**
          * Textliche Ausgabe
          */
