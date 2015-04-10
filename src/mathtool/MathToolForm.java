@@ -80,7 +80,7 @@ public class MathToolForm extends JFrame implements MouseListener {
      * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten
      * ausgegeben haben möchte.
      */
-    public int log_position = 0;
+    public int logPosition = 0;
 
     /**
      * Konstruktor
@@ -691,32 +691,32 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 computingDialog = new ComputingDialogGUI(computingSwingWorker, mtf.getX(), mtf.getY(), mtf.getWidth(), mtf.getHeight());
 
-                boolean valid_command = false;
+                boolean validCommand = false;
 
                 /**
                  * Leerzeichen werden im Vorfeld beseitigt.
                  */
-                String command = inputField.getText().replaceAll(" ", "");
+                String input = inputField.getText().replaceAll(" ", "");
 
                 /**
                  * Alles zu Kleinbuchstaben machen.
                  */
-                char part;
-                int n = command.length();
-                for (int i = 0; i < n; i++) {
-                    part = command.charAt(i);
+                char currentChar;
+                int lengthInput = input.length();
+                for (int i = 0; i < lengthInput; i++) {
+                    currentChar = input.charAt(i);
                     //Falls es ein Großbuchstabe ist -> zu Kleinbuchstaben machen
-                    if (((int) part >= 65) && ((int) part <= 90)) {
-                        part = (char) ((int) part + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
-                        command = command.substring(0, i) + part + command.substring(i + 1, n);
+                    if (((int) currentChar >= 65) && ((int) currentChar <= 90)) {
+                        currentChar = (char) ((int) currentChar + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
+                        input = input.substring(0, i) + currentChar + input.substring(i + 1, lengthInput);
                     }
                 }
 
                 /**
                  * Befehl loggen!
                  */
-                listOfCommands.add(command);
-                log_position = listOfCommands.size();
+                listOfCommands.add(input);
+                logPosition = listOfCommands.size();
 
                 /**
                  * 1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
@@ -725,30 +725,30 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 try {
 
-                    String[] command_name = Expression.getOperatorAndArguments(command);
-                    String[] params = Expression.getArguments(command_name[1]);
+                    String[] commandName = Expression.getOperatorAndArguments(input);
+                    String[] params = Expression.getArguments(commandName[1]);
 
                     for (TypeCommand c : TypeCommand.values()) {
-                        valid_command = valid_command || command_name[0].equals(c.toString());
-                        if (valid_command) {
+                        validCommand = validCommand || commandName[0].equals(c.toString());
+                        if (validCommand) {
                             break;
                         }
                     }
 
-                    if (valid_command) {
+                    if (validCommand) {
 
                         /**
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
-                        mathToolTextArea.append(command + "\n \n");
+                        mathToolTextArea.append(input + "\n \n");
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
-                        mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(command_name[0], params));
+                        mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         /**
                          * Befehl verarbeiten.
                          */
-                        MathCommandCompiler.executeCommand(command, mathToolGraphicArea, mathToolTextArea,
+                        MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
                                 graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
                                 definedVars, definedFunctions);
@@ -756,7 +756,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                          * Falls es ein Grafikbefehle war -> Grafik sichtbar
                          * machen.
                          */
-                        activatePanelsForGraphs(command_name[0], params);
+                        activatePanelsForGraphs(commandName[0], params);
                         inputField.setText("");
 
                     }
@@ -768,7 +768,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                      * weiter prüfen, ob es sich um einen Ausdruck handeln
                      * könnte.
                      */
-                    if (valid_command) {
+                    if (validCommand) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
@@ -780,7 +780,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                  * Fehler enthield oder nicht) -> abbrechen und NICHT weiter
                  * prüfen, ob es sich um einen Ausdruck handeln könnte.
                  */
-                if (valid_command) {
+                if (validCommand) {
                     return null;
                 }
 
@@ -794,13 +794,13 @@ public class MathToolForm extends JFrame implements MouseListener {
                  * überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
                  * logischer und kein Matrizenausdruck) sein kann.
                  */
-                boolean input_is_arithmetic_expression = !command.contains("&") && !command.contains("|")
-                        && !command.contains(">") && !command.contains("=") && !command.contains("[")
-                        && !command.contains("]");
+                boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
+                        && !input.contains(">") && !input.contains("=") && !input.contains("[")
+                        && !input.contains("]");
 
                 try {
 
-                    Expression expr = Expression.build(command, new HashSet());
+                    Expression expr = Expression.build(input, new HashSet());
 
                     /**
                      * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -809,21 +809,21 @@ public class MathToolForm extends JFrame implements MouseListener {
                      */
                     try {
 
-                        Expression expr_simplified = expr.evaluate(new HashSet(definedVars.keySet()));
-                        expr_simplified = expr_simplified.simplify();
+                        Expression exprSimplified = expr.evaluate(new HashSet(definedVars.keySet()));
+                        exprSimplified = exprSimplified.simplify();
                         /**
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
-                        mathToolTextArea.append(expr.writeFormula(true) + " = " + expr_simplified.writeFormula(true) + "\n \n");
+                        mathToolTextArea.append(expr.writeFormula(true) + " = " + exprSimplified.writeFormula(true) + "\n \n");
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
-                        mathToolGraphicArea.addComponent(expr, "  =  ", expr_simplified);
+                        mathToolGraphicArea.addComponent(expr, "  =  ", exprSimplified);
                         inputField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
-                        if (input_is_arithmetic_expression) {
+                        if (inputIsAlgebraicExpression) {
                             mathToolTextArea.append(expr.writeFormula(true) + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(expr);
@@ -834,7 +834,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (input_is_arithmetic_expression) {
+                    if (inputIsAlgebraicExpression) {
                         /**
                          * Dann ist der Ausdruck zumindest kein logischer
                          * Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -851,12 +851,12 @@ public class MathToolForm extends JFrame implements MouseListener {
                  * Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
                  * Nein -> Weitere Möglichkeiten prüfen.
                  */
-                boolean input_is_matrix_expression = !command.contains("&") && !command.contains("|")
-                        && !command.contains(">") && !command.contains("=");
+                boolean inputIsMatrixExpression = !input.contains("&") && !input.contains("|")
+                        && !input.contains(">") && !input.contains("=");
 
                 try {
 
-                    MatrixExpression mat_expr = MatrixExpression.build(command, new HashSet());
+                    MatrixExpression matExpr = MatrixExpression.build(input, new HashSet());
 
                     /**
                      * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -865,23 +865,23 @@ public class MathToolForm extends JFrame implements MouseListener {
                      */
                     try {
 
-                        MatrixExpression mat_expr_simplified = mat_expr.simplify();
+                        MatrixExpression matExprSimplified = matExpr.simplify();
                         /**
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
-//                        mathToolTextArea.append(mat_expr.writeFormula(true) + " = " + mat_expr_simplified.writeFormula(true) + "\n \n");
+//                        mathToolTextArea.append(matExpr.writeFormula(true) + " = " + matExprSimplified.writeFormula(true) + "\n \n");
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
-                        mathToolGraphicArea.addComponent(mat_expr, "  =  ", mat_expr_simplified.convertToOneTimesOneMatrixToExpression());
+                        mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertToOneTimesOneMatrixToExpression());
                         inputField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
-                        if (input_is_matrix_expression) {
-//                            mathToolTextArea.append(mat_expr.writeFormula(true) + "\n \n");
+                        if (inputIsMatrixExpression) {
+//                            mathToolTextArea.append(matExpr.writeFormula(true) + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
-                            mathToolGraphicArea.addComponent(mat_expr);
+                            mathToolGraphicArea.addComponent(matExpr);
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                             inputField.setText("");
                             return null;
@@ -889,7 +889,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (input_is_arithmetic_expression) {
+                    if (inputIsAlgebraicExpression) {
                         /**
                          * Dann ist der Ausdruck zumindest kein logischer
                          * Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -907,16 +907,16 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 try {
 
-                    LogicalExpression log_expr = LogicalExpression.build(command, new HashSet());
-                    LogicalExpression log_expr_simplified = log_expr.simplify();
+                    LogicalExpression logExpr = LogicalExpression.build(input, new HashSet());
+                    LogicalExpression logExprSimplified = logExpr.simplify();
                     /**
                      * Hinzufügen zum textlichen Ausgabefeld.
                      */
-                    mathToolTextArea.append(log_expr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + log_expr_simplified.writeFormula() + " \n \n");
+                    mathToolTextArea.append(logExpr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeFormula() + " \n \n");
                     /**
                      * Hinzufügen zum graphischen Ausgabefeld.
                      */
-                    mathToolGraphicArea.addComponent(log_expr.writeFormula(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), log_expr_simplified);
+                    mathToolGraphicArea.addComponent(logExpr.writeFormula(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
@@ -1049,11 +1049,11 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!startRotate) {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                this.threadRotate = new Thread(graphicMethods3D, "rotateGraph");
+                threadRotate = new Thread(graphicMethods3D, "rotateGraph");
                 startRotate = true;
                 graphicMethods3D.setStartRotate(true);
             } else {
-                this.threadRotate = new Thread(graphicMethodsCurves3D, "rotateGraph");
+                threadRotate = new Thread(graphicMethodsCurves3D, "rotateGraph");
                 startRotate = true;
                 graphicMethodsCurves3D.setStartRotate(true);
             }
@@ -1113,52 +1113,52 @@ public class MathToolForm extends JFrame implements MouseListener {
      * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
      * Kommata bei einer gültigen Eingabe.
      */
-    private int getNumberOfComma(String s) {
+    private int getNumberOfComma(String operatorOrCommandName) {
 
-        if (s.equals("diff")) {
+        if (operatorOrCommandName.equals("diff")) {
             return 1;
         }
-        if (s.equals("gcd")) {
+        if (operatorOrCommandName.equals("gcd")) {
             return 1;
         }
-        if (s.equals("int")) {
+        if (operatorOrCommandName.equals("int")) {
             return 1;
         }
-        if (s.equals("lcm")) {
+        if (operatorOrCommandName.equals("lcm")) {
             return 1;
         }
-        if (s.equals("mod")) {
+        if (operatorOrCommandName.equals("mod")) {
             return 1;
         }
-        if (s.equals("prod")) {
+        if (operatorOrCommandName.equals("prod")) {
             return 3;
         }
-        if (s.equals("sum")) {
+        if (operatorOrCommandName.equals("sum")) {
             return 3;
         }
-        if (s.equals("taylor")) {
+        if (operatorOrCommandName.equals("taylor")) {
             return 3;
         }
 
-        if (s.equals("plot2d")) {
+        if (operatorOrCommandName.equals("plot2d")) {
             return 2;
         }
-        if (s.equals("plot3d")) {
+        if (operatorOrCommandName.equals("plot3d")) {
             return 4;
         }
-        if (s.equals("plotcurve")) {
+        if (operatorOrCommandName.equals("plotcurve")) {
             return 2;
         }
-        if (s.equals("plotpolar")) {
+        if (operatorOrCommandName.equals("plotpolar")) {
             return 2;
         }
-        if (s.equals("solvedeq")) {
+        if (operatorOrCommandName.equals("solvedeq")) {
             return 5;
         }
-        if (s.equals("tangent")) {
+        if (operatorOrCommandName.equals("tangent")) {
             return 1;
         }
-        if (s.equals("taylordeq")) {
+        if (operatorOrCommandName.equals("taylordeq")) {
             return 5;
         }
 
@@ -1220,20 +1220,20 @@ public class MathToolForm extends JFrame implements MouseListener {
                 break;
 
             case KeyEvent.VK_UP:
-                if (log_position > 0) {
-                    log_position--;
+                if (logPosition > 0) {
+                    logPosition--;
                 }
-                if (log_position == listOfCommands.size()) {
-                    log_position--;
+                if (logPosition == listOfCommands.size()) {
+                    logPosition--;
                 }
-                showLoggedCommand(log_position);
+                showLoggedCommand(logPosition);
                 break;
 
             case KeyEvent.VK_DOWN:
-                if (log_position < listOfCommands.size() - 1) {
-                    log_position++;
+                if (logPosition < listOfCommands.size() - 1) {
+                    logPosition++;
                 }
-                showLoggedCommand(log_position);
+                showLoggedCommand(logPosition);
                 break;
 
             case KeyEvent.VK_ESCAPE:

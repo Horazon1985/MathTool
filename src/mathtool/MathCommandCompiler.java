@@ -2018,7 +2018,7 @@ public class MathCommandCompiler {
         for (int i = 0; i < c.getParams().length - 2; i++) {
             graphicMethods2D.addExpression(exprs[i]);
         }
-        graphicMethods2D.setVar(var);
+        graphicMethods2D.setVarAbsc(var);
         graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
         graphicMethods2D.setSpecialPointsOccur(false);
@@ -2434,7 +2434,7 @@ public class MathCommandCompiler {
                 graphicMethods2D.clearExpressionAndGraph();
                 graphicMethods2D.addExpression(expr_1);
                 graphicMethods2D.addExpression(expr_2);
-                graphicMethods2D.setVar(var);
+                graphicMethods2D.setVarAbsc(var);
                 graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
                 graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
                 graphicMethods2D.setSpecialPointsOccur(false);
@@ -2500,7 +2500,7 @@ public class MathCommandCompiler {
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr_1);
             graphicMethods2D.addExpression(expr_2);
-            graphicMethods2D.setVar(var);
+            graphicMethods2D.setVarAbsc(var);
             graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
             graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
             graphicMethods2D.setSpecialPointsOccur(true);
@@ -2887,7 +2887,7 @@ public class MathCommandCompiler {
             graphicMethods2D.clearExpressionAndGraph();
             graphicMethods2D.addExpression(expr);
             graphicMethods2D.addExpression(tangent);
-            graphicMethods2D.setVar(var);
+            graphicMethods2D.setVarAbsc(var);
             graphicMethods2D.computeScreenSizes(x_0, x_1);
             graphicMethods2D.expressionToGraph(var, x_0, x_1);
             graphicMethods2D.setSpecialPointsOccur(true);
