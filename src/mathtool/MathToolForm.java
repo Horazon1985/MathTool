@@ -655,7 +655,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicMethods3D.setIsRotating(false);
             } else {
-                graphicMethodsCurves3D.setStartRotate(false);
+                graphicMethodsCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
             rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
@@ -1055,7 +1055,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             } else {
                 rotateThread = new Thread(graphicMethodsCurves3D, "rotateGraph");
                 isRotating = true;
-                graphicMethodsCurves3D.setStartRotate(true);
+                graphicMethodsCurves3D.setIsRotating(true);
             }
             rotateThread.start();
             rotateButton.setText("Rotation stoppen");
@@ -1064,7 +1064,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicMethods3D.setIsRotating(false);
             } else {
-                graphicMethodsCurves3D.setStartRotate(false);
+                graphicMethodsCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
             rotateButton.setText("Graphen rotieren lassen");
