@@ -1659,7 +1659,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(expr.writeFormula(true) + " \n \n");
+        output.add(expr.writeExpression() + " \n \n");
         /**
          * Graphische Ausgabe
          */
@@ -1691,7 +1691,7 @@ public class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
-                        + preciseExpression.writeFormula(true)
+                        + preciseExpression.writeExpression()
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
                 /**
@@ -1708,7 +1708,7 @@ public class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
-                        + ((Expression) c.getParams()[1]).writeFormula(true) + " = " + preciseExpression.writeFormula(true)
+                        + ((Expression) c.getParams()[1]).writeExpression() + " = " + preciseExpression.writeExpression()
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
                 /**
@@ -1764,7 +1764,7 @@ public class MathCommandCompiler {
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + " = "
-                    + f_for_output.writeFormula(true) + "\n \n");
+                    + f_for_output.writeExpression() + "\n \n");
             /**
              * Grafische Ausgabe
              */
@@ -1815,7 +1815,7 @@ public class MathCommandCompiler {
                 /**
                  * Textliche Ausgabe
                  */
-                output.add(function + " = " + f_for_output.writeFormula(true) + "\n \n");
+                output.add(function + " = " + f_for_output.writeExpression() + "\n \n");
                 /**
                  * Grafische Ausgabe
                  */
@@ -1835,7 +1835,7 @@ public class MathCommandCompiler {
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES")
-                        + var + " = " + ((Expression) definedVars.get(var)).writeFormula(true) + "\n \n");
+                        + var + " = " + ((Expression) definedVars.get(var)).writeExpression() + "\n \n");
                 /**
                  * Grafische Ausgabe
                  */
@@ -1935,7 +1935,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(expr.writeFormula(true) + "\n \n");
+        output.add(expr.writeExpression() + "\n \n");
         /**
          * Graphische Ausgabe
          */
@@ -2350,11 +2350,11 @@ public class MathCommandCompiler {
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + ((Expression) c.getParams()[0]).writeExpression()
                     + " = "
-                    + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+                    + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
             for (int i = 0; i < zeros.size(); i++) {
-                output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeFormula(true) + "\n \n");
+                output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
             }
             /**
              * Grafische Ausgabe
@@ -2406,9 +2406,9 @@ public class MathCommandCompiler {
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                        + ((Expression) c.getParams()[0]).writeFormula(true)
+                        + ((Expression) c.getParams()[0]).writeExpression()
                         + " = "
-                        + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+                        + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
                 if (expr.equals(Expression.ZERO)) {
                     output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
                 } else {
@@ -2449,9 +2449,9 @@ public class MathCommandCompiler {
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) c.getParams()[0]).writeFormula(true)
+                    + ((Expression) c.getParams()[0]).writeExpression()
                     + " = "
-                    + ((Expression) c.getParams()[1]).writeFormula(true) + ": \n \n");
+                    + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
             /**
              * Grafische Ausgabe
              */
@@ -2595,7 +2595,7 @@ public class MathCommandCompiler {
 
         formulation_of_AWP_for_graphicArea.add(formulation_of_AWP + "(" + var_1 + ") = ");
         formulation_of_AWP_for_graphicArea.add(expr);
-        formulation_of_AWP = formulation_of_AWP + "(" + var_1 + ") = " + expr.writeFormula(true);
+        formulation_of_AWP = formulation_of_AWP + "(" + var_1 + ") = " + expr.writeExpression();
 
         String var_2_with_primes;
         for (int i = 0; i < ord; i++) {
@@ -2607,8 +2607,8 @@ public class MathCommandCompiler {
                 var_2_with_primes = var_2_with_primes + "'";
             }
 
-            formulation_of_AWP = formulation_of_AWP + "(" + x_0.writeFormula(true) + ") = ";
-            formulation_of_AWP = formulation_of_AWP + y_0[i].writeFormula(true);
+            formulation_of_AWP = formulation_of_AWP + "(" + x_0.writeExpression() + ") = ";
+            formulation_of_AWP = formulation_of_AWP + y_0[i].writeExpression();
             formulation_of_AWP_for_graphicArea.add(var_2_with_primes);
             formulation_of_AWP_for_graphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
             formulation_of_AWP_for_graphicArea.add(x_0);
@@ -2616,7 +2616,7 @@ public class MathCommandCompiler {
             formulation_of_AWP_for_graphicArea.add(y_0[i]);
         }
 
-        formulation_of_AWP = formulation_of_AWP + ", " + x_0.writeFormula(true) + " \u2264 " + var_1 + " \u2264 " + x_1.writeFormula(true) + ": \n \n";
+        formulation_of_AWP = formulation_of_AWP + ", " + x_0.writeExpression() + " \u2264 " + var_1 + " \u2264 " + x_1.writeExpression() + ": \n \n";
         formulation_of_AWP_for_graphicArea.add(", ");
         formulation_of_AWP_for_graphicArea.add(x_0);
         formulation_of_AWP_for_graphicArea.add(" \u2264 ");
@@ -2830,7 +2830,7 @@ public class MathCommandCompiler {
         HashMap<String, Expression> vars = (HashMap<String, Expression>) c.getParams()[1];
 
         String tangent_announcement = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
-                + expr.writeFormula(true)
+                + expr.writeExpression()
                 + Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
         ArrayList tangent_announcement_for_graphicArea = new ArrayList();
         tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
@@ -2838,7 +2838,7 @@ public class MathCommandCompiler {
         tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
-            tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeFormula(true) + ", ";
+            tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeExpression() + ", ";
             tangent_announcement_for_graphicArea.add(var + " = ");
             tangent_announcement_for_graphicArea.add(vars.get(var));
             tangent_announcement_for_graphicArea.add(", ");
@@ -2857,7 +2857,7 @@ public class MathCommandCompiler {
          * Textliche Ausgabe
          */
         output.add(tangent_announcement);
-        output.add("Y = " + tangent.writeFormula(true) + "\n \n");
+        output.add("Y = " + tangent.writeExpression() + "\n \n");
         /**
          * Grafische Ausgabe
          */
@@ -2968,7 +2968,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(var_2 + "(" + var_1 + ") = " + result.writeFormula(true) + "\n \n");
+        output.add(var_2 + "(" + var_1 + ") = " + result.writeExpression() + "\n \n");
         /**
          * Graphische Ausgabe
          */

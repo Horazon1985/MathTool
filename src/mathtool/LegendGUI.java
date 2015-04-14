@@ -43,7 +43,7 @@ public class LegendGUI extends JDialog {
         for (int i = 0; i < colorLabels.length; i++) {
             colorLabels[i] = new JLabel();
             colorLabels[i].setForeground(colors.get(i));
-            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + expr.get(i).writeFormula(true));
+            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + expr.get(i).writeExpression());
             colorLabels[i].setBounds(10, 110 + 20 * instructions.length + 20 * i, 470, 25);
             add(colorLabels[i]);
         }
@@ -93,7 +93,7 @@ public class LegendGUI extends JDialog {
 
         JLabel colorLabel = new JLabel();
         colorLabel.setForeground(color);
-        colorLabel.setText(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION") + expr.writeFormula(true) + " = 0");
+        colorLabel.setText(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION") + expr.writeExpression() + " = 0");
         colorLabel.setBounds(10, 110 + 20 * instructions.length, 470, 25);
         add(colorLabel);
 
@@ -137,7 +137,7 @@ public class LegendGUI extends JDialog {
         graph.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graph);
 
-        JLabel exprLabel = new JLabel(expr.writeFormula(true));
+        JLabel exprLabel = new JLabel(expr.writeExpression());
         exprLabel.setBounds(10, 110 + 20 * instructions.length, 470, 25);
         add(exprLabel);
 
@@ -183,7 +183,7 @@ public class LegendGUI extends JDialog {
 
         JLabel[] exprLabels = new JLabel[expr.length];
         for (int i = 0; i < expr.length; i++) {
-            exprLabels[i] = new JLabel((char) (120 + i) + " = " + expr[i].writeFormula(true));
+            exprLabels[i] = new JLabel((char) (120 + i) + " = " + expr[i].writeExpression());
             exprLabels[i].setBounds(10, 110 + 20 * instructions.length + 20 * i, 470, 25);
             add(exprLabels[i]);
         }

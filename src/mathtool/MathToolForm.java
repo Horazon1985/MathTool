@@ -454,7 +454,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("MathTool - Mathematical Tool for Analysis and Numerical Computation");
+        setTitle("MathTool - Mathematical Tool for Analysis, Algebra and Numerical Computation");
         setBackground(new java.awt.Color(250, 150, 0));
         setBounds(new java.awt.Rectangle(20, 50, 1300, 670));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/mathtool/icons/MathToolIcon.png")).getImage());
@@ -471,6 +471,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("[2,5;0,7]+5*[2,5;0,7]");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -814,7 +815,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                         /**
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
-                        mathToolTextArea.append(expr.writeFormula(true) + " = " + exprSimplified.writeFormula(true) + "\n \n");
+                        mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
@@ -824,7 +825,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                     } catch (EvaluationException e) {
                         if (inputIsAlgebraicExpression) {
-                            mathToolTextArea.append(expr.writeFormula(true) + "\n \n");
+                            mathToolTextArea.append(expr.writeExpression() + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(expr);
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
@@ -869,17 +870,17 @@ public class MathToolForm extends JFrame implements MouseListener {
                         /**
                          * Hinzufügen zum textlichen Ausgabefeld.
                          */
-//                        mathToolTextArea.append(matExpr.writeFormula(true) + " = " + matExprSimplified.writeFormula(true) + "\n \n");
+                        mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
                         /**
                          * Hinzufügen zum graphischen Ausgabefeld.
                          */
-                        mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertToOneTimesOneMatrixToExpression());
+                        mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         inputField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
                         if (inputIsMatrixExpression) {
-//                            mathToolTextArea.append(matExpr.writeFormula(true) + "\n \n");
+                            mathToolTextArea.append(matExpr.writeMatrixExpression() + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(matExpr);
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
@@ -1362,11 +1363,11 @@ public class MathToolForm extends JFrame implements MouseListener {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MathToolForm myMathToolForm = new MathToolForm();
-                myMathToolForm.setVisible(true);
-                myMathToolForm.setBounds(50, 50, 1300, 650);
-                myMathToolForm.setExtendedState(MAXIMIZED_BOTH);
-                myMathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
+                MathToolForm mathToolForm = new MathToolForm();
+                mathToolForm.setVisible(true);
+                mathToolForm.setBounds(50, 50, 1300, 650);
+                mathToolForm.setExtendedState(MAXIMIZED_BOTH);
+                mathToolForm.getContentPane().setBackground(new Color(255, 150, 0));
             }
         });
     }
