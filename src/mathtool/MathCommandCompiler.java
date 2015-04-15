@@ -1852,7 +1852,7 @@ public class MathCommandCompiler {
         log_expr.getContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1")
-                    + log_expr.writeFormula()
+                    + log_expr.writeLogicalExpression()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
         }
 
@@ -1860,7 +1860,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(log_expr_in_ccnf.writeFormula() + " \n \n");
+        output.add(log_expr_in_ccnf.writeLogicalExpression() + " \n \n");
         /**
          * Graphische Ausgabe
          */
@@ -1875,7 +1875,7 @@ public class MathCommandCompiler {
         log_expr.getContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
-                    + log_expr.writeFormula()
+                    + log_expr.writeLogicalExpression()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
         }
 
@@ -1883,7 +1883,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(log_expr_in_cdnf.writeFormula() + " \n \n");
+        output.add(log_expr_in_cdnf.writeLogicalExpression() + " \n \n");
         /**
          * Graphische Ausgabe
          */
@@ -2683,14 +2683,14 @@ public class MathCommandCompiler {
         int n = vars.size();
         if (n > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")
-                    + log_expr.writeFormula()
+                    + log_expr.writeLogicalExpression()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2"));
         }
 
         /**
          * Textliche Ausgabe
          */
-        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n");
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeLogicalExpression() + ": \n \n");
         /**
          * Grafische Ausgabe
          */
@@ -2706,26 +2706,26 @@ public class MathCommandCompiler {
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeFormula()
+                        + log_expr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
                 /**
                  * Grafische Ausgabe
                  */
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeFormula()
+                        + log_expr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
                 /**
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeFormula()
+                        + log_expr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
                 /**
                  * Grafische Ausgabe
                  */
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeFormula()
+                        + log_expr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
             return;
@@ -2752,7 +2752,7 @@ public class MathCommandCompiler {
         /**
          * Textliche Ausgabe
          */
-        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeFormula() + ": \n \n");
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeLogicalExpression() + ": \n \n");
         /**
          * Grafische Ausgabe
          */

@@ -471,7 +471,6 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("[2,5;0,7]+5*[2,5;0,7]");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -791,7 +790,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                  * ausgeben. Nein -> Weitere Möglichkeiten prüfen.
                  */
                 /**
-                 * input_is_arithmetic_expression besagt, dass Eingabe, wenn
+                 * inputIsAlgebraicExpression besagt, dass Eingabe, wenn
                  * überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
                  * logischer und kein Matrizenausdruck) sein kann.
                  */
@@ -913,11 +912,11 @@ public class MathToolForm extends JFrame implements MouseListener {
                     /**
                      * Hinzufügen zum textlichen Ausgabefeld.
                      */
-                    mathToolTextArea.append(logExpr.writeFormula() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeFormula() + " \n \n");
+                    mathToolTextArea.append(logExpr.writeLogicalExpression() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeLogicalExpression() + " \n \n");
                     /**
                      * Hinzufügen zum graphischen Ausgabefeld.
                      */
-                    mathToolGraphicArea.addComponent(logExpr.writeFormula(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
+                    mathToolGraphicArea.addComponent(logExpr.writeLogicalExpression(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
