@@ -276,8 +276,19 @@ public class MathCommandCompiler {
             }
 
             /**
-             * Falls man hier ankommt, muss das obige try funktioniert haben.
+             * Hier werden noch einmal alle in expr vorkommenden Variablen neu
+             * ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
+             * ist (etwa Summe, Produkt, Integral), dann werden die lokalen
+             * Variablen in vars mitaufgenommen, und es kann später Exceptions
+             * geben, weil im Operator Variablen vorkommen, die in den
+             * Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
+             * sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
+             * eine Indexvariable, welche bei anwendung von getContainedVars()
+             * übergangen wird.
              */
+            vars.clear();
+            expr.getContainedVars(vars);
+
             /**
              * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
              * enthält (der Benutzer kann beispielsweise eine weitere Funktion
@@ -287,21 +298,20 @@ public class MathCommandCompiler {
              */
             expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
 
+            /**
+             * Funktionsnamen und Variablen auslesen.
+             */
+            String functionName;
+            String[] functionVars;
             try {
                 /**
                  * Funktionsname und Funktionsvariablen werden ermittelt.
                  */
-                Expression.getOperatorAndArguments(functionNameAndArguments);
-                Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
+                functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
+                functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
             }
-
-            /**
-             * Funktionsnamen und Variablen auslesen.
-             */
-            String functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
-            String[] functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
 
             /**
              * Falls functions_vars leer ist -> Fehler ausgeben (es muss
@@ -1531,91 +1541,87 @@ public class MathCommandCompiler {
      * @throws ExpressionException
      * @throws EvaluationException
      */
-    public static void executeCommand(String commandLine, GraphicArea graphicArea,
+    public static void executeCommand(String input, GraphicArea graphicArea,
             JTextArea textArea, GraphicMethods2D graphicMethods2D, GraphicMethods3D graphicMethods3D,
             GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
             GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
-        int n = commandLine.length();
 
         //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
-        commandLine = commandLine.replaceAll(" ", "");
+        input = input.replaceAll(" ", "");
 
         //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
-        char part;
-        for (int i = 0; i < n; i++) {
-            part = commandLine.charAt(i);
-            if (((int) part >= 65) && ((int) part <= 90)) {
+        for (int i = 0; i < input.length(); i++) {
+            if (((int) input.charAt(i) >= 65) && ((int) input.charAt(i) <= 90)) {
                 //Macht Großbuchstaben zu Kleinbuchstaben
-                part = (char) ((int) part + 32);
-                commandLine = commandLine.substring(0, i) + part + commandLine.substring(i + 1, n);
+                input = input.substring(0, i) + (char) ((int) input.charAt(i) + 32) + input.substring(i + 1, input.length());
             }
         }
 
-        String[] command_and_params = Expression.getOperatorAndArguments(commandLine);
-        String command = command_and_params[0];
-        String[] params = Expression.getArguments(command_and_params[1]);
+        String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
+        String commandName = commandNameAndParams[0];
+        String[] params = Expression.getArguments(commandNameAndParams[1]);
 
         /**
          * Zunächst muss der entsprechende Befehl ermittelt und in ein Objekt
          * der Klasse Command umgewandelt werdeb.
          */
-        Command c = getCommand(command, params);
+        Command command = getCommand(commandName, params);
 
         /**
          * Abhängig vom Typ von c wird der Befehl ausgeführt.
          */
-        if (c.getTypeCommand().equals(TypeCommand.approx)) {
-            executeApprox(c, definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.ccnf)) {
-            executeCCNF(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.cdnf)) {
-            executeCDNF(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.clear)) {
-            executeClear(c, textArea, graphicArea);
-        } else if ((c.getTypeCommand().equals(TypeCommand.def)) && c.getParams().length >= 1) {
-            executeDefine(c, definedVars, definedFunctions, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.deffuncs)) {
+        if (command.getTypeCommand().equals(TypeCommand.approx)) {
+            executeApprox(command, definedVars, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.ccnf)) {
+            executeCCNF(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.cdnf)) {
+            executeCDNF(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
+            executeClear(textArea, graphicArea);
+        } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
+            executeDefine(command, definedVars, definedFunctions, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.deffuncs)) {
             executeDefFuncs(definedFunctions, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.defvars)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.defvars)) {
             executeDefVars(definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.euler)) {
-            executeEuler(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.expand)) {
-            executeExpand(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.latex)) {
-            executeLatex(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.pi)) {
-            executePi(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.euler)) {
+            executeEuler(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.expand)) {
+            executeExpand(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.latex)) {
+            executeLatex(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.pi)) {
+            executePi(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.plot2d)) {
             if (params[0].contains("=")) {
-                executeImplicitPlot2D(c, graphicMethods2D);
+                executeImplicitPlot2D(command, graphicMethods2D);
             } else {
-                executePlot2D(c, graphicMethods2D);
+                executePlot2D(command, graphicMethods2D);
             }
-        } else if (c.getTypeCommand().equals(TypeCommand.plot3d)) {
-            executePlot3D(c, graphicMethods3D);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 4) {
-            executePlotCurve2D(c, graphicMethodsCurves2D);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 5) {
-            executePlotCurve3D(c, graphicMethodsCurves3D);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
-            executePlotPolar2D(c, graphicMethodsPolar2D);
-        } else if (c.getTypeCommand().equals(TypeCommand.solve)) {
-            executeSolve(c, graphicMethods2D, textArea, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.solvedeq)) {
-            executeSolveDEQ(c, graphicMethods2D, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.table)) {
-            executeTable(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.tangent)) {
-            executeTangent(c, graphicMethods2D, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.taylordeq)) {
-            executeTaylorDEQ(c, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.undef)) {
-            executeUndefine(c, definedVars, graphicArea);
-        } else if (c.getTypeCommand().equals(TypeCommand.undefall)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.plot3d)) {
+            executePlot3D(command, graphicMethods3D);
+        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 4) {
+            executePlotCurve2D(command, graphicMethodsCurves2D);
+        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 5) {
+            executePlotCurve3D(command, graphicMethodsCurves3D);
+        } else if (command.getTypeCommand().equals(TypeCommand.plotpolar)) {
+            executePlotPolar2D(command, graphicMethodsPolar2D);
+        } else if (command.getTypeCommand().equals(TypeCommand.solve)) {
+            executeSolve(command, graphicMethods2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.solvedeq)) {
+            executeSolveDEQ(command, graphicMethods2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.table)) {
+            executeTable(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.tangent)) {
+            executeTangent(command, graphicMethods2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
+            executeTaylorDEQ(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.undef)) {
+            executeUndefine(command, definedVars, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.undefall)) {
             executeUndefineAll(definedVars, graphicArea);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
@@ -1631,10 +1637,10 @@ public class MathCommandCompiler {
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
-    private static void executeApprox(Command c, HashMap<String, Expression> definedVars, GraphicArea graphicArea)
+    private static void executeApprox(Command command, HashMap<String, Expression> definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
-        Expression expr = (Expression) c.getParams()[0];
+        Expression expr = (Expression) command.getParams()[0];
 
         /**
          * Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so
@@ -1668,24 +1674,69 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeClear(Command c, JTextArea area, GraphicArea graphicArea)
-            throws ExpressionException {
+    private static void executeCCNF(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
+        HashSet vars = new HashSet();
+        logExpr.getContainedVars(vars);
+        if (vars.size() > 20) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1")
+                    + logExpr.writeLogicalExpression()
+                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
+        }
+
+        LogicalExpression logExprInCCNF = logExpr.toCCNF();
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(logExprInCCNF.writeLogicalExpression() + " \n \n");
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(logExprInCCNF);
+
+    }
+
+    private static void executeCDNF(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
+        HashSet vars = new HashSet();
+        logExpr.getContainedVars(vars);
+        if (vars.size() > 20) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
+                    + logExpr.writeLogicalExpression()
+                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
+        }
+
+        LogicalExpression logExprInCDNF = logExpr.toCDNF();
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(logExprInCDNF.writeLogicalExpression() + " \n \n");
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(logExprInCDNF);
+
+    }
+
+    private static void executeClear(JTextArea area, GraphicArea graphicArea) {
         area.setText("");
         graphicArea.clearArea();
     }
 
-    private static void executeDefine(Command c, HashMap<String, Expression> definedVars,
-            HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
+    private static void executeDefine(Command command, HashMap<String, Expression> definedVars,
+            HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws EvaluationException {
 
         /**
          * Falls ein Variablenwert definiert wird.
          */
-        if (c.getParams().length == 2) {
-            String var = (String) c.getParams()[0];
-            Expression preciseExpression = ((Expression) c.getParams()[1]).simplify();
+        if (command.getParams().length == 2) {
+            String var = (String) command.getParams()[0];
+            Expression preciseExpression = ((Expression) command.getParams()[1]).simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             definedVars.put(var, preciseExpression);
-            if (((Expression) c.getParams()[1]).equals(preciseExpression)) {
+            if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
                 /**
                  * Textliche Ausgabe
                  */
@@ -1709,7 +1760,7 @@ public class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
-                        + ((Expression) c.getParams()[1]).writeExpression() + " = " + preciseExpression.writeExpression()
+                        + ((Expression) command.getParams()[1]).writeExpression() + " = " + preciseExpression.writeExpression()
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
                 /**
@@ -1718,71 +1769,71 @@ public class MathCommandCompiler {
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
-                        (Expression) c.getParams()[1], " = ", preciseExpression,
+                        (Expression) command.getParams()[1], " = ", preciseExpression,
                         Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             }
         } else {
             /**
              * Falls eine Funktion definiert wird.
              */
-            Object[] params = c.getParams();
-            String function_name = (String) params[0];
+            Object[] params = command.getParams();
+            String functionName = (String) params[0];
             String[] vars = new String[params.length - 2];
-            Expression[] exprs_for_vars = new Expression[params.length - 2];
+            Expression[] exprsForVars = new Expression[params.length - 2];
             for (int i = 0; i < params.length - 2; i++) {
                 vars[i] = (String) params[i + 1];
-                exprs_for_vars[i] = Variable.create((String) params[i + 1]);
+                exprsForVars[i] = Variable.create((String) params[i + 1]);
             }
-            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(function_name, (Expression) c.getParams()[c.getParams().length - 1]);
-            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(function_name, exprs_for_vars);
-            SelfDefinedFunction.varsForSelfDefinedFunctions.put(function_name, vars);
-            definedFunctions.put(function_name, new SelfDefinedFunction(function_name, vars, (Expression) c.getParams()[c.getParams().length - 1], exprs_for_vars));
+            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(functionName, (Expression) command.getParams()[command.getParams().length - 1]);
+            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(functionName, exprsForVars);
+            SelfDefinedFunction.varsForSelfDefinedFunctions.put(functionName, vars);
+            definedFunctions.put(functionName, new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars));
 
             /**
              * Ausgabe an den Benutzer.
              */
             String function;
-            SelfDefinedFunction f = (SelfDefinedFunction) definedFunctions.get(function_name);
-            String[] f_arguments = f.getArguments();
-            Expression[] vars_for_output = new Expression[f.getArguments().length];
-            Expression f_for_output;
+            SelfDefinedFunction f = (SelfDefinedFunction) definedFunctions.get(functionName);
+            String[] fArguments = f.getArguments();
+            Expression[] varsForOutput = new Expression[f.getArguments().length];
+            Expression fForOutput;
 
             function = f.getName() + "(";
-            for (int i = 0; i < f_arguments.length; i++) {
+            for (int i = 0; i < fArguments.length; i++) {
                 /**
                  * Die Argumente in f haben alle "_ABSTRACT" als Anhängsel.
                  * Dieses wird nun beseitigt, um die Originalnamen
                  * wiederzubekommen. Die Variablen mit den Originalnamen werden
                  * im Array vars_for_output abgespechert.
                  */
-                vars_for_output[i] = Variable.create(f_arguments[i].substring(0, f_arguments[i].indexOf("_ABSTRACT")));
-                function = function + ((Variable) vars_for_output[i]).getName() + ",";
+                varsForOutput[i] = Variable.create(fArguments[i].substring(0, fArguments[i].indexOf("_ABSTRACT")));
+                function = function + ((Variable) varsForOutput[i]).getName() + ",";
             }
             function = function.substring(0, function.length() - 1) + ")";
-            f_for_output = f.replaceAllVariables(vars_for_output);
+            fForOutput = f.replaceAllVariables(varsForOutput);
 
             /**
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + " = "
-                    + f_for_output.writeExpression() + "\n \n");
+                    + fForOutput.writeExpression() + "\n \n");
             /**
              * Grafische Ausgabe
              */
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED"),
-                    function, " = ", f_for_output);
+                    function, " = ", fForOutput);
 
         }
 
     }
 
     private static void executeDefFuncs(HashMap<String, Expression> definedFunctions, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+            throws EvaluationException {
 
         String function;
         SelfDefinedFunction f;
-        Expression[] vars_for_output;
-        Expression f_for_output;
+        Expression[] varsForOutput;
+        Expression fForOutput;
 
         /**
          * Textliche Ausgabe
@@ -1797,38 +1848,37 @@ public class MathCommandCompiler {
          * Alle selbstdefinierten Funktionen nacheinander ausgeben.
          */
         if (!definedFunctions.isEmpty()) {
-            for (String function_name : definedFunctions.keySet()) {
+            for (String functionName : definedFunctions.keySet()) {
 
                 function = "";
-                f = (SelfDefinedFunction) definedFunctions.get(function_name);
+                f = (SelfDefinedFunction) definedFunctions.get(functionName);
                 function = function + f.getName() + "(";
                 for (int i = 0; i < f.getArguments().length; i++) {
                     function = function + "X_" + (i + 1) + ",";
                 }
                 function = function.substring(0, function.length() - 1) + ")";
 
-                vars_for_output = new Expression[f.getArguments().length];
+                varsForOutput = new Expression[f.getArguments().length];
                 for (int i = 0; i < f.getArguments().length; i++) {
-                    vars_for_output[i] = Variable.create("X_" + (i + 1));
+                    varsForOutput[i] = Variable.create("X_" + (i + 1));
                 }
-                f_for_output = f.replaceAllVariables(vars_for_output);
+                fForOutput = f.replaceAllVariables(varsForOutput);
 
                 /**
                  * Textliche Ausgabe
                  */
-                output.add(function + " = " + f_for_output.writeExpression() + "\n \n");
+                output.add(function + " = " + fForOutput.writeExpression() + "\n \n");
                 /**
                  * Grafische Ausgabe
                  */
-                graphicArea.addComponent(function, " = ", f_for_output);
+                graphicArea.addComponent(function, " = ", fForOutput);
 
             }
         }
 
     }
 
-    private static void executeDefVars(HashMap<String, Expression> definedVars, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeDefVars(HashMap<String, Expression> definedVars, GraphicArea graphicArea) {
 
         if (!definedVars.isEmpty()) {
             for (String var : definedVars.keySet()) {
@@ -1846,93 +1896,47 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeCCNF(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
+    private static void executeEuler(Command command, GraphicArea graphicArea) throws ExpressionException {
 
-        LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
-        HashSet vars = new HashSet();
-        log_expr.getContainedVars(vars);
-        if (vars.size() > 20) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1")
-                    + log_expr.writeLogicalExpression()
-                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
-        }
-
-        LogicalExpression log_expr_in_ccnf = log_expr.toCCNF();
-        /**
-         * Textliche Ausgabe
-         */
-        output.add(log_expr_in_ccnf.writeLogicalExpression() + " \n \n");
-        /**
-         * Graphische Ausgabe
-         */
-        graphicArea.addComponent(log_expr_in_ccnf);
-
-    }
-
-    private static void executeCDNF(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
-
-        LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
-        HashSet vars = new HashSet();
-        log_expr.getContainedVars(vars);
-        if (vars.size() > 20) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
-                    + log_expr.writeLogicalExpression()
-                    + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
-        }
-
-        LogicalExpression log_expr_in_cdnf = log_expr.toCDNF();
-        /**
-         * Textliche Ausgabe
-         */
-        output.add(log_expr_in_cdnf.writeLogicalExpression() + " \n \n");
-        /**
-         * Graphische Ausgabe
-         */
-        graphicArea.addComponent(log_expr_in_cdnf);
-
-    }
-
-    private static void executeEuler(Command c, GraphicArea graphicArea) throws ExpressionException {
-
-        BigDecimal e = AnalysisMethods.e((int) c.getParams()[0]);
+        BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
         /**
          * Textliche Ausgabe
          */
         output.add(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
-                + (int) c.getParams()[0]
+                + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString() + "\n \n");
         /**
          * Graphische Ausgabe
          */
         graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
-                + (int) c.getParams()[0]
+                + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString());
 
     }
 
-    private static void executeExpand(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
+    private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
         /**
          * Es wird definiert, welche Arten von Vereinfachungen durchgeführt
          * werden müssen.
          */
-        HashSet simplify = new HashSet();
-        simplify.add(TypeSimplify.simplify_trivial);
-        simplify.add(TypeSimplify.sort_difference_and_division);
-        simplify.add(TypeSimplify.expand);
-        simplify.add(TypeSimplify.collect_products);
-        simplify.add(TypeSimplify.factorize_rationals_in_sums);
-        simplify.add(TypeSimplify.factorize_rationals_in_differences);
-        simplify.add(TypeSimplify.reduce_quotients);
-        simplify.add(TypeSimplify.reduce_leadings_coefficients);
-        simplify.add(TypeSimplify.simplify_algebraic_expressions);
-        simplify.add(TypeSimplify.simplify_powers);
-        simplify.add(TypeSimplify.simplify_functional_relations);
-        simplify.add(TypeSimplify.order_sums_and_products);
+        HashSet simplifyTypes = new HashSet();
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+        simplifyTypes.add(TypeSimplify.expand);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.factorize_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
 
-        Expression expr = (Expression) c.getParams()[0];
-        expr = expr.simplify(simplify);
+        Expression expr = (Expression) command.getParams()[0];
+        expr = expr.simplify(simplifyTypes);
         /**
          * Textliche Ausgabe
          */
@@ -1943,60 +1947,60 @@ public class MathCommandCompiler {
         graphicArea.addComponent(expr);
     }
 
-    private static void executeLatex(Command c, GraphicArea graphicArea) throws ExpressionException {
+    private static void executeLatex(Command command, GraphicArea graphicArea) throws ExpressionException {
 
-        String latex_code = Translator.translateExceptionMessage("MCC_LATEX_CODE");
-        for (int i = 0; i < c.getParams().length - 1; i++) {
-            if (c.getParams()[i] == null) {
-                latex_code = latex_code + " = ";
+        String latexCode = Translator.translateExceptionMessage("MCC_LATEX_CODE");
+        for (int i = 0; i < command.getParams().length - 1; i++) {
+            if (command.getParams()[i] == null) {
+                latexCode = latexCode + " = ";
             } else {
-                latex_code = latex_code + ((Expression) c.getParams()[i]).expressionToLatex(true) + " = ";
+                latexCode = latexCode + ((Expression) command.getParams()[i]).expressionToLatex(true) + " = ";
             }
         }
-        if (c.getParams()[c.getParams().length - 1] == null) {
-            latex_code = latex_code + "\n \n";
+        if (command.getParams()[command.getParams().length - 1] == null) {
+            latexCode = latexCode + "\n \n";
         } else {
-            latex_code = latex_code + ((Expression) c.getParams()[c.getParams().length - 1]).expressionToLatex(true) + "\n \n";
+            latexCode = latexCode + ((Expression) command.getParams()[command.getParams().length - 1]).expressionToLatex(true) + "\n \n";
         }
 
         /**
          * Texttliche Ausgabe
          */
-        output.add(latex_code);
+        output.add(latexCode);
         /**
          * Graphische Ausgabe
          */
-        graphicArea.addComponent(latex_code);
+        graphicArea.addComponent(latexCode);
 
     }
 
-    private static void executePi(Command c, GraphicArea graphicArea) throws ExpressionException {
+    private static void executePi(Command command, GraphicArea graphicArea) throws ExpressionException {
 
-        BigDecimal pi = AnalysisMethods.pi((int) c.getParams()[0]);
+        BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
         /**
          * Textliche Ausgabe
          */
         output.add(Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
-                + (int) c.getParams()[0]
+                + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
                 + pi.toString() + "\n \n");
         /**
          * Graphische Ausgabe
          */
         graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
-                + (int) c.getParams()[0]
+                + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
                 + pi.toString());
 
     }
 
-    private static void executePlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
+    private static void executePlot2D(Command command, GraphicMethods2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression[] exprs = new Expression[c.getParams().length - 2];
-        for (int i = 0; i < c.getParams().length - 2; i++) {
-            exprs[i] = (Expression) c.getParams()[i];
+        Expression[] exprs = new Expression[command.getParams().length - 2];
+        for (int i = 0; i < command.getParams().length - 2; i++) {
+            exprs[i] = (Expression) command.getParams()[i];
             exprs[i] = exprs[i].simplify();
             exprs[i].getContainedVars(vars);
         }
@@ -2006,8 +2010,8 @@ public class MathCommandCompiler {
             vars.add("x");
         }
 
-        Expression x_0 = (Expression) c.getParams()[c.getParams().length - 2];
-        Expression x_1 = (Expression) c.getParams()[c.getParams().length - 1];
+        Expression x_0 = (Expression) command.getParams()[command.getParams().length - 2];
+        Expression x_1 = (Expression) command.getParams()[command.getParams().length - 1];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2016,7 +2020,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setIsExplicit(true);
         graphicMethods2D.setIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
-        for (int i = 0; i < c.getParams().length - 2; i++) {
+        for (int i = 0; i < command.getParams().length - 2; i++) {
             graphicMethods2D.addExpression(exprs[i]);
         }
         graphicMethods2D.setVarAbsc(var);
@@ -2027,11 +2031,10 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot3D(Command c, GraphicMethods3D graphicMethods3D) throws ExpressionException,
-            EvaluationException {
+    private static void executePlot3D(Command command, GraphicMethods3D graphicMethods3D) throws EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
+        Expression expr = (Expression) command.getParams()[0];
         expr = expr.simplify();
         expr.getContainedVars(vars);
 
@@ -2054,60 +2057,60 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression x_0 = (Expression) c.getParams()[1];
-        Expression x_1 = (Expression) c.getParams()[2];
-        Expression y_0 = (Expression) c.getParams()[3];
-        Expression y_1 = (Expression) c.getParams()[4];
+        Expression x_0 = (Expression) command.getParams()[1];
+        Expression x_1 = (Expression) command.getParams()[2];
+        Expression y_0 = (Expression) command.getParams()[3];
+        Expression y_1 = (Expression) command.getParams()[4];
 
         Iterator iter = vars.iterator();
-        String var_1 = (String) iter.next();
-        String var_2 = (String) iter.next();
+        String varOne = (String) iter.next();
+        String varTwo = (String) iter.next();
 
         /**
-         * Die Variablen var1 und var2 sind evtl. noch nicht in alphabetischer
-         * Reihenfolge. Dies wird hier nachgeholt. GRUND: Der Zeichenbereich
-         * wird durch vier Zahlen eingegrenzt, welche den Variablen in
-         * ALPHABETISCHER Reihenfolge entsprechen.
+         * Die Variablen varOne und varTwo sind evtl. noch nicht in
+         * alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
+         * Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
+         * Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
+         * beiden bilden die Grenzen für die Abszisse, die anderen beiden für
+         * die Ordinate.
          */
-        String var1_alphabetical = var_1;
-        String var2_alphabetical = var_2;
+        String varAbsc = varOne;
+        String varOrd = varTwo;
 
-        if ((int) var_1.charAt(0) > (int) var_2.charAt(0)) {
-            var1_alphabetical = var_2;
-            var2_alphabetical = var_1;
+        if ((int) varOne.charAt(0) > (int) varTwo.charAt(0)) {
+            varAbsc = varTwo;
+            varOrd = varOne;
         }
-        if ((int) var_1.charAt(0) == (int) var_2.charAt(0)) {
-            if ((var_1.length() > 1) && (var_2.length() == 1)) {
-                var1_alphabetical = var_2;
-                var2_alphabetical = var_1;
+        if ((int) varOne.charAt(0) == (int) varTwo.charAt(0)) {
+            if ((varOne.length() > 1) && (varTwo.length() == 1)) {
+                varAbsc = varTwo;
+                varOrd = varOne;
             }
-            if ((var_1.length() > 1) && (var_2.length() > 1)) {
-                int index_var1 = Integer.parseInt(var_1.substring(2));
-                int index_var2 = Integer.parseInt(var_2.substring(2));
-                if (index_var1 > index_var2) {
-                    var1_alphabetical = var_2;
-                    var2_alphabetical = var_1;
+            if ((varOne.length() > 1) && (varTwo.length() > 1)) {
+                int indexOfVarOne = Integer.parseInt(varOne.substring(2));
+                int indexOfVarTwo = Integer.parseInt(varTwo.substring(2));
+                if (indexOfVarOne > indexOfVarTwo) {
+                    varAbsc = varTwo;
+                    varOrd = varOne;
                 }
             }
         }
 
         graphicMethods3D.setExpression(expr);
-        graphicMethods3D.setParameters(var1_alphabetical, var2_alphabetical, 150, 200, 30, 30);
+        graphicMethods3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicMethods3D.expressionToGraph(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods3D.drawGraph3D();
 
     }
 
-    private static void executeImplicitPlot2D(Command c, GraphicMethods2D graphicMethods2D) throws ExpressionException,
-            EvaluationException {
+    private static void executeImplicitPlot2D(Command command, GraphicMethods2D graphicMethods2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression expr = new BinaryOperation((Expression) c.getParams()[0], (Expression) c.getParams()[1],
-                TypeBinary.MINUS).simplify();
+        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify();
         expr.getContainedVars(vars);
 
         //Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
-        if (expr instanceof Constant) {
+        if (vars.isEmpty()) {
             vars.add("x");
             vars.add("y");
         }
@@ -2120,33 +2123,33 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression x_0 = (Expression) c.getParams()[2];
-        Expression x_1 = (Expression) c.getParams()[3];
-        Expression y_0 = (Expression) c.getParams()[4];
-        Expression y_1 = (Expression) c.getParams()[5];
+        Expression x_0 = (Expression) command.getParams()[2];
+        Expression x_1 = (Expression) command.getParams()[3];
+        Expression y_0 = (Expression) command.getParams()[4];
+        Expression y_1 = (Expression) command.getParams()[5];
 
         Iterator iter = vars.iterator();
-        String var_1 = (String) iter.next();
-        String var_2 = (String) iter.next();
+        String varOne = (String) iter.next();
+        String varTwo = (String) iter.next();
 
-        String var1_alphabetical = var_1;
-        String var2_alphabetical = var_2;
+        String varAbsc = varOne;
+        String varOrd = varTwo;
 
-        if ((int) var_1.charAt(0) > (int) var_2.charAt(0)) {
-            var1_alphabetical = var_2;
-            var2_alphabetical = var_1;
+        if ((int) varOne.charAt(0) > (int) varTwo.charAt(0)) {
+            varAbsc = varTwo;
+            varOrd = varOne;
         }
-        if ((int) var_1.charAt(0) == (int) var_2.charAt(0)) {
-            if ((var_1.length() > 1) && (var_2.length() == 1)) {
-                var1_alphabetical = var_2;
-                var2_alphabetical = var_1;
+        if ((int) varOne.charAt(0) == (int) varTwo.charAt(0)) {
+            if ((varOne.length() > 1) && (varTwo.length() == 1)) {
+                varAbsc = varTwo;
+                varOrd = varOne;
             }
-            if ((var_1.length() > 1) && (var_2.length() > 1)) {
-                int index_var1 = Integer.parseInt(var_1.substring(2));
-                int index_var2 = Integer.parseInt(var_2.substring(2));
-                if (index_var1 > index_var2) {
-                    var1_alphabetical = var_2;
-                    var2_alphabetical = var_1;
+            if ((varOne.length() > 1) && (varTwo.length() > 1)) {
+                int indexOfVarOne = Integer.parseInt(varOne.substring(2));
+                int indexOfVarTwo = Integer.parseInt(varTwo.substring(2));
+                if (indexOfVarOne > indexOfVarTwo) {
+                    varAbsc = varTwo;
+                    varOrd = varOne;
                 }
             }
         }
@@ -2156,25 +2159,24 @@ public class MathCommandCompiler {
         graphicMethods2D.setIsFixed(false);
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr);
-        graphicMethods2D.setVars(var1_alphabetical, var2_alphabetical);
+        graphicMethods2D.setVars(varAbsc, varOrd);
         graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setSpecialPointsOccur(false);
-        HashMap<Integer, double[]> implicit_graph = NumericalMethods.solveImplicitEquation(expr, var1_alphabetical, var2_alphabetical,
+        HashMap<Integer, double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        graphicMethods2D.setImplicitGraph(implicit_graph);
+        graphicMethods2D.setImplicitGraph(implicitGraph);
         graphicMethods2D.drawGraph2D();
 
     }
 
-    private static void executePlotCurve2D(Command c, GraphicMethodsCurves2D graphicMethodsCurves2D) throws ExpressionException,
-            EvaluationException {
+    private static void executePlotCurve2D(Command command, GraphicMethodsCurves2D graphicMethodsCurves2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
         Expression[] expr = new Expression[2];
-        expr[0] = (Expression) c.getParams()[0];
+        expr[0] = (Expression) command.getParams()[0];
         expr[0] = expr[0].simplify();
         expr[0].getContainedVars(vars);
-        expr[1] = (Expression) c.getParams()[1];
+        expr[1] = (Expression) command.getParams()[1];
         expr[1].getContainedVars(vars);
         expr[1] = expr[1].simplify();
 
@@ -2183,8 +2185,8 @@ public class MathCommandCompiler {
             vars.add("t");
         }
 
-        Expression t_0 = (Expression) c.getParams()[2];
-        Expression t_1 = (Expression) c.getParams()[3];
+        Expression t_0 = (Expression) command.getParams()[2];
+        Expression t_1 = (Expression) command.getParams()[3];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2198,18 +2200,18 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve3D(Command c, GraphicMethodsCurves3D graphicMethodsCurves3D) throws ExpressionException,
+    private static void executePlotCurve3D(Command command, GraphicMethodsCurves3D graphicMethodsCurves3D) throws ExpressionException,
             EvaluationException {
 
         HashSet vars = new HashSet();
         Expression[] expr = new Expression[3];
-        expr[0] = (Expression) c.getParams()[0];
+        expr[0] = (Expression) command.getParams()[0];
         expr[0].getContainedVars(vars);
         expr[0] = expr[0].simplify();
-        expr[1] = (Expression) c.getParams()[1];
+        expr[1] = (Expression) command.getParams()[1];
         expr[1].getContainedVars(vars);
         expr[1] = expr[1].simplify();
-        expr[2] = (Expression) c.getParams()[2];
+        expr[2] = (Expression) command.getParams()[2];
         expr[2].getContainedVars(vars);
         expr[2] = expr[2].simplify();
 
@@ -2218,8 +2220,8 @@ public class MathCommandCompiler {
             vars.add("t");
         }
 
-        Expression t_0 = (Expression) c.getParams()[3];
-        Expression t_1 = (Expression) c.getParams()[4];
+        Expression t_0 = (Expression) command.getParams()[3];
+        Expression t_1 = (Expression) command.getParams()[4];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2234,13 +2236,12 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotPolar2D(Command c, GraphicMethodsPolar2D graphicMethodsPolar2D) throws ExpressionException,
-            EvaluationException {
+    private static void executePlotPolar2D(Command command, GraphicMethodsPolar2D graphicMethodsPolar2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression[] exprs = new Expression[c.getParams().length - 2];
-        for (int i = 0; i < c.getParams().length - 2; i++) {
-            exprs[i] = (Expression) c.getParams()[i];
+        Expression[] exprs = new Expression[command.getParams().length - 2];
+        for (int i = 0; i < command.getParams().length - 2; i++) {
+            exprs[i] = (Expression) command.getParams()[i];
             exprs[i] = exprs[i].simplify();
             exprs[i].getContainedVars(vars);
         }
@@ -2250,15 +2251,15 @@ public class MathCommandCompiler {
             vars.add("x");
         }
 
-        Expression phi_0 = (Expression) c.getParams()[c.getParams().length - 2];
-        Expression phi_1 = (Expression) c.getParams()[c.getParams().length - 1];
+        Expression phi_0 = (Expression) command.getParams()[command.getParams().length - 2];
+        Expression phi_1 = (Expression) command.getParams()[command.getParams().length - 1];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
         graphicMethodsPolar2D.setIsInitialized(true);
         graphicMethodsPolar2D.clearExpressionAndGraph();
-        for (int i = 0; i < c.getParams().length - 2; i++) {
+        for (int i = 0; i < command.getParams().length - 2; i++) {
             graphicMethodsPolar2D.addExpression(exprs[i]);
         }
         graphicMethodsPolar2D.setVar(var);
@@ -2268,22 +2269,22 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolve(Command c, GraphicMethods2D graphicMethods2D, JTextArea area, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeSolve(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+            throws EvaluationException {
 
         HashSet vars = new HashSet();
-        Expression f = (Expression) c.getParams()[0];
-        Expression g = (Expression) c.getParams()[1];
+        Expression f = (Expression) command.getParams()[0];
+        Expression g = (Expression) command.getParams()[1];
 
-        if (c.getParams().length <= 3) {
+        if (command.getParams().length <= 3) {
 
             f.getContainedVars(vars);
             g.getContainedVars(vars);
 
             //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var;
-            if (c.getParams().length == 3) {
-                var = (String) c.getParams()[2];
+            if (command.getParams().length == 3) {
+                var = (String) command.getParams()[2];
             } else {
                 var = "x";
                 if (!vars.isEmpty()) {
@@ -2351,17 +2352,17 @@ public class MathCommandCompiler {
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) c.getParams()[0]).writeExpression()
+                    + ((Expression) command.getParams()[0]).writeExpression()
                     + " = "
-                    + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
+                    + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
             for (int i = 0; i < zeros.size(); i++) {
                 output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
             }
             /**
              * Grafische Ausgabe
              */
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) c.getParams()[0],
-                    " = ", (Expression) c.getParams()[1], " :");
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
+                    " = ", (Expression) command.getParams()[1], " :");
             for (int i = 0; i < zeros.size(); i++) {
                 graphicArea.addComponent(var + "_" + (i + 1) + " = ", zeros.get(i));
             }
@@ -2390,26 +2391,26 @@ public class MathCommandCompiler {
                 var = (String) iter.next();
             }
 
-            Expression x_0 = (Expression) c.getParams()[2];
-            Expression x_1 = (Expression) c.getParams()[3];
+            Expression x_0 = (Expression) command.getParams()[2];
+            Expression x_1 = (Expression) command.getParams()[3];
             /**
              * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
              * das Intervall in 10000 Teile unterteilt werden.
              */
             int n = 10000;
 
-            if (c.getParams().length == 5) {
-                n = (int) c.getParams()[4];
+            if (command.getParams().length == 5) {
+                n = (int) command.getParams()[4];
             }
 
-            if (equation instanceof Constant) {
+            if (equation.isConstant()) {
                 /**
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                        + ((Expression) c.getParams()[0]).writeExpression()
+                        + ((Expression) command.getParams()[0]).writeExpression()
                         + " = "
-                        + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
+                        + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
                 if (equation.equals(Expression.ZERO)) {
                     output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
                 } else {
@@ -2418,8 +2419,8 @@ public class MathCommandCompiler {
                 /**
                  * Grafische Ausgabe
                  */
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) c.getParams()[0],
-                        " = ", (Expression) c.getParams()[1], " :");
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
+                        " = ", (Expression) command.getParams()[1], " :");
                 if (equation.equals(Expression.ZERO)) {
                     graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
                 } else {
@@ -2450,14 +2451,14 @@ public class MathCommandCompiler {
              * Textliche Ausgabe
              */
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) c.getParams()[0]).writeExpression()
+                    + ((Expression) command.getParams()[0]).writeExpression()
                     + " = "
-                    + ((Expression) c.getParams()[1]).writeExpression() + ": \n \n");
+                    + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
             /**
              * Grafische Ausgabe
              */
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) c.getParams()[0],
-                    " = ", (Expression) c.getParams()[1], " :");
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
+                    " = ", (Expression) command.getParams()[1], " :");
 
             for (int i = 0; i < zeros.size(); i++) {
                 /**
@@ -2512,152 +2513,151 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDEQ(Command c, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeSolveDEQ(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+            throws EvaluationException {
 
-        int ord = (int) c.getParams()[2];
+        int ord = (int) command.getParams()[2];
         HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
+        Expression expr = ((Expression) command.getParams()[0]).simplify();
         expr.getContainedVars(vars);
 
-        HashSet vars_without_primes = new HashSet();
+        HashSet varsWithoutPrimes = new HashSet();
         Iterator iter = vars.iterator();
-        String var_without_primes;
+        String varWithoutPrimes;
         for (int i = 0; i < vars.size(); i++) {
-            var_without_primes = (String) iter.next();
-            if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])) {
-                if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
+            varWithoutPrimes = (String) iter.next();
+            if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
+                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
+                    throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
                             + ord
                             + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
                             + (ord - 1)
                             + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
                 }
-                var_without_primes = var_without_primes.replaceAll("'", "");
+                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
-            vars_without_primes.add(var_without_primes);
+            varsWithoutPrimes.add(varWithoutPrimes);
         }
 
-        String var_1 = (String) c.getParams()[1];
-        Expression x_0 = (Expression) c.getParams()[3];
-        Expression x_1 = (Expression) c.getParams()[4];
+        String varAbsc = (String) command.getParams()[1];
+        Expression x_0 = (Expression) command.getParams()[3];
+        Expression x_1 = (Expression) command.getParams()[4];
         Expression[] y_0 = new Expression[ord];
         for (int i = 0; i < y_0.length; i++) {
-            y_0[i] = (Expression) c.getParams()[i + 5];
+            y_0[i] = (Expression) command.getParams()[i + 5];
         }
-        double[] y_0_as_double = new double[ord];
+        double[] startValues = new double[ord];
         for (int i = 0; i < y_0.length; i++) {
-            y_0_as_double[i] = y_0[i].evaluate();
+            startValues[i] = y_0[i].evaluate();
         }
 
         /**
          * Zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
-         * werden. Falls dieser nicht eindeutig ist, wird er kanonisch als "y"
-         * vergeben.
+         * werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
-        String var_2;
+        String varOrd;
 
-        if (vars_without_primes.isEmpty()) {
-            if (var_1.equals("y")) {
-                var_2 = "z";
+        if (varsWithoutPrimes.isEmpty()) {
+            if (varAbsc.equals("y")) {
+                varOrd = "z";
             } else {
-                var_2 = "y";
+                varOrd = "y";
             }
-        } else if (vars_without_primes.size() == 1) {
-            if (vars_without_primes.contains(var_1)) {
-                if (var_1.equals("y")) {
-                    var_2 = "z";
+        } else if (varsWithoutPrimes.size() == 1) {
+            if (varsWithoutPrimes.contains(varAbsc)) {
+                if (varAbsc.equals("y")) {
+                    varOrd = "z";
                 } else {
-                    var_2 = "y";
+                    varOrd = "y";
                 }
             } else {
-                iter = vars_without_primes.iterator();
-                var_2 = (String) iter.next();
+                iter = varsWithoutPrimes.iterator();
+                varOrd = (String) iter.next();
             }
         } else {
-            iter = vars_without_primes.iterator();
-            var_2 = (String) iter.next();
-            if (var_2.equals(var_1)) {
-                var_2 = (String) iter.next();
+            iter = varsWithoutPrimes.iterator();
+            varOrd = (String) iter.next();
+            if (varOrd.equals(varAbsc)) {
+                varOrd = (String) iter.next();
             }
         }
 
-        double[][] solution_of_deq = NumericalMethods.solveDifferentialEquation(expr.simplify(), var_1, var_2, ord, x_0.evaluate(), x_1.evaluate(), y_0_as_double, 1000);
+        double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquation(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
 
         /**
          * Formulierung und Ausgabe des AWP.
          */
-        String formulation_of_AWP = Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ") + var_2;
-        ArrayList formulation_of_AWP_for_graphicArea = new ArrayList();
+        String formulationOfAWPForTextArea = Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ") + varOrd;
+        ArrayList formulationOfAWPForGraphicArea = new ArrayList();
 
         for (int i = 0; i < ord; i++) {
-            formulation_of_AWP = formulation_of_AWP + "'";
+            formulationOfAWPForTextArea = formulationOfAWPForTextArea + "'";
         }
 
-        formulation_of_AWP_for_graphicArea.add(formulation_of_AWP + "(" + var_1 + ") = ");
-        formulation_of_AWP_for_graphicArea.add(expr);
-        formulation_of_AWP = formulation_of_AWP + "(" + var_1 + ") = " + expr.writeExpression();
+        formulationOfAWPForGraphicArea.add(formulationOfAWPForTextArea + "(" + varAbsc + ") = ");
+        formulationOfAWPForGraphicArea.add(expr);
+        formulationOfAWPForTextArea = formulationOfAWPForTextArea + "(" + varAbsc + ") = " + expr.writeExpression();
 
-        String var_2_with_primes;
+        String varOrdWithPrimes;
         for (int i = 0; i < ord; i++) {
-            formulation_of_AWP = formulation_of_AWP + ", " + var_2;
-            formulation_of_AWP_for_graphicArea.add(", ");
-            var_2_with_primes = var_2;
+            formulationOfAWPForTextArea = formulationOfAWPForTextArea + ", " + varOrd;
+            formulationOfAWPForGraphicArea.add(", ");
+            varOrdWithPrimes = varOrd;
             for (int j = 0; j < i; j++) {
-                formulation_of_AWP = formulation_of_AWP + "'";
-                var_2_with_primes = var_2_with_primes + "'";
+                formulationOfAWPForTextArea = formulationOfAWPForTextArea + "'";
+                varOrdWithPrimes = varOrdWithPrimes + "'";
             }
 
-            formulation_of_AWP = formulation_of_AWP + "(" + x_0.writeExpression() + ") = ";
-            formulation_of_AWP = formulation_of_AWP + y_0[i].writeExpression();
-            formulation_of_AWP_for_graphicArea.add(var_2_with_primes);
-            formulation_of_AWP_for_graphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
-            formulation_of_AWP_for_graphicArea.add(x_0);
-            formulation_of_AWP_for_graphicArea.add(" = ");
-            formulation_of_AWP_for_graphicArea.add(y_0[i]);
+            formulationOfAWPForTextArea = formulationOfAWPForTextArea + "(" + x_0.writeExpression() + ") = ";
+            formulationOfAWPForTextArea = formulationOfAWPForTextArea + y_0[i].writeExpression();
+            formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
+            formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+            formulationOfAWPForGraphicArea.add(x_0);
+            formulationOfAWPForGraphicArea.add(" = ");
+            formulationOfAWPForGraphicArea.add(y_0[i]);
         }
 
-        formulation_of_AWP = formulation_of_AWP + ", " + x_0.writeExpression() + " \u2264 " + var_1 + " \u2264 " + x_1.writeExpression() + ": \n \n";
-        formulation_of_AWP_for_graphicArea.add(", ");
-        formulation_of_AWP_for_graphicArea.add(x_0);
-        formulation_of_AWP_for_graphicArea.add(" \u2264 ");
-        formulation_of_AWP_for_graphicArea.add(var_1);
-        formulation_of_AWP_for_graphicArea.add(" \u2264 ");
-        formulation_of_AWP_for_graphicArea.add(x_1);
-        formulation_of_AWP_for_graphicArea.add(":");
+        formulationOfAWPForTextArea = formulationOfAWPForTextArea + ", " + x_0.writeExpression() + " \u2264 " + varAbsc + " \u2264 " + x_1.writeExpression() + ": \n \n";
+        formulationOfAWPForGraphicArea.add(", ");
+        formulationOfAWPForGraphicArea.add(x_0);
+        formulationOfAWPForGraphicArea.add(" \u2264 ");
+        formulationOfAWPForGraphicArea.add(varAbsc);
+        formulationOfAWPForGraphicArea.add(" \u2264 ");
+        formulationOfAWPForGraphicArea.add(x_1);
+        formulationOfAWPForGraphicArea.add(":");
 
         /**
          * Textliche Ausgabe
          */
-        output.add(formulation_of_AWP);
+        output.add(formulationOfAWPForTextArea);
         /**
          * Grafische Ausgabe
          */
-        graphicArea.addComponent(formulation_of_AWP_for_graphicArea);
+        graphicArea.addComponent(formulationOfAWPForGraphicArea);
 
         /**
          * Lösungen ausgeben.
          */
-        for (double[] solution : solution_of_deq) {
+        for (double[] solution : solutionOfDifferentialEquation) {
             /**
              * Textliche Ausgabe
              */
-            output.add(var_1 + " = " + solution[0] + "; " + var_2 + " = " + solution[1] + "\n \n");
+            output.add(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1] + "\n \n");
             /**
              * Grafische Ausgabe
              */
-            graphicArea.addComponent(var_1 + " = " + solution[0] + "; " + var_2 + " = " + solution[1]);
+            graphicArea.addComponent(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
         }
-        if (solution_of_deq.length < 1001) {
+        if (solutionOfDifferentialEquation.length < 1001) {
             /**
              * Falls die Lösung innerhalb des Berechnungsbereichs
              * unendlich/undefiniert ist.
              */
             output.add(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
-                    + (x_0.evaluate() + (solution_of_deq.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+                    + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ". \n \n");
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
-                    + (x_0.evaluate() + (solution_of_deq.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+                    + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ".");
         }
 
@@ -2668,65 +2668,65 @@ public class MathCommandCompiler {
         graphicMethods2D.setIsExplicit(true);
         graphicMethods2D.setIsFixed(true);
         graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addGraph(solution_of_deq);
-        graphicMethods2D.setVars(var_1, var_2);
+        graphicMethods2D.addGraph(solutionOfDifferentialEquation);
+        graphicMethods2D.setVars(varAbsc, varOrd);
         graphicMethods2D.computeScreenSizes();
         graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
 
     }
 
-    private static void executeTable(Command c, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeTable(Command command, GraphicArea graphicArea) throws EvaluationException {
 
-        LogicalExpression log_expr = (LogicalExpression) c.getParams()[0];
+        LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet vars = new HashSet();
-        log_expr.getContainedVars(vars);
-        int n = vars.size();
-        if (n > 20) {
+        logExpr.getContainedVars(vars);
+        int numberOfVars = vars.size();
+        if (numberOfVars > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")
-                    + log_expr.writeLogicalExpression()
+                    + logExpr.writeLogicalExpression()
                     + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2"));
         }
 
         /**
          * Textliche Ausgabe
          */
-        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeLogicalExpression() + ": \n \n");
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
         /**
          * Grafische Ausgabe
          */
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), log_expr);
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr);
 
         /**
          * Falls es sich um einen konstanten Ausdruck handelt.
          */
-        if (n == 0) {
-            boolean value = log_expr.evaluate();
+        if (numberOfVars == 0) {
+            boolean value = logExpr.evaluate();
             if (value) {
                 /**
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeLogicalExpression()
+                        + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
                 /**
                  * Grafische Ausgabe
                  */
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeLogicalExpression()
+                        + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
                 /**
                  * Textliche Ausgabe
                  */
                 output.add(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeLogicalExpression()
+                        + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
                 /**
                  * Grafische Ausgabe
                  */
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + log_expr.writeLogicalExpression()
+                        + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
             return;
@@ -2736,87 +2736,87 @@ public class MathCommandCompiler {
          * Für die Geschwindigkeit der Tabellenberechnung: log_expr
          * vereinfachen.
          */
-        log_expr = log_expr.simplify();
+        logExpr = logExpr.simplify();
 
         /**
          * Nummerierung der logischen Variablen.
          */
-        HashMap<Integer, String> vars_enumerated = new HashMap<>();
+        HashMap<Integer, String> varsEnumerated = new HashMap<>();
 
         Iterator iter = vars.iterator();
         for (int i = 0; i < vars.size(); i++) {
-            vars_enumerated.put(vars_enumerated.size(), (String) iter.next());
+            varsEnumerated.put(varsEnumerated.size(), (String) iter.next());
         }
 
-        int table_length = BigInteger.valueOf(2).pow(n).intValue();
+        int tableLength = BigInteger.valueOf(2).pow(numberOfVars).intValue();
 
         /**
          * Textliche Ausgabe
          */
-        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + log_expr.writeLogicalExpression() + ": \n \n");
+        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
         /**
          * Grafische Ausgabe
          */
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), log_expr);
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr);
 
-        String vars_ordered = Translator.translateExceptionMessage("MCC_ORDER_OF_VARIABLES_IN_TABLE");
-        for (int i = 0; i < vars_enumerated.size(); i++) {
-            vars_ordered = vars_ordered + vars_enumerated.get(i) + ", ";
+        String varsInOrder = Translator.translateExceptionMessage("MCC_ORDER_OF_VARIABLES_IN_TABLE");
+        for (int i = 0; i < varsEnumerated.size(); i++) {
+            varsInOrder = varsInOrder + varsEnumerated.get(i) + ", ";
         }
-        vars_ordered = vars_ordered.substring(0, vars_ordered.length() - 2) + " \n \n";
+        varsInOrder = varsInOrder.substring(0, varsInOrder.length() - 2) + " \n \n";
 
         /**
          * Textliche Ausgabe
          */
-        output.add(vars_ordered);
+        output.add(varsInOrder);
         /**
          * Grafische Ausgabe
          */
-        graphicArea.addComponent(vars_ordered);
+        graphicArea.addComponent(varsInOrder);
 
         /**
          * Erstellung eines Binärcounters zum Durchlaufen aller möglichen
          * Belegungen der Variablen in vars.
          */
-        boolean[] vars_values = new boolean[vars.size()];
-        boolean current_value;
+        boolean[] varsValues = new boolean[vars.size()];
+        boolean currentValue;
 
-        String binary_counter;
-        for (int i = 0; i < table_length; i++) {
+        String binaryCounter;
+        for (int i = 0; i < tableLength; i++) {
 
-            binary_counter = "(";
+            binaryCounter = "(";
             for (int j = 0; j < vars.size(); j++) {
-                if (vars_values[j]) {
-                    binary_counter = binary_counter + "1, ";
+                if (varsValues[j]) {
+                    binaryCounter = binaryCounter + "1, ";
                 } else {
-                    binary_counter = binary_counter + "0, ";
+                    binaryCounter = binaryCounter + "0, ";
                 }
-                LogicalVariable.setValue(vars_enumerated.get(j), vars_values[j]);
+                LogicalVariable.setValue(varsEnumerated.get(j), varsValues[j]);
             }
-            binary_counter = binary_counter.substring(0, binary_counter.length() - 2) + "): ";
+            binaryCounter = binaryCounter.substring(0, binaryCounter.length() - 2) + "): ";
 
-            current_value = log_expr.evaluate();
-            if (current_value) {
-                binary_counter = binary_counter + "1 \n";
+            currentValue = logExpr.evaluate();
+            if (currentValue) {
+                binaryCounter = binaryCounter + "1 \n";
             } else {
-                binary_counter = binary_counter + "0 \n";
+                binaryCounter = binaryCounter + "0 \n";
             }
 
             /**
              * Textliche Ausgabe
              */
-            output.add(binary_counter);
+            output.add(binaryCounter);
             /**
              * Grafische Ausgabe
              */
-            graphicArea.addComponent(binary_counter);
+            graphicArea.addComponent(binaryCounter);
 
-            vars_values = LogicalExpression.binaryCounter(vars_values);
+            varsValues = LogicalExpression.binaryCounter(varsValues);
 
             /**
              * Am Ende der Tabelle: Leerzeile lassen.
              */
-            if (i == table_length - 1) {
+            if (i == tableLength - 1) {
                 output.add("\n");
             }
 
@@ -2824,59 +2824,62 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command c, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeTangent(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+            throws EvaluationException {
 
-        Expression expr = (Expression) c.getParams()[0];
-        HashMap<String, Expression> vars = (HashMap<String, Expression>) c.getParams()[1];
+        Expression expr = (Expression) command.getParams()[0];
+        HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
 
-        String tangent_announcement = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
+        String tangentAnnouncementForTextArea = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
                 + expr.writeExpression()
                 + Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
-        ArrayList tangent_announcement_for_graphicArea = new ArrayList();
-        tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
-        tangent_announcement_for_graphicArea.add(expr);
-        tangent_announcement_for_graphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
+        ArrayList tangentAnnouncementForGraphicArea = new ArrayList();
+        tangentAnnouncementForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
+        tangentAnnouncementForGraphicArea.add(expr);
+        tangentAnnouncementForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
-            tangent_announcement = tangent_announcement + var + " = " + vars.get(var).writeExpression() + ", ";
-            tangent_announcement_for_graphicArea.add(var + " = ");
-            tangent_announcement_for_graphicArea.add(vars.get(var));
-            tangent_announcement_for_graphicArea.add(", ");
+            tangentAnnouncementForTextArea = tangentAnnouncementForTextArea + var + " = " + vars.get(var).writeExpression() + ", ";
+            tangentAnnouncementForGraphicArea.add(var + " = ");
+            tangentAnnouncementForGraphicArea.add(vars.get(var));
+            tangentAnnouncementForGraphicArea.add(", ");
         }
         /**
          * In der textlichen und in der grafischen Ausgabe das letzte
          * (überflüssige) Komma entfernen.
          */
-        tangent_announcement = tangent_announcement.substring(0, tangent_announcement.length() - 2) + ": \n \n";
-        tangent_announcement_for_graphicArea.remove(tangent_announcement_for_graphicArea.size() - 1);
-        tangent_announcement_for_graphicArea.add(":");
+        tangentAnnouncementForTextArea = tangentAnnouncementForTextArea.substring(0, tangentAnnouncementForTextArea.length() - 2) + ": \n \n";
+        tangentAnnouncementForGraphicArea.remove(tangentAnnouncementForGraphicArea.size() - 1);
+        tangentAnnouncementForGraphicArea.add(":");
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
 
         /**
          * Textliche Ausgabe
          */
-        output.add(tangent_announcement);
+        output.add(tangentAnnouncementForTextArea);
         output.add("Y = " + tangent.writeExpression() + "\n \n");
         /**
          * Grafische Ausgabe
          */
-        graphicArea.addComponent(tangent_announcement_for_graphicArea);
+        graphicArea.addComponent(tangentAnnouncementForGraphicArea);
         graphicArea.addComponent("Y = ", tangent);
 
         if (vars.size() == 1) {
 
             String var = "";
-            for (String unique_var : vars.keySet()) {
-                var = unique_var;
+            /**
+             * vars enthält in diesem Fall nur eine Variable.
+             */
+            for (String uniqueVar : vars.keySet()) {
+                var = uniqueVar;
             }
             double x_0 = vars.get(var).evaluate() - 1;
             double x_1 = x_0 + 2;
 
-            double[][] tangent_point = new double[1][2];
-            tangent_point[0][0] = vars.get(var).evaluate();
-            tangent_point[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
+            double[][] tangentPoint = new double[1][2];
+            tangentPoint[0][0] = vars.get(var).evaluate();
+            tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
 
             /**
              * Im Falle einer Veränderlichen: den Graphen der Funktion und die
@@ -2892,117 +2895,111 @@ public class MathCommandCompiler {
             graphicMethods2D.computeScreenSizes(x_0, x_1);
             graphicMethods2D.expressionToGraph(var, x_0, x_1);
             graphicMethods2D.setSpecialPointsOccur(true);
-            graphicMethods2D.setSpecialPoints(tangent_point);
+            graphicMethods2D.setSpecialPoints(tangentPoint);
             graphicMethods2D.drawGraph2D();
 
         }
 
     }
 
-    private static void executeTaylorDEQ(Command c, GraphicArea graphicArea) throws ExpressionException, EvaluationException {
+    private static void executeTaylorDEQ(Command command, GraphicArea graphicArea) throws EvaluationException {
 
-        int ord = (int) c.getParams()[2];
+        int ord = (int) command.getParams()[2];
         HashSet vars = new HashSet();
-        Expression expr = (Expression) c.getParams()[0];
-        expr = expr.simplify();
+        Expression expr = ((Expression) command.getParams()[0]).simplify();
         expr.getContainedVars(vars);
 
-        HashSet vars_without_primes = new HashSet();
+        HashSet varsWithoutPrimes = new HashSet();
         Iterator iter = vars.iterator();
-        String var_without_primes;
+        String varWithoutPrimes;
         for (int i = 0; i < vars.size(); i++) {
-            var_without_primes = (String) iter.next();
-            if (!var_without_primes.replaceAll("'", "").equals(c.getParams()[1])) {
-                if (var_without_primes.length() - var_without_primes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
+            varWithoutPrimes = (String) iter.next();
+            if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
+                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
+                    throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
                             + ord
                             + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
                             + (ord - 1)
                             + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
                 }
-                var_without_primes = var_without_primes.replaceAll("'", "");
+                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
-            vars_without_primes.add(var_without_primes);
+            varsWithoutPrimes.add(varWithoutPrimes);
         }
 
-        String var_1 = (String) c.getParams()[1];
-        Expression x_0 = (Expression) c.getParams()[3];
+        String varAbsc = (String) command.getParams()[1];
+        Expression x_0 = (Expression) command.getParams()[3];
         Expression[] y_0 = new Expression[ord];
         for (int i = 0; i < y_0.length; i++) {
-            y_0[i] = (Expression) c.getParams()[i + 4];
+            y_0[i] = (Expression) command.getParams()[i + 4];
         }
 
-        int k = (int) c.getParams()[ord + 4];
+        int k = (int) command.getParams()[ord + 4];
 
         /**
          * zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
-         * werden.
+         * werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
-        String var_2;
+        String varOrd;
 
-        if (vars_without_primes.isEmpty()) {
-            if (var_1.equals("y")) {
-                var_2 = "z";
+        if (varsWithoutPrimes.isEmpty()) {
+            if (varAbsc.equals("y")) {
+                varOrd = "z";
             } else {
-                var_2 = "y";
+                varOrd = "y";
             }
-        } else if (vars_without_primes.size() == 1) {
-            if (vars_without_primes.contains(var_1)) {
-                if (var_1.equals("y")) {
-                    var_2 = "z";
+        } else if (varsWithoutPrimes.size() == 1) {
+            if (varsWithoutPrimes.contains(varAbsc)) {
+                if (varAbsc.equals("y")) {
+                    varOrd = "z";
                 } else {
-                    var_2 = "y";
+                    varOrd = "y";
                 }
             } else {
-                iter = vars_without_primes.iterator();
-                var_2 = (String) iter.next();
+                iter = varsWithoutPrimes.iterator();
+                varOrd = (String) iter.next();
             }
         } else {
-            iter = vars_without_primes.iterator();
-            var_2 = (String) iter.next();
-            if (var_2.equals(var_1)) {
-                var_2 = (String) iter.next();
+            iter = varsWithoutPrimes.iterator();
+            varOrd = (String) iter.next();
+            if (varOrd.equals(varAbsc)) {
+                varOrd = (String) iter.next();
             }
         }
 
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, var_1, var_2, ord, x_0, y_0, k);
+        Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
         /**
          * Textliche Ausgabe
          */
-        output.add(var_2 + "(" + var_1 + ") = " + result.writeExpression() + "\n \n");
+        output.add(varOrd + "(" + varAbsc + ") = " + result.writeExpression() + "\n \n");
         /**
          * Graphische Ausgabe
          */
-        graphicArea.addComponent(var_2 + "(" + var_1 + ") = ", result);
+        graphicArea.addComponent(varOrd + "(" + varAbsc + ") = ", result);
 
     }
 
-    private static void executeUndefine(Command c, HashMap definedVars, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeUndefine(Command comand, HashMap definedVars, GraphicArea graphicArea)
+            throws EvaluationException {
 
-        Object[] vars = c.getParams();
-        for (int i = 0; i < vars.length; i++) {
-            if (definedVars.containsKey((String) vars[i])) {
-                definedVars.remove((String) vars[i]);
+        Object[] vars = comand.getParams();
+        for (Object var : vars) {
+            if (definedVars.containsKey((String) var)) {
+                definedVars.remove((String) var);
                 /**
                  * Textliche Ausgabe
                  */
-                output.add(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
-                        + (String) vars[i]
-                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n");
+                output.add(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n");
                 /**
                  * Graphische Ausgabe
                  */
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1")
-                        + (String) vars[i]
-                        + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
             }
         }
 
     }
 
-    private static void executeUndefineAll(HashMap definedVars, GraphicArea graphicArea)
-            throws ExpressionException, EvaluationException {
+    private static void executeUndefineAll(HashMap definedVars, GraphicArea graphicArea) {
 
         definedVars.clear();
         /**
