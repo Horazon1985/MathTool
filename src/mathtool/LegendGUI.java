@@ -11,15 +11,15 @@ import java.util.HashMap;
 
 public class LegendGUI extends JDialog {
 
-    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+    public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             String[] instructions, HashMap<Integer, Color> colors, HashMap<Integer, Expression> expr) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 500) / 2 + x_mathtoolform,
-                (heigth_mathtoolform - 145 - 20 * instructions.length - 20 * colors.size()) / 2 + y_mathtoolform,
+        this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
+                (mathtoolformHeight - 145 - 20 * instructions.length - 20 * colors.size()) / 2 + mathtoolformY,
                 500, 145 + 20 * instructions.length + 20 * colors.size());
         this.getContentPane().setBackground(Color.white);
 
@@ -63,15 +63,15 @@ public class LegendGUI extends JDialog {
     /**
      * Legende für Graphen impliziter Funktionen.
      */
-    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+    public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             String[] instructions, Color color, Expression expr) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 500) / 2 + x_mathtoolform,
-                (heigth_mathtoolform - 165 - 20 * instructions.length) / 2 + y_mathtoolform,
+        this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
+                (mathtoolformHeight - 165 - 20 * instructions.length) / 2 + mathtoolformY,
                 500, 165 + 20 * instructions.length);
         this.getContentPane().setBackground(Color.white);
 
@@ -109,15 +109,15 @@ public class LegendGUI extends JDialog {
         repaint();
     }
 
-    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+    public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             String[] instructions, Expression expr) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 500) / 2 + x_mathtoolform,
-                (heigth_mathtoolform - 165 - 20 * instructions.length) / 2 + y_mathtoolform,
+        this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
+                (mathtoolformHeight - 165 - 20 * instructions.length) / 2 + mathtoolformY,
                 500, 165 + 20 * instructions.length);
         this.getContentPane().setBackground(Color.white);
 
@@ -153,15 +153,15 @@ public class LegendGUI extends JDialog {
         repaint();
     }
 
-    public LegendGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform,
+    public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             String[] instructions, Expression[] expr) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
-        this.setBounds((with_mathtoolform - 500) / 2 + x_mathtoolform,
-                (heigth_mathtoolform - 165 - 20 * instructions.length - 20 * expr.length) / 2 + y_mathtoolform,
+        this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
+                (mathtoolformHeight - 165 - 20 * instructions.length - 20 * expr.length) / 2 + mathtoolformY,
                 500, 165 + 20 * instructions.length + 20 * expr.length);
         this.getContentPane().setBackground(Color.white);
 

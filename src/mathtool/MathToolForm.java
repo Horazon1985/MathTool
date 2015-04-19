@@ -125,7 +125,7 @@ public class MathToolForm extends JFrame implements MouseListener {
          * Textliches Ausgabefeld ausrichten
          */
         mathToolTextArea = new JTextArea();
-        Font mathToolAreaFont = new Font("Arial", Font.BOLD, 12);
+        Font mathToolAreaFont = new Font("Arial", Font.BOLD, 14);
         mathToolTextArea.setFont(mathToolAreaFont);
         mathToolTextArea.setEditable(false);
         mathToolTextArea.setLineWrap(true);
@@ -140,7 +140,7 @@ public class MathToolForm extends JFrame implements MouseListener {
          * Graphisches Ausgabefeld ausrichten
          */
         mathToolGraphicArea = new GraphicArea(10, 10, this.getWidth() - 40, this.getHeight() - 170);
-        mathToolGraphicArea.setFontSize(16);
+        mathToolGraphicArea.setFontSize(18);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
@@ -471,7 +471,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solve(exp(6*x)-5*exp(3*x)+1=0)");
+        inputField.setText("solve(sin(x)+sin(x)^3-5/8=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);

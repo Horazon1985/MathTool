@@ -20,7 +20,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
     private final JEditorPane helpArea;
     private final JScrollPane scrollPaneHelp;
 
-    public HelpDialogGUI(int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
+    public HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
 
         setTitle(Translator.translateExceptionMessage("GUI_HelpDialogGUI_HELP"));
         setLayout(null);
@@ -71,7 +71,7 @@ public class HelpDialogGUI extends JDialog implements MouseListener {
         add(commands);
         add(contact);
 
-        this.setBounds((with_mathtoolform - 505) / 2 + x_mathtoolform, (heigth_mathtoolform - 680) / 2 + y_mathtoolform, 505, 370);
+        this.setBounds((mathtoolformWidth - 505) / 2 + mathtoolformX, (mathtoolformHeight - 680) / 2 + mathtoolformY, 505, 370);
         this.getContentPane().setBackground(Color.white);
 
         /**

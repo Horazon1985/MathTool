@@ -14,13 +14,13 @@ public class ComputingDialogGUI extends JDialog {
     private final JLabel owlLabel;
     private final SwingWorker swingWorker;
 
-    public ComputingDialogGUI(SwingWorker swingWorker, int x_mathtoolform, int y_mathtoolform, int with_mathtoolform, int heigth_mathtoolform) {
+    public ComputingDialogGUI(SwingWorker swingWorker, int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
 
         setTitle(Translator.translateExceptionMessage("GUI_ComputingDialogGUI_INFO"));
         setLayout(null);
         setResizable(false);
 
-        this.setBounds((with_mathtoolform - 550) / 2 + x_mathtoolform, (heigth_mathtoolform - 100) / 2 + y_mathtoolform, 550, 100);
+        this.setBounds((mathtoolformWidth - 550) / 2 + mathtoolformX, (mathtoolformHeight - 100) / 2 + mathtoolformY, 550, 100);
         this.getContentPane().setBackground(Color.white);
 
         JLabel computingLabel = new JLabel(Translator.translateExceptionMessage("GUI_ComputingDialogGUI_COMPUTING"));
