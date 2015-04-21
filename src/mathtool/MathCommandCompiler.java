@@ -2298,7 +2298,7 @@ public class MathCommandCompiler {
             /**
              * Falls keine Lösungen ermittelt werden konnten, User informieren.
              */
-            if (zeros.isEmpty()) {
+            if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
                 /**
                  * Textliche Ausgabe
                  */
@@ -2348,6 +2348,13 @@ public class MathCommandCompiler {
 
             }
 
+            if (var.length() > 1) {
+                /**
+                 * Falls var etwa x_1 oder x' ist, so sollen die Lösungen
+                 * (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
+                 */
+                var = "(" + var + ")";
+            }
             /**
              * Textliche Ausgabe
              */
@@ -2355,16 +2362,24 @@ public class MathCommandCompiler {
                     + ((Expression) command.getParams()[0]).writeExpression()
                     + " = "
                     + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
-            for (int i = 0; i < zeros.size(); i++) {
-                output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+            if (zeros == SolveMethods.ALL_REALS) {
+                output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+            } else {
+                for (int i = 0; i < zeros.size(); i++) {
+                    output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                }
             }
             /**
              * Grafische Ausgabe
              */
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
                     " = ", (Expression) command.getParams()[1], " :");
-            for (int i = 0; i < zeros.size(); i++) {
-                graphicArea.addComponent(var + "_" + (i + 1) + " = ", zeros.get(i));
+            if (zeros == SolveMethods.ALL_REALS) {
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+            } else {
+                for (int i = 0; i < zeros.size(); i++) {
+                    graphicArea.addComponent(var + "_" + (i + 1) + " = ", zeros.get(i));
+                }
             }
 
             if (solutionContainsFreeParameter) {
@@ -2447,6 +2462,13 @@ public class MathCommandCompiler {
 
             HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
+            if (var.length() > 1) {
+                /**
+                 * Falls var etwa x_1 oder x' ist, so sollen die Lösungen
+                 * (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
+                 */
+                var = "(" + var + ")";
+            }
             /**
              * Textliche Ausgabe
              */
