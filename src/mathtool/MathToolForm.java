@@ -473,6 +473,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("solve(exp(3*x)+exp(6*x)=20)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -730,8 +731,8 @@ public class MathToolForm extends JFrame implements MouseListener {
                     String[] commandName = Expression.getOperatorAndArguments(input);
                     String[] params = Expression.getArguments(commandName[1]);
 
-                    for (TypeCommand c : TypeCommand.values()) {
-                        validCommand = validCommand || commandName[0].equals(c.toString());
+                    for (TypeCommand commandType : TypeCommand.values()) {
+                        validCommand = validCommand || commandName[0].equals(commandType.toString());
                         if (validCommand) {
                             break;
                         }
