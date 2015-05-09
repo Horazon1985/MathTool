@@ -2,13 +2,10 @@ package mathtool;
 
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
-import expressionbuilder.Constant;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.Variable;
-import expressionbuilder.TypeBinary;
 import expressionbuilder.TypeSimplify;
-import expressionbuilder.BinaryOperation;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
 import graphic.GraphicMethods2D;
@@ -38,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import simplifymethods.ExpressionCollection;
 
 public class MathCommandCompiler {
 
@@ -2293,7 +2291,7 @@ public class MathCommandCompiler {
                 }
             }
 
-            HashMap<Integer, Expression> zeros = SolveMethods.solveGeneralEquation(f, g, var);
+            ExpressionCollection zeros = SolveMethods.solveGeneralEquation(f, g, var);
 
             /**
              * Falls keine Lösungen ermittelt werden konnten, User informieren.
@@ -2317,7 +2315,7 @@ public class MathCommandCompiler {
              */
             boolean solutionContainsFreeParameter = false;
             String messageAboutFreeParameters = "";
-            for (int i = 0; i < zeros.size(); i++) {
+            for (int i = 0; i < zeros.getBound(); i++) {
                 solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
             }
             if (solutionContainsFreeParameter) {
@@ -2326,7 +2324,7 @@ public class MathCommandCompiler {
                 while (solutionContainsFreeParameterOfGivenIndex) {
                     maxIndex++;
                     solutionContainsFreeParameterOfGivenIndex = false;
-                    for (int i = 0; i < zeros.size(); i++) {
+                    for (int i = 0; i < zeros.getBound(); i++) {
                         solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
                                 || zeros.get(i).contains("K_" + maxIndex);
                     }
@@ -2365,7 +2363,7 @@ public class MathCommandCompiler {
             if (zeros == SolveMethods.ALL_REALS) {
                 output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
-                for (int i = 0; i < zeros.size(); i++) {
+                for (int i = 0; i < zeros.getBound(); i++) {
                     output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
                 }
             }
@@ -2377,7 +2375,7 @@ public class MathCommandCompiler {
             if (zeros == SolveMethods.ALL_REALS) {
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
-                for (int i = 0; i < zeros.size(); i++) {
+                for (int i = 0; i < zeros.getBound(); i++) {
                     graphicArea.addComponent(var + "_" + (i + 1) + " = ", zeros.get(i));
                 }
             }
