@@ -1,21 +1,22 @@
 package mathtool;
 
+import command.Command;
+import command.TypeCommand;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.TypeGraphic;
 import expressionbuilder.TypeLanguage;
-import logicalexpressionbuilder.LogicalExpression;
-import translator.Translator;
-import graphic.GraphicMethods2D;
-import graphic.GraphicMethods3D;
-import graphic.GraphicMethodsCurves2D;
-import graphic.GraphicMethodsCurves3D;
-import graphic.GraphicMethodsPolar2D;
+import graphic.GraphicPanel2D;
+import graphic.GraphicPanel3D;
+import graphic.GraphicPanelCurves2D;
+import graphic.GraphicPanelCurves3D;
+import graphic.GraphicPanelPolar2D;
 import graphic.GraphicArea;
-import graphic.GraphicPresentationOfFormula;
-import command.Command;
-import command.TypeCommand;
+import graphic.GraphicPanelFormula;
+import logicalexpressionbuilder.LogicalExpression;
+import matrixexpressionbuilder.MatrixExpression;
+import translator.Translator;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -40,7 +41,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import matrixexpressionbuilder.MatrixExpression;
 
 public class MathToolForm extends JFrame implements MouseListener {
 
@@ -60,12 +60,12 @@ public class MathToolForm extends JFrame implements MouseListener {
     JScrollPane scrollPaneGraphic;
     JEditorPane helpArea;
 
-    GraphicMethods2D graphicMethods2D;
-    GraphicMethods3D graphicMethods3D;
-    GraphicMethodsCurves2D graphicMethodsCurves2D;
-    GraphicMethodsCurves3D graphicMethodsCurves3D;
-    GraphicMethodsPolar2D graphicMethodsPolar2D;
-    ArrayList<GraphicPresentationOfFormula> ListOfFormulas;
+    GraphicPanel2D graphicMethods2D;
+    GraphicPanel3D graphicMethods3D;
+    GraphicPanelCurves2D graphicMethodsCurves2D;
+    GraphicPanelCurves3D graphicMethodsCurves3D;
+    GraphicPanelPolar2D graphicMethodsPolar2D;
+    ArrayList<GraphicPanelFormula> ListOfFormulas;
 
     /**
      * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
@@ -74,7 +74,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     static HashMap<String, Expression> definedVars = new HashMap<>();
     static HashMap<String, Expression> definedFunctions = new HashMap<>();
     public ArrayList<String> listOfCommands = new ArrayList<>();
-    public ArrayList<GraphicPresentationOfFormula> listOfFormulas = new ArrayList<>();
+    public ArrayList<GraphicPanelFormula> listOfFormulas = new ArrayList<>();
 
     /**
      * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten
@@ -154,26 +154,26 @@ public class MathToolForm extends JFrame implements MouseListener {
         /**
          * 2D-Grafikobjekte initialisieren
          */
-        graphicMethods2D = new GraphicMethods2D();
+        graphicMethods2D = new GraphicPanel2D();
         add(graphicMethods2D);
         graphicMethods2D.setVisible(false);
 
-        graphicMethodsCurves2D = new GraphicMethodsCurves2D();
+        graphicMethodsCurves2D = new GraphicPanelCurves2D();
         add(graphicMethodsCurves2D);
         graphicMethodsCurves2D.setVisible(false);
 
-        graphicMethodsPolar2D = new GraphicMethodsPolar2D();
+        graphicMethodsPolar2D = new GraphicPanelPolar2D();
         add(graphicMethodsPolar2D);
         graphicMethodsPolar2D.setVisible(false);
 
         /**
          * 3D-Grafikobjekte initialisieren
          */
-        graphicMethods3D = new GraphicMethods3D();
+        graphicMethods3D = new GraphicPanel3D();
         add(graphicMethods3D);
         graphicMethods3D.setVisible(false);
 
-        graphicMethodsCurves3D = new GraphicMethodsCurves3D();
+        graphicMethodsCurves3D = new GraphicPanelCurves3D();
         add(graphicMethodsCurves3D);
         graphicMethodsCurves3D.setVisible(false);
 
@@ -1307,19 +1307,19 @@ public class MathToolForm extends JFrame implements MouseListener {
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicMethods3D.getInstructions(), graphicMethods3D.getExpression());
+                        GraphicPanel3D.getInstructions(), graphicMethods3D.getExpression());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicMethodsCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
+                        GraphicPanelCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicMethodsCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
+                        GraphicPanelCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
                 legendGUI.setVisible(true);
             } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
                 LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicMethodsPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
+                        GraphicPanelPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
                 legendGUI.setVisible(true);
             }
         }

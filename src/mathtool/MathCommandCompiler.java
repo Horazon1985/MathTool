@@ -8,11 +8,11 @@ import expressionbuilder.Variable;
 import expressionbuilder.TypeSimplify;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
-import graphic.GraphicMethods2D;
-import graphic.GraphicMethodsCurves2D;
-import graphic.GraphicMethods3D;
-import graphic.GraphicMethodsCurves3D;
-import graphic.GraphicMethodsPolar2D;
+import graphic.GraphicPanel2D;
+import graphic.GraphicPanelCurves2D;
+import graphic.GraphicPanel3D;
+import graphic.GraphicPanelCurves3D;
+import graphic.GraphicPanelPolar2D;
 import graphic.GraphicArea;
 import graphic.TypeBracket;
 import computationclasses.AnalysisMethods;
@@ -1540,9 +1540,9 @@ public class MathCommandCompiler {
      * @throws EvaluationException
      */
     public static void executeCommand(String input, GraphicArea graphicArea,
-            JTextArea textArea, GraphicMethods2D graphicMethods2D, GraphicMethods3D graphicMethods3D,
-            GraphicMethodsCurves2D graphicMethodsCurves2D, GraphicMethodsCurves3D graphicMethodsCurves3D,
-            GraphicMethodsPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars,
+            JTextArea textArea, GraphicPanel2D graphicMethods2D, GraphicPanel3D graphicMethods3D,
+            GraphicPanelCurves2D graphicMethodsCurves2D, GraphicPanelCurves3D graphicMethodsCurves3D,
+            GraphicPanelPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
@@ -1992,7 +1992,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot2D(Command command, GraphicMethods2D graphicMethods2D) throws ExpressionException,
+    private static void executePlot2D(Command command, GraphicPanel2D graphicMethods2D) throws ExpressionException,
             EvaluationException {
 
         HashSet vars = new HashSet();
@@ -2029,7 +2029,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot3D(Command command, GraphicMethods3D graphicMethods3D) throws EvaluationException {
+    private static void executePlot3D(Command command, GraphicPanel3D graphicMethods3D) throws EvaluationException {
 
         HashSet vars = new HashSet();
         Expression expr = (Expression) command.getParams()[0];
@@ -2101,7 +2101,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeImplicitPlot2D(Command command, GraphicMethods2D graphicMethods2D) throws EvaluationException {
+    private static void executeImplicitPlot2D(Command command, GraphicPanel2D graphicMethods2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
         Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify();
@@ -2167,7 +2167,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve2D(Command command, GraphicMethodsCurves2D graphicMethodsCurves2D) throws EvaluationException {
+    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicMethodsCurves2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
         Expression[] expr = new Expression[2];
@@ -2198,7 +2198,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve3D(Command command, GraphicMethodsCurves3D graphicMethodsCurves3D) throws ExpressionException,
+    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicMethodsCurves3D) throws ExpressionException,
             EvaluationException {
 
         HashSet vars = new HashSet();
@@ -2234,7 +2234,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotPolar2D(Command command, GraphicMethodsPolar2D graphicMethodsPolar2D) throws EvaluationException {
+    private static void executePlotPolar2D(Command command, GraphicPanelPolar2D graphicMethodsPolar2D) throws EvaluationException {
 
         HashSet vars = new HashSet();
         Expression[] exprs = new Expression[command.getParams().length - 2];
@@ -2267,7 +2267,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolve(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeSolve(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         HashSet vars = new HashSet();
@@ -2533,7 +2533,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDEQ(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeSolveDEQ(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
@@ -2844,7 +2844,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command command, GraphicMethods2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeTangent(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         Expression expr = (Expression) command.getParams()[0];
