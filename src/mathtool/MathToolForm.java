@@ -798,7 +798,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
                         && !input.contains(">") && !input.contains("=") && !input.contains("[")
-                        && !input.contains("]");
+                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!';
 
                 try {
 
@@ -918,7 +918,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                     /**
                      * Hinzufügen zum graphischen Ausgabefeld.
                      */
-                    mathToolGraphicArea.addComponent(logExpr.writeLogicalExpression(), Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
+                    mathToolGraphicArea.addComponent(logExpr, Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
                     inputField.setText("");
 
                 } catch (ExpressionException e) {
