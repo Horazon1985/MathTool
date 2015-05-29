@@ -473,6 +473,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("diff([x^3,x;x,1],x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -775,6 +776,15 @@ public class MathToolForm extends JFrame implements MouseListener {
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
                     }
+                } catch (Exception exception) {
+                    /**
+                     * Falls ein unerwarteter Fehler auftritt.
+                     */
+                    if (validCommand) {
+                        mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        return null;
+                    }
                 }
 
                 /**
@@ -833,6 +843,15 @@ public class MathToolForm extends JFrame implements MouseListener {
                             inputField.setText("");
                             return null;
                         }
+                    } catch (Exception exception) {
+                        /**
+                         * Falls ein unerwarteter Fehler auftritt.
+                         */
+                        if (inputIsAlgebraicExpression) {
+                            mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            return null;
+                        }
                     }
 
                 } catch (ExpressionException e) {
@@ -844,6 +863,15 @@ public class MathToolForm extends JFrame implements MouseListener {
                          */
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                        return null;
+                    }
+                } catch (Exception exception) {
+                    /**
+                     * Falls ein unerwarteter Fehler auftritt.
+                     */
+                    if (inputIsAlgebraicExpression) {
+                        mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
                     }
                 }
@@ -888,10 +916,19 @@ public class MathToolForm extends JFrame implements MouseListener {
                             inputField.setText("");
                             return null;
                         }
+                    } catch (Exception exception) {
+                        /**
+                         * Falls ein unerwarteter Fehler auftritt.
+                         */
+                        if (inputIsMatrixExpression) {
+                            mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            return null;
+                        }
                     }
 
                 } catch (ExpressionException e) {
-                    if (inputIsAlgebraicExpression) {
+                    if (inputIsMatrixExpression) {
                         /**
                          * Dann ist der Ausdruck zumindest kein logischer
                          * Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -899,6 +936,15 @@ public class MathToolForm extends JFrame implements MouseListener {
                          */
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                        return null;
+                    }
+                } catch (Exception exception) {
+                    /**
+                     * Falls ein unerwarteter Fehler auftritt.
+                     */
+                    if (inputIsMatrixExpression) {
+                        mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
                     }
                 }
@@ -924,6 +970,9 @@ public class MathToolForm extends JFrame implements MouseListener {
                 } catch (ExpressionException e) {
                     mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                     mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
+                } catch (Exception exception) {
+                    mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
+                    mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                 }
 
                 return null;

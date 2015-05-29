@@ -15,8 +15,8 @@ import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
 import graphic.GraphicArea;
 import graphic.TypeBracket;
-import computationclasses.AnalysisMethods;
-import computationclasses.NumericalMethods;
+import computation.AnalysisMethods;
+import computation.NumericalMethods;
 import solveequationmethods.SolveMethods;
 import logicalexpressionbuilder.LogicalExpression;
 import logicalexpressionbuilder.LogicalVariable;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import simplifymethods.ExpressionCollection;
+import expressionsimplifymethods.ExpressionCollection;
 
 public class MathCommandCompiler {
 
@@ -215,10 +215,9 @@ public class MathCommandCompiler {
 
         //DEFINE
         /**
-         * Struktur: def(var = value) var = Variablenname reelle Zahl. ODER:
-         * def(func(var_1, ..., var_k) = EXPRESSION) func = Funktionsname var_i:
-         * Variablennamen EXPRESSION: Funktionsterm, durch den func definiert
-         * wird.
+         * Struktur: def(var = value) var = Variablenname, value = reelle Zahl.
+         * ODER: def(f(var_1, ..., var_k) = EXPRESSION) f = Funktionsname var_i:
+         * Variablennamen EXPRESSION: Funktionsterm, durch den f definiert wird.
          */
         if (command.equals("def")) {
 
