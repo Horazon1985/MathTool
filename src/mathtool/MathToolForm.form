@@ -169,7 +169,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="charpol([7,1;2,5])"/>
+        <Property name="text" type="java.lang.String" value="eigenvalues([7,1;2,5])"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
@@ -281,28 +281,30 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="21">
+          <StringArray count="23">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
-            <StringItem index="2" value="clear"/>
-            <StringItem index="3" value="def"/>
-            <StringItem index="4" value="deffuncs"/>
-            <StringItem index="5" value="defvars"/>
-            <StringItem index="6" value="dnf"/>
-            <StringItem index="7" value="euler"/>
-            <StringItem index="8" value="latex"/>
-            <StringItem index="9" value="pi"/>
-            <StringItem index="10" value="plot2d"/>
-            <StringItem index="11" value="plot3d"/>
-            <StringItem index="12" value="plotcurve"/>
-            <StringItem index="13" value="plotpolar"/>
-            <StringItem index="14" value="solve"/>
-            <StringItem index="15" value="solvedeq"/>
-            <StringItem index="16" value="table"/>
-            <StringItem index="17" value="tangent"/>
-            <StringItem index="18" value="taylordeq"/>
-            <StringItem index="19" value="undef"/>
-            <StringItem index="20" value="undefall"/>
+            <StringItem index="2" value="ccnf"/>
+            <StringItem index="3" value="cdnf"/>
+            <StringItem index="4" value="clear"/>
+            <StringItem index="5" value="def"/>
+            <StringItem index="6" value="deffuncs"/>
+            <StringItem index="7" value="defvars"/>
+            <StringItem index="8" value="eigenvalues"/>
+            <StringItem index="9" value="euler"/>
+            <StringItem index="10" value="latex"/>
+            <StringItem index="11" value="pi"/>
+            <StringItem index="12" value="plot2d"/>
+            <StringItem index="13" value="plot3d"/>
+            <StringItem index="14" value="plotcurve"/>
+            <StringItem index="15" value="plotpolar"/>
+            <StringItem index="16" value="solve"/>
+            <StringItem index="17" value="solvedeq"/>
+            <StringItem index="18" value="table"/>
+            <StringItem index="19" value="tangent"/>
+            <StringItem index="20" value="taylordeq"/>
+            <StringItem index="21" value="undef"/>
+            <StringItem index="22" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>

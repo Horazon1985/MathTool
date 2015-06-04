@@ -195,25 +195,25 @@ public class MathCommandCompiler {
 
         }
 
-        //CHARPOL
+        //EIGENVALUES
         /**
-         * Struktur: charpol(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
+         * Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
          * Matrizenausdruck.
          */
-        if (command.equals("charpol")) {
+        if (command.equals("eigenvalues")) {
 
             if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CHARPOL"));
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
             }
 
             try {
                 commandParams = new Object[1];
                 commandParams[0] = MatrixExpression.build(params[0], new HashSet());
-                resultCommand.setType(TypeCommand.charpol);
+                resultCommand.setType(TypeCommand.eigenvalues);
                 resultCommand.setParams(commandParams);
                 return resultCommand;
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CHARPOL"));
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
             }
 
         }
@@ -1601,7 +1601,7 @@ public class MathCommandCompiler {
             executeCCNF(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.cdnf)) {
             executeCDNF(command, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.charpol)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.eigenvalues)) {
             executeCharPolynomial(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
