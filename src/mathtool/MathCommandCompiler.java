@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import expressionsimplifymethods.ExpressionCollection;
+import linearalgebraalgorithms.EigenvaluesEigenvectorsAlgorithms;
+import matrixexpressionbuilder.MatrixExpression;
 
 public class MathCommandCompiler {
 
@@ -189,6 +191,29 @@ public class MathCommandCompiler {
                 return resultCommand;
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CDNF"));
+            }
+
+        }
+
+        //CHARPOL
+        /**
+         * Struktur: charpol(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
+         * Matrizenausdruck.
+         */
+        if (command.equals("charpol")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CHARPOL"));
+            }
+
+            try {
+                commandParams = new Object[1];
+                commandParams[0] = MatrixExpression.build(params[0], new HashSet());
+                resultCommand.setType(TypeCommand.charpol);
+                resultCommand.setParams(commandParams);
+                return resultCommand;
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CHARPOL"));
             }
 
         }
@@ -1576,6 +1601,8 @@ public class MathCommandCompiler {
             executeCCNF(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.cdnf)) {
             executeCDNF(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.charpol)) {
+            executeCharPolynomial(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
         } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
@@ -1714,6 +1741,23 @@ public class MathCommandCompiler {
          * Graphische Ausgabe
          */
         graphicArea.addComponent(logExprInCDNF);
+
+    }
+
+    private static void executeCharPolynomial(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
+
+        for (int i = 0; i < eigenvalues.getBound(); i++) {
+            /**
+             * Textliche Ausgabe
+             */
+            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
+            /**
+             * Graphische Ausgabe
+             */
+            graphicArea.addComponent(eigenvalues.get(i));
+        }
 
     }
 
