@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import expressionsimplifymethods.ExpressionCollection;
+import java.awt.Dimension;
 import linearalgebraalgorithms.EigenvaluesEigenvectorsAlgorithms;
 import matrixexpressionbuilder.MatrixExpression;
 
@@ -191,29 +192,6 @@ public class MathCommandCompiler {
                 return resultCommand;
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CDNF"));
-            }
-
-        }
-
-        //EIGENVALUES
-        /**
-         * Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
-         * Matrizenausdruck.
-         */
-        if (command.equals("eigenvalues")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = MatrixExpression.build(params[0], new HashSet());
-                resultCommand.setType(TypeCommand.eigenvalues);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
             }
 
         }
@@ -478,6 +456,62 @@ public class MathCommandCompiler {
             resultCommand.setType(TypeCommand.defvars);
             resultCommand.setParams(commandParams);
             return resultCommand;
+
+        }
+
+        //EIGENVALUES
+        /**
+         * Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
+         * Matrizenausdruck.
+         */
+        if (command.equals("eigenvalues")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
+            }
+
+            try {
+                commandParams = new Object[1];
+                commandParams[0] = MatrixExpression.build(params[0], new HashSet());
+                // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
+                Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
+                if (dim.height != dim.width) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
+                }
+                resultCommand.setType(TypeCommand.eigenvalues);
+                resultCommand.setParams(commandParams);
+                return resultCommand;
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
+            }
+
+        }
+
+        //EIGENVECTORS
+        /**
+         * Struktur: eigenvectors(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
+         * Matrizenausdruck.
+         */
+        if (command.equals("eigenvectors")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVECTORS"));
+            }
+
+            try {
+                commandParams = new Object[1];
+                commandParams[0] = MatrixExpression.build(params[0], new HashSet());
+                // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
+                Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
+                if (dim.height != dim.width) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
+                }
+                resultCommand.setType(TypeCommand.eigenvectors);
+                resultCommand.setParams(commandParams);
+                return resultCommand;
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
+            }
 
         }
 
