@@ -20,6 +20,7 @@ import computation.NumericalMethods;
 import solveequationmethods.SolveMethods;
 import logicalexpressionbuilder.LogicalExpression;
 import logicalexpressionbuilder.LogicalVariable;
+import linearalgebraalgorithms.GaussAlgorithm;
 import translator.Translator;
 import command.Command;
 import command.TypeCommand;
@@ -38,7 +39,10 @@ import java.util.ArrayList;
 import expressionsimplifymethods.ExpressionCollection;
 import java.awt.Dimension;
 import linearalgebraalgorithms.EigenvaluesEigenvectorsAlgorithms;
+import linearalgebraalgorithms.GaussAlgorithm;
+import matrixexpressionbuilder.Matrix;
 import matrixexpressionbuilder.MatrixExpression;
+import matrixsimplifymethods.MatrixExpressionCollection;
 
 public class MathCommandCompiler {
 
@@ -550,6 +554,29 @@ public class MathCommandCompiler {
                 return resultCommand;
             } catch (NumberFormatException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_EULER"));
+            }
+
+        }
+
+        //KER
+        /**
+         * Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
+         * Matrizenausdruck.
+         */
+        if (command.equals("ker")) {
+
+            if (params.length != 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_KER"));
+            }
+
+            try {
+                commandParams = new Object[1];
+                commandParams[0] = MatrixExpression.build(params[0], new HashSet());
+                resultCommand.setType(TypeCommand.ker);
+                resultCommand.setParams(commandParams);
+                return resultCommand;
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_KER"));
             }
 
         }
@@ -1604,31 +1631,19 @@ public class MathCommandCompiler {
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
-
-        //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
-        input = input.replaceAll(" ", "");
-
-        //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
-        for (int i = 0; i < input.length(); i++) {
-            if (((int) input.charAt(i) >= 65) && ((int) input.charAt(i) <= 90)) {
-                //Macht Großbuchstaben zu Kleinbuchstaben
-                input = input.substring(0, i) + (char) ((int) input.charAt(i) + 32) + input.substring(i + 1, input.length());
-            }
-        }
-
+        input = convertToSmallLetters(input);
+        
         String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
         String commandName = commandNameAndParams[0];
         String[] params = Expression.getArguments(commandNameAndParams[1]);
 
         /**
-         * Zunächst muss der entsprechende Befehl ermittelt und in ein Objekt
-         * der Klasse Command umgewandelt werdeb.
+         * Zunächst muss der entsprechende Befehl ermittelt und in eine Instanz
+         * der Klasse Command umgewandelt werden.
          */
         Command command = getCommand(commandName, params);
 
-        /**
-         * Abhängig vom Typ von c wird der Befehl ausgeführt.
-         */
+        // Abhängig vom Typ von c wird der Befehl ausgeführt.
         if (command.getTypeCommand().equals(TypeCommand.approx)) {
             executeApprox(command, definedVars, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.ccnf)) {
@@ -1636,7 +1651,7 @@ public class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.cdnf)) {
             executeCDNF(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.eigenvalues)) {
-            executeCharPolynomial(command, graphicArea);
+            executeEigenvalues(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
         } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
@@ -1649,6 +1664,8 @@ public class MathCommandCompiler {
             executeEuler(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.expand)) {
             executeExpand(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.ker)) {
+            executeKer(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.latex)) {
             executeLatex(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.pi)) {
@@ -1688,6 +1705,26 @@ public class MathCommandCompiler {
         for (String out : output) {
             textArea.append(out);
         }
+
+    }
+
+    /**
+     * Verwandelt alle Großbuchstaben im String s zu Kleinbuchstaben.
+     */
+    private static String convertToSmallLetters(String s) {
+
+        //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
+        s = s.replaceAll(" ", "");
+
+        //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
+        for (int i = 0; i < s.length(); i++) {
+            if (((int) s.charAt(i) >= 65) && ((int) s.charAt(i) <= 90)) {
+                //Macht Großbuchstaben zu Kleinbuchstaben
+                s = s.substring(0, i) + (char) ((int) s.charAt(i) + 32) + s.substring(i + 1, s.length());
+            }
+        }
+        
+        return s;
 
     }
 
@@ -1775,23 +1812,6 @@ public class MathCommandCompiler {
          * Graphische Ausgabe
          */
         graphicArea.addComponent(logExprInCDNF);
-
-    }
-
-    private static void executeCharPolynomial(Command command, GraphicArea graphicArea) throws EvaluationException {
-
-        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
-
-        for (int i = 0; i < eigenvalues.getBound(); i++) {
-            /**
-             * Textliche Ausgabe
-             */
-            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
-            /**
-             * Graphische Ausgabe
-             */
-            graphicArea.addComponent(eigenvalues.get(i));
-        }
 
     }
 
@@ -2020,6 +2040,58 @@ public class MathCommandCompiler {
          * Graphische Ausgabe
          */
         graphicArea.addComponent(expr);
+    }
+
+    private static void executeEigenvalues(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
+
+        for (int i = 0; i < eigenvalues.getBound(); i++) {
+            /**
+             * Textliche Ausgabe
+             */
+            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
+            /**
+             * Graphische Ausgabe
+             */
+            graphicArea.addComponent(eigenvalues.get(i));
+        }
+
+    }
+
+    private static void executeKer(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
+        if (!(matExpr instanceof Matrix)) {
+            throw new EvaluationException("TO DO");
+        }
+
+        MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExpr);
+
+        String basisAsString = "";
+        ArrayList<Object> basisAsObjectArray = new ArrayList<>();
+        for (int i = 0; i < basisOfKer.getBound(); i++) {
+            // Für textliche Ausgabe
+            basisAsString = basisAsString + basisOfKer.get(i).writeMatrixExpression() + ", ";
+            // Für graphische Ausgabe
+            basisAsObjectArray.add(basisOfKer.get(i));
+            if (i < basisOfKer.getBound() - 1) {
+                basisAsObjectArray.add(", ");
+            }
+        }
+
+        if (!basisOfKer.isEmpty()) {
+            basisAsString = basisAsString.substring(0, basisAsString.length() - 2);
+        }
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(basisAsString + "\n \n");
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(basisAsObjectArray);
+
     }
 
     private static void executeLatex(Command command, GraphicArea graphicArea) throws ExpressionException {
