@@ -473,6 +473,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        inputField.setText("solve(tan(x)*cos(x)^2=1/2)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -532,14 +533,14 @@ public class MathToolForm extends JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "euler", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "ker", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 115, 23);
+        commandChoice.setBounds(560, 370, 122, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Leeren");

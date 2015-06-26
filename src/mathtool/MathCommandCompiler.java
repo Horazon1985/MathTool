@@ -20,7 +20,6 @@ import computation.NumericalMethods;
 import solveequationmethods.SolveMethods;
 import logicalexpressionbuilder.LogicalExpression;
 import logicalexpressionbuilder.LogicalVariable;
-import linearalgebraalgorithms.GaussAlgorithm;
 import translator.Translator;
 import command.Command;
 import command.TypeCommand;
@@ -127,54 +126,10 @@ public class MathCommandCompiler {
         Command resultCommand = new Command();
         Object[] commandParams;
 
-        //APPROX
-        /**
-         * Struktur: approx(expr)
-         */
         if (command.equals("approx")) {
-
-            /**
-             * Prüft, ob der Befehl genau einen Parameter besitzt.
-             */
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX"));
-            }
-
-            try {
-                Expression.build(params[0], new HashSet());
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
-            }
-
-            commandParams = new Object[1];
-            commandParams[0] = Expression.build(params[0], new HashSet());
-            resultCommand.setType(TypeCommand.approx);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-
-        }
-
-        //CCNF
-        /**
-         * Struktur: ccnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
-         * logischer Ausdruck.
-         */
-        if (command.equals("ccnf")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CCNF"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = LogicalExpression.build(params[0], new HashSet());
-                resultCommand.setType(TypeCommand.ccnf);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CCNF"));
-            }
-
+            return getCommandApprox(params);
+        } else if (command.equals("ccnf")) {
+            return getCommandCCNF(params);
         }
 
         //CDNF
@@ -1618,6 +1573,54 @@ public class MathCommandCompiler {
 
     }
 
+    private static Command getCommandApprox(String[] params) throws ExpressionException {
+
+        /**
+         * Struktur: approx(expr)
+         */
+        Object[] commandParams;
+
+        /**
+         * Prüft, ob der Befehl genau einen Parameter besitzt.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX"));
+        }
+
+        try {
+            Expression.build(params[0], new HashSet());
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
+        }
+
+        commandParams = new Object[1];
+        commandParams[0] = Expression.build(params[0], new HashSet());
+        return new Command(TypeCommand.approx, commandParams);
+
+    }
+
+    private static Command getCommandCCNF(String[] params) throws ExpressionException {
+
+        /**
+         * Struktur: ccnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
+         * logischer Ausdruck.
+         */
+        Object[] commandParams;
+
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CCNF"));
+        }
+
+        try {
+            commandParams = new Object[1];
+            commandParams[0] = LogicalExpression.build(params[0], new HashSet());
+            return new Command(TypeCommand.ccnf, commandParams);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CCNF"));
+        }
+
+    }
+
     /**
      * Hauptmethode zum Ausführen des Befehls.
      *
@@ -1632,7 +1635,7 @@ public class MathCommandCompiler {
 
         output.clear();
         input = convertToSmallLetters(input);
-        
+
         String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
         String commandName = commandNameAndParams[0];
         String[] params = Expression.getArguments(commandNameAndParams[1]);
@@ -1709,11 +1712,12 @@ public class MathCommandCompiler {
     }
 
     /**
-     * Verwandelt alle Großbuchstaben im String s zu Kleinbuchstaben.
+     * Beseitigt alle Leerzeichen im String s und verwandelt alle Großbuchstaben
+     * zu Kleinbuchstaben.
      */
     private static String convertToSmallLetters(String s) {
 
-        //Leerzeichen beseitigen und alles zu Kleinbuchstaben machen
+        //Leerzeichen beseitigen
         s = s.replaceAll(" ", "");
 
         //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
@@ -1723,7 +1727,7 @@ public class MathCommandCompiler {
                 s = s.substring(0, i) + (char) ((int) s.charAt(i) + 32) + s.substring(i + 1, s.length());
             }
         }
-        
+
         return s;
 
     }
@@ -1750,6 +1754,11 @@ public class MathCommandCompiler {
             expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
         }
 
+        /**
+         * Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ
+         * ausgewertet.
+         */
+        expr = expr.simplify();
         expr = expr.turnToApproximate().simplify();
         /**
          * Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
@@ -2067,6 +2076,36 @@ public class MathCommandCompiler {
         }
 
         MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExpr);
+
+        if (basisOfKer.isEmpty()) {
+            /**
+             * Textliche Ausgabe
+             */
+            output.add(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1")
+                    + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
+                    + Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2")
+                    + MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1).writeMatrixExpression());
+            /**
+             * Graphische Ausgabe
+             */
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1"),
+                    ((MatrixExpression) command.getParams()[0]),
+                    Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2"),
+                    MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1));
+            return;
+        }
+
+        /**
+         * Textliche Ausgabe
+         */
+        output.add(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1")
+                + matExpr.writeMatrixExpression()
+                + Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
+        /**
+         * Graphische Ausgabe
+         */
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1"),
+                matExpr, Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
 
         String basisAsString = "";
         ArrayList<Object> basisAsObjectArray = new ArrayList<>();

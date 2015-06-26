@@ -169,6 +169,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="solve(tan(x)*cos(x)^2=1/2)"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
@@ -280,7 +281,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="23">
+          <StringArray count="25">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
             <StringItem index="2" value="ccnf"/>
@@ -290,20 +291,22 @@
             <StringItem index="6" value="deffuncs"/>
             <StringItem index="7" value="defvars"/>
             <StringItem index="8" value="eigenvalues"/>
-            <StringItem index="9" value="euler"/>
-            <StringItem index="10" value="latex"/>
-            <StringItem index="11" value="pi"/>
-            <StringItem index="12" value="plot2d"/>
-            <StringItem index="13" value="plot3d"/>
-            <StringItem index="14" value="plotcurve"/>
-            <StringItem index="15" value="plotpolar"/>
-            <StringItem index="16" value="solve"/>
-            <StringItem index="17" value="solvedeq"/>
-            <StringItem index="18" value="table"/>
-            <StringItem index="19" value="tangent"/>
-            <StringItem index="20" value="taylordeq"/>
-            <StringItem index="21" value="undef"/>
-            <StringItem index="22" value="undefall"/>
+            <StringItem index="9" value="eigenvectors"/>
+            <StringItem index="10" value="euler"/>
+            <StringItem index="11" value="ker"/>
+            <StringItem index="12" value="latex"/>
+            <StringItem index="13" value="pi"/>
+            <StringItem index="14" value="plot2d"/>
+            <StringItem index="15" value="plot3d"/>
+            <StringItem index="16" value="plotcurve"/>
+            <StringItem index="17" value="plotpolar"/>
+            <StringItem index="18" value="solve"/>
+            <StringItem index="19" value="solvedeq"/>
+            <StringItem index="20" value="table"/>
+            <StringItem index="21" value="tangent"/>
+            <StringItem index="22" value="taylordeq"/>
+            <StringItem index="23" value="undef"/>
+            <StringItem index="24" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>
