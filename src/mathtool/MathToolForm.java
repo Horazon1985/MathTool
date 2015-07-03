@@ -473,7 +473,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(518, 335, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solve(tan(x)*cos(x)^2=1/2)");
+        inputField.setText("solve(exp(x)-exp(x^3-6)=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);

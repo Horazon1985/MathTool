@@ -169,7 +169,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="12" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="solve(tan(x)*cos(x)^2=1/2)"/>
+        <Property name="text" type="java.lang.String" value="solve(exp(x)-exp(x^3-6)=0)"/>
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldKeyPressed"/>
