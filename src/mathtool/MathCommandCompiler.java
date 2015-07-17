@@ -1822,6 +1822,8 @@ public class MathCommandCompiler {
 
     private static void executeClear(JTextArea area, GraphicArea graphicArea) {
         area.setText("");
+        graphicArea.initializeBounds(MathToolForm.mathToolGraphicAreaX, MathToolForm.mathToolGraphicAreaY, 
+                MathToolForm.mathToolGraphicAreaWidth, MathToolForm.mathToolGraphicAreaHeight);
         graphicArea.clearArea();
     }
 
