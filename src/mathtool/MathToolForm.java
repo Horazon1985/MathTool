@@ -31,7 +31,6 @@ import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -104,32 +103,25 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
         });
 
-        /**
-         * Standardsprache = DE
-         */
+        // Standardsprache = DE
         Expression.setLanguage(TypeLanguage.DE);
 
-        /**
-         * Formelmodus ist am Anfang aktiviert
-         */
+        // Formelmodus ist am Anfang aktiviert
         typeMode = TypeMode.GRAPHIC;
 
-        /**
-         * Es wird noch keine Grafik angezeigt
-         */
+        // Es wird noch keine Grafik angezeigt
         typeGraphic = TypeGraphic.NONE;
 
-        /**
-         * Labels ausrichten
-         */
+        // Mindestfenstergröße festlegen
+        setMinimumSize(new Dimension(1000, 600));
+        
+        // Labels ausrichten
         legendLabel = new JLabel("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
 
-        /**
-         * Textliches Ausgabefeld ausrichten
-         */
+        // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
         Font mathToolAreaFont = new Font("Arial", Font.BOLD, 14);
         mathToolTextArea.setFont(mathToolAreaFont);
@@ -142,9 +134,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         add(scrollPaneText);
         scrollPaneText.setVisible(false);
 
-        /**
-         * Graphisches Ausgabefeld ausrichten
-         */
+        // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
         mathToolGraphicAreaY = 10;
         mathToolGraphicAreaWidth = this.getWidth() - 40;
@@ -156,15 +146,11 @@ public class MathToolForm extends JFrame implements MouseListener {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
 
-        /**
-         * Buttons ausrichten
-         */
+        // Buttons ausrichten
         rotateButton.setVisible(false);
         cancelButton.setVisible(false);
 
-        /**
-         * 2D-Grafikobjekte initialisieren
-         */
+        // 2D-Grafikobjekte initialisieren
         graphicMethods2D = new GraphicPanel2D();
         add(graphicMethods2D);
         graphicMethods2D.setVisible(false);
@@ -177,9 +163,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         add(graphicMethodsPolar2D);
         graphicMethodsPolar2D.setVisible(false);
 
-        /**
-         * 3D-Grafikobjekte initialisieren
-         */
+        // 3D-Grafikobjekte initialisieren
         graphicMethods3D = new GraphicPanel3D();
         add(graphicMethods3D);
         graphicMethods3D.setVisible(false);
@@ -191,9 +175,9 @@ public class MathToolForm extends JFrame implements MouseListener {
         validate();
         repaint();
 
-        /**
-         * ComponentListener für das Ausrichten von Komponenten bei Änderung der
-         * Maße von MathTool.
+        /*
+         ComponentListener für das Ausrichten von Komponenten bei Änderung der
+         Maße von MathTool.
          */
         this.addComponentListener(new ComponentAdapter() {
 
@@ -492,17 +476,17 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(inputButton);
-        inputButton.setBounds(518, 335, 100, 30);
+        inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("ln(5)*x");
+        inputField.setText("solve(exp(5*x/7)+2*exp(15*x/7)=18,x)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
         });
         getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 490, 20);
+        inputField.setBounds(10, 336, 540, 20);
 
         rotateButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -542,7 +526,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(520, 300, 100, 30);
+        cancelButton.setBounds(560, 300, 100, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "int", "laplace", "lcm", "mod", "prod", "sum", "taylor" }));
