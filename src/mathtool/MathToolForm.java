@@ -479,7 +479,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solve(exp(5*x/7)+2*exp(15*x/7)=18,x)");
+        inputField.setText("eigenvectors([1,3;0,5])");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);

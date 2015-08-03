@@ -1649,8 +1649,6 @@ public class MathCommandCompiler {
             executeCCNF(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.cdnf)) {
             executeCDNF(command, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.eigenvalues)) {
-            executeEigenvalues(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
         } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
@@ -1659,6 +1657,10 @@ public class MathCommandCompiler {
             executeDefFuncs(definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.defvars)) {
             executeDefVars(definedVars, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.eigenvalues)) {
+            executeEigenvalues(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.eigenvectors)) {
+            executeEigenvectors(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.euler)) {
             executeEuler(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.expand)) {
@@ -2066,6 +2068,23 @@ public class MathCommandCompiler {
 
     }
 
+    private static void executeEigenvectors(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
+
+        for (int i = 0; i < eigenvalues.getBound(); i++) {
+            /**
+             * Textliche Ausgabe
+             */
+            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
+            /**
+             * Graphische Ausgabe
+             */
+            graphicArea.addComponent(eigenvalues.get(i));
+        }
+
+    }
+    
     private static void executeKer(Command command, GraphicArea graphicArea) throws EvaluationException {
 
         MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
