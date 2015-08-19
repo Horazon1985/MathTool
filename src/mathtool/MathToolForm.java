@@ -7,39 +7,38 @@ import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.TypeGraphic;
 import expressionbuilder.TypeLanguage;
+import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
-import graphic.GraphicPanelPolar2D;
-import graphic.GraphicArea;
 import graphic.GraphicPanelFormula;
-import logicalexpressionbuilder.LogicalExpression;
-import matrixexpressionbuilder.MatrixExpression;
-import translator.Translator;
-
-import java.awt.*;
+import graphic.GraphicPanelPolar2D;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
-import javax.swing.JFrame;
-import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-
-import java.util.HashSet;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import logicalexpressionbuilder.LogicalExpression;
+import matrixexpressionbuilder.MatrixExpression;
+import translator.Translator;
 
 public class MathToolForm extends JFrame implements MouseListener {
 
@@ -64,32 +63,27 @@ public class MathToolForm extends JFrame implements MouseListener {
     private final GraphicPanelCurves3D graphicMethodsCurves3D;
     private final GraphicPanelPolar2D graphicMethodsPolar2D;
 
-    /**
-     * Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
-     * im Laufe des Programms definierten Variablen und Funktionen.
+    /*
+     Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
+     im Laufe des Programms definierten Variablen und Funktionen.
      */
     static HashMap<String, Expression> definedVars = new HashMap<>();
     static HashMap<String, Expression> definedFunctions = new HashMap<>();
     public ArrayList<String> listOfCommands = new ArrayList<>();
     public ArrayList<GraphicPanelFormula> listOfFormulas = new ArrayList<>();
 
-    /**
-     * Koordinaten und Maße für die graphische Ausgabeoberfläche.
-     */
+    // Koordinaten und Maße für die graphische Ausgabeoberfläche.
     public static int mathToolGraphicAreaX;
     public static int mathToolGraphicAreaY;
     public static int mathToolGraphicAreaWidth;
     public static int mathToolGraphicAreaHeight;
 
-    /**
-     * log_position = Index des aktuellen befehls, den man mittels Pfeiltasten
-     * ausgegeben haben möchte.
+    /*
+     logPosition = Index des aktuellen befehls, den man mittels Pfeiltasten
+     ausgegeben haben möchte.
      */
     public int logPosition = 0;
 
-    /**
-     * Konstruktor
-     */
     public MathToolForm() {
 
         initComponents();
@@ -114,7 +108,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
         // Mindestfenstergröße festlegen
         setMinimumSize(new Dimension(1000, 600));
-        
+
         // Labels ausrichten
         legendLabel = new JLabel("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
         legendLabel.setVisible(false);
@@ -257,9 +251,7 @@ public class MathToolForm extends JFrame implements MouseListener {
      */
     private void refreshInterface() {
 
-        /**
-         * Im Sprachmenü die gewählte Sprache fett hervorheben.
-         */
+        // Im Sprachmenü die gewählte Sprache fett hervorheben.
         if (Expression.getLanguage().equals(TypeLanguage.EN)) {
             menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
             menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
@@ -282,9 +274,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
         }
 
-        /**
-         * Im Darstellungsmenü den gewählten Modus fett hervorheben.
-         */
+        // Im Darstellungsmenü den gewählten Modus fett hervorheben.
         if (typeMode.equals(TypeMode.GRAPHIC)) {
             menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.BOLD, 12));
             menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.PLAIN, 12));
@@ -293,9 +283,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
         }
 
-        /**
-         * Menüeinträge aktualisieren
-         */
+        // Menüeinträge aktualisieren
         menuFile.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_FILE"));
         MenuItemQuit.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_QUIT"));
         menuMathTool.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_MATHTOOL"));
@@ -479,7 +467,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("eigenvectors([1,3;0,5])");
+        inputField.setText("solve(cos(x)+3*cos(2*x)+1=0)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -702,14 +690,10 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 boolean validCommand = false;
 
-                /**
-                 * Leerzeichen werden im Vorfeld beseitigt.
-                 */
+                // Leerzeichen werden im Vorfeld beseitigt.
                 String input = inputField.getText().replaceAll(" ", "");
 
-                /**
-                 * Alles zu Kleinbuchstaben machen.
-                 */
+                // Alles zu Kleinbuchstaben machen.
                 char currentChar;
                 int lengthInput = input.length();
                 for (int i = 0; i < lengthInput; i++) {
@@ -721,16 +705,14 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
                 }
 
-                /**
-                 * Befehl loggen!
-                 */
+                // Befehl loggen!
                 listOfCommands.add(input);
                 logPosition = listOfCommands.size();
 
-                /**
-                 * 1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
-                 * bildet. Ja -> Befehl ausführen. Nein -> Weitere Möglichkeiten
-                 * prüfen.
+                /*
+                 1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
+                 bildet. Ja -> Befehl ausführen. Nein -> Weitere Möglichkeiten
+                 prüfen.
                  */
                 try {
 
@@ -746,24 +728,18 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                     if (validCommand) {
 
-                        /**
-                         * Hinzufügen zum textlichen Ausgabefeld.
-                         */
+                        // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(input + "\n \n");
-                        /**
-                         * Hinzufügen zum graphischen Ausgabefeld.
-                         */
+                        // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
-                        /**
-                         * Befehl verarbeiten.
-                         */
+                        // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
                                 graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
                                 definedVars, definedFunctions);
-                        /**
-                         * Falls es ein Grafikbefehle war -> Grafik sichtbar
-                         * machen.
+                        /*
+                         Falls es ein Grafikbefehle war -> Grafik sichtbar
+                         machen.
                          */
                         activatePanelsForGraphs(commandName[0], params);
                         inputField.setText("");
@@ -771,11 +747,11 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException | EvaluationException e) {
-                    /**
-                     * Falls es ein gültiger Befehl war (unabhängig davon, ob
-                     * dieser Fehler enthielt oder nicht) -> abbrechen und NICHT
-                     * weiter prüfen, ob es sich um einen Ausdruck handeln
-                     * könnte.
+                    /*
+                     Falls es ein gültiger Befehl war (unabhängig davon, ob
+                     dieser Fehler enthielt oder nicht) -> abbrechen und NICHT
+                     weiter prüfen, ob es sich um einen Ausdruck handeln
+                     könnte.
                      */
                     if (validCommand) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
@@ -783,9 +759,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                         return null;
                     }
                 } catch (Exception exception) {
-                    /**
-                     * Falls ein unerwarteter Fehler auftritt.
-                     */
+                    // Falls ein unerwarteter Fehler auftritt.
                     if (validCommand) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
@@ -793,24 +767,24 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
                 }
 
-                /**
-                 * Falls es ein gültiger Befehl war (unabhängig davon, ob dieser
-                 * Fehler enthield oder nicht) -> abbrechen und NICHT weiter
-                 * prüfen, ob es sich um einen Ausdruck handeln könnte.
+                /*
+                 Falls es ein gültiger Befehl war (unabhängig davon, ob dieser
+                 Fehler enthield oder nicht) -> abbrechen und NICHT weiter
+                 prüfen, ob es sich um einen Ausdruck handeln könnte.
                  */
                 if (validCommand) {
                     return null;
                 }
 
-                /**
-                 * 2. Versuch: Es wird geprüft, ob die Zeile einen
-                 * mathematischen Ausdruck bildet. Ja -> Vereinfachen und
-                 * ausgeben. Nein -> Weitere Möglichkeiten prüfen.
+                /*
+                 2. Versuch: Es wird geprüft, ob die Zeile einen
+                 mathematischen Ausdruck bildet. Ja -> Vereinfachen und
+                 ausgeben. Nein -> Weitere Möglichkeiten prüfen.
                  */
-                /**
-                 * inputIsAlgebraicExpression besagt, dass Eingabe, wenn
-                 * überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
-                 * logischer und kein Matrizenausdruck) sein kann.
+                /*
+                 inputIsAlgebraicExpression besagt, dass Eingabe, wenn
+                 überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
+                 logischer und kein Matrizenausdruck) sein kann.
                  */
                 boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
                         && !input.contains(">") && !input.contains("=") && !input.contains("[")
@@ -820,22 +794,18 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                     Expression expr = Expression.build(input, new HashSet());
 
-                    /**
-                     * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
-                     * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber
-                     * beim Auswerten einen Fehler.
+                    /*
+                     Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+                     Beispielsweise ist 1/0 zwar ein gültiger Ausdruck, liefert aber
+                     beim Auswerten einen Fehler.
                      */
                     try {
 
                         Expression exprSimplified = expr.evaluate(new HashSet(definedVars.keySet()));
                         exprSimplified = exprSimplified.simplify();
-                        /**
-                         * Hinzufügen zum textlichen Ausgabefeld.
-                         */
+                        // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
-                        /**
-                         * Hinzufügen zum graphischen Ausgabefeld.
-                         */
+                        // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(expr, "  =  ", exprSimplified);
                         inputField.setText("");
                         return null;
@@ -850,9 +820,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                             return null;
                         }
                     } catch (Exception exception) {
-                        /**
-                         * Falls ein unerwarteter Fehler auftritt.
-                         */
+                        // Falls ein unerwarteter Fehler auftritt.
                         if (inputIsAlgebraicExpression) {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
@@ -862,19 +830,17 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 } catch (ExpressionException e) {
                     if (inputIsAlgebraicExpression) {
-                        /**
-                         * Dann ist der Ausdruck zumindest kein logischer
-                         * Ausdruck -> Fehler ausgeben, welcher soeben bei
-                         * arithmetischen Ausdrücken geworfen wurde.
+                        /*
+                         Dann ist der Ausdruck zumindest kein logischer
+                         Ausdruck -> Fehler ausgeben, welcher soeben bei
+                         arithmetischen Ausdrücken geworfen wurde.
                          */
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
-                    /**
-                     * Falls ein unerwarteter Fehler auftritt.
-                     */
+                    // Falls ein unerwarteter Fehler auftritt.
                     if (inputIsAlgebraicExpression) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
@@ -882,10 +848,10 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
                 }
 
-                /**
-                 * 3. Versuch: Es wird geprüft, ob die Zeile einen gültigen
-                 * Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
-                 * Nein -> Weitere Möglichkeiten prüfen.
+                /*
+                 3. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                 Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
+                 Nein -> Weitere Möglichkeiten prüfen.
                  */
                 boolean inputIsMatrixExpression = !input.contains("&") && !input.contains("|")
                         && !input.contains(">") && !input.contains("=");
@@ -894,21 +860,17 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                     MatrixExpression matExpr = MatrixExpression.build(input, new HashSet());
 
-                    /**
-                     * Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
-                     * Z.B. 1/0 ist zwar ein gültiger Ausdruck, liefert aber
-                     * beim Auswerten einen Fehler.
+                    /*
+                     Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
+                     Beispielsweise ist 1/0 zwar ein gültiger Ausdruck, liefert aber
+                     beim Auswerten einen Fehler.
                      */
                     try {
 
                         MatrixExpression matExprSimplified = matExpr.simplify();
-                        /**
-                         * Hinzufügen zum textlichen Ausgabefeld.
-                         */
+                        // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
-                        /**
-                         * Hinzufügen zum graphischen Ausgabefeld.
-                         */
+                        // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         inputField.setText("");
                         return null;
@@ -1094,9 +1056,9 @@ public class MathToolForm extends JFrame implements MouseListener {
     }
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
-        /**
-         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         * aktiv ist.
+        /*
+         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         aktiv ist.
          */
         stopPossibleRotation();
         executeCommand();
@@ -1139,9 +1101,9 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemAboutActionPerformed
 
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
-        /**
-         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         * aktiv ist.
+        /*
+         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         aktiv ist.
          */
         stopPossibleRotation();
         inputField.setText("approx(" + inputField.getText() + ")");
@@ -1149,9 +1111,9 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
-        /**
-         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         * aktiv ist.
+        /*
+         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         aktiv ist.
          */
         stopPossibleRotation();
         inputField.setText("latex(" + inputField.getText() + ")");
@@ -1219,9 +1181,9 @@ public class MathToolForm extends JFrame implements MouseListener {
             return 5;
         }
 
-        /**
-         * Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument
-         * benötigen.
+        /*
+         Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument
+         benötigen.
          */
         return 0;
 
@@ -1268,9 +1230,9 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-                /**
-                 * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls
-                 * diese aktiv ist.
+                /*
+                 Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls
+                 diese aktiv ist.
                  */
                 stopPossibleRotation();
                 executeCommand();
@@ -1304,9 +1266,9 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_inputFieldKeyPressed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        /**
-         * Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         * aktiv ist.
+        /*
+         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
+         aktiv ist.
          */
         stopPossibleRotation();
         inputField.setText("clear()");

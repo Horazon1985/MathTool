@@ -1,26 +1,26 @@
 package mathtool;
 
-import translator.Translator;
 import expressionbuilder.Expression;
 import java.awt.Color;
-import javax.swing.JDialog;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.util.HashMap;
+import translator.Translator;
 
 public class LegendGUI extends JDialog {
 
     public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
-            String[] instructions, HashMap<Integer, Color> colors, HashMap<Integer, Expression> expr) {
+            String[] instructions, HashMap<Integer, Color> colorMap, HashMap<Integer, Expression> exprMap) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
         this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
-                (mathtoolformHeight - 145 - 20 * instructions.length - 20 * colors.size()) / 2 + mathtoolformY,
-                500, 145 + 20 * instructions.length + 20 * colors.size());
+                (mathtoolformHeight - 145 - 20 * instructions.length - 20 * colorMap.size()) / 2 + mathtoolformY,
+                500, 145 + 20 * instructions.length + 20 * colorMap.size());
         this.getContentPane().setBackground(Color.white);
 
         JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
@@ -39,18 +39,16 @@ public class LegendGUI extends JDialog {
         graphs.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graphs);
 
-        JLabel[] colorLabels = new JLabel[colors.size()];
+        JLabel[] colorLabels = new JLabel[colorMap.size()];
         for (int i = 0; i < colorLabels.length; i++) {
             colorLabels[i] = new JLabel();
-            colorLabels[i].setForeground(colors.get(i));
-            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + expr.get(i).writeExpression());
+            colorLabels[i].setForeground(colorMap.get(i));
+            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + exprMap.get(i).writeExpression());
             colorLabels[i].setBounds(10, 110 + 20 * instructions.length + 20 * i, 470, 25);
             add(colorLabels[i]);
         }
 
-        /**
-         * Logo laden
-         */
+        // Logo laden
         JPanel panel = new JPanel();
         add(panel);
         panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/LegendLogo.png"))));
@@ -58,6 +56,20 @@ public class LegendGUI extends JDialog {
         panel.setVisible(true);
         validate();
         repaint();
+
+//        String[] exprStrings = new String[exprMap.size()];
+//        Color[] colors = new Color[colorMap.size()];
+//        for (int i = 0; i < exprStrings.length; i++){
+//            exprStrings[i] = Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + exprMap.get(i).writeExpression();
+//            colors[i] = colorMap.get(i);
+//        }
+//        
+//        super(this.getX(), this.getY(),
+//                this.getWidth(), this.getHeight(),
+//                "GUI_LegendGUI_LEGEND", "icons/LegendLogo.png",
+//                instructions, exprStrings, colors,
+//                new String[0], new String[0]);        
+                
     }
 
     /**
