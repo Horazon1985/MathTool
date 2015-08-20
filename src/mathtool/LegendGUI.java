@@ -2,7 +2,7 @@ package mathtool;
 
 import expressionbuilder.Expression;
 import java.awt.Color;
-import java.util.HashMap;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -12,15 +12,15 @@ import translator.Translator;
 public class LegendGUI extends JDialog {
 
     public LegendGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
-            String[] instructions, HashMap<Integer, Color> colorMap, HashMap<Integer, Expression> exprMap) {
+            String[] instructions, ArrayList<Color> colors, ArrayList<Expression> exprs) {
         setTitle(Translator.translateExceptionMessage("GUI_LegendGUI_LEGEND"));
         setLayout(null);
         setResizable(false);
         setModal(true);
 
         this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
-                (mathtoolformHeight - 145 - 20 * instructions.length - 20 * colorMap.size()) / 2 + mathtoolformY,
-                500, 145 + 20 * instructions.length + 20 * colorMap.size());
+                (mathtoolformHeight - 145 - 20 * instructions.length - 20 * colors.size()) / 2 + mathtoolformY,
+                500, 145 + 20 * instructions.length + 20 * colors.size());
         this.getContentPane().setBackground(Color.white);
 
         JLabel instruction = new JLabel("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
@@ -39,11 +39,11 @@ public class LegendGUI extends JDialog {
         graphs.setBounds(10, 90 + 20 * instructions.length, 470, 25);
         add(graphs);
 
-        JLabel[] colorLabels = new JLabel[colorMap.size()];
+        JLabel[] colorLabels = new JLabel[colors.size()];
         for (int i = 0; i < colorLabels.length; i++) {
             colorLabels[i] = new JLabel();
-            colorLabels[i].setForeground(colorMap.get(i));
-            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + exprMap.get(i).writeExpression());
+            colorLabels[i].setForeground(colors.get(i));
+            colorLabels[i].setText(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + exprs.get(i).writeExpression());
             colorLabels[i].setBounds(10, 110 + 20 * instructions.length + 20 * i, 470, 25);
             add(colorLabels[i]);
         }

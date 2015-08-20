@@ -1,47 +1,44 @@
 package mathtool;
 
+import command.Command;
+import command.TypeCommand;
+import computation.AnalysisMethods;
+import computation.NumericalMethods;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
 import expressionbuilder.SelfDefinedFunction;
-import expressionbuilder.Variable;
-import expressionbuilder.TypeSimplify;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
+import expressionbuilder.TypeSimplify;
+import expressionbuilder.Variable;
+import expressionsimplifymethods.ExpressionCollection;
+import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
-import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanel3D;
+import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
-import graphic.GraphicArea;
 import graphic.TypeBracket;
-import computation.AnalysisMethods;
-import computation.NumericalMethods;
-import solveequationmethods.SolveMethods;
-import logicalexpressionbuilder.LogicalExpression;
-import logicalexpressionbuilder.LogicalVariable;
-import translator.Translator;
-import command.Command;
-import command.TypeCommand;
-
-import java.math.BigInteger;
+import java.awt.Dimension;
 import java.math.BigDecimal;
-
-import javax.swing.*;
-
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import expressionsimplifymethods.ExpressionCollection;
-import java.awt.Dimension;
+import javax.swing.JTextArea;
 import linearalgebraalgorithms.EigenvaluesEigenvectorsAlgorithms;
 import linearalgebraalgorithms.GaussAlgorithm;
+import logicalexpressionbuilder.LogicalExpression;
+import logicalexpressionbuilder.LogicalVariable;
 import matrixexpressionbuilder.Matrix;
 import matrixexpressionbuilder.MatrixExpression;
 import matrixsimplifymethods.MatrixExpressionCollection;
+import solveequationmethods.SolveMethods;
+import translator.Translator;
 
 public class MathCommandCompiler {
 
@@ -2365,7 +2362,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setVars(varAbsc, varOrd);
         graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setSpecialPointsOccur(false);
-        HashMap<Integer, double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
+        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicMethods2D.setImplicitGraph(implicitGraph);
         graphicMethods2D.drawGraph2D();
@@ -2887,9 +2884,7 @@ public class MathCommandCompiler {
                     + ".");
         }
 
-        /**
-         * Lösungsgraphen zeichnen.
-         */
+        // Lösungsgraphen zeichnen.
         graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setIsExplicit(true);
         graphicMethods2D.setIsFixed(true);
