@@ -165,6 +165,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         repaint();
 
         // Diverse Listener
+        // Der Fokus soll immmer auf der Eingabezeile sien.
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -172,10 +173,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
         });
 
-        /*
-         ComponentListener für das Ausrichten von Komponenten bei Änderung der
-         Maße von MathTool.
-         */
+        // ComponentListener für das Ausrichten von Komponenten bei Änderung der Maße von MathTool.
         this.addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -683,9 +681,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
                 computing = false;
-                /**
-                 * mathToolArea nach unten scrollen lassen.
-                 */
+                // mathToolArea nach unten scrollen lassen.
                 scrollPaneText.getVerticalScrollBar().setValue(scrollPaneText.getVerticalScrollBar().getMaximum());
             }
 
@@ -743,10 +739,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                                 graphicMethods2D, graphicMethods3D,
                                 graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
                                 definedVars, definedFunctions);
-                        /*
-                         Falls es ein Grafikbefehle war -> Grafik sichtbar
-                         machen.
-                         */
+                        // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         inputField.setText("");
 
@@ -1272,13 +1265,17 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_inputFieldKeyPressed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        /*
-         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         aktiv ist.
-         */
+        // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
-        inputField.setText("clear()");
-        executeCommand();
+        try {
+            MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
+                    graphicMethods2D, graphicMethods3D,
+                    graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
+                    definedVars, definedFunctions);
+        } catch (Exception e) {
+            mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());
+        }
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
