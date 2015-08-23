@@ -51,11 +51,11 @@ public class MathToolForm extends JFrame implements MouseListener {
     private final JScrollPane scrollPaneGraphic;
     private ComputingDialogGUI computingDialog;
 
-    private final GraphicPanel2D graphicMethods2D;
-    private final GraphicPanel3D graphicMethods3D;
-    private final GraphicPanelCurves2D graphicMethodsCurves2D;
-    private final GraphicPanelCurves3D graphicMethodsCurves3D;
-    private final GraphicPanelPolar2D graphicMethodsPolar2D;
+    private final GraphicPanel2D graphicPanel2D;
+    private final GraphicPanel3D graphicPanel3D;
+    private final GraphicPanelCurves2D graphicPanelCurves2D;
+    private final GraphicPanelCurves3D graphicPanelCurves3D;
+    private final GraphicPanelPolar2D graphicPanelPolar2D;
 
     // Zeitabhängige Komponenten
     private Thread rotateThread;
@@ -140,26 +140,26 @@ public class MathToolForm extends JFrame implements MouseListener {
         cancelButton.setVisible(false);
 
         // 2D-Grafikobjekte initialisieren
-        graphicMethods2D = new GraphicPanel2D();
-        add(graphicMethods2D);
-        graphicMethods2D.setVisible(false);
+        graphicPanel2D = new GraphicPanel2D();
+        add(graphicPanel2D);
+        graphicPanel2D.setVisible(false);
 
-        graphicMethodsCurves2D = new GraphicPanelCurves2D();
-        add(graphicMethodsCurves2D);
-        graphicMethodsCurves2D.setVisible(false);
+        graphicPanelCurves2D = new GraphicPanelCurves2D();
+        add(graphicPanelCurves2D);
+        graphicPanelCurves2D.setVisible(false);
 
-        graphicMethodsPolar2D = new GraphicPanelPolar2D();
-        add(graphicMethodsPolar2D);
-        graphicMethodsPolar2D.setVisible(false);
+        graphicPanelPolar2D = new GraphicPanelPolar2D();
+        add(graphicPanelPolar2D);
+        graphicPanelPolar2D.setVisible(false);
 
         // 3D-Grafikobjekte initialisieren
-        graphicMethods3D = new GraphicPanel3D();
-        add(graphicMethods3D);
-        graphicMethods3D.setVisible(false);
+        graphicPanel3D = new GraphicPanel3D();
+        add(graphicPanel3D);
+        graphicPanel3D.setVisible(false);
 
-        graphicMethodsCurves3D = new GraphicPanelCurves3D();
-        add(graphicMethodsCurves3D);
-        graphicMethodsCurves3D.setVisible(false);
+        graphicPanelCurves3D = new GraphicPanelCurves3D();
+        add(graphicPanelCurves3D);
+        graphicPanelCurves3D.setVisible(false);
 
         validate();
         repaint();
@@ -198,14 +198,14 @@ public class MathToolForm extends JFrame implements MouseListener {
                 operatorChoice.setBounds(415, scrollPaneText.getHeight() + 60, 130, 30);
                 commandChoice.setBounds(550, scrollPaneText.getHeight() + 60, 130, 30);
 
-                graphicMethods2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicMethods3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicMethodsCurves2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicMethodsCurves3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicMethodsPolar2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                graphicPanel2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                graphicPanel3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                graphicPanelCurves2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                graphicPanelCurves3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
-                legendLabel.setBounds(graphicMethods3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
-                rotateButton.setBounds(graphicMethods3D.getX() + 140, scrollPaneText.getHeight() + 20, 220, 30);
+                legendLabel.setBounds(graphicPanel3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
+                rotateButton.setBounds(graphicPanel3D.getX() + 140, scrollPaneText.getHeight() + 20, 220, 30);
 
                 if (computingDialog != null) {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
@@ -302,27 +302,25 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemRepresentationText.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_TEXT_MODE"));
         menuItemRepresentationFormula.setText(Translator.translateExceptionMessage("GUI_MathToolForm_FORMULA_MODE"));
 
-        /**
-         * Restliche Komponenten aktualisieren.
-         */
+        // Restliche Komponenten aktualisieren.
         //Operatorbox aktualisieren.
-        ArrayList<String> new_entries = new ArrayList<>();
-        new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
+        ArrayList<String> newEntries = new ArrayList<>();
+        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
         for (int i = 1; i < operatorChoice.getModel().getSize(); i++) {
-            new_entries.add((String) operatorChoice.getItemAt(i));
+            newEntries.add((String) operatorChoice.getItemAt(i));
         }
         operatorChoice.removeAllItems();
-        for (String op : new_entries) {
+        for (String op : newEntries) {
             operatorChoice.addItem(op);
         }
         //Befehlbox aktualisieren.
-        new_entries.clear();
-        new_entries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
+        newEntries.clear();
+        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
         for (int i = 1; i < commandChoice.getModel().getSize(); i++) {
-            new_entries.add((String) commandChoice.getItemAt(i));
+            newEntries.add((String) commandChoice.getItemAt(i));
         }
         commandChoice.removeAllItems();
-        for (String c : new_entries) {
+        for (String c : newEntries) {
             commandChoice.addItem(c);
         }
         //Buttons aktualisieren
@@ -367,42 +365,42 @@ public class MathToolForm extends JFrame implements MouseListener {
         cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
 
         //Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
-        graphicMethods2D.setVisible(false);
-        graphicMethods3D.setVisible(false);
-        graphicMethodsPolar2D.setVisible(false);
-        graphicMethodsCurves2D.setVisible(false);
-        graphicMethodsCurves3D.setVisible(false);
+        graphicPanel2D.setVisible(false);
+        graphicPanel3D.setVisible(false);
+        graphicPanelPolar2D.setVisible(false);
+        graphicPanelCurves2D.setVisible(false);
+        graphicPanelCurves3D.setVisible(false);
         rotateButton.setVisible(false);
         legendLabel.setVisible(true);
 
-        graphicMethods2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicMethods3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicMethodsPolar2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicMethodsCurves2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicMethodsCurves3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        graphicPanel2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        graphicPanel3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        graphicPanelCurves2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        graphicPanelCurves3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
 
         if (command_name.equals("plot2d")) {
-            graphicMethods2D.setVisible(true);
+            graphicPanel2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else if (command_name.equals("plot3d")) {
-            graphicMethods3D.setVisible(true);
+            graphicPanel3D.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH3D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
-            graphicMethodsCurves2D.setVisible(true);
+            graphicPanelCurves2D.setVisible(true);
             typeGraphic = TypeGraphic.CURVE2D;
         } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
-            graphicMethodsCurves3D.setVisible(true);
+            graphicPanelCurves3D.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
         } else if (command_name.equals("plotpolar")) {
-            graphicMethodsPolar2D.setVisible(true);
+            graphicPanelPolar2D.setVisible(true);
             typeGraphic = TypeGraphic.POLARGRAPH2D;
         } else if ((command_name.equals("solve") && c.getParams().length >= 4) || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
-            graphicMethods2D.setVisible(true);
+            graphicPanel2D.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else if (command_name.equals("solvedeq")) {
-            graphicMethods2D.setVisible(true);
+            graphicPanel2D.setVisible(true);
             legendLabel.setVisible(false);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else {
@@ -471,7 +469,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("solve(sin(x)+sin(3*x)=1/4)");
+        inputField.setText("plot2d(x^2+y^2=1,-2,2,-2,2)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -654,9 +652,9 @@ public class MathToolForm extends JFrame implements MouseListener {
         if (isRotating) {
             isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                graphicMethods3D.setIsRotating(false);
+                graphicPanel3D.setIsRotating(false);
             } else {
-                graphicMethodsCurves3D.setIsRotating(false);
+                graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
             rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
@@ -736,8 +734,8 @@ public class MathToolForm extends JFrame implements MouseListener {
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
-                                graphicMethods2D, graphicMethods3D,
-                                graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
+                                graphicPanel2D, graphicPanel3D,
+                                graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D,
                                 definedVars, definedFunctions);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
@@ -884,9 +882,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                             return null;
                         }
                     } catch (Exception exception) {
-                        /**
-                         * Falls ein unerwarteter Fehler auftritt.
-                         */
+                        // Falls ein unerwarteter Fehler auftritt.
                         if (inputIsMatrixExpression) {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
@@ -896,19 +892,17 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 } catch (ExpressionException e) {
                     if (inputIsMatrixExpression) {
-                        /**
-                         * Dann ist der Ausdruck zumindest kein logischer
-                         * Ausdruck -> Fehler ausgeben, welcher soeben bei
-                         * arithmetischen Ausdrücken geworfen wurde.
+                        /*
+                         Dann ist der Ausdruck zumindest kein logischer
+                         Ausdruck -> Fehler ausgeben, welcher soeben bei
+                         arithmetischen Ausdrücken geworfen wurde.
                          */
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
-                    /**
-                     * Falls ein unerwarteter Fehler auftritt.
-                     */
+                    // Falls ein unerwarteter Fehler auftritt.
                     if (inputIsMatrixExpression) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
@@ -916,21 +910,17 @@ public class MathToolForm extends JFrame implements MouseListener {
                     }
                 }
 
-                /**
-                 * 4. Versuch: Es wird geprüft, ob die Zeile einen gültigen
-                 * logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
+                /*
+                 4. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                 logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
                  */
                 try {
 
                     LogicalExpression logExpr = LogicalExpression.build(input, new HashSet());
                     LogicalExpression logExprSimplified = logExpr.simplify();
-                    /**
-                     * Hinzufügen zum textlichen Ausgabefeld.
-                     */
+                    // Hinzufügen zum textlichen Ausgabefeld.
                     mathToolTextArea.append(logExpr.writeLogicalExpression() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeLogicalExpression() + " \n \n");
-                    /**
-                     * Hinzufügen zum graphischen Ausgabefeld.
-                     */
+                    // Hinzufügen zum graphischen Ausgabefeld.
                     mathToolGraphicArea.addComponent(logExpr, Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
                     inputField.setText("");
 
@@ -955,10 +945,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         final ImageIcon computingOwlEyesHalfOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesHalfOpen.png"));
         final ImageIcon computingOwlEyesClosed = new ImageIcon(getClass().getResource("icons/LogoOwlEyesClosed.png"));
 
-        /**
-         * Es folgen die TimerTasks, welche die Eule veranlassen, mit den Augen
-         * zu zwinkern.
-         */
+        // Es folgen die TimerTasks, welche die Eule veranlassen, mit den Augen zu zwinkern.
         TimerTask start = new TimerTask() {
             @Override
             public void run() {
@@ -1064,22 +1051,22 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
         if (!isRotating) {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                rotateThread = new Thread(graphicMethods3D, "rotateGraph");
+                rotateThread = new Thread(graphicPanel3D, "rotateGraph");
                 isRotating = true;
-                graphicMethods3D.setIsRotating(true);
+                graphicPanel3D.setIsRotating(true);
             } else {
-                rotateThread = new Thread(graphicMethodsCurves3D, "rotateGraph");
+                rotateThread = new Thread(graphicPanelCurves3D, "rotateGraph");
                 isRotating = true;
-                graphicMethodsCurves3D.setIsRotating(true);
+                graphicPanelCurves3D.setIsRotating(true);
             }
             rotateThread.start();
             rotateButton.setText("Rotation stoppen");
         } else {
             isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                graphicMethods3D.setIsRotating(false);
+                graphicPanel3D.setIsRotating(false);
             } else {
-                graphicMethodsCurves3D.setIsRotating(false);
+                graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
             rotateButton.setText("Graphen rotieren lassen");
@@ -1171,10 +1158,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             return 5;
         }
 
-        /*
-         Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument
-         benötigen.
-         */
+        // Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument benötigen.
         return 0;
 
     }
@@ -1182,15 +1166,15 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
 
-            String inserted_operator = (String) operatorChoice.getSelectedItem() + "(";
-            int number_of_commata = getNumberOfComma((String) operatorChoice.getSelectedItem());
-            for (int i = 0; i < number_of_commata; i++) {
-                inserted_operator = inserted_operator + ",";
+            String insertedOperator = (String) operatorChoice.getSelectedItem() + "(";
+            int numberOfCommata = getNumberOfComma((String) operatorChoice.getSelectedItem());
+            for (int i = 0; i < numberOfCommata; i++) {
+                insertedOperator = insertedOperator + ",";
             }
-            inserted_operator = inserted_operator + ")";
+            insertedOperator = insertedOperator + ")";
 
-            inputField.replaceSelection(inserted_operator);
-            inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
+            inputField.replaceSelection(insertedOperator);
+            inputField.setSelectionStart(inputField.getSelectionStart() - numberOfCommata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
             operatorChoice.setSelectedIndex(0);
 
@@ -1201,15 +1185,15 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
         if (commandChoice.getSelectedIndex() > 0) {
 
-            String inserted_command = (String) commandChoice.getSelectedItem() + "(";
-            int number_of_commata = getNumberOfComma((String) commandChoice.getSelectedItem());
-            for (int i = 0; i < number_of_commata; i++) {
-                inserted_command = inserted_command + ",";
+            String insertedCommand = (String) commandChoice.getSelectedItem() + "(";
+            int numberOfCommata = getNumberOfComma((String) commandChoice.getSelectedItem());
+            for (int i = 0; i < numberOfCommata; i++) {
+                insertedCommand = insertedCommand + ",";
             }
-            inserted_command = inserted_command + ")";
+            insertedCommand = insertedCommand + ")";
 
-            inputField.setText(inserted_command);
-            inputField.setSelectionStart(inputField.getSelectionStart() - number_of_commata - 1);
+            inputField.setText(insertedCommand);
+            inputField.setSelectionStart(inputField.getSelectionStart() - numberOfCommata - 1);
             inputField.setSelectionEnd(inputField.getSelectionStart());
             commandChoice.setSelectedIndex(0);
 
@@ -1220,10 +1204,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-                /*
-                 Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls
-                 diese aktiv ist.
-                 */
+                // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
                 stopPossibleRotation();
                 executeCommand();
                 break;
@@ -1260,8 +1241,8 @@ public class MathToolForm extends JFrame implements MouseListener {
         stopPossibleRotation();
         try {
             MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
-                    graphicMethods2D, graphicMethods3D,
-                    graphicMethodsCurves2D, graphicMethodsCurves3D, graphicMethodsPolar2D,
+                    graphicPanel2D, graphicPanel3D,
+                    graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D,
                     definedVars, definedFunctions);
         } catch (Exception e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
@@ -1305,45 +1286,51 @@ public class MathToolForm extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+        LegendGUI legendGUI = null;
+
+        ArrayList<String> instructions = new ArrayList<>();
+        ArrayList<String> exprs = new ArrayList<>();
+        instructions.add("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
+
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
-                LegendGUI legendGUI;
-                if (graphicMethods2D.getIsExplicit()) {
-                    ArrayList<String> exprs = new ArrayList<>();
-                    ArrayList<String> instructions = new ArrayList<>();
-                    for (int i = 0; i < graphicMethods2D.getInstructions().length; i++){
-                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicMethods2D.getExpressions().get(i).writeExpression());
-                    }
-                    for (int i = 0; i < graphicMethods2D.getExpressions().size(); i++){
-                        instructions.add(graphicMethods2D.getInstructions()[i]);
+                instructions.addAll(graphicPanel2D.getInstructions());
+                if (graphicPanel2D.getIsExplicit()) {
+                    for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
                     }
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            instructions, graphicMethods2D.getColors(), exprs);
-                    legendGUI.setVisible(true);
+                            instructions, graphicPanel2D.getColors(), exprs);
                 } else {
-//                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
+                            + graphicPanel2D.getExpressions().get(0).writeExpression() + " = 0");
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanel2D.getColors(), exprs);
                 }
-//                legendGUI.setVisible(true);
-            }
-//            else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                        GraphicPanel3D.getInstructions(), graphicMethods3D.getExpression());
-//                legendGUI.setVisible(true);
-//            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
-//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
+                instructions.addAll(GraphicPanel3D.getInstructions());
+                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + ": " + graphicPanel3D.getExpression().writeExpression());
+                ArrayList<Color> colors = new ArrayList<>();
+                colors.add(Color.blue);
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, colors, exprs);
+            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
+//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
 //                        GraphicPanelCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
-//                legendGUI.setVisible(true);
-//            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
-//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                        GraphicPanelCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
-//                legendGUI.setVisible(true);
-//            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
-//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
+//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                        GraphicPanelCurves3D.getInstructions(), graphicPanelCurves3D.getExpressions());
+            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
+//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
 //                        GraphicPanelPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
-//                legendGUI.setVisible(true);
-//            }
+            }
         }
+
+        if (legendGUI != null) {
+            legendGUI.setVisible(true);
+        }
+
     }
 
     @Override
