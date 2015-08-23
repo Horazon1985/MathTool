@@ -469,7 +469,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plot2d(x^2+y^2=1,-2,2,-2,2)");
+        inputField.setText("plotpolar(1+cos(t),1+cos(2*t),1+cos(3*t),0,2*pi)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -1316,14 +1316,33 @@ public class MathToolForm extends JFrame implements MouseListener {
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         instructions, colors, exprs);
             } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
-//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                        GraphicPanelCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
+                instructions.addAll(GraphicPanelCurves2D.getInstructions());
+                ArrayList<Color> colors = new ArrayList<>();
+                colors.add(Color.blue);
+                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                        + "(" + graphicPanelCurves2D.getExpressions()[0]
+                        + ", " + graphicPanelCurves2D.getExpressions()[1] + ")"
+                );
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, colors, exprs);
             } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
-//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                        GraphicPanelCurves3D.getInstructions(), graphicPanelCurves3D.getExpressions());
+                instructions.addAll(GraphicPanelCurves3D.getInstructions());
+                ArrayList<Color> colors = new ArrayList<>();
+                colors.add(Color.blue);
+                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                        + "(" + graphicPanelCurves3D.getExpressions()[0]
+                        + ", " + graphicPanelCurves3D.getExpressions()[1]
+                        + ", " + graphicPanelCurves3D.getExpressions()[2] + ")"
+                );
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, colors, exprs);
             } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
-//                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                        GraphicPanelPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
+                instructions.addAll(GraphicPanelPolar2D.getInstructions());
+                for (int i = 0; i < graphicPanelPolar2D.getExpressions().size(); i++) {
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar2D.getExpressions().get(i).writeExpression());
+                }
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, graphicPanelPolar2D.getColors(), exprs);
             }
         }
 
