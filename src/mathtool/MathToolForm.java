@@ -471,7 +471,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plotpolar(1+cos(t),1+cos(2*t),1+cos(3*t),1+cos(4*t),1+cos(5*t),1+cos(6*t),0,2*pi)");
+        inputField.setText("solve(sin(x)+sin(3*x)=1/4)");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
@@ -1055,10 +1055,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     }
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
-        /*
-         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         aktiv ist.
-         */
+        // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         executeCommand();
     }//GEN-LAST:event_inputButtonActionPerformed
@@ -1100,20 +1097,14 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemAboutActionPerformed
 
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
-        /*
-         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         aktiv ist.
-         */
+        // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         inputField.setText("approx(" + inputField.getText() + ")");
         executeCommand();
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
-        /*
-         Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese
-         aktiv ist.
-         */
+        // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         inputField.setText("latex(" + inputField.getText() + ")");
         executeCommand();
@@ -1318,30 +1309,40 @@ public class MathToolForm extends JFrame implements MouseListener {
             if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
                 LegendGUI legendGUI;
                 if (graphicMethods2D.getIsExplicit()) {
+                    ArrayList<String> exprs = new ArrayList<>();
+                    ArrayList<String> instructions = new ArrayList<>();
+                    for (int i = 0; i < graphicMethods2D.getInstructions().length; i++){
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicMethods2D.getExpressions().get(i).writeExpression());
+                    }
+                    for (int i = 0; i < graphicMethods2D.getExpressions().size(); i++){
+                        instructions.add(graphicMethods2D.getInstructions()[i]);
+                    }
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors(), graphicMethods2D.getExpressions());
+                            instructions, graphicMethods2D.getColors(), exprs);
+                    legendGUI.setVisible(true);
                 } else {
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
+//                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                            graphicMethods2D.getInstructions(), graphicMethods2D.getColors().get(0), graphicMethods2D.getExpressions().get(0));
                 }
-                legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicPanel3D.getInstructions(), graphicMethods3D.getExpression());
-                legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
-                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicPanelCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
-                legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
-                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicPanelCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
-                legendGUI.setVisible(true);
-            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
-                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        GraphicPanelPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
-                legendGUI.setVisible(true);
+//                legendGUI.setVisible(true);
             }
+//            else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
+//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                        GraphicPanel3D.getInstructions(), graphicMethods3D.getExpression());
+//                legendGUI.setVisible(true);
+//            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
+//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                        GraphicPanelCurves2D.getInstructions(), graphicMethodsCurves2D.getExpressions());
+//                legendGUI.setVisible(true);
+//            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
+//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                        GraphicPanelCurves3D.getInstructions(), graphicMethodsCurves3D.getExpressions());
+//                legendGUI.setVisible(true);
+//            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
+//                LegendGUI legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                        GraphicPanelPolar2D.getInstructions(), graphicMethodsPolar2D.getColors(), graphicMethodsPolar2D.getExpressions());
+//                legendGUI.setVisible(true);
+//            }
         }
     }
 

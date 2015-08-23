@@ -1,6 +1,7 @@
 package components;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -14,10 +15,10 @@ public class MathToolInfoComponentTemplate extends JDialog {
     private final JPanel headerPanel;
     private final JLabel headerLabel;
     private final ImageIcon headerImage;
-    private final JLabel[] infoLabels;
-    private final Color[] colors;
-    private final JLabel[] coloredInfoLabels;
-    private final JLabel[] menuLabels;
+    private final ArrayList<JLabel> infoLabels;
+    private final ArrayList<Color> colors;
+    private final ArrayList<JLabel> coloredInfoLabels;
+    private final ArrayList<JLabel> menuLabels;
     private final JEditorPane infoEditorPane;
 
     /**
@@ -30,8 +31,8 @@ public class MathToolInfoComponentTemplate extends JDialog {
     public MathToolInfoComponentTemplate(int mathtoolformX, int mathtoolformY,
             int mathtoolformWidth, int mathtoolformHeight,
             String titleID, String headerImageFilePath,
-            String[] information, String[] coloredInformation, Color[] colors,
-            String[] menuText, String[] fileName) {
+            ArrayList<String> information, ArrayList<String> coloredInformation, 
+            ArrayList<Color> colors, ArrayList<String> menuText, ArrayList<String> fileName) {
 
         setTitle(Translator.translateExceptionMessage(titleID));
         setLayout(null);
@@ -52,17 +53,17 @@ public class MathToolInfoComponentTemplate extends JDialog {
         if (information == null) {
             numberOfInfoLabels = 0;
         } else {
-            numberOfInfoLabels = information.length;
+            numberOfInfoLabels = information.size();
         }
         if (coloredInformation == null) {
             numberOfColoredInfoLabels = 0;
         } else {
-            numberOfColoredInfoLabels = coloredInformation.length;
+            numberOfColoredInfoLabels = coloredInformation.size();
         }
         if (menuText == null) {
             numberOfMenuLabels = 0;
         } else {
-            numberOfMenuLabels = menuText.length;
+            numberOfMenuLabels = menuText.size();
         }
 
         int numberOfLabels = numberOfInfoLabels + numberOfColoredInfoLabels + numberOfMenuLabels;
@@ -79,26 +80,26 @@ public class MathToolInfoComponentTemplate extends JDialog {
                 500, 165 + 20 * numberOfLabels + heightTextArea);
 
         // Info-Labels einfügen
-        this.infoLabels = new JLabel[numberOfInfoLabels];
+        this.infoLabels = new ArrayList<>();
         for (int i = 0; i < numberOfInfoLabels; i++) {
-            this.infoLabels[i] = new JLabel(information[i]);
-            this.infoLabels[i].setBounds(10, 90 + 20 * i, 470, 25);
+            this.infoLabels.add(new JLabel(information.get(i)));
+            this.infoLabels.get(i).setBounds(10, 90 + 20 * i, 470, 25);
         }
 
         // Farbige Info-Labels einfügen
         this.colors = colors;
-        this.coloredInfoLabels = new JLabel[numberOfColoredInfoLabels];
+        this.coloredInfoLabels = new ArrayList<>();
         for (int i = 0; i < numberOfColoredInfoLabels; i++) {
-            this.coloredInfoLabels[i] = new JLabel(coloredInformation[i]);
-            this.coloredInfoLabels[i].setForeground(this.colors[i]);
-            this.coloredInfoLabels[i].setBounds(10, 90 + 20 * (numberOfInfoLabels + i), 470, 25);
+            this.coloredInfoLabels.add(new JLabel(coloredInformation.get(i)));
+            this.coloredInfoLabels.get(i).setForeground(this.colors.get(i));
+            this.coloredInfoLabels.get(i).setBounds(10, 90 + 20 * (numberOfInfoLabels + i), 470, 25);
         }
 
         // Menütext-Labels einfügen
-        this.menuLabels = new JLabel[numberOfMenuLabels];
+        this.menuLabels = new ArrayList<>();
         for (int i = 0; i < numberOfMenuLabels; i++) {
-            this.menuLabels[i] = new JLabel(menuText[i]);
-            this.menuLabels[i].setBounds(10, 90
+            this.menuLabels.add(new JLabel(menuText.get(i)));
+            this.menuLabels.get(i).setBounds(10, 90
                     + 20 * (numberOfMenuLabels + numberOfInfoLabels + i), 470, 25);
             // Für jeden Menüpunkt Listener und html-Seite definieren.
 
