@@ -226,6 +226,8 @@ public class MathToolForm extends JFrame implements MouseListener {
                     mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
                 }
 
+                mathToolGraphicArea.updateSize();
+                
                 validate();
                 repaint();
             }
