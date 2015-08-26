@@ -1,6 +1,5 @@
 package mathtool;
 
-import translator.Translator;
 import expressionbuilder.Expression;
 import java.awt.Color;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import translator.Translator;
 
 public class DevelopersDialogGUI extends JDialog {
 

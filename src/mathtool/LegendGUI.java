@@ -16,4 +16,8 @@ public class LegendGUI extends MathToolInfoComponentTemplate {
                         
     }
 
+    @Override
+    public void showFile(String fileName){
+    }
+    
 }

@@ -1074,7 +1074,23 @@ public class MathToolForm extends JFrame implements MouseListener {
     }//GEN-LAST:event_rotateButtonActionPerformed
 
     private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
-        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        ArrayList<String> menuCaptions = new ArrayList<>();
+        ArrayList<String> fileNames = new ArrayList<>();
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_GENERALITIES"));
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_MATH_FORMULAS"));
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_LOGICAL_EXPRESSION"));
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_OPERATORS"));
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_COMMANDS"));
+        menuCaptions.add(Translator.translateExceptionMessage("GUI_HelpDialogGUI_BUG_REPORT"));
+        fileNames.add("Generalities");
+        fileNames.add("Formulas");
+        fileNames.add("LogicalExpressions");
+        fileNames.add("Operators");
+        fileNames.add("Commands");
+        fileNames.add("Contact");
+        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(), 
+                this.getWidth(), this.getHeight(), menuCaptions, fileNames
+        );
         helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_menuItemHelpActionPerformed
 
