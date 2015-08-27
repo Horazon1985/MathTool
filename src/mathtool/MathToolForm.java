@@ -471,7 +471,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         inputButton.setBounds(560, 330, 100, 30);
 
         inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("plotpolar(1+cos(t),1+cos(2*t),1+cos(3*t),0,2*pi)");
+        inputField.setText("eigenvectors([3,1;2,4])");
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);

@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class HelpDialogGUI extends MathToolInfoComponentTemplate {
 
-//    private final JLabel generalities, mathFormulas, logicalExpressions, operators, commands, contact;
-//    private final JEditorPane helpArea;
-//    private final JScrollPane scrollPaneHelp;
     public HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 

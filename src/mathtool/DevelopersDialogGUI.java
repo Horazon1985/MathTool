@@ -26,18 +26,14 @@ public class DevelopersDialogGUI extends JDialog {
         this.setBounds((mathtoolformWidth - 505)/2 + mathtoolformX, (mathtoolformHeight - 530)/2 + mathtoolformY, 505, 530);
         this.getContentPane().setBackground(Color.white);
 
-        /**
-         * Logo laden
-         */
+        // Logo laden
         JPanel panel = new JPanel();
         add(panel);
         panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/MathToolLogo.png"))));
         panel.setBounds(0, -5, 500, 150);
         panel.setVisible(true);
 
-        /**
-         * About-Datei laden
-         */
+        // About-Datei laden
         developersArea = new JEditorPane();
         developersArea.setContentType("text/html");
         add(developersArea);

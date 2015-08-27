@@ -202,7 +202,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
 
         // TextArea einfügen
         if (menuCaptions != null) {
-            if (informations != null || coloredInformations != null || menuCaptions != null) {
+            if (informations != null || coloredInformations != null) {
                 currentComponentLevel += this.stub;
             }
             this.infoEditorPane = new JEditorPane();

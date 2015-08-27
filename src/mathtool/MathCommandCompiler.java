@@ -57,19 +57,13 @@ public class MathCommandCompiler {
      */
     private static boolean isForbiddenName(String name) {
 
-        /**
-         * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
-         * überschrieben werden.
-         */
+        // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
         for (TypeFunction protectedFunction : TypeFunction.values()) {
             if (protectedFunction.toString().equals(name)) {
                 return false;
             }
         }
-        /**
-         * Prüfen, ob nicht geschützte Operatoren (wie z.B. taylor, int etc.)
-         * überschrieben werden.
-         */
+        // Prüfen, ob nicht geschützte Operatoren (wie z.B. taylor, int etc.) überschrieben werden.
         String operatorName;
         for (TypeOperator protectedOperator : TypeOperator.values()) {
             if (protectedOperator.equals(TypeOperator.integral)) {
@@ -81,10 +75,7 @@ public class MathCommandCompiler {
                 return false;
             }
         }
-        /**
-         * Prüfen, ob nicht geschützte Befehle (wie z.B. approx etc.)
-         * überschrieben werden.
-         */
+        // Prüfen, ob nicht geschützte Befehle (wie z.B. approx etc.) überschrieben werden.
         for (TypeCommand protectedCommand : TypeCommand.values()) {
             if (protectedCommand.toString().equals(name)) {
                 return false;
@@ -130,10 +121,7 @@ public class MathCommandCompiler {
         }
 
         //CDNF
-        /**
-         * Struktur: cdnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
-         * logischer Ausdruck.
-         */
+        // Struktur: cdnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger logischer Ausdruck.
         if (command.equals("cdnf")) {
 
             if (params.length != 1) {
@@ -153,14 +141,10 @@ public class MathCommandCompiler {
         }
 
         //CLEAR
-        /**
-         * Struktur: clear()
-         */
+        // Struktur: clear()
         if (command.equals("clear")) {
 
-            /**
-             * Prüft, ob der Befehl keine Parameter besitzt.
-             */
+            // Prüft, ob der Befehl keine Parameter besitzt.
             if (params.length > 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CLEAR"));
             }
@@ -173,10 +157,10 @@ public class MathCommandCompiler {
         }
 
         //DEFINE
-        /**
-         * Struktur: def(var = value) var = Variablenname, value = reelle Zahl.
-         * ODER: def(f(var_1, ..., var_k) = EXPRESSION) f = Funktionsname var_i:
-         * Variablennamen EXPRESSION: Funktionsterm, durch den f definiert wird.
+        /*
+         Struktur: def(var = value) var = Variablenname, value = reelle Zahl.
+         ODER: def(f(var_1, ..., var_k) = EXPRESSION) f = Funktionsname var_i:
+         Variablennamen EXPRESSION: Funktionsterm, durch den f definiert wird.
          */
         if (command.equals("def")) {
 
@@ -191,11 +175,11 @@ public class MathCommandCompiler {
             String functionNameAndArguments = params[0].substring(0, params[0].indexOf("="));
             String functionTerm = params[0].substring(params[0].indexOf("=") + 1, params[0].length());
 
-            /**
-             * Falls der linke Teil eine Variable ist, dann ist es eine
-             * Zuweisung, die dieser Variablen einen festen Wert zuweist.
-             * Beispiel: def(x = 2) liefert: result.name = "def" result.params =
-             * {"x"} result.left = 2 (als Expression)
+            /*
+             Falls der linke Teil eine Variable ist, dann ist es eine
+             Zuweisung, die dieser Variablen einen festen Wert zuweist.
+             Beispiel: def(x = 2) liefert: result.name = "def" result.params =
+             {"x"} result.left = 2 (als Expression)
              */
             if (Expression.isValidDerivateOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
 
@@ -220,10 +204,10 @@ public class MathCommandCompiler {
 
             HashSet<String> vars = new HashSet<>();
             Expression expr;
-            /**
-             * Nun wird geprüft, ob es sich um eine Funktionsdeklaration
-             * handelt. Zunächst wird versucht, den rechten Teilstring vom "="
-             * in einen Ausdruck umzuwandeln.
+            /*
+             Nun wird geprüft, ob es sich um eine Funktionsdeklaration
+             handelt. Zunächst wird versucht, den rechten Teilstring vom "="
+             in einen Ausdruck umzuwandeln.
              */
             try {
                 expr = Expression.build(functionTerm, vars);
@@ -231,56 +215,49 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
             }
 
-            /**
-             * Hier werden noch einmal alle in expr vorkommenden Variablen neu
-             * ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
-             * ist (etwa Summe, Produkt, Integral), dann werden die lokalen
-             * Variablen in vars mitaufgenommen, und es kann später Exceptions
-             * geben, weil im Operator Variablen vorkommen, die in den
-             * Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
-             * sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
-             * eine Indexvariable, welche bei anwendung von getContainedVars()
-             * übergangen wird.
+            /*
+             Hier werden noch einmal alle in expr vorkommenden Variablen neu
+             ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
+             ist (etwa Summe, Produkt, Integral), dann werden die lokalen
+             Variablen in vars mitaufgenommen, und es kann später Exceptions
+             geben, weil im Operator Variablen vorkommen, die in den
+             Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
+             sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
+             eine Indexvariable, welche bei anwendung von getContainedVars()
+             übergangen wird.
              */
             vars.clear();
             expr.getContainedVars(vars);
 
-            /**
-             * WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
-             * enthält (der Benutzer kann beispielsweise eine weitere Funktion
-             * mit Hilfe bereits definierter Funktionen definieren), dann werden
-             * hier alle neu definierten Funktionen durch vordefinierte
-             * Funktionen ersetzt.
+            /*
+             WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
+             enthält (der Benutzer kann beispielsweise eine weitere Funktion
+             mit Hilfe bereits definierter Funktionen definieren), dann werden
+             hier alle neu definierten Funktionen durch vordefinierte
+             Funktionen ersetzt.
              */
             expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
 
-            /**
-             * Funktionsnamen und Variablen auslesen.
-             */
+            // Funktionsnamen und Variablen auslesen.
             String functionName;
             String[] functionVars;
             try {
-                /**
-                 * Funktionsname und Funktionsvariablen werden ermittelt.
-                 */
+                // Funktionsname und Funktionsvariablen werden ermittelt.
                 functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
                 functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
             }
 
-            /**
-             * Falls functions_vars leer ist -> Fehler ausgeben (es muss
-             * mindestens eine Variable vorhanden sein).
+            /*
+             Falls functions_vars leer ist -> Fehler ausgeben (es muss
+             mindestens eine Variable vorhanden sein).
              */
             if (functionVars.length == 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION"));
             }
 
-            /**
-             * Nun wird geprüft, ob die einzelnen Parameter in der
-             * Funktionsklammer gültige Variablen sind
-             */
+            // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
             for (int i = 0; i < functionVars.length; i++) {
                 if (!Expression.isValidDerivateOfVariable(functionVars[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
@@ -289,10 +266,7 @@ public class MathCommandCompiler {
                 }
             }
 
-            /**
-             * Nun wird geprüft, ob die Variablen in function_vars auch alle
-             * verschieden sind!
-             */
+            // Wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
             HashSet<String> functionVarsAsHashset = new HashSet<>();
             for (String functionVar : functionVars) {
                 if (functionVarsAsHashset.contains(functionVar)) {
@@ -303,43 +277,37 @@ public class MathCommandCompiler {
                 functionVarsAsHashset.add(functionVar);
             }
 
-            /**
-             * Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
-             * dient der Kennzeichnung, dass diese Variablen Platzhalter für
-             * weitere Ausdrücke und keine echten Variablen sind. Solche
-             * Variablen können niemals in einem geparsten Ausdruck vorkommen,
-             * da der Parser Expression.build solche Variablen nicht akzeptiert.
+            /*
+             Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
+             dient der Kennzeichnung, dass diese Variablen Platzhalter für
+             weitere Ausdrücke und keine echten Variablen sind. Solche
+             Variablen können niemals in einem geparsten Ausdruck vorkommen,
+             da der Parser Expression.build solche Variablen nicht akzeptiert.
              */
             for (int i = 0; i < functionVars.length; i++) {
                 functionVars[i] = functionVars[i] + "_ABSTRACT";
             }
 
-            /**
-             * Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.)
-             * überschrieben werden.
-             */
+            // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
             if (!isForbiddenName(functionName)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
                         + functionName
                         + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
             }
 
-            /**
-             * Prüfen, ob keine Sonderzeichen vorkommen.
-             */
+            // Prüfen, ob keine Sonderzeichen vorkommen.
             if (!checkForSpecialCharacters(functionName)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
                         + functionName
                         + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
             }
 
-            /**
-             * Prüfen, ob alle Variablen, die in expr auftreten, auch als
-             * Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
-             *
-             * Zugleich: Im Ausdruck expr werden alle Variablen der Form var
-             * durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
-             * im HashSet vars ebenfalls.
+            /*
+             Prüfen, ob alle Variablen, die in expr auftreten, auch als
+             Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
+             Zugleich: Im Ausdruck expr werden alle Variablen der Form var
+             durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
+             im HashSet vars ebenfalls.
              */
             List<String> functionVarsAsList = Arrays.asList(functionVars);
             Iterator iter = vars.iterator();
@@ -353,9 +321,6 @@ public class MathCommandCompiler {
                 }
             }
 
-            /**
-             * result.params werden gesetzt.
-             */
             commandParams = new Object[2 + functionVars.length];
             commandParams[0] = functionName;
             for (int i = 1; i <= functionVars.length; i++) {
@@ -363,11 +328,11 @@ public class MathCommandCompiler {
             }
             commandParams[1 + functionVars.length] = expr;
 
-            /**
-             * Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
-             * result.type = TypeCommand.DEF result.params = {"f", "x_ABSTRACT",
-             * "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
-             * Expression).
+            /*
+             Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
+             result.type = TypeCommand.DEF result.params = {"f", "x_ABSTRACT",
+             "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
+             Expression).
              */
             resultCommand.setType(TypeCommand.def);
             resultCommand.setParams(commandParams);
@@ -376,14 +341,10 @@ public class MathCommandCompiler {
         }
 
         //DEFINEDFUNCS
-        /**
-         * Struktur: defvars()
-         */
+        // Struktur: defvars()
         if (command.equals("deffuncs")) {
 
-            /**
-             * Prüft, ob der Befehl keine Parameter besitzt.
-             */
+            // Prüft, ob der Befehl keine Parameter besitzt.
             if (params.length > 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFFUNCS"));
             }
@@ -396,14 +357,10 @@ public class MathCommandCompiler {
         }
 
         //DEFINEDVARS
-        /**
-         * Struktur: defvars()
-         */
+        // Struktur: defvars()
         if (command.equals("defvars")) {
 
-            /**
-             * Prüft, ob der Befehl keine Parameter besitzt.
-             */
+            // Prüft, ob der Befehl keine Parameter besitzt.
             if (params.length > 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFVARS"));
             }
@@ -416,10 +373,7 @@ public class MathCommandCompiler {
         }
 
         //EIGENVALUES
-        /**
-         * Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
-         * Matrizenausdruck.
-         */
+        // Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
         if (command.equals("eigenvalues")) {
 
             if (params.length != 1) {
@@ -444,10 +398,7 @@ public class MathCommandCompiler {
         }
 
         //EIGENVECTORS
-        /**
-         * Struktur: eigenvectors(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
-         * Matrizenausdruck.
-         */
+        // Struktur: eigenvectors(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
         if (command.equals("eigenvectors")) {
 
             if (params.length != 1) {
@@ -472,9 +423,9 @@ public class MathCommandCompiler {
         }
 
         //EULER
-        /**
-         * Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
-         * Anzahl der Stellen, die von e ausgegeben werden sollen.
+        /*
+         Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
+         Anzahl der Stellen, die von e ausgegeben werden sollen.
          */
         if (command.equals("euler")) {
 
@@ -482,10 +433,7 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EULER"));
             }
 
-            /**
-             * Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze
-             * Zahl handelt.
-             */
+            // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
             try {
                 BigInteger numberOfDigits = new BigInteger(params[0]);
                 if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
@@ -511,10 +459,7 @@ public class MathCommandCompiler {
         }
 
         //KER
-        /**
-         * Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger
-         * Matrizenausdruck.
-         */
+        // Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
         if (command.equals("ker")) {
 
             if (params.length != 1) {
@@ -534,9 +479,7 @@ public class MathCommandCompiler {
         }
 
         //EXPAND
-        /**
-         * Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
-         */
+        // Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
         if (command.equals("expand")) {
 
             if (params.length != 1) {
@@ -556,9 +499,9 @@ public class MathCommandCompiler {
         }
 
         //LATEX
-        /**
-         * Struktur: latex(EXPRESSION) EXPRESSION: Ausdruck, welcher in einen
-         * Latex-Code umgewandelt werden soll.
+        /*
+         Struktur: latex(EXPRESSION) EXPRESSION: Ausdruck, welcher in einen
+         Latex-Code umgewandelt werden soll.
          */
         if (command.equals("latex")) {
 
@@ -600,9 +543,9 @@ public class MathCommandCompiler {
         }
 
         //PI
-        /**
-         * Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
-         * der Stellen, die von pi ausgegeben werden sollen.
+        /*
+         Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
+         der Stellen, die von pi ausgegeben werden sollen.
          */
         if (command.equals("pi")) {
 
@@ -610,10 +553,7 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PI"));
             }
 
-            /**
-             * Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze
-             * Zahl handelt.
-             */
+            // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
             try {
                 BigInteger numberOfDigits = new BigInteger(params[0]);
                 if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
@@ -639,15 +579,15 @@ public class MathCommandCompiler {
         }
 
         //PLOT2D
-        /**
-         * Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         * value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         * value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
-         * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         * Variablen werden dabei alphabetisch geordnet.
+        /*
+         Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
+         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
+         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
          */
         if (command.equals("plot2d")) {
             if (params.length < 3) {
@@ -788,11 +728,11 @@ public class MathCommandCompiler {
         }
 
         //PLOT3D
-        /**
-         * Struktur: PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3,
-         * value_4) EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 <
-         * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         * Variablen werden dabei alphabetisch geordnet.
+        /*
+         Struktur: PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3,
+         value_4) EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
          */
         if (command.equals("plot3d")) {
             if (params.length != 5) {
@@ -854,12 +794,12 @@ public class MathCommandCompiler {
         }
 
         //PLOTCURVE
-        /**
-         * Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1,
-         * value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
-         * value_2: Parametergrenzen. ODER: PLOTCURVE([FUNCTION_1(var),
-         * FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
-         * = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
+        /*
+         Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1,
+         value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
+         value_2: Parametergrenzen. ODER: PLOTCURVE([FUNCTION_1(var),
+         FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
+         = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
          */
         if (command.equals("plotcurve")) {
             if (params.length != 3) {
@@ -868,9 +808,9 @@ public class MathCommandCompiler {
 
             HashSet<String> vars = new HashSet<>();
 
-            /**
-             * Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
-             * expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
+            /*
+             Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
+             expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
              */
             if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE"));
@@ -933,15 +873,15 @@ public class MathCommandCompiler {
         }
 
         //PLOTPOLAR
-        /**
-         * Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         * value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         * value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
-         * var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         * (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         * EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         * value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         * Variablen werden dabei alphabetisch geordnet.
+        /*
+         Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
+         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
+         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
          */
         if (command.equals("plotpolar")) {
             if (params.length < 3) {
@@ -1015,11 +955,11 @@ public class MathCommandCompiler {
         }
 
         //SOLVE
-        /**
-         * Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
-         * expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
-         * legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
-         * Intervalls [x_1, x_2]
+        /*
+         Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
+         expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
+         legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
+         Intervalls [x_1, x_2]
          */
         if (command.equals("solve")) {
             if (params.length < 1) {
@@ -1130,12 +1070,12 @@ public class MathCommandCompiler {
         }
 
         //SOLVEDEQ
-        /**
-         * Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
-         * y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         * EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
-         * der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
-         * fest x_1 = Obere x-Schranke für die numerische Berechnung
+        /*
+         Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
+         y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
+         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
+         fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
         if (command.equals("solvedeq")) {
             if (params.length < 6) {
@@ -1155,10 +1095,10 @@ public class MathCommandCompiler {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
                 }
 
-                /**
-                 * Prüft, ob es sich um eine korrekte DGL handelt:
-                 * Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
-                 * y'''' etc. auf der rechten Seite auftreten.
+                /*
+                 Prüft, ob es sich um eine korrekte DGL handelt:
+                 Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
+                 y'''' etc. auf der rechten Seite auftreten.
                  */
                 HashSet<String> vars = new HashSet<>();
                 try {
@@ -1209,7 +1149,7 @@ public class MathCommandCompiler {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDEQ"));
                 }
 
-                //Prüft, ob die AWP-Daten korrekt sind
+                // Prüft, ob die AWP-Daten korrekt sind
                 HashSet<String> varsInLimits = new HashSet<>();
                 for (int i = 3; i < ord + 5; i++) {
                     try {
@@ -1219,11 +1159,11 @@ public class MathCommandCompiler {
                                     + String.valueOf(i + 1)
                                     + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
                         }
-                        /**
-                         * Prüfen, ob die Grenzen ausgewerten werden können.
-                         * Dies ist notwendig, da es sich hier um eine
-                         * numerische Berechnung handelt (und nicht um eine
-                         * algebraische).
+                        /*
+                         Prüfen, ob die Grenzen ausgewerten werden können.
+                         Dies ist notwendig, da es sich hier um eine
+                         numerische Berechnung handelt (und nicht um eine
+                         algebraische).
                          */
                         limit.evaluate();
                     } catch (ExpressionException | EvaluationException e) {
@@ -1248,10 +1188,7 @@ public class MathCommandCompiler {
         }
 
         //TABLE
-        /**
-         * Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer
-         * Ausdruck.
-         */
+        // Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer Ausdruck.
         if (command.equals("table")) {
             if (params.length != 1) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
@@ -1275,11 +1212,11 @@ public class MathCommandCompiler {
         }
 
         //TANGENT
-        /**
-         * Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
-         * EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert. var_i =
-         * Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
-         * var_i vorkommen, welche auch in expr vorkommen.
+        /*
+         Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
+         EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert. var_i =
+         Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
+         var_i vorkommen, welche auch in expr vorkommen.
          */
         if (command.equals("tangent")) {
             if (params.length < 2) {
@@ -1294,9 +1231,9 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
             }
 
-            /**
-             * Ermittelt die Anzahl der Variablen, von denen die Funktion
-             * abhängt, von der der Tangentialraum berechnet werden soll.
+            /*
+             Ermittelt die Anzahl der Variablen, von denen die Funktion
+             abhängt, von der der Tangentialraum berechnet werden soll.
              */
             for (int i = 1; i < params.length; i++) {
                 if (!params[i].contains("=")) {
@@ -1322,9 +1259,7 @@ public class MathCommandCompiler {
                 }
             }
 
-            /**
-             * Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
-             */
+            // Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
             for (int i = 1; i < params.length; i++) {
                 for (int j = i + 1; j < params.length; j++) {
                     if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
@@ -1335,9 +1270,9 @@ public class MathCommandCompiler {
                 }
             }
 
-            /**
-             * Einzelne Punktkoordinaten werden in der HashMap
-             * varsContainedInParams gespeichert.
+            /*
+             Einzelne Punktkoordinaten werden in der HashMap
+             varsContainedInParams gespeichert.
              */
             HashMap<String, Expression> varsContainedInParams = new HashMap<>();
             for (int i = 1; i < params.length; i++) {
@@ -1345,10 +1280,10 @@ public class MathCommandCompiler {
                         Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
             }
 
-            /**
-             * Es wird geprüft, ob allen Variablen, welche in der
-             * Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
-             * wurde.
+            /*
+             Es wird geprüft, ob allen Variablen, welche in der
+             Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
+             wurde.
              */
             Iterator iter = vars.iterator();
             String var;
@@ -1371,21 +1306,19 @@ public class MathCommandCompiler {
         }
 
         //TAYLORDEQ
-        /**
-         * Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
-         * y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         * EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
-         * der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
-         * fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
+        /*
+         Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
+         y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
+         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
+         fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
          */
         if (command.equals("taylordeq")) {
             if (params.length < 6) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
             }
 
-            /**
-             * Ermittelt die Ordnung der DGL
-             */
+            // Ermittelt die Ordnung der DGL
             int ord;
             try {
                 ord = Integer.parseInt(params[2]);
@@ -1396,10 +1329,10 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
             }
 
-            /**
-             * Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
-             * darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
-             * rechten Seite auftreten.
+            /*
+             Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
+             darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
+             rechten Seite auftreten.
              */
             HashSet<String> vars = new HashSet<>();
             try {
@@ -1451,11 +1384,11 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
             }
 
-            /**
-             * Nun wird varsWithoutPrimes, falls nötig, soweit ergänzt, dass es
-             * alle in der DGL auftretenden Variablen enthält (max. 2). Dies
-             * wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
-             * SWP-Daten korrekt sind.
+            /*
+             Nun wird varsWithoutPrimes, falls nötig, soweit ergänzt, dass es
+             alle in der DGL auftretenden Variablen enthält (max. 2). Dies
+             wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
+             SWP-Daten korrekt sind.
              */
             if (varsWithoutPrimes.isEmpty()) {
                 varsWithoutPrimes.add(params[1]);
@@ -1478,19 +1411,17 @@ public class MathCommandCompiler {
 
             }
 
-            /**
-             * Prüft, ob die AWP-Daten korrekt sind.
-             */
+            // Prüft, ob die AWP-Daten korrekt sind.
             HashSet<String> varsInLimits = new HashSet<>();
             for (int i = 3; i < ord + 4; i++) {
                 try {
                     Expression.build(params[i], varsInLimits).simplify();
                     iter = varsWithoutPrimes.iterator();
-                    /**
-                     * Im Folgenden wird geprüft, ob in den Anfangsbedingungen
-                     * die Variablen aus der eigentlichen DGL nicht auftreten
-                     * (diese beiden Variablen sind im HashSet varsWithoutPrimes
-                     * gespeichert).
+                    /*
+                     Im Folgenden wird geprüft, ob in den Anfangsbedingungen
+                     die Variablen aus der eigentlichen DGL nicht auftreten
+                     (diese beiden Variablen sind im HashSet varsWithoutPrimes
+                     gespeichert).
                      */
                     if (varsInLimits.contains((String) iter.next())) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
@@ -1525,13 +1456,9 @@ public class MathCommandCompiler {
         }
 
         //UNDEFINE
-        /**
-         * Struktur: undef(var_1, ..., var_k) var_i: Variablenname
-         */
+        // Struktur: undef(var_1, ..., var_k) var_i: Variablenname
         if (command.equals("undef")) {
-            /**
-             * Prüft, ob alle Parameter gültige Variablen sind.
-             */
+            // Prüft, ob alle Parameter gültige Variablen sind.
             for (int i = 0; i < params.length; i++) {
                 if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
@@ -1549,13 +1476,9 @@ public class MathCommandCompiler {
         }
 
         //UNDEFINEALL
-        /**
-         * Struktur: undefall()
-         */
+        // Struktur: undefall()
         if (command.equals("undefall")) {
-            /**
-             * Prüft, ob der Befehl keine Parameter besitzt.
-             */
+            // Prüft, ob der Befehl keine Parameter besitzt.
             if (params.length > 0) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_UNDEFALL"));
             }
@@ -1572,14 +1495,10 @@ public class MathCommandCompiler {
 
     private static Command getCommandApprox(String[] params) throws ExpressionException {
 
-        /**
-         * Struktur: approx(expr)
-         */
+        // Struktur: approx(expr)
         Object[] commandParams = new Object[1];
 
-        /**
-         * Prüft, ob der Befehl genau einen Parameter besitzt.
-         */
+        // Prüft, ob der Befehl genau einen Parameter besitzt.
         if (params.length != 1) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX"));
         }
@@ -1595,10 +1514,7 @@ public class MathCommandCompiler {
 
     private static Command getCommandCCNF(String[] params) throws ExpressionException {
 
-        /**
-         * Struktur: ccnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger
-         * logischer Ausdruck.
-         */
+        // Struktur: ccnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger logischer Ausdruck.
         Object[] commandParams = new Object[1];
 
         if (params.length != 1) {
@@ -1821,7 +1737,7 @@ public class MathCommandCompiler {
 
     private static void executeClear(JTextArea area, GraphicArea graphicArea) {
         area.setText("");
-        graphicArea.initializeBounds(MathToolForm.mathToolGraphicAreaX, MathToolForm.mathToolGraphicAreaY, 
+        graphicArea.initializeBounds(MathToolForm.mathToolGraphicAreaX, MathToolForm.mathToolGraphicAreaY,
                 MathToolForm.mathToolGraphicAreaWidth, MathToolForm.mathToolGraphicAreaHeight);
         graphicArea.clearArea();
     }
@@ -2018,10 +1934,7 @@ public class MathCommandCompiler {
     }
 
     private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
-        /**
-         * Es wird definiert, welche Arten von Vereinfachungen durchgeführt
-         * werden müssen.
-         */
+        // Es wird definiert, welche Arten von Vereinfachungen durchgeführt werden müssen.
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.simplify_trivial);
         simplifyTypes.add(TypeSimplify.sort_difference_and_division);
@@ -2038,13 +1951,9 @@ public class MathCommandCompiler {
 
         Expression expr = (Expression) command.getParams()[0];
         expr = expr.simplify(simplifyTypes);
-        /**
-         * Textliche Ausgabe
-         */
+        // Textliche Ausgabe
         output.add(expr.writeExpression() + "\n \n");
-        /**
-         * Graphische Ausgabe
-         */
+        // Graphische Ausgabe
         graphicArea.addComponent(expr);
     }
 
@@ -2052,16 +1961,44 @@ public class MathCommandCompiler {
 
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
-        for (int i = 0; i < eigenvalues.getBound(); i++) {
-            /**
-             * Textliche Ausgabe
-             */
-            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
-            /**
-             * Graphische Ausgabe
-             */
-            graphicArea.addComponent(eigenvalues.get(i));
+        if (eigenvalues.isEmpty()) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_1")
+                    + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
+                    + Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_2") + "\n \n");
+            // Graphische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_1"),
+                    (MatrixExpression) command.getParams()[0],
+                    Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_2"));
         }
+
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_1")
+                + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
+                + Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_2") + "\n \n");
+        // Graphische Ausgabe
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_1"),
+                (MatrixExpression) command.getParams()[0],
+                Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_2"));
+
+        String eigenvaluesAsString = "";
+        ArrayList<Object> eigenvaluesAsObjectArray = new ArrayList<>();
+
+        for (int i = 0; i < eigenvalues.getBound(); i++) {
+            // Für textliche Ausgabe
+            eigenvaluesAsString = eigenvaluesAsString + eigenvalues.get(i).writeExpression();
+            // Für graphische Ausgabe
+            eigenvaluesAsObjectArray.add(eigenvalues.get(i));
+            if (i < eigenvalues.getBound() - 1) {
+                eigenvaluesAsString = eigenvaluesAsString + ", ";
+                eigenvaluesAsObjectArray.add(", ");
+            }
+        }
+
+        // Textliche Ausgabe
+        output.add(eigenvaluesAsString);
+        // Graphische Ausgabe
+        graphicArea.addComponent(eigenvaluesAsObjectArray);
 
     }
 
@@ -2069,19 +2006,57 @@ public class MathCommandCompiler {
 
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
+        MatrixExpressionCollection eigenvectors;
+        MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
+        MatrixExpression matrixMinusMultipleOfE;
+        Dimension dim = matrix.getDimension();
+
+        String eigenvectorsAsString = "";
+        ArrayList<Object> eigenvectorsAsObjectArray = new ArrayList<>();
+
         for (int i = 0; i < eigenvalues.getBound(); i++) {
-            /**
-             * Textliche Ausgabe
-             */
-            output.add(eigenvalues.get(i).writeExpression() + "\n \n");
-            /**
-             * Graphische Ausgabe
-             */
-            graphicArea.addComponent(eigenvalues.get(i));
+
+            // Sicherheitshalber! Sollte eigentlich nie passieren.
+            if (eigenvalues.get(i) == null) {
+                continue;
+            }
+
+            // A - k*E bilden, A = Matrix, k = Eigenwert von A.
+            matrixMinusMultipleOfE = matrix.sub(new Matrix(eigenvalues.get(i)).mult(MatrixExpression.getId(dim.height))).simplify();
+
+            if (!(matrixMinusMultipleOfE instanceof Matrix)) {
+                continue;
+            }
+
+            // Eigenvektoren berechnen.
+            eigenvectors = GaussAlgorithm.computeKernelOfMatrix((Matrix) matrixMinusMultipleOfE);
+
+            eigenvectorsAsString = "";
+            eigenvectorsAsObjectArray = new ArrayList<>();
+            eigenvectorsAsObjectArray.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
+            eigenvectorsAsObjectArray.add(eigenvalues.get(i));
+            eigenvectorsAsObjectArray.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
+            for (int j = 0; j < eigenvectors.getBound(); j++) {
+                // Für textliche Ausgabe
+                eigenvectorsAsString = eigenvectorsAsString + eigenvectors.get(j).writeMatrixExpression();
+                // Für graphische Ausgabe
+                eigenvectorsAsObjectArray.add(eigenvectors.get(j));
+                if (j < eigenvectors.getBound() - 1) {
+                    eigenvectorsAsString = eigenvectorsAsString + ", ";
+                    eigenvectorsAsObjectArray.add(", ");
+                }
+            }
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1")
+                    + eigenvalues.get(i).writeExpression()
+                    + Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2")
+                    + eigenvectorsAsString + "\n \n");
+            // Graphische Ausgabe
+            graphicArea.addComponent(eigenvectorsAsObjectArray);
         }
 
     }
-    
+
     private static void executeKer(Command command, GraphicArea graphicArea) throws EvaluationException {
 
         MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
@@ -2092,16 +2067,12 @@ public class MathCommandCompiler {
         MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExpr);
 
         if (basisOfKer.isEmpty()) {
-            /**
-             * Textliche Ausgabe
-             */
+            // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1")
                     + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
                     + Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2")
                     + MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1).writeMatrixExpression());
-            /**
-             * Graphische Ausgabe
-             */
+            // Graphische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1"),
                     ((MatrixExpression) command.getParams()[0]),
                     Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2"),
@@ -2109,15 +2080,11 @@ public class MathCommandCompiler {
             return;
         }
 
-        /**
-         * Textliche Ausgabe
-         */
+        // Textliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1")
                 + matExpr.writeMatrixExpression()
                 + Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
-        /**
-         * Graphische Ausgabe
-         */
+        // Graphische Ausgabe
         graphicArea.addComponent(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1"),
                 matExpr, Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
 
@@ -2125,24 +2092,18 @@ public class MathCommandCompiler {
         ArrayList<Object> basisAsObjectArray = new ArrayList<>();
         for (int i = 0; i < basisOfKer.getBound(); i++) {
             // Für textliche Ausgabe
-            basisAsString = basisAsString + basisOfKer.get(i).writeMatrixExpression() + ", ";
+            basisAsString = basisAsString + basisOfKer.get(i).writeMatrixExpression();
             // Für graphische Ausgabe
             basisAsObjectArray.add(basisOfKer.get(i));
             if (i < basisOfKer.getBound() - 1) {
+                basisAsString = basisAsString + ", ";
                 basisAsObjectArray.add(", ");
             }
         }
 
-        if (!basisOfKer.isEmpty()) {
-            basisAsString = basisAsString.substring(0, basisAsString.length() - 2);
-        }
-        /**
-         * Textliche Ausgabe
-         */
+        // Textliche Ausgabe
         output.add(basisAsString + "\n \n");
-        /**
-         * Graphische Ausgabe
-         */
+        // Graphische Ausgabe
         graphicArea.addComponent(basisAsObjectArray);
 
     }
@@ -2496,25 +2457,19 @@ public class MathCommandCompiler {
             SolveMethods.setSolveTries(100);
             ExpressionCollection zeros = SolveMethods.solveGeneralEquation(f, g, var);
 
-            /**
-             * Falls keine Lösungen ermittelt werden konnten, User informieren.
-             */
+            // Falls keine Lösungen ermittelt werden konnten, User informieren.
             if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
-                /**
-                 * Textliche Ausgabe
-                 */
+                // Textliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
-                /**
-                 * Graphische Ausgabe
-                 */
+                // Graphische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
 
                 return;
             }
 
-            /**
-             * Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
-             * ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+            /*
+             Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+             ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
              */
             boolean solutionContainsFreeParameter = false;
             String messageAboutFreeParameters = "";
@@ -2550,15 +2505,13 @@ public class MathCommandCompiler {
             }
 
             if (var.length() > 1) {
-                /**
-                 * Falls var etwa x_1 oder x' ist, so sollen die Lösungen
-                 * (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
+                /*
+                 Falls var etwa x_1 oder x' ist, so sollen die Lösungen
+                 (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
                  */
                 var = "(" + var + ")";
             }
-            /**
-             * Textliche Ausgabe
-             */
+            // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
                     + ((Expression) command.getParams()[0]).writeExpression()
                     + " = "
@@ -2570,9 +2523,7 @@ public class MathCommandCompiler {
                     output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
                 }
             }
-            /**
-             * Grafische Ausgabe
-             */
+            // Grafische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
                     " = ", (Expression) command.getParams()[1], " :");
             if (zeros == SolveMethods.ALL_REALS) {
@@ -2585,13 +2536,9 @@ public class MathCommandCompiler {
 
             if (solutionContainsFreeParameter) {
 
-                /**
-                 * Textliche Ausgabe
-                 */
+                // Textliche Ausgabe
                 output.add(messageAboutFreeParameters);
-                /**
-                 * Grafische Ausgabe
-                 */
+                // Grafische Ausgabe
                 graphicArea.addComponent(messageAboutFreeParameters);
 
             }
@@ -2600,7 +2547,7 @@ public class MathCommandCompiler {
 
             Expression equation = f.sub(g).simplify();
             equation.getContainedVars(vars);
-            //Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+            // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var = "x";
             if (!vars.isEmpty()) {
                 Iterator iter = vars.iterator();
@@ -2609,9 +2556,9 @@ public class MathCommandCompiler {
 
             Expression x_0 = (Expression) command.getParams()[2];
             Expression x_1 = (Expression) command.getParams()[3];
-            /**
-             * Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
-             * das Intervall in 10000 Teile unterteilt werden.
+            /*
+             Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
+             das Intervall in 10000 Teile unterteilt werden.
              */
             int n = 10000;
 
@@ -2620,9 +2567,7 @@ public class MathCommandCompiler {
             }
 
             if (equation.isConstant()) {
-                /**
-                 * Textliche Ausgabe
-                 */
+                // Textliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
                         + ((Expression) command.getParams()[0]).writeExpression()
                         + " = "
@@ -2632,9 +2577,7 @@ public class MathCommandCompiler {
                 } else {
                     output.add(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
                 }
-                /**
-                 * Grafische Ausgabe
-                 */
+                // Grafische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
                         " = ", (Expression) command.getParams()[1], " :");
                 if (equation.equals(Expression.ZERO)) {
@@ -2643,9 +2586,7 @@ public class MathCommandCompiler {
                     graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
                 }
 
-                /**
-                 * Graphen der linken und der rechten Seite zeichnen.
-                 */
+                // Graphen der linken und der rechten Seite zeichnen.
                 graphicMethods2D.setIsInitialized(true);
                 graphicMethods2D.setIsExplicit(true);
                 graphicMethods2D.setIsFixed(false);
@@ -2664,50 +2605,36 @@ public class MathCommandCompiler {
             HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
             if (var.length() > 1) {
-                /**
-                 * Falls var etwa x_1 oder x' ist, so sollen die Lösungen
-                 * (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
+                /*
+                 Falls var etwa x_1 oder x' ist, so sollen die Lösungen
+                 (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
                  */
                 var = "(" + var + ")";
             }
-            /**
-             * Textliche Ausgabe
-             */
+            // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
                     + ((Expression) command.getParams()[0]).writeExpression()
                     + " = "
                     + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
-            /**
-             * Grafische Ausgabe
-             */
+            // Grafische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
                     " = ", (Expression) command.getParams()[1], " :");
 
             for (int i = 0; i < zeros.size(); i++) {
-                /**
-                 * Textliche Ausgabe
-                 */
+                // Textliche Ausgabe
                 output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
-                /**
-                 * Grafische Ausgabe
-                 */
+                // Grafische Ausgabe
                 graphicArea.addComponent(var + "_" + (i + 1) + " = " + zeros.get(i));
             }
 
             if (zeros.isEmpty()) {
-                /**
-                 * Textliche Ausgabe
-                 */
+                // Textliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
-                /**
-                 * Grafische Ausgabe
-                 */
+                // Grafische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
             }
 
-            /**
-             * Nullstellen als Array (zum Markieren).
-             */
+            // Nullstellen als Array (zum Markieren).
             double[][] zerosAsArray = new double[zeros.size()][2];
             for (int i = 0; i < zerosAsArray.length; i++) {
                 zerosAsArray[i][0] = zeros.get(i);
@@ -2715,9 +2642,9 @@ public class MathCommandCompiler {
                 zerosAsArray[i][1] = f.evaluate();
             }
 
-            /**
-             * Graphen der linken und der rechten Seite zeichnen, inkl. der
-             * Lösungen (als rot markierte Punkte).
+            /*
+             Graphen der linken und der rechten Seite zeichnen, inkl. der
+             Lösungen (als rot markierte Punkte).
              */
             graphicMethods2D.setIsInitialized(true);
             graphicMethods2D.setIsExplicit(true);
