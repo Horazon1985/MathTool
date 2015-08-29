@@ -50,7 +50,8 @@ public class MathToolForm extends JFrame implements MouseListener {
     private final GraphicArea mathToolGraphicArea;
     private final JScrollPane scrollPaneGraphic;
     private ComputingDialogGUI computingDialog;
-
+    private final MathToolTextField mathToolTextField;
+    
     private final GraphicPanel2D graphicPanel2D;
     private final GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
@@ -123,6 +124,30 @@ public class MathToolForm extends JFrame implements MouseListener {
         add(scrollPaneText);
         scrollPaneText.setVisible(false);
 
+        mathToolTextField = new MathToolTextField();
+        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        mathToolTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                mathToolTextFieldKeyPressed(evt);
+            }
+        });
+        getContentPane().add(mathToolTextField);
+        mathToolTextField.setBounds(10, 336, 540, 20);
+//        mathToolTextField.addValueChangeListener(new MathToolValueChangeListener() {
+//            @Override
+//            public void valueChange(ValueChangeEvent e) {
+//                
+//            }
+//        });
+//        mathToolTextField.getDocument().addDocumentListener(new ChangeListener() {
+//
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+        
         // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
         mathToolGraphicAreaY = 10;
@@ -169,7 +194,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
-                inputField.requestFocus();
+                mathToolTextField.requestFocus();
             }
         });
 
@@ -189,7 +214,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
                 mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
 
-                inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+                mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
                 inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
                 cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
                 approxButton.setBounds(10, scrollPaneText.getHeight() + 60, 130, 30);
@@ -216,7 +241,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                     scrollPaneGraphic.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
                     mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
                     mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-                    inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+                    mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
                     inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
                     cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
 
@@ -248,7 +273,7 @@ public class MathToolForm extends JFrame implements MouseListener {
      */
     private void showLoggedCommand(int i) {
         if (!listOfCommands.isEmpty() && listOfCommands.get(i) != null) {
-            inputField.setText(listOfCommands.get(i));
+            mathToolTextField.setText(listOfCommands.get(i));
         }
     }
 
@@ -305,7 +330,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemRepresentationFormula.setText(Translator.translateExceptionMessage("GUI_MathToolForm_FORMULA_MODE"));
 
         // Restliche Komponenten aktualisieren.
-        //Operatorbox aktualisieren.
+        // Operatorbox aktualisieren.
         ArrayList<String> newEntries = new ArrayList<>();
         newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
         for (int i = 1; i < operatorChoice.getModel().getSize(); i++) {
@@ -362,7 +387,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
         mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
         mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-        inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+        mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
         inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
         cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
 
@@ -414,7 +439,7 @@ public class MathToolForm extends JFrame implements MouseListener {
             mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
             mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
             mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-            inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+            mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
             inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
             cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
             typeGraphic = TypeGraphic.NONE;
@@ -430,7 +455,6 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void initComponents() {
 
         inputButton = new javax.swing.JButton();
-        inputField = new javax.swing.JTextField();
         rotateButton = new javax.swing.JButton();
         latexButton = new javax.swing.JButton();
         approxButton = new javax.swing.JButton();
@@ -469,16 +493,6 @@ public class MathToolForm extends JFrame implements MouseListener {
         });
         getContentPane().add(inputButton);
         inputButton.setBounds(560, 330, 100, 30);
-
-        inputField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        inputField.setText("eigenvectors([3,1;2,4])");
-        inputField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inputFieldKeyPressed(evt);
-            }
-        });
-        getContentPane().add(inputField);
-        inputField.setBounds(10, 336, 540, 20);
 
         rotateButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         rotateButton.setText("Graphen rotieren lassen");
@@ -693,7 +707,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 boolean validCommand = false;
 
                 // Leerzeichen werden im Vorfeld beseitigt.
-                String input = inputField.getText().replaceAll(" ", "");
+                String input = mathToolTextField.getText().replaceAll(" ", "");
 
                 // Alles zu Kleinbuchstaben machen.
                 char currentChar;
@@ -741,7 +755,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                                 definedVars, definedFunctions);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
-                        inputField.setText("");
+                        mathToolTextField.setText("");
 
                     }
 
@@ -806,7 +820,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                         mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(expr, "  =  ", exprSimplified);
-                        inputField.setText("");
+                        mathToolTextField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
@@ -815,7 +829,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(expr);
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
-                            inputField.setText("");
+                            mathToolTextField.setText("");
                             return null;
                         }
                     } catch (Exception exception) {
@@ -871,7 +885,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                         mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
-                        inputField.setText("");
+                        mathToolTextField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
@@ -880,7 +894,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(matExpr);
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage());
-                            inputField.setText("");
+                            mathToolTextField.setText("");
                             return null;
                         }
                     } catch (Exception exception) {
@@ -924,7 +938,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                     mathToolTextArea.append(logExpr.writeLogicalExpression() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeLogicalExpression() + " \n \n");
                     // Hinzufügen zum graphischen Ausgabefeld.
                     mathToolGraphicArea.addComponent(logExpr, Translator.translateExceptionMessage("MTF_EQUIVALENT_TO"), logExprSimplified);
-                    inputField.setText("");
+                    mathToolTextField.setText("");
 
                 } catch (ExpressionException e) {
                     mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
@@ -1104,14 +1118,14 @@ public class MathToolForm extends JFrame implements MouseListener {
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
-        inputField.setText("approx(" + inputField.getText() + ")");
+        mathToolTextField.setText("approx(" + mathToolTextField.getText() + ")");
         executeCommand();
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
-        inputField.setText("latex(" + inputField.getText() + ")");
+        mathToolTextField.setText("latex(" + mathToolTextField.getText() + ")");
         executeCommand();
     }//GEN-LAST:event_latexButtonActionPerformed
 
@@ -1191,13 +1205,13 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
             insertedOperator = insertedOperator + ")";
 
-            inputField.replaceSelection(insertedOperator);
-            inputField.setSelectionStart(inputField.getSelectionStart() - numberOfCommata - 1);
-            inputField.setSelectionEnd(inputField.getSelectionStart());
+            mathToolTextField.replaceSelection(insertedOperator);
+            mathToolTextField.setSelectionStart(mathToolTextField.getSelectionStart() - numberOfCommata - 1);
+            mathToolTextField.setSelectionEnd(mathToolTextField.getSelectionStart());
             operatorChoice.setSelectedIndex(0);
 
         }
-        inputField.requestFocus();
+        mathToolTextField.requestFocus();
     }//GEN-LAST:event_operatorChoiceActionPerformed
 
     private void commandChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandChoiceActionPerformed
@@ -1210,49 +1224,14 @@ public class MathToolForm extends JFrame implements MouseListener {
             }
             insertedCommand = insertedCommand + ")";
 
-            inputField.setText(insertedCommand);
-            inputField.setSelectionStart(inputField.getSelectionStart() - numberOfCommata - 1);
-            inputField.setSelectionEnd(inputField.getSelectionStart());
+            mathToolTextField.setText(insertedCommand);
+            mathToolTextField.setSelectionStart(mathToolTextField.getSelectionStart() - numberOfCommata - 1);
+            mathToolTextField.setSelectionEnd(mathToolTextField.getSelectionStart());
             commandChoice.setSelectedIndex(0);
 
         }
-        inputField.requestFocus();
+        mathToolTextField.requestFocus();
     }//GEN-LAST:event_commandChoiceActionPerformed
-
-    private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
-                // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
-                stopPossibleRotation();
-                executeCommand();
-                break;
-
-            case KeyEvent.VK_UP:
-                if (logPosition > 0) {
-                    logPosition--;
-                }
-                if (logPosition == listOfCommands.size()) {
-                    logPosition--;
-                }
-                showLoggedCommand(logPosition);
-                break;
-
-            case KeyEvent.VK_DOWN:
-                if (logPosition < listOfCommands.size() - 1) {
-                    logPosition++;
-                }
-                showLoggedCommand(logPosition);
-                break;
-
-            case KeyEvent.VK_ESCAPE:
-                if (computing) {
-                    computingSwingWorker.cancel(true);
-                } else {
-                    inputField.setText("");
-                }
-                break;
-        }
-    }//GEN-LAST:event_inputFieldKeyPressed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
@@ -1302,6 +1281,41 @@ public class MathToolForm extends JFrame implements MouseListener {
         refreshInterface();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
+    private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {                                      
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+            // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
+            stopPossibleRotation();
+            executeCommand();
+            break;
+
+            case KeyEvent.VK_UP:
+            if (logPosition > 0) {
+                logPosition--;
+            }
+            if (logPosition == listOfCommands.size()) {
+                logPosition--;
+            }
+            showLoggedCommand(logPosition);
+            break;
+
+            case KeyEvent.VK_DOWN:
+            if (logPosition < listOfCommands.size() - 1) {
+                logPosition++;
+            }
+            showLoggedCommand(logPosition);
+            break;
+
+            case KeyEvent.VK_ESCAPE:
+            if (computing) {
+                computingSwingWorker.cancel(true);
+            } else {
+                mathToolTextField.setText("");
+            }
+            break;
+        }
+    }                                     
+    
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -1425,7 +1439,6 @@ public class MathToolForm extends JFrame implements MouseListener {
     private javax.swing.JButton clearButton;
     private javax.swing.JComboBox commandChoice;
     private javax.swing.JButton inputButton;
-    private javax.swing.JTextField inputField;
     private javax.swing.JButton latexButton;
     private javax.swing.JMenuBar mathToolMenuBar;
     private javax.swing.JMenu menuFile;

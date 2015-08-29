@@ -111,9 +111,6 @@ public class MathCommandCompiler {
      */
     public static Command getCommand(String command, String[] params) throws ExpressionException, EvaluationException {
 
-        Command resultCommand = new Command();
-        Object[] commandParams;
-
         switch (command) {
             case "approx":
                 return getCommandApprox(params);
@@ -124,1383 +121,51 @@ public class MathCommandCompiler {
             case "clear":
                 return getCommandClear(params);
             case "def":
-                break;
+                return getCommandDef(params);
             case "deffuncs":
-                break;
+                return getCommandDefFuncs(params);
             case "defvars":
-                break;
+                return getCommandDefVars(params);
             case "eigenvalues":
-                break;
+                return getCommandEigenvalues(params);
             case "eigenvectors":
-                break;
+                return getCommandEigenvectors(params);
             case "euler":
-                break;
+                return getCommandEuler(params);
             case "expand":
-                break;
+                return getCommandExpand(params);
             case "ker":
-                break;
+                return getCommandKer(params);
             case "latex":
-                break;
+                return getCommandLatex(params);
             case "pi":
-                break;
+                return getCommandPi(params);
             case "plot2d":
-                break;
+                return getCommandPlot2D(params);
             case "plot3d":
-                break;
+                return getCommandPlot3D(params);
             case "plotcurve":
-                break;
+                return getCommandPlotCurve(params);
             case "plotpolar":
-                break;
+                return getCommandPlotPolar(params);
             case "solve":
-                break;
+                return getCommandSolve(params);
             case "solvedeq":
-                break;
+                return getCommandSolveDEQ(params);
             case "table":
-                break;
+                return getCommandTable(params);
             case "tangent":
-                break;
+                return getCommandTangent(params);
             case "taylordeq":
-                break;
+                return getCommandTaylorDEQ(params);
             case "undef":
-                break;
+                return getCommandUndef(params);
             case "undefall":
-                break;
+                return getCommandUndelAll(params);
         }
 
-        //DEFINE
-        /*
-         Struktur: def(var = value) var = Variablenname, value = reelle Zahl.
-         ODER: def(f(var_1, ..., var_k) = EXPRESSION) f = Funktionsname var_i:
-         Variablennamen EXPRESSION: Funktionsterm, durch den f definiert wird.
-         */
-        if (command.equals("def")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF"));
-            }
-
-            if (!params[0].contains("=")) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_EQUAL_IN_DEF"));
-            }
-
-            String functionNameAndArguments = params[0].substring(0, params[0].indexOf("="));
-            String functionTerm = params[0].substring(params[0].indexOf("=") + 1, params[0].length());
-
-            /*
-             Falls der linke Teil eine Variable ist, dann ist es eine
-             Zuweisung, die dieser Variablen einen festen Wert zuweist.
-             Beispiel: def(x = 2) liefert: result.name = "def" result.params =
-             {"x"} result.left = 2 (als Expression)
-             */
-            if (Expression.isValidDerivateOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
-
-                Expression preciseExpression;
-                HashSet<String> vars = new HashSet<>();
-                try {
-                    preciseExpression = Expression.build(functionTerm, vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
-                }
-                if (!vars.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE"));
-                }
-                commandParams = new Object[2];
-                commandParams[0] = functionNameAndArguments;
-                commandParams[1] = preciseExpression;
-                resultCommand.setType(TypeCommand.def);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-
-            }
-
-            HashSet<String> vars = new HashSet<>();
-            Expression expr;
-            /*
-             Nun wird geprüft, ob es sich um eine Funktionsdeklaration
-             handelt. Zunächst wird versucht, den rechten Teilstring vom "="
-             in einen Ausdruck umzuwandeln.
-             */
-            try {
-                expr = Expression.build(functionTerm, vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
-            }
-
-            /*
-             Hier werden noch einmal alle in expr vorkommenden Variablen neu
-             ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
-             ist (etwa Summe, Produkt, Integral), dann werden die lokalen
-             Variablen in vars mitaufgenommen, und es kann später Exceptions
-             geben, weil im Operator Variablen vorkommen, die in den
-             Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
-             sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
-             eine Indexvariable, welche bei anwendung von getContainedVars()
-             übergangen wird.
-             */
-            vars.clear();
-            expr.getContainedVars(vars);
-
-            /*
-             WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
-             enthält (der Benutzer kann beispielsweise eine weitere Funktion
-             mit Hilfe bereits definierter Funktionen definieren), dann werden
-             hier alle neu definierten Funktionen durch vordefinierte
-             Funktionen ersetzt.
-             */
-            expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
-
-            // Funktionsnamen und Variablen auslesen.
-            String functionName;
-            String[] functionVars;
-            try {
-                // Funktionsname und Funktionsvariablen werden ermittelt.
-                functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
-                functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
-            }
-
-            /*
-             Falls functions_vars leer ist -> Fehler ausgeben (es muss
-             mindestens eine Variable vorhanden sein).
-             */
-            if (functionVars.length == 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION"));
-            }
-
-            // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
-            for (int i = 0; i < functionVars.length; i++) {
-                if (!Expression.isValidDerivateOfVariable(functionVars[i])) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
-                            + functionVars[i]
-                            + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
-                }
-            }
-
-            // Wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
-            HashSet<String> functionVarsAsHashset = new HashSet<>();
-            for (String functionVar : functionVars) {
-                if (functionVarsAsHashset.contains(functionVar)) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_1")
-                            + functionName
-                            + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_2"));
-                }
-                functionVarsAsHashset.add(functionVar);
-            }
-
-            /*
-             Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
-             dient der Kennzeichnung, dass diese Variablen Platzhalter für
-             weitere Ausdrücke und keine echten Variablen sind. Solche
-             Variablen können niemals in einem geparsten Ausdruck vorkommen,
-             da der Parser Expression.build solche Variablen nicht akzeptiert.
-             */
-            for (int i = 0; i < functionVars.length; i++) {
-                functionVars[i] = functionVars[i] + "_ABSTRACT";
-            }
-
-            // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
-            if (!isForbiddenName(functionName)) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
-                        + functionName
-                        + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
-            }
-
-            // Prüfen, ob keine Sonderzeichen vorkommen.
-            if (!checkForSpecialCharacters(functionName)) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
-                        + functionName
-                        + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
-            }
-
-            /*
-             Prüfen, ob alle Variablen, die in expr auftreten, auch als
-             Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
-             Zugleich: Im Ausdruck expr werden alle Variablen der Form var
-             durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
-             im HashSet vars ebenfalls.
-             */
-            List<String> functionVarsAsList = Arrays.asList(functionVars);
-            Iterator iter = vars.iterator();
-            String var;
-            for (int i = 0; i < vars.size(); i++) {
-                var = (String) iter.next();
-                expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
-                var = var + "_ABSTRACT";
-                if (!functionVarsAsList.contains(var)) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR"));
-                }
-            }
-
-            commandParams = new Object[2 + functionVars.length];
-            commandParams[0] = functionName;
-            for (int i = 1; i <= functionVars.length; i++) {
-                commandParams[i] = functionVars[i - 1];
-            }
-            commandParams[1 + functionVars.length] = expr;
-
-            /*
-             Für das obige Beispiel def(f(x, y) = x^2+y) gilt dann:
-             result.type = TypeCommand.DEF result.params = {"f", "x_ABSTRACT",
-             "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als
-             Expression).
-             */
-            resultCommand.setType(TypeCommand.def);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-
-        }
-
-        //DEFINEDFUNCS
-        // Struktur: defvars()
-        if (command.equals("deffuncs")) {
-
-            // Prüft, ob der Befehl keine Parameter besitzt.
-            if (params.length > 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFFUNCS"));
-            }
-
-            commandParams = new Object[0];
-            resultCommand.setType(TypeCommand.deffuncs);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-
-        }
-
-        //DEFINEDVARS
-        // Struktur: defvars()
-        if (command.equals("defvars")) {
-
-            // Prüft, ob der Befehl keine Parameter besitzt.
-            if (params.length > 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFVARS"));
-            }
-
-            commandParams = new Object[0];
-            resultCommand.setType(TypeCommand.defvars);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-
-        }
-
-        //EIGENVALUES
-        // Struktur: eigenvalues(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
-        if (command.equals("eigenvalues")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
-                // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
-                Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
-                if (dim.height != dim.width) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
-                }
-                resultCommand.setType(TypeCommand.eigenvalues);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
-            }
-
-        }
-
-        //EIGENVECTORS
-        // Struktur: eigenvectors(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
-        if (command.equals("eigenvectors")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVECTORS"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
-                // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
-                Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
-                if (dim.height != dim.width) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
-                }
-                resultCommand.setType(TypeCommand.eigenvectors);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
-            }
-
-        }
-
-        //EULER
-        /*
-         Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
-         Anzahl der Stellen, die von e ausgegeben werden sollen.
-         */
-        if (command.equals("euler")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EULER"));
-            }
-
-            // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
-            try {
-                BigInteger numberOfDigits = new BigInteger(params[0]);
-                if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-                }
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = Integer.parseInt(params[0]);
-                if ((int) commandParams[0] < 0) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-                }
-                resultCommand.setType(TypeCommand.euler);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_EULER"));
-            }
-
-        }
-
-        //KER
-        // Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
-        if (command.equals("ker")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_KER"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
-                resultCommand.setType(TypeCommand.ker);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_KER"));
-            }
-
-        }
-
-        //EXPAND
-        // Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
-        if (command.equals("expand")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EXPAND"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = Expression.build(params[0], new HashSet<String>());
-                resultCommand.setType(TypeCommand.expand);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EXPAND"));
-            }
-
-        }
-
-        //LATEX
-        /*
-         Struktur: latex(EXPRESSION) EXPRESSION: Ausdruck, welcher in einen
-         Latex-Code umgewandelt werden soll.
-         */
-        if (command.equals("latex")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_LATEX"));
-            }
-
-            try {
-                int n = 0;
-                String expressions = params[0];
-                while (expressions.contains("=")) {
-                    expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
-                    n++;
-                }
-                expressions = params[0];
-                Expression[] exprs = new Expression[n + 1];
-                HashSet<String> vars = new HashSet<>();
-                for (int i = 0; i < n; i++) {
-                    if (expressions.indexOf("=") == 0) {
-                        exprs[i] = null;
-                        expressions = expressions.substring(1, expressions.length());
-                    } else {
-                        exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), vars);
-                        expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
-                    }
-                }
-                if (expressions.length() == 0) {
-                    exprs[n] = null;
-                } else {
-                    exprs[n] = Expression.build(expressions, vars);
-                }
-                resultCommand.setType(TypeCommand.latex);
-                resultCommand.setParams(exprs);
-                return resultCommand;
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
-            }
-
-        }
-
-        //PI
-        /*
-         Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
-         der Stellen, die von pi ausgegeben werden sollen.
-         */
-        if (command.equals("pi")) {
-
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PI"));
-            }
-
-            // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
-            try {
-                BigInteger numberOfDigits = new BigInteger(params[0]);
-                if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-                }
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-            }
-
-            try {
-                commandParams = new Object[1];
-                commandParams[0] = Integer.parseInt(params[0]);
-                if ((int) commandParams[0] < 0) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-                }
-                resultCommand.setType(TypeCommand.pi);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_PI"));
-            }
-
-        }
-
-        //PLOT2D
-        /*
-         Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
-         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
-         */
-        if (command.equals("plot2d")) {
-            if (params.length < 3) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-
-            if (params.length != 5 || !params[0].contains("=")) {
-
-                for (int i = 0; i < params.length - 2; i++) {
-                    try {
-                        Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
-                    }
-                }
-
-                if (vars.size() > 1) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
-                            + vars.size()
-                            + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
-                }
-
-                HashSet<String> varsInLimits = new HashSet<>();
-                try {
-                    Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                                + (params.length - 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                            + (params.length - 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                }
-
-                try {
-                    Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                                + params.length
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                            + params.length
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                }
-
-                Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
-                Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-                if (x_0.evaluate() >= x_1.evaluate()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
-                            + (params.length - 1)
-                            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
-                            + params.length
-                            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
-                }
-
-                commandParams = new Object[params.length];
-                for (int i = 0; i < params.length - 2; i++) {
-                    commandParams[i] = Expression.build(params[i], vars);
-                }
-                commandParams[params.length - 2] = x_0;
-                commandParams[params.length - 1] = x_1;
-                resultCommand.setType(TypeCommand.plot2d);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-
-            } else {
-
-                if (params[0].contains("=")) {
-
-                    if (params.length != 5) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
-                    }
-
-                    try {
-                        Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet<String>()).getContainedVars(vars);
-                        Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet<String>()).getContainedVars(vars);
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
-                    }
-
-                    if (vars.size() > 2) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
-                                + String.valueOf(vars.size())
-                                + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
-                    }
-
-                    HashSet<String> varsInLimits = new HashSet<>();
-                    for (int i = 1; i <= 4; i++) {
-                        try {
-                            Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
-                            if (!varsInLimits.isEmpty()) {
-                                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
-                                        + (i + 1)
-                                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
-                            }
-                        } catch (ExpressionException e) {
-                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
-                                    + (i + 1)
-                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
-                        }
-                    }
-
-                    Expression exprLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                    Expression exprRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-                    Expression x_0 = Expression.build(params[1], vars);
-                    Expression x_1 = Expression.build(params[2], vars);
-                    Expression y_0 = Expression.build(params[3], vars);
-                    Expression y_1 = Expression.build(params[4], vars);
-                    if (x_0.evaluate() >= x_1.evaluate()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
-                    }
-                    if (y_0.evaluate() >= y_1.evaluate()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
-                    }
-
-                    commandParams = new Object[6];
-                    commandParams[0] = exprLeft;
-                    commandParams[1] = exprRight;
-                    commandParams[2] = x_0;
-                    commandParams[3] = x_1;
-                    commandParams[4] = y_0;
-                    commandParams[5] = y_1;
-                    resultCommand.setType(TypeCommand.plot2d);
-                    resultCommand.setParams(commandParams);
-                    return resultCommand;
-
-                }
-
-            }
-        }
-
-        //PLOT3D
-        /*
-         Struktur: PLOT(EXPRESSION(var1, var2), value_1, value_2, value_3,
-         value_4) EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
-         */
-        if (command.equals("plot3d")) {
-            if (params.length != 5) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOT3D"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-
-            try {
-                Expression expr = Expression.build(params[0], new HashSet<String>());
-                expr.getContainedVars(vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOT3D") + e.getMessage());
-            }
-
-            if (vars.size() > 2) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_1")
-                        + String.valueOf(vars.size())
-                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_2"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
-            for (int i = 1; i <= 4; i++) {
-                try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
-                }
-            }
-
-            Expression expr = Expression.build(params[0], vars);
-            Expression x_0 = Expression.build(params[1], vars);
-            Expression x_1 = Expression.build(params[2], vars);
-            Expression y_0 = Expression.build(params[3], vars);
-            Expression y_1 = Expression.build(params[4], vars);
-            if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
-            }
-            if (y_0.evaluate() >= y_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
-            }
-            commandParams = new Object[5];
-            commandParams[0] = expr;
-            commandParams[1] = x_0;
-            commandParams[2] = x_1;
-            commandParams[3] = y_0;
-            commandParams[4] = y_1;
-            resultCommand.setType(TypeCommand.plot3d);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-
-        }
-
-        //PLOTCURVE
-        /*
-         Struktur: PLOTCURVE([FUNCTION_1(var), FUNCTION_2(var)], value_1,
-         value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
-         value_2: Parametergrenzen. ODER: PLOTCURVE([FUNCTION_1(var),
-         FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
-         = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
-         */
-        if (command.equals("plotcurve")) {
-            if (params.length != 3) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-
-            /*
-             Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
-             expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
-             */
-            if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE"));
-            }
-
-            String[] curveComponents = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
-            if (curveComponents.length != 2 && curveComponents.length != 3) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_CURVE_COMPONENTS_IN_PLOTCURVE"));
-            }
-
-            for (int i = 0; i < curveComponents.length; i++) {
-                try {
-                    Expression.build(curveComponents[i], vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_2")
-                            + e.getMessage());
-                }
-            }
-
-            if (vars.size() > 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CURVE_COMPONENTS_IN_PLOTCURVE"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
-            for (int i = 1; i <= 2; i++) {
-                try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
-                }
-            }
-
-            if (curveComponents.length == 2) {
-                commandParams = new Object[4];
-                commandParams[0] = Expression.build(curveComponents[0], vars);
-                commandParams[1] = Expression.build(curveComponents[1], vars);
-                commandParams[2] = Expression.build(params[1], vars);
-                commandParams[3] = Expression.build(params[2], vars);
-            } else {
-                commandParams = new Object[5];
-                commandParams[0] = Expression.build(curveComponents[0], vars);
-                commandParams[1] = Expression.build(curveComponents[1], vars);
-                commandParams[2] = Expression.build(curveComponents[2], vars);
-                commandParams[3] = Expression.build(params[1], vars);
-                commandParams[4] = Expression.build(params[2], vars);
-            }
-
-            resultCommand.setType(TypeCommand.plotcurve);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //PLOTPOLAR
-        /*
-         Struktur: PLOT(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
-         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
-         */
-        if (command.equals("plotpolar")) {
-            if (params.length < 3) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-
-            for (int i = 0; i < params.length - 2; i++) {
-                try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_2"));
-                }
-            }
-
-            if (vars.size() > 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_1")
-                        + vars.size()
-                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_2"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
-            try {
-                Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                            + (params.length - 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                        + (params.length - 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
-            }
-
-            try {
-                Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                            + params.length
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                        + params.length
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
-            }
-
-            Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
-            Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-            if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
-                        + (params.length - 1)
-                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
-                        + (params.length)
-                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
-            }
-
-            commandParams = new Object[params.length];
-            for (int i = 0; i < params.length - 2; i++) {
-                commandParams[i] = Expression.build(params[i], vars);
-            }
-            commandParams[params.length - 2] = x_0;
-            commandParams[params.length - 1] = x_1;
-            resultCommand.setType(TypeCommand.plotpolar);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //SOLVE
-        /*
-         Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
-         expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
-         legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
-         Intervalls [x_1, x_2]
-         */
-        if (command.equals("solve")) {
-            if (params.length < 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVE"));
-            }
-            if (params.length > 4) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVE"));
-            }
-            if (!params[0].contains("=")) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-            try {
-                Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE_WITH_REPORTED_ERROR") + e.getMessage());
-            }
-
-            Expression f = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-            Expression g = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-
-            if (params.length == 1 || params.length == 2) {
-
-                if (vars.size() > 1 && params.length == 1) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_MORE_THAN_ONE_VARIABLE_IN_SOLVE"));
-                }
-
-                if (params.length == 2) {
-                    if (!Expression.isValidDerivateOfVariable(params[1])) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVE"));
-                    }
-                }
-
-                if (params.length == 1) {
-                    commandParams = new Object[2];
-                    commandParams[0] = f;
-                    commandParams[1] = g;
-                } else {
-                    commandParams = new Object[3];
-                    commandParams[0] = f;
-                    commandParams[1] = g;
-                    commandParams[2] = params[1];
-                }
-
-                resultCommand.setType(TypeCommand.solve);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-
-            } else {
-
-                if (vars.size() > 1) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_SOLVE"));
-                }
-
-                HashSet<String> varsInLimits = new HashSet<>();
-                for (int i = 1; i <= 2; i++) {
-                    try {
-                        Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
-                        if (!varsInLimits.isEmpty()) {
-                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
-                                    + (i + 1)
-                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
-                        }
-                    } catch (ExpressionException e) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
-                    }
-                }
-
-                if (params.length == 4) {
-                    try {
-                        Integer.parseInt(params[3]);
-                    } catch (NumberFormatException e) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
-                    }
-                }
-
-                Expression lowerLimit = Expression.build(params[1], vars);
-                Expression upperLimit = Expression.build(params[2], vars);
-
-                if (params.length == 3) {
-                    commandParams = new Object[4];
-                    commandParams[0] = f;
-                    commandParams[1] = g;
-                    commandParams[2] = lowerLimit;
-                    commandParams[3] = upperLimit;
-                } else {
-                    int n = Integer.parseInt(params[3]);
-                    if (n < 1) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
-                    }
-                    commandParams = new Object[5];
-                    commandParams[0] = f;
-                    commandParams[1] = g;
-                    commandParams[2] = lowerLimit;
-                    commandParams[3] = upperLimit;
-                    commandParams[4] = n;
-                }
-
-                resultCommand.setType(TypeCommand.solve);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-
-            }
-        }
-
-        //SOLVEDEQ
-        /*
-         Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
-         y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
-         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
-         fest x_1 = Obere x-Schranke für die numerische Berechnung
-         */
-        if (command.equals("solvedeq")) {
-            if (params.length < 6) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
-            }
-
-            if (params.length >= 6) {
-
-                //Ermittelt die Ordnung der DGL
-                int ord;
-                try {
-                    ord = Integer.parseInt(params[2]);
-                    if (ord < 1) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
-                    }
-                } catch (NumberFormatException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
-                }
-
-                /*
-                 Prüft, ob es sich um eine korrekte DGL handelt:
-                 Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
-                 y'''' etc. auf der rechten Seite auftreten.
-                 */
-                HashSet<String> vars = new HashSet<>();
-                try {
-                    Expression.build(params[0], vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ") + e.getMessage());
-                }
-                Expression expr = Expression.build(params[0], vars);
-
-                HashSet<String> varsWithoutPrimes = new HashSet<>();
-                Iterator iter = vars.iterator();
-                String varWithoutPrimes;
-                for (int i = 0; i < vars.size(); i++) {
-                    varWithoutPrimes = (String) iter.next();
-                    if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
-                        if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_1")
-                                    + ord
-                                    + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_2")
-                                    + (ord - 1)
-                                    + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_3"));
-                        }
-                        varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
-                    }
-                    varsWithoutPrimes.add(varWithoutPrimes);
-                }
-
-                if (varsWithoutPrimes.size() > 2) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDEQ"));
-                }
-
-                if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
-                    if (varsWithoutPrimes.size() == 2) {
-                        if (!vars.contains(params[1])) {
-                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_1")
-                                    + params[1]
-                                    + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_2"));
-                        }
-                    }
-                } else {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDEQ"));
-                }
-
-                if (params.length < ord + 5) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
-                }
-                if (params.length > ord + 5) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDEQ"));
-                }
-
-                // Prüft, ob die AWP-Daten korrekt sind
-                HashSet<String> varsInLimits = new HashSet<>();
-                for (int i = 3; i < ord + 5; i++) {
-                    try {
-                        Expression limit = Expression.build(params[i], varsInLimits);
-                        if (!varsInLimits.isEmpty()) {
-                            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
-                                    + String.valueOf(i + 1)
-                                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
-                        }
-                        /*
-                         Prüfen, ob die Grenzen ausgewerten werden können.
-                         Dies ist notwendig, da es sich hier um eine
-                         numerische Berechnung handelt (und nicht um eine
-                         algebraische).
-                         */
-                        limit.evaluate();
-                    } catch (ExpressionException | EvaluationException e) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
-                                + String.valueOf(i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
-                    }
-                }
-
-                commandParams = new Object[ord + 5];
-                commandParams[0] = expr;
-                commandParams[1] = params[1];
-                commandParams[2] = ord;
-                for (int i = 3; i < ord + 5; i++) {
-                    commandParams[i] = Expression.build(params[i], vars);
-                }
-
-                resultCommand.setType(TypeCommand.solvedeq);
-                resultCommand.setParams(commandParams);
-                return resultCommand;
-            }
-        }
-
-        //TABLE
-        // Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer Ausdruck.
-        if (command.equals("table")) {
-            if (params.length != 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-            LogicalExpression logExpr;
-
-            try {
-                logExpr = LogicalExpression.build(params[0], vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_TABLE") + e.getMessage());
-            }
-
-            commandParams = new Object[1];
-            commandParams[0] = logExpr;
-
-            resultCommand.setType(TypeCommand.table);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //TANGENT
-        /*
-         Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
-         EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert. var_i =
-         Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
-         var_i vorkommen, welche auch in expr vorkommen.
-         */
-        if (command.equals("tangent")) {
-            if (params.length < 2) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
-            }
-
-            HashSet<String> vars = new HashSet<>();
-            Expression expr;
-            try {
-                expr = Expression.build(params[0], vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
-            }
-
-            /*
-             Ermittelt die Anzahl der Variablen, von denen die Funktion
-             abhängt, von der der Tangentialraum berechnet werden soll.
-             */
-            for (int i = 1; i < params.length; i++) {
-                if (!params[i].contains("=")) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
-                }
-                if (!Expression.isValidDerivateOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
-                    throw new ExpressionException(params[i].substring(0, params[i].indexOf("="))
-                            + Translator.translateExceptionMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT"));
-                }
-                try {
-                    Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>());
-                    if (!point.isConstant()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
-                }
-            }
-
-            // Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
-            for (int i = 1; i < params.length; i++) {
-                for (int j = i + 1; j < params.length; j++) {
-                    if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_1")
-                                + params[i].substring(0, params[i].indexOf("="))
-                                + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_2"));
-                    }
-                }
-            }
-
-            /*
-             Einzelne Punktkoordinaten werden in der HashMap
-             varsContainedInParams gespeichert.
-             */
-            HashMap<String, Expression> varsContainedInParams = new HashMap<>();
-            for (int i = 1; i < params.length; i++) {
-                varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
-                        Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
-            }
-
-            /*
-             Es wird geprüft, ob allen Variablen, welche in der
-             Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
-             wurde.
-             */
-            Iterator iter = vars.iterator();
-            String var;
-            for (int i = 0; i < vars.size(); i++) {
-                var = (String) iter.next();
-                if (!varsContainedInParams.containsKey(var)) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_1")
-                            + var
-                            + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_2"));
-                }
-            }
-
-            commandParams = new Object[2];
-            commandParams[0] = expr;
-            commandParams[1] = varsContainedInParams;
-
-            resultCommand.setType(TypeCommand.tangent);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //TAYLORDEQ
-        /*
-         Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
-         y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
-         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
-         fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
-         */
-        if (command.equals("taylordeq")) {
-            if (params.length < 6) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
-            }
-
-            // Ermittelt die Ordnung der DGL
-            int ord;
-            try {
-                ord = Integer.parseInt(params[2]);
-                if (ord < 1) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
-                }
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
-            }
-
-            /*
-             Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
-             darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
-             rechten Seite auftreten.
-             */
-            HashSet<String> vars = new HashSet<>();
-            try {
-                Expression.build(params[0], vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ") + e.getMessage());
-            }
-            Expression expr = Expression.build(params[0], vars);
-
-            HashSet<String> varsWithoutPrimes = new HashSet<>();
-            Iterator iter = vars.iterator();
-            String varWithoutPrimes;
-            for (int i = 0; i < vars.size(); i++) {
-                varWithoutPrimes = (String) iter.next();
-                if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
-                    if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_1")
-                                + ord
-                                + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_2")
-                                + (ord - 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_3"));
-                    }
-                    varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
-                }
-                varsWithoutPrimes.add(varWithoutPrimes);
-            }
-
-            if (varsWithoutPrimes.size() > 2) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ"));
-            }
-
-            if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
-                if (varsWithoutPrimes.size() == 2) {
-                    if (!vars.contains(params[1])) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_1")
-                                + params[1]
-                                + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_2"));
-                    }
-                }
-            } else {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDEQ"));
-            }
-
-            if (params.length < ord + 5) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
-            }
-
-            if (params.length > ord + 5) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
-            }
-
-            /*
-             Nun wird varsWithoutPrimes, falls nötig, soweit ergänzt, dass es
-             alle in der DGL auftretenden Variablen enthält (max. 2). Dies
-             wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
-             SWP-Daten korrekt sind.
-             */
-            if (varsWithoutPrimes.isEmpty()) {
-                varsWithoutPrimes.add(params[1]);
-                if (params[1].equals("y")) {
-                    varsWithoutPrimes.add("z");
-                } else {
-                    varsWithoutPrimes.add("y");
-                }
-            } else if (varsWithoutPrimes.size() == 1) {
-
-                if (varsWithoutPrimes.contains(params[1])) {
-                    if (params[1].equals("y")) {
-                        varsWithoutPrimes.add("z");
-                    } else {
-                        varsWithoutPrimes.add("y");
-                    }
-                } else {
-                    varsWithoutPrimes.add(params[1]);
-                }
-
-            }
-
-            // Prüft, ob die AWP-Daten korrekt sind.
-            HashSet<String> varsInLimits = new HashSet<>();
-            for (int i = 3; i < ord + 4; i++) {
-                try {
-                    Expression.build(params[i], varsInLimits).simplify();
-                    iter = varsWithoutPrimes.iterator();
-                    /*
-                     Im Folgenden wird geprüft, ob in den Anfangsbedingungen
-                     die Variablen aus der eigentlichen DGL nicht auftreten
-                     (diese beiden Variablen sind im HashSet varsWithoutPrimes
-                     gespeichert).
-                     */
-                    if (varsInLimits.contains((String) iter.next())) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
-                                + String.valueOf(i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
-                    }
-                } catch (ExpressionException | EvaluationException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
-                            + String.valueOf(i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
-                }
-            }
-
-            try {
-                Integer.parseInt(params[ord + 4]);
-            } catch (NumberFormatException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDEQ"));
-            }
-
-            commandParams = new Object[ord + 5];
-            commandParams[0] = expr;
-            commandParams[1] = params[1];
-            commandParams[2] = ord;
-            for (int i = 3; i < ord + 4; i++) {
-                commandParams[i] = Expression.build(params[i], vars);
-            }
-            commandParams[ord + 4] = Integer.parseInt(params[ord + 4]);
-
-            resultCommand.setType(TypeCommand.taylordeq);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //UNDEFINE
-        // Struktur: undef(var_1, ..., var_k) var_i: Variablenname
-        if (command.equals("undef")) {
-            // Prüft, ob alle Parameter gültige Variablen sind.
-            for (int i = 0; i < params.length; i++) {
-                if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
-                }
-            }
-
-            commandParams = new Object[params.length];
-            System.arraycopy(params, 0, commandParams, 0, params.length);
-
-            resultCommand.setType(TypeCommand.undef);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        //UNDEFINEALL
-        // Struktur: undefall()
-        if (command.equals("undefall")) {
-            // Prüft, ob der Befehl keine Parameter besitzt.
-            if (params.length > 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_UNDEFALL"));
-            }
-
-            commandParams = new Object[0];
-            resultCommand.setType(TypeCommand.undefall);
-            resultCommand.setParams(commandParams);
-            return resultCommand;
-        }
-
-        return resultCommand;
+        // Sollte theoretisch nie vorkommen.
+        return new Command();
 
     }
 
@@ -1568,89 +233,1271 @@ public class MathCommandCompiler {
         return new Command(TypeCommand.clear, new Object[0]);
     }
 
-//    private static Command getCommandDef(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandDeffuncs(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandDefvars(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandEigenvalues(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandEigenvectors(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandEuler(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandExpand(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandKer(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandLatex(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandPi(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandPlot2D(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandPlot3D(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandPlotCurve(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandSolve(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandSolveDEQ(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandTable(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandTangent(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandTaylorDEQ(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandUndef(String[] params) throws ExpressionException {
-//
-//    }
-//
-//    private static Command getCommandUndelAll(String[] params) throws ExpressionException {
-//
-//    }
+    private static Command getCommandDef(String[] params) throws ExpressionException {
+
+        // Struktur: def(VAR = VALUE) oder def(FUNCTION(VAR_1, ..., VAR_n) = EXPRESSION(VAR_1, ..., VAR_n))
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF"));
+        }
+
+        if (!params[0].contains("=")) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_EQUAL_IN_DEF"));
+        }
+
+        String functionNameAndArguments = params[0].substring(0, params[0].indexOf("="));
+        String functionTerm = params[0].substring(params[0].indexOf("=") + 1, params[0].length());
+
+        /*
+         Falls der linke Teil eine Variable ist, dann ist es eine
+         Zuweisung, die dieser Variablen einen festen Wert zuweist.
+         Beispiel: def(x = 2) liefert: result.name = "def" result.params =
+         {"x"} result.left = 2 (als Expression)
+         */
+        if (Expression.isValidDerivateOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
+
+            Expression preciseExpression;
+            HashSet<String> vars = new HashSet<>();
+            try {
+                preciseExpression = Expression.build(functionTerm, vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
+            }
+            if (!vars.isEmpty()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE"));
+            }
+
+            return new Command(TypeCommand.def, new Object[]{functionNameAndArguments, preciseExpression});
+
+        }
+
+        HashSet<String> vars = new HashSet<>();
+        Expression expr;
+        /*
+         Nun wird geprüft, ob es sich um eine Funktionsdeklaration
+         handelt. Zunächst wird versucht, den rechten Teilstring vom "="
+         in einen Ausdruck umzuwandeln.
+         */
+        try {
+            expr = Expression.build(functionTerm, vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
+        }
+
+        /*
+         Hier werden noch einmal alle in expr vorkommenden Variablen neu
+         ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
+         ist (etwa Summe, Produkt, Integral), dann werden die lokalen
+         Variablen in vars mitaufgenommen, und es kann später Exceptions
+         geben, weil im Operator Variablen vorkommen, die in den
+         Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
+         sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
+         eine Indexvariable, welche bei anwendung von getContainedVars()
+         übergangen wird.
+         */
+        vars.clear();
+        expr.getContainedVars(vars);
+
+        /*
+         WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
+         enthält (der Benutzer kann beispielsweise eine weitere Funktion
+         mit Hilfe bereits definierter Funktionen definieren), dann werden
+         hier alle neu definierten Funktionen durch vordefinierte
+         Funktionen ersetzt.
+         */
+        expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
+
+        // Funktionsnamen und Variablen auslesen.
+        String functionName;
+        String[] functionVars;
+        try {
+            // Funktionsname und Funktionsvariablen werden ermittelt.
+            functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
+            functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
+        }
+
+        /*
+         Falls functions_vars leer ist -> Fehler ausgeben (es muss
+         mindestens eine Variable vorhanden sein).
+         */
+        if (functionVars.length == 0) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NO_FUNCTION_VARS_IN_FUNCTION_DECLARATION"));
+        }
+
+        // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
+        for (int i = 0; i < functionVars.length; i++) {
+            if (!Expression.isValidDerivateOfVariable(functionVars[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
+                        + functionVars[i]
+                        + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
+            }
+        }
+
+        // Wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
+        HashSet<String> functionVarsAsHashset = new HashSet<>();
+        for (String functionVar : functionVars) {
+            if (functionVarsAsHashset.contains(functionVar)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_1")
+                        + functionName
+                        + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_2"));
+            }
+            functionVarsAsHashset.add(functionVar);
+        }
+
+        /*
+         Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
+         dient der Kennzeichnung, dass diese Variablen Platzhalter für
+         weitere Ausdrücke und keine echten Variablen sind. Solche
+         Variablen können niemals in einem geparsten Ausdruck vorkommen,
+         da der Parser Expression.build solche Variablen nicht akzeptiert.
+         */
+        for (int i = 0; i < functionVars.length; i++) {
+            functionVars[i] = functionVars[i] + "_ABSTRACT";
+        }
+
+        // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
+        if (!isForbiddenName(functionName)) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
+                    + functionName
+                    + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
+        }
+
+        // Prüfen, ob keine Sonderzeichen vorkommen.
+        if (!checkForSpecialCharacters(functionName)) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
+                    + functionName
+                    + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
+        }
+
+        /*
+         Prüfen, ob alle Variablen, die in expr auftreten, auch als
+         Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
+         Zugleich: Im Ausdruck expr werden alle Variablen der Form var
+         durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
+         im HashSet vars ebenfalls.
+         */
+        List<String> functionVarsAsList = Arrays.asList(functionVars);
+        Iterator iter = vars.iterator();
+        String var;
+        for (int i = 0; i < vars.size(); i++) {
+            var = (String) iter.next();
+            expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
+            var = var + "_ABSTRACT";
+            if (!functionVarsAsList.contains(var)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR"));
+            }
+        }
+
+        Object[] commandParams = new Object[2 + functionVars.length];
+        commandParams[0] = functionName;
+        for (int i = 1; i <= functionVars.length; i++) {
+            commandParams[i] = functionVars[i - 1];
+        }
+        commandParams[1 + functionVars.length] = expr;
+
+        /*
+         Für das obige Beispiel def(f(x, y) = x^2+y) das Ergebnis result gilt dann:
+         result.type = TypeCommand.def result.params = {"f", "x_ABSTRACT",
+         "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als Expression).
+         */
+        return new Command(TypeCommand.def, commandParams);
+
+    }
+
+    private static Command getCommandDefFuncs(String[] params) throws ExpressionException {
+        // Struktur: deffuncs().
+        // Prüft, ob der Befehl keine Parameter besitzt.
+        if (params.length > 0) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFFUNCS"));
+        }
+        return new Command(TypeCommand.deffuncs, new Object[0]);
+    }
+
+    private static Command getCommandDefVars(String[] params) throws ExpressionException {
+        // Struktur: defvars().
+        // Prüft, ob der Befehl keine Parameter besitzt.
+        if (params.length > 0) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFVARS"));
+        }
+        return new Command(TypeCommand.defvars, new Object[0]);
+    }
+
+    private static Command getCommandEigenvalues(String[] params) throws ExpressionException {
+
+        /* 
+         Struktur: eigenvalues(MATRIXEXPRESSION), MATRIXEXPRESSION: gültiger
+         Matrizenausdruck, der eine quadratische Matrix darstellt.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
+            Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
+            if (dim.height != dim.width) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
+            }
+            return new Command(TypeCommand.eigenvalues, commandParams);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
+        } catch (EvaluationException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES_NOT_QUADRATIC"));
+        }
+
+    }
+
+    private static Command getCommandEigenvectors(String[] params) throws ExpressionException {
+
+        /* 
+         Struktur: eigenvectors(MATRIXEXPRESSION), MATRIXEXPRESSION: gültiger
+         Matrizenausdruck, der eine quadratische Matrix darstellt.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVECTORS"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
+            Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
+            if (dim.height != dim.width) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
+            }
+            return new Command(TypeCommand.eigenvectors, commandParams);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
+        } catch (EvaluationException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS_NOT_QUADRATIC"));
+        }
+
+    }
+
+    private static Command getCommandEuler(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
+         Anzahl der Stellen, die von e ausgegeben werden sollen.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EULER"));
+        }
+
+        // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
+        try {
+            BigInteger numberOfDigits = new BigInteger(params[0]);
+            if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
+            }
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = Integer.parseInt(params[0]);
+            if ((int) commandParams[0] < 0) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
+            }
+            return new Command(TypeCommand.euler, commandParams);
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_EULER"));
+        }
+
+    }
+
+    private static Command getCommandExpand(String[] params) throws ExpressionException {
+
+        // Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EXPAND"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = Expression.build(params[0], new HashSet<String>());
+            return new Command(TypeCommand.expand, commandParams);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EXPAND"));
+        }
+
+    }
+
+    private static Command getCommandKer(String[] params) throws ExpressionException {
+
+        // Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_KER"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            return new Command(TypeCommand.ker, commandParams);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_KER"));
+        }
+
+    }
+
+    private static Command getCommandLatex(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: latex(EXPRESSION) EXPRESSION: Ausdruck, welcher in einen
+         Latex-Code umgewandelt werden soll.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_LATEX"));
+        }
+
+        try {
+            int n = 0;
+            String expressions = params[0];
+            while (expressions.contains("=")) {
+                expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
+                n++;
+            }
+            expressions = params[0];
+            Expression[] exprs = new Expression[n + 1];
+            HashSet<String> vars = new HashSet<>();
+            for (int i = 0; i < n; i++) {
+                if (expressions.indexOf("=") == 0) {
+                    exprs[i] = null;
+                    expressions = expressions.substring(1, expressions.length());
+                } else {
+                    exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), vars);
+                    expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
+                }
+            }
+            if (expressions.length() == 0) {
+                exprs[n] = null;
+            } else {
+                exprs[n] = Expression.build(expressions, vars);
+            }
+            return new Command(TypeCommand.latex, exprs);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
+        }
+
+    }
+
+    private static Command getCommandPi(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
+         der Stellen, die von pi ausgegeben werden sollen.
+         */
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PI"));
+        }
+
+        // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
+        try {
+            BigInteger numberOfDigits = new BigInteger(params[0]);
+            if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
+            }
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
+        }
+
+        try {
+            Object[] commandParams = new Object[1];
+            commandParams[0] = Integer.parseInt(params[0]);
+            if ((int) commandParams[0] < 0) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
+            }
+            return new Command(TypeCommand.pi, commandParams);
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_PI"));
+        }
+
+    }
+
+    private static Command getCommandPlot2D(String[] params) throws ExpressionException, EvaluationException {
+
+        /*
+         Struktur: plot2d(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         value_2: Grenzen des Zeichenbereichs ODER: plot2d(EXPRESSION_1(var1,
+         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
+         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length < 3) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+
+        if (!params[0].contains("=")) {
+
+            for (int i = 0; i < params.length - 2; i++) {
+                try {
+                    Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
+                } catch (ExpressionException e) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
+                }
+            }
+
+            if (vars.size() > 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
+                        + vars.size()
+                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
+            }
+
+            HashSet<String> varsInLimits = new HashSet<>();
+            try {
+                Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                            + (params.length - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                        + (params.length - 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+            }
+
+            try {
+                Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                            + params.length
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                        + params.length
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+            }
+
+            Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
+            Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
+            if (x_0.evaluate() >= x_1.evaluate()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+                        + (params.length - 1)
+                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                        + params.length
+                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+            }
+
+            Object[] commandParams = new Object[params.length];
+            for (int i = 0; i < params.length - 2; i++) {
+                commandParams[i] = Expression.build(params[i], vars);
+            }
+            commandParams[params.length - 2] = x_0;
+            commandParams[params.length - 1] = x_1;
+            return new Command(TypeCommand.plot2d, commandParams);
+
+        } else {
+
+            if (params.length != 5) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
+            }
+
+            try {
+                Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet<String>()).getContainedVars(vars);
+                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet<String>()).getContainedVars(vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
+            }
+
+            if (vars.size() > 2) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
+                        + String.valueOf(vars.size())
+                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
+            }
+
+            HashSet<String> varsInLimits = new HashSet<>();
+            for (int i = 1; i <= 4; i++) {
+                try {
+                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                    if (!varsInLimits.isEmpty()) {
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
+                }
+            }
+
+            Expression exprLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+            Expression exprRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+            Expression x_0 = Expression.build(params[1], vars);
+            Expression x_1 = Expression.build(params[2], vars);
+            Expression y_0 = Expression.build(params[3], vars);
+            Expression y_1 = Expression.build(params[4], vars);
+            if (x_0.evaluate() >= x_1.evaluate()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
+            }
+            if (y_0.evaluate() >= y_1.evaluate()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
+            }
+
+            Object[] commandParams = new Object[6];
+            commandParams[0] = exprLeft;
+            commandParams[1] = exprRight;
+            commandParams[2] = x_0;
+            commandParams[3] = x_1;
+            commandParams[4] = y_0;
+            commandParams[5] = y_1;
+            return new Command(TypeCommand.plot2d, commandParams);
+
+        }
+
+    }
+
+    private static Command getCommandPlot3D(String[] params) throws ExpressionException, EvaluationException {
+
+        /*
+         Struktur: plot3d(EXPRESSION(var1, var2), value_1, value_2, value_3,
+         value_4) EXPRESSION: Ausdruck in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length != 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOT3D"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+
+        try {
+            Expression expr = Expression.build(params[0], new HashSet<String>());
+            expr.getContainedVars(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOT3D") + e.getMessage());
+        }
+
+        if (vars.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_1")
+                    + String.valueOf(vars.size())
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_2"));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 1; i <= 4; i++) {
+            try {
+                Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
+            }
+        }
+
+        Expression expr = Expression.build(params[0], vars);
+        Expression x_0 = Expression.build(params[1], vars);
+        Expression x_1 = Expression.build(params[2], vars);
+        Expression y_0 = Expression.build(params[3], vars);
+        Expression y_1 = Expression.build(params[4], vars);
+        if (x_0.evaluate() >= x_1.evaluate()) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
+        }
+        if (y_0.evaluate() >= y_1.evaluate()) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
+        }
+        Object[] commandParams = new Object[5];
+        commandParams[0] = expr;
+        commandParams[1] = x_0;
+        commandParams[2] = x_1;
+        commandParams[3] = y_0;
+        commandParams[4] = y_1;
+        return new Command(TypeCommand.plot3d, commandParams);
+
+    }
+
+    private static Command getCommandPlotCurve(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotcurve([FUNCTION_1(var), FUNCTION_2(var)], value_1,
+         value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
+         value_2: Parametergrenzen. ODER: plotcurve([FUNCTION_1(var),
+         FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
+         = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
+         */
+        if (params.length != 3) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+
+        /*
+         Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
+         expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
+         */
+        if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE"));
+        }
+
+        String[] curveComponents = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
+        if (curveComponents.length != 2 && curveComponents.length != 3) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_CURVE_COMPONENTS_IN_PLOTCURVE"));
+        }
+
+        for (int i = 0; i < curveComponents.length; i++) {
+            try {
+                Expression.build(curveComponents[i], vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_2")
+                        + e.getMessage());
+            }
+        }
+
+        if (vars.size() > 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CURVE_COMPONENTS_IN_PLOTCURVE"));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 1; i <= 2; i++) {
+            try {
+                Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
+            }
+        }
+
+        Object[] commandParams;
+        if (curveComponents.length == 2) {
+            commandParams = new Object[4];
+            commandParams[0] = Expression.build(curveComponents[0], vars);
+            commandParams[1] = Expression.build(curveComponents[1], vars);
+            commandParams[2] = Expression.build(params[1], vars);
+            commandParams[3] = Expression.build(params[2], vars);
+        } else {
+            commandParams = new Object[5];
+            commandParams[0] = Expression.build(curveComponents[0], vars);
+            commandParams[1] = Expression.build(curveComponents[1], vars);
+            commandParams[2] = Expression.build(curveComponents[2], vars);
+            commandParams[3] = Expression.build(params[1], vars);
+            commandParams[4] = Expression.build(params[2], vars);
+        }
+
+        return new Command(TypeCommand.plotcurve, commandParams);
+
+    }
+
+    private static Command getCommandPlotPolar(String[] params) throws ExpressionException, EvaluationException {
+
+        /*
+         Struktur: plotpolar(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
+         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
+         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
+         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
+         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
+         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length < 3) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+
+        for (int i = 0; i < params.length - 2; i++) {
+            try {
+                Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_2"));
+            }
+        }
+
+        if (vars.size() > 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_1")
+                    + vars.size()
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_2"));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        try {
+            Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                        + (params.length - 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                    + (params.length - 1)
+                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+        }
+
+        try {
+            Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                        + params.length
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
+                    + params.length
+                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+        }
+
+        Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
+        Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
+        if (x_0.evaluate() >= x_1.evaluate()) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
+                    + (params.length - 1)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
+                    + (params.length)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
+        }
+
+        Object[] commandParams = new Object[params.length];
+        for (int i = 0; i < params.length - 2; i++) {
+            commandParams[i] = Expression.build(params[i], vars);
+        }
+        commandParams[params.length - 2] = x_0;
+        commandParams[params.length - 1] = x_1;
+        return new Command(TypeCommand.plotpolar, commandParams);
+
+    }
+
+    private static Command getCommandSolve(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
+         expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
+         legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
+         Intervalls [x_1, x_2]
+         */
+        if (params.length < 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVE"));
+        }
+        if (params.length > 4) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVE"));
+        }
+        if (!params[0].contains("=")) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+        try {
+            Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+            Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE_WITH_REPORTED_ERROR") + e.getMessage());
+        }
+
+        Expression f = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+        Expression g = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+
+        if (params.length == 1 || params.length == 2) {
+
+            if (vars.size() > 1 && params.length == 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_MORE_THAN_ONE_VARIABLE_IN_SOLVE"));
+            }
+
+            if (params.length == 2) {
+                if (!Expression.isValidDerivateOfVariable(params[1])) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVE"));
+                }
+            }
+
+            Object[] commandParams;
+            if (params.length == 1) {
+                commandParams = new Object[2];
+                commandParams[0] = f;
+                commandParams[1] = g;
+            } else {
+                commandParams = new Object[3];
+                commandParams[0] = f;
+                commandParams[1] = g;
+                commandParams[2] = params[1];
+            }
+
+            return new Command(TypeCommand.solve, commandParams);
+
+        } else {
+
+            if (vars.size() > 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_SOLVE"));
+            }
+
+            HashSet<String> varsInLimits = new HashSet<>();
+            for (int i = 1; i <= 2; i++) {
+                try {
+                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                    if (!varsInLimits.isEmpty()) {
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
+                                + (i + 1)
+                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
+                    }
+                } catch (ExpressionException e) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
+                }
+            }
+
+            if (params.length == 4) {
+                try {
+                    Integer.parseInt(params[3]);
+                } catch (NumberFormatException e) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
+                }
+            }
+
+            Expression lowerLimit = Expression.build(params[1], vars);
+            Expression upperLimit = Expression.build(params[2], vars);
+
+            Object[] commandParams;
+            if (params.length == 3) {
+                commandParams = new Object[4];
+                commandParams[0] = f;
+                commandParams[1] = g;
+                commandParams[2] = lowerLimit;
+                commandParams[3] = upperLimit;
+            } else {
+                int n = Integer.parseInt(params[3]);
+                if (n < 1) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
+                }
+                commandParams = new Object[5];
+                commandParams[0] = f;
+                commandParams[1] = g;
+                commandParams[2] = lowerLimit;
+                commandParams[3] = upperLimit;
+                commandParams[4] = n;
+            }
+
+            return new Command(TypeCommand.solve, commandParams);
+
+        }
+
+    }
+
+    private static Command getCommandSolveDEQ(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
+         y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
+         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
+         fest x_1 = Obere x-Schranke für die numerische Berechnung
+         */
+        if (params.length < 6) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
+        }
+
+        // Ordnung der DGL ermitteln.
+        int ord;
+        try {
+            ord = Integer.parseInt(params[2]);
+            if (ord < 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
+            }
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
+        }
+
+        /*
+         Prüft, ob es sich um eine korrekte DGL handelt:
+         Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
+         y'''' etc. auf der rechten Seite auftreten.
+         */
+        HashSet<String> vars = new HashSet<>();
+        try {
+            Expression.build(params[0], vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ") + e.getMessage());
+        }
+        Expression expr = Expression.build(params[0], vars);
+
+        HashSet<String> varsWithoutPrimes = new HashSet<>();
+        Iterator iter = vars.iterator();
+        String varWithoutPrimes;
+        for (int i = 0; i < vars.size(); i++) {
+            varWithoutPrimes = (String) iter.next();
+            if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
+                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_1")
+                            + ord
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_2")
+                            + (ord - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_3"));
+                }
+                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
+            }
+            varsWithoutPrimes.add(varWithoutPrimes);
+        }
+
+        if (varsWithoutPrimes.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDEQ"));
+        }
+
+        if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
+            if (varsWithoutPrimes.size() == 2) {
+                if (!vars.contains(params[1])) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_1")
+                            + params[1]
+                            + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_2"));
+                }
+            }
+        } else {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDEQ"));
+        }
+
+        if (params.length < ord + 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
+        }
+        if (params.length > ord + 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDEQ"));
+        }
+
+        // Prüft, ob die AWP-Daten korrekt sind.
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 3; i < ord + 5; i++) {
+            try {
+                Expression limit = Expression.build(params[i], varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
+                            + String.valueOf(i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
+                }
+                /*
+                 Prüfen, ob die Grenzen ausgewerten werden können.
+                 Dies ist notwendig, da es sich hier um eine
+                 numerische Berechnung handelt (und nicht um eine
+                 algebraische).
+                 */
+                limit.evaluate();
+            } catch (ExpressionException | EvaluationException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
+                        + String.valueOf(i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
+            }
+        }
+
+        Object[] commandParams = new Object[ord + 5];
+        commandParams[0] = expr;
+        commandParams[1] = params[1];
+        commandParams[2] = ord;
+        for (int i = 3; i < ord + 5; i++) {
+            commandParams[i] = Expression.build(params[i], vars);
+        }
+
+        return new Command(TypeCommand.solvedeq, commandParams);
+
+    }
+
+    private static Command getCommandTable(String[] params) throws ExpressionException {
+
+        // Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer Ausdruck.
+        if (params.length != 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+        LogicalExpression logExpr;
+
+        try {
+            logExpr = LogicalExpression.build(params[0], vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_TABLE") + e.getMessage());
+        }
+
+        return new Command(TypeCommand.table, new Object[]{logExpr});
+
+    }
+
+    private static Command getCommandTangent(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
+         EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert. var_i =
+         Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
+         var_i vorkommen, welche auch in expr vorkommen.
+         */
+        if (params.length < 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
+        }
+
+        HashSet<String> vars = new HashSet<>();
+        Expression expr;
+        try {
+            expr = Expression.build(params[0], vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
+        }
+
+        /*
+         Ermittelt die Anzahl der Variablen, von denen die Funktion
+         abhängt, von der der Tangentialraum berechnet werden soll.
+         */
+        for (int i = 1; i < params.length; i++) {
+            if (!params[i].contains("=")) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+            }
+            if (!Expression.isValidDerivateOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
+                throw new ExpressionException(params[i].substring(0, params[i].indexOf("="))
+                        + Translator.translateExceptionMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT"));
+            }
+            try {
+                Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>());
+                if (!point.isConstant()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+            }
+        }
+
+        // Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
+        for (int i = 1; i < params.length; i++) {
+            for (int j = i + 1; j < params.length; j++) {
+                if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_1")
+                            + params[i].substring(0, params[i].indexOf("="))
+                            + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_2"));
+                }
+            }
+        }
+
+        /*
+         Einzelne Punktkoordinaten werden in der HashMap
+         varsContainedInParams gespeichert.
+         */
+        HashMap<String, Expression> varsContainedInParams = new HashMap<>();
+        for (int i = 1; i < params.length; i++) {
+            varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
+        }
+
+        /*
+         Es wird geprüft, ob allen Variablen, welche in der
+         Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
+         wurde.
+         */
+        Iterator iter = vars.iterator();
+        String var;
+        for (int i = 0; i < vars.size(); i++) {
+            var = (String) iter.next();
+            if (!varsContainedInParams.containsKey(var)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_2"));
+            }
+        }
+
+        return new Command(TypeCommand.tangent, new Object[]{expr, varsContainedInParams});
+
+    }
+
+    private static Command getCommandTaylorDEQ(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
+         y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
+         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
+         fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
+         */
+        if (params.length < 6) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
+        }
+
+        // Ordnung der DGL ermitteln.
+        int ord;
+        try {
+            ord = Integer.parseInt(params[2]);
+            if (ord < 1) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
+            }
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
+        }
+
+        /*
+         Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
+         darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
+         rechten Seite auftreten.
+         */
+        HashSet<String> vars = new HashSet<>();
+        try {
+            Expression.build(params[0], vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ") + e.getMessage());
+        }
+        Expression expr = Expression.build(params[0], vars);
+
+        HashSet<String> varsWithoutPrimes = new HashSet<>();
+        Iterator iter = vars.iterator();
+        String varWithoutPrimes;
+        for (int i = 0; i < vars.size(); i++) {
+            varWithoutPrimes = (String) iter.next();
+            if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
+                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_1")
+                            + ord
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_2")
+                            + (ord - 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_3"));
+                }
+                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
+            }
+            varsWithoutPrimes.add(varWithoutPrimes);
+        }
+
+        if (varsWithoutPrimes.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ"));
+        }
+
+        if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
+            if (varsWithoutPrimes.size() == 2) {
+                if (!vars.contains(params[1])) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_1")
+                            + params[1]
+                            + Translator.translateExceptionMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_2"));
+                }
+            }
+        } else {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDEQ"));
+        }
+
+        if (params.length < ord + 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
+        }
+
+        if (params.length > ord + 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
+        }
+
+        /*
+         Nun wird varsWithoutPrimes, falls nötig, soweit ergänzt, dass es
+         alle in der DGL auftretenden Variablen enthält (max. 2). Dies
+         wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
+         SWP-Daten korrekt sind.
+         */
+        if (varsWithoutPrimes.isEmpty()) {
+            varsWithoutPrimes.add(params[1]);
+            if (params[1].equals("y")) {
+                varsWithoutPrimes.add("z");
+            } else {
+                varsWithoutPrimes.add("y");
+            }
+        } else if (varsWithoutPrimes.size() == 1) {
+
+            if (varsWithoutPrimes.contains(params[1])) {
+                if (params[1].equals("y")) {
+                    varsWithoutPrimes.add("z");
+                } else {
+                    varsWithoutPrimes.add("y");
+                }
+            } else {
+                varsWithoutPrimes.add(params[1]);
+            }
+
+        }
+
+        // Prüft, ob die AWP-Daten korrekt sind.
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 3; i < ord + 4; i++) {
+            try {
+                Expression.build(params[i], varsInLimits).simplify();
+                iter = varsWithoutPrimes.iterator();
+                /*
+                 Im Folgenden wird geprüft, ob in den Anfangsbedingungen
+                 die Variablen aus der eigentlichen DGL nicht auftreten
+                 (diese beiden Variablen sind im HashSet varsWithoutPrimes
+                 gespeichert).
+                 */
+                if (varsInLimits.contains((String) iter.next())) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
+                            + String.valueOf(i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
+                }
+            } catch (ExpressionException | EvaluationException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
+                        + String.valueOf(i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
+            }
+        }
+
+        try {
+            Integer.parseInt(params[ord + 4]);
+        } catch (NumberFormatException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDEQ"));
+        }
+
+        Object[] commandParams = new Object[ord + 5];
+        commandParams[0] = expr;
+        commandParams[1] = params[1];
+        commandParams[2] = ord;
+        for (int i = 3; i < ord + 4; i++) {
+            commandParams[i] = Expression.build(params[i], vars);
+        }
+        commandParams[ord + 4] = Integer.parseInt(params[ord + 4]);
+
+        return new Command(TypeCommand.taylordeq, commandParams);
+
+    }
+
+    private static Command getCommandUndef(String[] params) throws ExpressionException {
+
+        // Struktur: undef(var_1, ..., var_k) var_i: Variablenname.
+        // Prüft, ob alle Parameter gültige Variablen sind.
+        for (int i = 0; i < params.length; i++) {
+            if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
+            }
+        }
+
+        Object[] commandParams = new Object[params.length];
+        System.arraycopy(params, 0, commandParams, 0, params.length);
+
+        return new Command(TypeCommand.undef, commandParams);
+
+    }
+
+    private static Command getCommandUndelAll(String[] params) throws ExpressionException {
+        // Struktur: undefall().
+        // Prüft, ob der Befehl keine Parameter besitzt.
+        if (params.length > 0) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_UNDEFALL"));
+        }
+        return new Command(TypeCommand.undefall, new Object[0]);
+    }
+
     /**
      * Hauptmethode zum Ausführen des Befehls.
      *
@@ -2037,6 +1884,7 @@ public class MathCommandCompiler {
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_1"),
                     (MatrixExpression) command.getParams()[0],
                     Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_2"));
+            return;
         }
 
         // Textliche Ausgabe
@@ -2078,8 +1926,8 @@ public class MathCommandCompiler {
         MatrixExpression matrixMinusMultipleOfE;
         Dimension dim = matrix.getDimension();
 
-        String eigenvectorsAsString = "";
-        ArrayList<Object> eigenvectorsAsObjectArray = new ArrayList<>();
+        String eigenvectorsAsString;
+        ArrayList<Object> eigenvectorsAsObjectArray;
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
 
