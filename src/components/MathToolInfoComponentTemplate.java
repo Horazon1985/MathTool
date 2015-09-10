@@ -58,7 +58,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
             this.headerImage = new ImageIcon(getClass().getResource(headerImageFilePath));
             this.headerLabel = new JLabel(this.headerImage);
             this.headerPanel.add(this.headerLabel);
-            this.headerPanel.setBounds(0, -5, 500, 70);
+            this.headerPanel.setBounds(0, -5, this.headerImage.getIconWidth(), this.headerImage.getIconHeight());
             this.headerPanel.setVisible(true);
             currentComponentLevel = this.stub + this.headerImage.getIconHeight() - 5;
         } else {
@@ -96,14 +96,16 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
 
         // Größe der Komponente festlegen.
         if (this.headerImage != null) {
-            this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
-                    (mathtoolformHeight - 165 - 20 * numberOfLabels) / 2 + mathtoolformY,
-                    500, 80 + this.headerImage.getIconHeight() + 20 * numberOfLabels 
-                            + this.heightTextArea);
+            int height = 80 + this.headerImage.getIconHeight() + 20 * numberOfLabels 
+                            + this.heightTextArea;
+            this.setBounds((mathtoolformWidth - this.headerImage.getIconWidth()) / 2 + mathtoolformX,
+                    (mathtoolformHeight - height) / 2 + mathtoolformY,
+                    this.headerImage.getIconWidth(), height);
         } else {
-            this.setBounds((mathtoolformWidth - 500) / 2 + mathtoolformX,
-                    (mathtoolformHeight - 165 - 20 * numberOfLabels) / 2 + mathtoolformY,
-                    500, 80 + 20 * numberOfLabels + this.heightTextArea);
+            int height = 80 + 20 * numberOfLabels + this.heightTextArea;
+            this.setBounds((mathtoolformWidth - this.headerImage.getIconWidth()) / 2 + mathtoolformX,
+                    (mathtoolformHeight - height) / 2 + mathtoolformY,
+                    500, height);
         }
 
         // Info-Labels einfügen
@@ -202,7 +204,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
 
         // TextArea einfügen
         if (menuCaptions != null) {
-            if (informations != null || coloredInformations != null) {
+            if (informations != null || coloredInformations != null || menuCaptions != null) {
                 currentComponentLevel += this.stub;
             }
             this.infoEditorPane = new JEditorPane();
