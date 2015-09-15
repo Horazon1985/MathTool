@@ -51,7 +51,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     private final JScrollPane scrollPaneGraphic;
     private ComputingDialogGUI computingDialog;
     private final MathToolTextField mathToolTextField;
-    
+
     private final GraphicPanel2D graphicPanel2D;
     private final GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
@@ -147,7 +147,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //            }
 //        });
-        
+
         // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
         mathToolGraphicAreaY = 10;
@@ -252,7 +252,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 }
 
                 mathToolGraphicArea.updateSize();
-                
+
                 validate();
                 repaint();
             }
@@ -366,17 +366,17 @@ public class MathToolForm extends JFrame implements MouseListener {
     }
 
     /**
-     * Falls command_name der Name eines Befehls ist, welcher Grafiken
-     * anzuzeigen veranlasst, dann wird das dazu passende Panel (auf dem die
-     * Grafik gezeichnet wird) angezeigt und die Ausgabefläche wird um die
+     * Falls commandName der Name eines Befehls ist, welcher Grafiken anzuzeigen
+     * veranlasst, dann wird das dazu passende Panel (auf dem die Grafik
+     * gezeichnet wird) angezeigt und die Ausgabefläche wird um die
      * entsprechenden Maße nach links zusammengedrückt.
      *
      * @throws ExpressionException
      * @throws EvaluationException
      */
-    private void activatePanelsForGraphs(String command_name, String[] params) throws ExpressionException, EvaluationException {
+    private void activatePanelsForGraphs(String commandName, String[] params) throws ExpressionException, EvaluationException {
 
-        Command c = MathCommandCompiler.getCommand(command_name, params);
+        Command c = MathCommandCompiler.getCommand(commandName, params);
 
         //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         scrollPaneText.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
@@ -398,7 +398,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         graphicPanelCurves2D.setVisible(false);
         graphicPanelCurves3D.setVisible(false);
         rotateButton.setVisible(false);
-        legendLabel.setVisible(true);
+        legendLabel.setVisible(false);
 
         graphicPanel2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
         graphicPanel3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
@@ -406,29 +406,34 @@ public class MathToolForm extends JFrame implements MouseListener {
         graphicPanelCurves2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
         graphicPanelCurves3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
 
-        if (command_name.equals("plot2d")) {
+        if (commandName.equals("plot2d")) {
             graphicPanel2D.setVisible(true);
+            legendLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
-        } else if (command_name.equals("plot3d")) {
+        } else if (commandName.equals("plot3d")) {
             graphicPanel3D.setVisible(true);
+            legendLabel.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH3D;
-        } else if (command_name.equals("plotcurve") && c.getParams().length == 4) {
+        } else if (commandName.equals("plotcurve") && c.getParams().length == 4) {
             graphicPanelCurves2D.setVisible(true);
+            legendLabel.setVisible(true);
             typeGraphic = TypeGraphic.CURVE2D;
-        } else if (command_name.equals("plotcurve") && c.getParams().length == 5) {
+        } else if (commandName.equals("plotcurve") && c.getParams().length == 5) {
             graphicPanelCurves3D.setVisible(true);
+            legendLabel.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
-        } else if (command_name.equals("plotpolar")) {
+        } else if (commandName.equals("plotpolar")) {
             graphicPanelPolar2D.setVisible(true);
+            legendLabel.setVisible(true);
             typeGraphic = TypeGraphic.POLARGRAPH2D;
-        } else if ((command_name.equals("solve") && c.getParams().length >= 4) || (command_name.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
+        } else if ((commandName.equals("solve") && c.getParams().length >= 4) || (commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicPanel2D.setVisible(true);
+            legendLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
-        } else if (command_name.equals("solvedeq")) {
+        } else if (commandName.equals("solvedeq")) {
             graphicPanel2D.setVisible(true);
-            legendLabel.setVisible(false);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else {
             scrollPaneText.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
@@ -707,19 +712,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 boolean validCommand = false;
 
                 // Leerzeichen werden im Vorfeld beseitigt.
-                String input = mathToolTextField.getText().replaceAll(" ", "");
-
-                // Alles zu Kleinbuchstaben machen.
-                char currentChar;
-                int lengthInput = input.length();
-                for (int i = 0; i < lengthInput; i++) {
-                    currentChar = input.charAt(i);
-                    //Falls es ein Großbuchstabe ist -> zu Kleinbuchstaben machen
-                    if (((int) currentChar >= 65) && ((int) currentChar <= 90)) {
-                        currentChar = (char) ((int) currentChar + 32);  //Macht Großbuchstaben zu Kleinbuchstaben
-                        input = input.substring(0, i) + currentChar + input.substring(i + 1, lengthInput);
-                    }
-                }
+                String input = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
 
                 // Befehl loggen!
                 listOfCommands.add(input);
@@ -1104,7 +1097,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         fileNames.add("Operators");
         fileNames.add("Commands");
         fileNames.add("Contact");
-        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(), 
+        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(),
                 this.getWidth(), this.getHeight(), menuCaptions, fileNames
         );
         helpDialogGUI.setVisible(true);
@@ -1281,41 +1274,41 @@ public class MathToolForm extends JFrame implements MouseListener {
         refreshInterface();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
-    private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {                                      
+    private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-            // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
-            stopPossibleRotation();
-            executeCommand();
-            break;
+                // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
+                stopPossibleRotation();
+                executeCommand();
+                break;
 
             case KeyEvent.VK_UP:
-            if (logPosition > 0) {
-                logPosition--;
-            }
-            if (logPosition == listOfCommands.size()) {
-                logPosition--;
-            }
-            showLoggedCommand(logPosition);
-            break;
+                if (logPosition > 0) {
+                    logPosition--;
+                }
+                if (logPosition == listOfCommands.size()) {
+                    logPosition--;
+                }
+                showLoggedCommand(logPosition);
+                break;
 
             case KeyEvent.VK_DOWN:
-            if (logPosition < listOfCommands.size() - 1) {
-                logPosition++;
-            }
-            showLoggedCommand(logPosition);
-            break;
+                if (logPosition < listOfCommands.size() - 1) {
+                    logPosition++;
+                }
+                showLoggedCommand(logPosition);
+                break;
 
             case KeyEvent.VK_ESCAPE:
-            if (computing) {
-                computingSwingWorker.cancel(true);
-            } else {
-                mathToolTextField.setText("");
-            }
-            break;
+                if (computing) {
+                    computingSwingWorker.cancel(true);
+                } else {
+                    mathToolTextField.setText("");
+                }
+                break;
         }
-    }                                     
-    
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
