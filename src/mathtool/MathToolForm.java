@@ -703,9 +703,20 @@ public class MathToolForm extends JFrame implements MouseListener {
 
         try {
             String[] commandName = Expression.getOperatorAndArguments(s);
+            boolean validCommand = false;
+            for (TypeCommand commandType : TypeCommand.values()) {
+                validCommand = validCommand || commandName[0].equals(commandType.toString());
+                if (validCommand) {
+                    break;
+                }
+            }
+            if (!validCommand) {
+                // Dafür da, damit man in den Catch-Block springt.
+                throw new ExpressionException("");
+            }
             String[] params = Expression.getArguments(commandName[1]);
             MathCommandCompiler.getCommand(commandName[0], params);
-        } catch (ExpressionException | EvaluationException eCommand) {
+        } catch (ExpressionException eCommand) {
             try {
                 Expression.build(s, new HashSet<String>());
             } catch (ExpressionException eExpr) {

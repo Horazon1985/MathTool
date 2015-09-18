@@ -110,7 +110,7 @@ public class MathCommandCompiler {
      *
      * @throws ExpressionException, EvaluationException
      */
-    public static Command getCommand(String command, String[] params) throws ExpressionException, EvaluationException {
+    public static Command getCommand(String command, String[] params) throws ExpressionException {
 
         switch (command) {
             case "approx":
@@ -619,7 +619,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static Command getCommandPlot2D(String[] params) throws ExpressionException, EvaluationException {
+    private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
         /*
          Struktur: plot2d(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
@@ -741,7 +741,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static Command getCommandPlot3D(String[] params) throws ExpressionException, EvaluationException {
+    private static Command getCommandPlot3D(String[] params) throws ExpressionException {
 
         /*
          Struktur: plot3d(EXPRESSION(var1, var2), value_1, value_2, value_3,
@@ -873,7 +873,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static Command getCommandPlotPolar(String[] params) throws ExpressionException, EvaluationException {
+    private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
         /*
          Struktur: plotpolar(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
