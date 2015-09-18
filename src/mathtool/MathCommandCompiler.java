@@ -4,6 +4,7 @@ import command.Command;
 import command.TypeCommand;
 import computation.AnalysisMethods;
 import computation.NumericalMethods;
+import expressionbuilder.Constant;
 import expressionbuilder.EvaluationException;
 import expressionbuilder.Expression;
 import expressionbuilder.ExpressionException;
@@ -683,13 +684,6 @@ public class MathCommandCompiler {
 
             Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
             Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-            if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
-                        + (params.length - 1)
-                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
-                        + params.length
-                        + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
-            }
 
             Object[] commandParams = new Object[params.length];
             for (int i = 0; i < params.length - 2; i++) {
@@ -734,26 +728,13 @@ public class MathCommandCompiler {
                 }
             }
 
-            Expression exprLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-            Expression exprRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            Expression x_0 = Expression.build(params[1], vars);
-            Expression x_1 = Expression.build(params[2], vars);
-            Expression y_0 = Expression.build(params[3], vars);
-            Expression y_1 = Expression.build(params[4], vars);
-            if (x_0.evaluate() >= x_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
-            }
-            if (y_0.evaluate() >= y_1.evaluate()) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_IMPLICIT_PLOT2D"));
-            }
-
             Object[] commandParams = new Object[6];
-            commandParams[0] = exprLeft;
-            commandParams[1] = exprRight;
-            commandParams[2] = x_0;
-            commandParams[3] = x_1;
-            commandParams[4] = y_0;
-            commandParams[5] = y_1;
+            commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+            commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+            commandParams[2] = Expression.build(params[1], vars);
+            commandParams[3] = Expression.build(params[2], vars);
+            commandParams[4] = Expression.build(params[3], vars);
+            commandParams[5] = Expression.build(params[4], vars);
             return new Command(TypeCommand.plot2d, commandParams);
 
         }
@@ -803,23 +784,12 @@ public class MathCommandCompiler {
             }
         }
 
-        Expression expr = Expression.build(params[0], vars);
-        Expression x_0 = Expression.build(params[1], vars);
-        Expression x_1 = Expression.build(params[2], vars);
-        Expression y_0 = Expression.build(params[3], vars);
-        Expression y_1 = Expression.build(params[4], vars);
-        if (x_0.evaluate() >= x_1.evaluate()) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
-        }
-        if (y_0.evaluate() >= y_1.evaluate()) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D"));
-        }
         Object[] commandParams = new Object[5];
-        commandParams[0] = expr;
-        commandParams[1] = x_0;
-        commandParams[2] = x_1;
-        commandParams[3] = y_0;
-        commandParams[4] = y_1;
+        commandParams[0] = Expression.build(params[0], vars);
+        commandParams[1] = Expression.build(params[1], vars);
+        commandParams[2] = Expression.build(params[2], vars);
+        commandParams[3] = Expression.build(params[3], vars);
+        commandParams[4] = Expression.build(params[4], vars);
         return new Command(TypeCommand.plot3d, commandParams);
 
     }
@@ -966,13 +936,6 @@ public class MathCommandCompiler {
 
         Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
         Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-        if (x_0.evaluate() >= x_1.evaluate()) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
-                    + (params.length - 1)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
-                    + (params.length)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
-        }
 
         Object[] commandParams = new Object[params.length];
         for (int i = 0; i < params.length - 2; i++) {
@@ -2092,8 +2055,8 @@ public class MathCommandCompiler {
             graphicMethods2D.addExpression(exprs[i]);
         }
         graphicMethods2D.setVarAbsc(var);
-        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
-        graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
+        graphicMethods2D.computeScreenSizes(x_0, x_1);
+        graphicMethods2D.expressionToGraph(var, x_0, x_1);
         graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
 
@@ -2166,7 +2129,7 @@ public class MathCommandCompiler {
 
         graphicMethods3D.setExpression(expr);
         graphicMethods3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
+        graphicMethods3D.expressionToGraph(x_0, x_1, y_0, y_1);
         graphicMethods3D.drawGraph3D();
 
     }
@@ -2228,7 +2191,7 @@ public class MathCommandCompiler {
         graphicMethods2D.clearExpressionAndGraph();
         graphicMethods2D.addExpression(expr);
         graphicMethods2D.setVars(varAbsc, varOrd);
-        graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
+        graphicMethods2D.computeScreenSizes(x_0, x_1, y_0, y_1);
         graphicMethods2D.setSpecialPointsOccur(false);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
@@ -2262,8 +2225,8 @@ public class MathCommandCompiler {
         graphicMethodsCurves2D.setIsInitialized(true);
         graphicMethodsCurves2D.setExpression(expr);
         graphicMethodsCurves2D.setVar(var);
-        graphicMethodsCurves2D.computeScreenSizes(t_0.evaluate(), t_1.evaluate());
-        graphicMethodsCurves2D.expressionToGraph(t_0.evaluate(), t_1.evaluate());
+        graphicMethodsCurves2D.computeScreenSizes(t_0, t_1);
+        graphicMethodsCurves2D.expressionToGraph(t_0, t_1);
         graphicMethodsCurves2D.drawCurve2D();
 
     }
@@ -2298,8 +2261,8 @@ public class MathCommandCompiler {
         graphicMethodsCurves3D.setExpression(expr);
         graphicMethodsCurves3D.setVar(var);
         graphicMethodsCurves3D.setParameters(150, 200, 30, 30);
-        graphicMethodsCurves3D.computeScreenSizes(t_0.evaluate(), t_1.evaluate());
-        graphicMethodsCurves3D.expressionToGraph(t_0.evaluate(), t_1.evaluate());
+        graphicMethodsCurves3D.computeScreenSizes(t_0, t_1);
+        graphicMethodsCurves3D.expressionToGraph(t_0, t_1);
         graphicMethodsCurves3D.drawCurve3D();
 
     }
@@ -2331,7 +2294,7 @@ public class MathCommandCompiler {
             graphicMethodsPolar2D.addExpression(exprs[i]);
         }
         graphicMethodsPolar2D.setVar(var);
-        graphicMethodsPolar2D.computeScreenSizes(phi_0.evaluate(), phi_1.evaluate());
+        graphicMethodsPolar2D.computeScreenSizes(phi_0, phi_1);
         graphicMethodsPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
         graphicMethodsPolar2D.drawPolarGraph2D();
 
@@ -2501,8 +2464,8 @@ public class MathCommandCompiler {
                 graphicMethods2D.addExpression(f);
                 graphicMethods2D.addExpression(g);
                 graphicMethods2D.setVarAbsc(var);
-                graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
-                graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
+                graphicMethods2D.computeScreenSizes(x_0, x_1);
+                graphicMethods2D.expressionToGraph(var, x_0, x_1);
                 graphicMethods2D.setSpecialPointsOccur(false);
                 graphicMethods2D.drawGraph2D();
                 return;
@@ -2560,8 +2523,8 @@ public class MathCommandCompiler {
             graphicMethods2D.addExpression(f);
             graphicMethods2D.addExpression(g);
             graphicMethods2D.setVarAbsc(var);
-            graphicMethods2D.computeScreenSizes(x_0.evaluate(), x_1.evaluate());
-            graphicMethods2D.expressionToGraph(var, x_0.evaluate(), x_1.evaluate());
+            graphicMethods2D.computeScreenSizes(x_0, x_1);
+            graphicMethods2D.expressionToGraph(var, x_0, x_1);
             graphicMethods2D.setSpecialPointsOccur(true);
             graphicMethods2D.setSpecialPoints(zerosAsArray);
             graphicMethods2D.drawGraph2D();
@@ -2887,8 +2850,8 @@ public class MathCommandCompiler {
             graphicMethods2D.addExpression(expr);
             graphicMethods2D.addExpression(tangent);
             graphicMethods2D.setVarAbsc(var);
-            graphicMethods2D.computeScreenSizes(x_0, x_1);
-            graphicMethods2D.expressionToGraph(var, x_0, x_1);
+            graphicMethods2D.computeScreenSizes(new Constant(x_0), new Constant(x_1));
+            graphicMethods2D.expressionToGraph(var, new Constant(x_0), new Constant(x_1));
             graphicMethods2D.setSpecialPointsOccur(true);
             graphicMethods2D.setSpecialPoints(tangentPoint);
             graphicMethods2D.drawGraph2D();

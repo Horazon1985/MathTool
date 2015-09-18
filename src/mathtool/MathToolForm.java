@@ -36,6 +36,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import logicalexpressionbuilder.LogicalExpression;
 import matrixexpressionbuilder.MatrixExpression;
 import translator.Translator;
@@ -61,6 +63,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     // Zeitabhängige Komponenten
     private Thread rotateThread;
     private SwingWorker<Void, Void> computingSwingWorker;
+    private SwingWorker<Void, Void> validitySwingWorker;
     private Timer computingTimer;
 
     /*
@@ -132,21 +135,25 @@ public class MathToolForm extends JFrame implements MouseListener {
                 mathToolTextFieldKeyPressed(evt);
             }
         });
+        mathToolTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkInputValidity();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkInputValidity();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkInputValidity();
+            }
+        });
+
         getContentPane().add(mathToolTextField);
         mathToolTextField.setBounds(10, 336, 540, 20);
-//        mathToolTextField.addValueChangeListener(new MathToolValueChangeListener() {
-//            @Override
-//            public void valueChange(ValueChangeEvent e) {
-//                
-//            }
-//        });
-//        mathToolTextField.getDocument().addDocumentListener(new ChangeListener() {
-//
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
 
         // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
@@ -680,6 +687,43 @@ public class MathToolForm extends JFrame implements MouseListener {
             rotateThread.interrupt();
             rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
         }
+    }
+
+    /**
+     * Prüft, ob die Eingabe korrekt ist.
+     */
+    private void checkInputValidity() {
+
+        String s = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
+
+        if (mathToolTextField.getText().equals("")) {
+            mathToolTextField.setForeground(Color.black);
+            return;
+        }
+
+        try {
+            String[] commandName = Expression.getOperatorAndArguments(s);
+            String[] params = Expression.getArguments(commandName[1]);
+            MathCommandCompiler.getCommand(commandName[0], params);
+        } catch (ExpressionException | EvaluationException eCommand) {
+            try {
+                Expression.build(s, new HashSet<String>());
+            } catch (ExpressionException eExpr) {
+                try {
+                    LogicalExpression.build(s, new HashSet<String>());
+                } catch (ExpressionException eLogExpr) {
+                    try {
+                        MatrixExpression.build(s, new HashSet<String>());
+                    } catch (ExpressionException eMatExpr) {
+                        mathToolTextField.setForeground(Color.red);
+                        return;
+                    }
+                }
+            }
+        }
+
+        mathToolTextField.setForeground(Color.black);
+
     }
 
     /**
