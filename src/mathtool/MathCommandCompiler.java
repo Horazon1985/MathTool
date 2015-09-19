@@ -1993,13 +1993,13 @@ public class MathCommandCompiler {
             if (command.getParams()[i] == null) {
                 latexCode = latexCode + " = ";
             } else {
-                latexCode = latexCode + ((Expression) command.getParams()[i]).expressionToLatex(true) + " = ";
+                latexCode = latexCode + ((Expression) command.getParams()[i]).expressionToLatex() + " = ";
             }
         }
         if (command.getParams()[command.getParams().length - 1] == null) {
             latexCode = latexCode + "\n \n";
         } else {
-            latexCode = latexCode + ((Expression) command.getParams()[command.getParams().length - 1]).expressionToLatex(true) + "\n \n";
+            latexCode = latexCode + ((Expression) command.getParams()[command.getParams().length - 1]).expressionToLatex() + "\n \n";
         }
 
         // Texttliche Ausgabe
