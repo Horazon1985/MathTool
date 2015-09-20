@@ -2108,25 +2108,11 @@ public class MathCommandCompiler {
         String varAbsc = varOne;
         String varOrd = varTwo;
 
-        if ((int) varOne.charAt(0) > (int) varTwo.charAt(0)) {
+        if (varAbsc.compareTo(varOrd) > 0){
             varAbsc = varTwo;
             varOrd = varOne;
         }
-        if ((int) varOne.charAt(0) == (int) varTwo.charAt(0)) {
-            if ((varOne.length() > 1) && (varTwo.length() == 1)) {
-                varAbsc = varTwo;
-                varOrd = varOne;
-            }
-            if ((varOne.length() > 1) && (varTwo.length() > 1)) {
-                int indexOfVarOne = Integer.parseInt(varOne.substring(2));
-                int indexOfVarTwo = Integer.parseInt(varTwo.substring(2));
-                if (indexOfVarOne > indexOfVarTwo) {
-                    varAbsc = varTwo;
-                    varOrd = varOne;
-                }
-            }
-        }
-
+        
         graphicMethods3D.setExpression(expr);
         graphicMethods3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicMethods3D.expressionToGraph(x_0, x_1, y_0, y_1);
