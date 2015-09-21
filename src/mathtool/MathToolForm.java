@@ -849,7 +849,8 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
                         && !input.contains(">") && !input.contains("=") && !input.contains("[")
-                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!';
+                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!' 
+                        && !input.contains("grad");
 
                 try {
 
