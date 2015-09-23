@@ -234,19 +234,21 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="12">
+          <StringArray count="14">
             <StringItem index="0" value="Operator"/>
             <StringItem index="1" value="diff"/>
             <StringItem index="2" value="div"/>
             <StringItem index="3" value="fac"/>
             <StringItem index="4" value="gcd"/>
-            <StringItem index="5" value="int"/>
-            <StringItem index="6" value="laplace"/>
-            <StringItem index="7" value="lcm"/>
-            <StringItem index="8" value="mod"/>
-            <StringItem index="9" value="prod"/>
-            <StringItem index="10" value="sum"/>
-            <StringItem index="11" value="taylor"/>
+            <StringItem index="5" value="grad"/>
+            <StringItem index="6" value="int"/>
+            <StringItem index="7" value="laplace"/>
+            <StringItem index="8" value="lcm"/>
+            <StringItem index="9" value="mod"/>
+            <StringItem index="10" value="prod"/>
+            <StringItem index="11" value="rot"/>
+            <StringItem index="12" value="sum"/>
+            <StringItem index="13" value="taylor"/>
           </StringArray>
         </Property>
       </Properties>

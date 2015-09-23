@@ -547,7 +547,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         cancelButton.setBounds(560, 300, 100, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "int", "laplace", "lcm", "mod", "prod", "sum", "taylor" }));
+        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "grad", "int", "laplace", "lcm", "mod", "prod", "rot", "sum", "taylor" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 operatorChoiceActionPerformed(evt);

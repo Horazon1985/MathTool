@@ -163,10 +163,10 @@ public class MathCommandCompiler {
                 return getCommandUndef(params);
             case "undefall":
                 return getCommandUndelAll(params);
+            // Sollte theoretisch nie vorkommen.
+            default:
+                return new Command();
         }
-
-        // Sollte theoretisch nie vorkommen.
-        return new Command();
 
     }
 
@@ -2108,11 +2108,11 @@ public class MathCommandCompiler {
         String varAbsc = varOne;
         String varOrd = varTwo;
 
-        if (varAbsc.compareTo(varOrd) > 0){
+        if (varAbsc.compareTo(varOrd) > 0) {
             varAbsc = varTwo;
             varOrd = varOne;
         }
-        
+
         graphicMethods3D.setExpression(expr);
         graphicMethods3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicMethods3D.expressionToGraph(x_0, x_1, y_0, y_1);
