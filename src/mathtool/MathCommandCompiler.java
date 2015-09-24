@@ -181,7 +181,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            commandParams[0] = Expression.build(params[0], new HashSet<String>());
+            commandParams[0] = Expression.build(params[0], null);
             return new Command(TypeCommand.approx, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
@@ -199,7 +199,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            commandParams[0] = LogicalExpression.build(params[0], new HashSet<String>());
+            commandParams[0] = LogicalExpression.build(params[0], null);
             return new Command(TypeCommand.ccnf, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CCNF"));
@@ -217,7 +217,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            commandParams[0] = LogicalExpression.build(params[0], new HashSet<String>());
+            commandParams[0] = LogicalExpression.build(params[0], null);
             return new Command(TypeCommand.cdnf, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CDNF"));
@@ -436,7 +436,7 @@ public class MathCommandCompiler {
 
         try {
             Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            commandParams[0] = MatrixExpression.build(params[0], null);
             // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
             Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
             if (dim.height != dim.width) {
@@ -463,7 +463,7 @@ public class MathCommandCompiler {
 
         try {
             Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            commandParams[0] = MatrixExpression.build(params[0], null);
             // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
             Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
             if (dim.height != dim.width) {
@@ -520,7 +520,7 @@ public class MathCommandCompiler {
 
         try {
             Object[] commandParams = new Object[1];
-            commandParams[0] = Expression.build(params[0], new HashSet<String>());
+            commandParams[0] = Expression.build(params[0], null);
             return new Command(TypeCommand.expand, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EXPAND"));
@@ -537,7 +537,7 @@ public class MathCommandCompiler {
 
         try {
             Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], new HashSet<String>());
+            commandParams[0] = MatrixExpression.build(params[0], null);
             return new Command(TypeCommand.ker, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_KER"));
@@ -635,13 +635,14 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
         }
 
+        Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
         if (!params[0].contains("=")) {
 
             for (int i = 0; i < params.length - 2; i++) {
                 try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
+                    commandParams[i] = Expression.build(params[i], vars);
                 } catch (ExpressionException e) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
                             + (i + 1)
@@ -657,7 +658,7 @@ public class MathCommandCompiler {
 
             HashSet<String> varsInLimits = new HashSet<>();
             try {
-                Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
+                commandParams[params.length - 2] = Expression.build(params[params.length - 2], varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                             + (params.length - 1)
@@ -670,7 +671,7 @@ public class MathCommandCompiler {
             }
 
             try {
-                Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
+                commandParams[params.length - 1] = Expression.build(params[params.length - 1], varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                             + params.length
@@ -682,15 +683,6 @@ public class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
             }
 
-            Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
-            Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-
-            Object[] commandParams = new Object[params.length];
-            for (int i = 0; i < params.length - 2; i++) {
-                commandParams[i] = Expression.build(params[i], vars);
-            }
-            commandParams[params.length - 2] = x_0;
-            commandParams[params.length - 1] = x_1;
             return new Command(TypeCommand.plot2d, commandParams);
 
         } else {
@@ -699,9 +691,11 @@ public class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
             }
 
+            commandParams = new Object[6];
+
             try {
-                Expression.build(params[0].substring(0, params[0].indexOf("=")), new HashSet<String>()).getContainedVars(vars);
-                Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), new HashSet<String>()).getContainedVars(vars);
+                commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
+                commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
             }
@@ -715,7 +709,7 @@ public class MathCommandCompiler {
             HashSet<String> varsInLimits = new HashSet<>();
             for (int i = 1; i <= 4; i++) {
                 try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                    commandParams[i + 1] = Expression.build(params[i], varsInLimits);
                     if (!varsInLimits.isEmpty()) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
                                 + (i + 1)
@@ -728,13 +722,6 @@ public class MathCommandCompiler {
                 }
             }
 
-            Object[] commandParams = new Object[6];
-            commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-            commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-            commandParams[2] = Expression.build(params[1], vars);
-            commandParams[3] = Expression.build(params[2], vars);
-            commandParams[4] = Expression.build(params[3], vars);
-            commandParams[5] = Expression.build(params[4], vars);
             return new Command(TypeCommand.plot2d, commandParams);
 
         }
@@ -753,11 +740,11 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOT3D"));
         }
 
+        Object[] commandParams = new Object[5];
         HashSet<String> vars = new HashSet<>();
 
         try {
-            Expression expr = Expression.build(params[0], new HashSet<String>());
-            expr.getContainedVars(vars);
+            commandParams[0] = Expression.build(params[0], vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOT3D") + e.getMessage());
         }
@@ -771,7 +758,7 @@ public class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 1; i <= 4; i++) {
             try {
-                Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                commandParams[i] = Expression.build(params[i], varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
                             + (i + 1)
@@ -784,12 +771,6 @@ public class MathCommandCompiler {
             }
         }
 
-        Object[] commandParams = new Object[5];
-        commandParams[0] = Expression.build(params[0], vars);
-        commandParams[1] = Expression.build(params[1], vars);
-        commandParams[2] = Expression.build(params[2], vars);
-        commandParams[3] = Expression.build(params[3], vars);
-        commandParams[4] = Expression.build(params[4], vars);
         return new Command(TypeCommand.plot3d, commandParams);
 
     }
@@ -822,9 +803,16 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_CURVE_COMPONENTS_IN_PLOTCURVE"));
         }
 
+        Object[] commandParams;
+        if (curveComponents.length == 2) {
+            commandParams = new Object[4];
+        } else {
+            commandParams = new Object[5];
+        }
+
         for (int i = 0; i < curveComponents.length; i++) {
             try {
-                Expression.build(curveComponents[i], vars);
+                commandParams[i] = Expression.build(curveComponents[i], vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
                         + (i + 1)
@@ -838,35 +826,19 @@ public class MathCommandCompiler {
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
-        for (int i = 1; i <= 2; i++) {
+        for (int i = 0; i <= 1; i++) {
             try {
-                Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                commandParams[curveComponents.length + i] = Expression.build(params[i + 1], varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                            + (i + 1)
+                            + (i + 2)
                             + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
                 }
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                        + (i + 1)
+                        + (i + 2)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
             }
-        }
-
-        Object[] commandParams;
-        if (curveComponents.length == 2) {
-            commandParams = new Object[4];
-            commandParams[0] = Expression.build(curveComponents[0], vars);
-            commandParams[1] = Expression.build(curveComponents[1], vars);
-            commandParams[2] = Expression.build(params[1], vars);
-            commandParams[3] = Expression.build(params[2], vars);
-        } else {
-            commandParams = new Object[5];
-            commandParams[0] = Expression.build(curveComponents[0], vars);
-            commandParams[1] = Expression.build(curveComponents[1], vars);
-            commandParams[2] = Expression.build(curveComponents[2], vars);
-            commandParams[3] = Expression.build(params[1], vars);
-            commandParams[4] = Expression.build(params[2], vars);
         }
 
         return new Command(TypeCommand.plotcurve, commandParams);
@@ -893,7 +865,7 @@ public class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 2; i++) {
             try {
-                Expression.build(params[i], new HashSet<String>()).getContainedVars(vars);
+                Expression.build(params[i], vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
                         + (i + 1)
@@ -909,7 +881,7 @@ public class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            Expression.build(params[params.length - 2], new HashSet<String>()).getContainedVars(varsInLimits);
+            Expression.build(params[params.length - 2], varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + (params.length - 1)
@@ -922,7 +894,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            Expression.build(params[params.length - 1], new HashSet<String>()).getContainedVars(varsInLimits);
+            Expression.build(params[params.length - 1], varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + params.length
@@ -1434,7 +1406,6 @@ public class MathCommandCompiler {
     }
 
     private static Command getCommandUndef(String[] params) throws ExpressionException {
-
         // Struktur: undef(var_1, ..., var_k) var_i: Variablenname.
         // Prüft, ob alle Parameter gültige Variablen sind.
         for (int i = 0; i < params.length; i++) {
@@ -1444,12 +1415,7 @@ public class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
             }
         }
-
-        Object[] commandParams = new Object[params.length];
-        System.arraycopy(params, 0, commandParams, 0, params.length);
-
-        return new Command(TypeCommand.undef, commandParams);
-
+        return new Command(TypeCommand.undef, params);
     }
 
     private static Command getCommandUndelAll(String[] params) throws ExpressionException {
@@ -1794,46 +1760,6 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeEuler(Command command, GraphicArea graphicArea) throws ExpressionException {
-
-        BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
-        // Textliche Ausgabe
-        output.add(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
-                + (int) command.getParams()[0]
-                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
-                + e.toString() + "\n \n");
-        // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
-                + (int) command.getParams()[0]
-                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
-                + e.toString());
-
-    }
-
-    private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
-        // Es wird definiert, welche Arten von Vereinfachungen durchgeführt werden müssen.
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-        simplifyTypes.add(TypeSimplify.expand);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.factorize_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-
-        Expression expr = (Expression) command.getParams()[0];
-        expr = expr.simplify(simplifyTypes);
-        // Textliche Ausgabe
-        output.add(expr.writeExpression() + "\n \n");
-        // Graphische Ausgabe
-        graphicArea.addComponent(expr);
-    }
-
     private static void executeEigenvalues(Command command, GraphicArea graphicArea) throws EvaluationException {
 
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
@@ -1914,14 +1840,23 @@ public class MathCommandCompiler {
             eigenvectorsAsObjectArray.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
             eigenvectorsAsObjectArray.add(eigenvalues.get(i));
             eigenvectorsAsObjectArray.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
-            for (int j = 0; j < eigenvectors.getBound(); j++) {
+            if (eigenvectors.isEmpty()) {
                 // Für textliche Ausgabe
-                eigenvectorsAsString = eigenvectorsAsString + eigenvectors.get(j).writeMatrixExpression();
+                eigenvectorsAsString = Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS");
                 // Für graphische Ausgabe
-                eigenvectorsAsObjectArray.add(eigenvectors.get(j));
-                if (j < eigenvectors.getBound() - 1) {
-                    eigenvectorsAsString = eigenvectorsAsString + ", ";
-                    eigenvectorsAsObjectArray.add(", ");
+                eigenvectorsAsObjectArray.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
+            } else {
+                for (int j = 0; j < eigenvectors.getBound(); j++) {
+
+                    // Für textliche Ausgabe
+                    eigenvectorsAsString = eigenvectorsAsString + eigenvectors.get(j).writeMatrixExpression();
+                    // Für graphische Ausgabe
+                    eigenvectorsAsObjectArray.add(eigenvectors.get(j));
+                    if (j < eigenvectors.getBound() - 1) {
+                        eigenvectorsAsString = eigenvectorsAsString + ", ";
+                        eigenvectorsAsObjectArray.add(", ");
+                    }
+
                 }
             }
             // Textliche Ausgabe
@@ -1933,13 +1868,66 @@ public class MathCommandCompiler {
             graphicArea.addComponent(eigenvectorsAsObjectArray);
         }
 
+        if (eigenvalues.isEmpty()) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
+            // Graphische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
+        }
+
+    }
+
+    private static void executeEuler(Command command, GraphicArea graphicArea) throws ExpressionException {
+
+        BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
+                + (int) command.getParams()[0]
+                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
+                + e.toString() + "\n \n");
+        // Graphische Ausgabe
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
+                + (int) command.getParams()[0]
+                + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
+                + e.toString());
+
+    }
+
+    private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
+        // Es wird definiert, welche Arten von Vereinfachungen durchgeführt werden müssen.
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+        simplifyTypes.add(TypeSimplify.expand);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.factorize_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+
+        Expression expr = (Expression) command.getParams()[0];
+        expr = expr.simplify(simplifyTypes);
+        // Textliche Ausgabe
+        output.add(expr.writeExpression() + "\n \n");
+        // Graphische Ausgabe
+        graphicArea.addComponent(expr);
     }
 
     private static void executeKer(Command command, GraphicArea graphicArea) throws EvaluationException {
 
         MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
         if (!(matExpr instanceof Matrix)) {
-            throw new EvaluationException("TO DO");
+            output.add(Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1")
+                    + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
+                    + Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_2"));
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1"),
+                    ((MatrixExpression) command.getParams()[0]),
+                    Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_2"));
+            return;
         }
 
         MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExpr);
