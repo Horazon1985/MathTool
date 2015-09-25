@@ -861,11 +861,12 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR"));
         }
 
+        Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 2; i++) {
             try {
-                Expression.build(params[i], vars);
+                commandParams[i] = Expression.build(params[i], vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
                         + (i + 1)
@@ -881,7 +882,7 @@ public class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            Expression.build(params[params.length - 2], varsInLimits);
+            commandParams[params.length - 2] = Expression.build(params[params.length - 2], varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + (params.length - 1)
@@ -894,7 +895,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            Expression.build(params[params.length - 1], varsInLimits);
+            commandParams[params.length - 1] = Expression.build(params[params.length - 1], varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + params.length
@@ -906,15 +907,6 @@ public class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
         }
 
-        Expression x_0 = Expression.build(params[params.length - 2], varsInLimits);
-        Expression x_1 = Expression.build(params[params.length - 1], varsInLimits);
-
-        Object[] commandParams = new Object[params.length];
-        for (int i = 0; i < params.length - 2; i++) {
-            commandParams[i] = Expression.build(params[i], vars);
-        }
-        commandParams[params.length - 2] = x_0;
-        commandParams[params.length - 1] = x_1;
         return new Command(TypeCommand.plotpolar, commandParams);
 
     }
@@ -937,6 +929,7 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE"));
         }
 
+        Object[] commandParams;
         HashSet<String> vars = new HashSet<>();
         try {
             Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
@@ -960,7 +953,6 @@ public class MathCommandCompiler {
                 }
             }
 
-            Object[] commandParams;
             if (params.length == 1) {
                 commandParams = new Object[2];
                 commandParams[0] = f;
@@ -1007,7 +999,6 @@ public class MathCommandCompiler {
             Expression lowerLimit = Expression.build(params[1], vars);
             Expression upperLimit = Expression.build(params[2], vars);
 
-            Object[] commandParams;
             if (params.length == 3) {
                 commandParams = new Object[4];
                 commandParams[0] = f;
@@ -1154,16 +1145,13 @@ public class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
         }
 
-        HashSet<String> vars = new HashSet<>();
-        LogicalExpression logExpr;
-
         try {
-            logExpr = LogicalExpression.build(params[0], vars);
+            Object[] commandParams = new Object[1];
+            commandParams[0] = LogicalExpression.build(params[0], null);
+            return new Command(TypeCommand.table, commandParams);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_TABLE") + e.getMessage());
         }
-
-        return new Command(TypeCommand.table, new Object[]{logExpr});
 
     }
 
@@ -1440,7 +1428,7 @@ public class MathCommandCompiler {
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
-        input = convertToSmallLetters(input);
+        input = input.replaceAll(" ", "").toLowerCase();
 
         String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
         String commandName = commandNameAndParams[0];
@@ -1516,27 +1504,6 @@ public class MathCommandCompiler {
         for (String out : output) {
             textArea.append(out);
         }
-
-    }
-
-    /*
-     Beseitigt alle Leerzeichen im String s und verwandelt alle Großbuchstaben
-     zu Kleinbuchstaben.
-     */
-    private static String convertToSmallLetters(String s) {
-
-        //Leerzeichen beseitigen
-        s = s.replaceAll(" ", "");
-
-        //Falls Großbuchstaben auftreten -> zu Kleinbuchstaben machen
-        for (int i = 0; i < s.length(); i++) {
-            if (((int) s.charAt(i) >= 65) && ((int) s.charAt(i) <= 90)) {
-                //Macht Großbuchstaben zu Kleinbuchstaben
-                s = s.substring(0, i) + (char) ((int) s.charAt(i) + 32) + s.substring(i + 1, s.length());
-            }
-        }
-
-        return s;
 
     }
 
@@ -1900,8 +1867,8 @@ public class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.sort_difference_and_division);
         simplifyTypes.add(TypeSimplify.expand);
         simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.factorize_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
         simplifyTypes.add(TypeSimplify.reduce_quotients);
         simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
         simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
@@ -2668,7 +2635,7 @@ public class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr);
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr, ":");
 
         // Falls es sich um einen konstanten Ausdruck handelt.
         if (numberOfVars == 0) {
@@ -2707,11 +2674,6 @@ public class MathCommandCompiler {
         }
 
         int tableLength = BigInteger.valueOf(2).pow(numberOfVars).intValue();
-
-        // Texttliche Ausgabe
-        output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
-        // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr);
 
         String varsInOrder = Translator.translateExceptionMessage("MCC_ORDER_OF_VARIABLES_IN_TABLE");
         for (int i = 0; i < varsEnumerated.size(); i++) {
