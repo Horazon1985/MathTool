@@ -1779,8 +1779,6 @@ public class MathCommandCompiler {
 
         MatrixExpressionCollection eigenvectors;
         MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
-        MatrixExpression matrixMinusMultipleOfE;
-        Dimension dim = matrix.getDimension();
 
         String eigenvectorsAsString;
         ArrayList<Object> eigenvectorsAsObjectArray;
@@ -1791,16 +1789,8 @@ public class MathCommandCompiler {
             if (eigenvalues.get(i) == null) {
                 continue;
             }
-
-            // A - k*E bilden, A = Matrix, k = Eigenwert von A.
-            matrixMinusMultipleOfE = matrix.sub(new Matrix(eigenvalues.get(i)).mult(MatrixExpression.getId(dim.height))).simplify();
-
-            if (!(matrixMinusMultipleOfE instanceof Matrix)) {
-                continue;
-            }
-
             // Eigenvektoren berechnen.
-            eigenvectors = GaussAlgorithm.computeKernelOfMatrix((Matrix) matrixMinusMultipleOfE);
+            eigenvectors = EigenvaluesEigenvectorsAlgorithms.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
 
             eigenvectorsAsString = "";
             eigenvectorsAsObjectArray = new ArrayList<>();
