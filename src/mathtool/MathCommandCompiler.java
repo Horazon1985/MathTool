@@ -1976,22 +1976,22 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression[] exprs = new Expression[command.getParams().length - 2];
         
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
+//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+//        simplifyTypes.add(TypeSimplify.simplify_trivial);
+//        simplifyTypes.add(TypeSimplify.simplify_powers);
+//        simplifyTypes.add(TypeSimplify.collect_products);
+//        simplifyTypes.add(TypeSimplify.reduce_quotients);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
         
         for (int i = 0; i < command.getParams().length - 2; i++) {
             exprs[i] = (Expression) command.getParams()[i];
-            exprs[i] = exprs[i].simplify(simplifyTypes);
+//            exprs[i] = exprs[i].simplify(simplifyTypes);
             exprs[i].getContainedVars(vars);
         }
 
@@ -2026,20 +2026,20 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression expr = (Expression) command.getParams()[0];
         
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
+//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+//        simplifyTypes.add(TypeSimplify.simplify_trivial);
+//        simplifyTypes.add(TypeSimplify.simplify_powers);
+//        simplifyTypes.add(TypeSimplify.collect_products);
+//        simplifyTypes.add(TypeSimplify.reduce_quotients);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
         
-        expr = expr.simplify(simplifyTypes);
+//        expr = expr.simplify(simplifyTypes);
         expr.getContainedVars(vars);
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2164,25 +2164,25 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[2];
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
+//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+//        simplifyTypes.add(TypeSimplify.simplify_trivial);
+//        simplifyTypes.add(TypeSimplify.simplify_powers);
+//        simplifyTypes.add(TypeSimplify.collect_products);
+//        simplifyTypes.add(TypeSimplify.reduce_quotients);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
         
         expr[0] = (Expression) command.getParams()[0];
-        expr[0] = expr[0].simplify(simplifyTypes);
         expr[0].getContainedVars(vars);
+//        expr[0] = expr[0].simplify(simplifyTypes);
         expr[1] = (Expression) command.getParams()[1];
         expr[1].getContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypes);
+//        expr[1] = expr[1].simplify(simplifyTypes);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2210,28 +2210,28 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[3];
         
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
+//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+//        simplifyTypes.add(TypeSimplify.simplify_trivial);
+//        simplifyTypes.add(TypeSimplify.simplify_powers);
+//        simplifyTypes.add(TypeSimplify.collect_products);
+//        simplifyTypes.add(TypeSimplify.reduce_quotients);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
         
         expr[0] = (Expression) command.getParams()[0];
         expr[0].getContainedVars(vars);
-        expr[0] = expr[0].simplify(simplifyTypes);
+//        expr[0] = expr[0].simplify(simplifyTypes);
         expr[1] = (Expression) command.getParams()[1];
         expr[1].getContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypes);
+//        expr[1] = expr[1].simplify(simplifyTypes);
         expr[2] = (Expression) command.getParams()[2];
         expr[2].getContainedVars(vars);
-        expr[2] = expr[2].simplify(simplifyTypes);
+//        expr[2] = expr[2].simplify(simplifyTypes);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
