@@ -1,6 +1,8 @@
 package components;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -95,8 +97,11 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         currentComponentLevel += 20 + this.stub;
         this.optionLabels = new ArrayList<>();
         if (options != null) {
+            JCheckBox optionBox;
             for (int i = 0; i < numberOfOptionLabels; i++) {
-                this.optionLabels.add(new JCheckBox(Translator.translateExceptionMessage(options.get(i))));
+                optionBox = new JCheckBox(Translator.translateExceptionMessage(options.get(i)));
+                optionBox.setOpaque(false);
+                this.optionLabels.add(optionBox);
                 this.add(this.optionLabels.get(i));
                 this.optionLabels.get(i).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 25);
                 if ((i + 1) % numberOfColumns == 0) {
@@ -115,6 +120,20 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         this.saveButton.setBounds(10, currentComponentLevel, 200, 30);
         this.cancelButton.setBounds(220, currentComponentLevel, 200, 30);
 
+        this.saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TO DO.
+            }
+        });
+        
+        this.cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        
     }
 
 }
