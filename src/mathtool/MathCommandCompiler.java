@@ -5,9 +5,9 @@ import command.TypeCommand;
 import computation.AnalysisMethods;
 import computation.NumericalMethods;
 import expressionbuilder.Constant;
-import expressionbuilder.EvaluationException;
+import exceptions.EvaluationException;
 import expressionbuilder.Expression;
-import expressionbuilder.ExpressionException;
+import exceptions.ExpressionException;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
@@ -1854,7 +1854,7 @@ public class MathCommandCompiler {
         // Es wird definiert, welche Arten von Vereinfachungen durchgeführt werden müssen.
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.expand);
         simplifyTypes.add(TypeSimplify.collect_products);
         simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
@@ -2260,7 +2260,7 @@ public class MathCommandCompiler {
         Expression[] exprs = new Expression[command.getParams().length - 2];
         
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
         simplifyTypes.add(TypeSimplify.simplify_trivial);
         simplifyTypes.add(TypeSimplify.simplify_powers);

@@ -2,11 +2,11 @@ package mathtool;
 
 import command.Command;
 import command.TypeCommand;
-import expressionbuilder.EvaluationException;
+import enumerations.TypeGraphic;
+import enumerations.TypeLanguage;
+import exceptions.EvaluationException;
+import exceptions.ExpressionException;
 import expressionbuilder.Expression;
-import expressionbuilder.ExpressionException;
-import expressionbuilder.TypeGraphic;
-import expressionbuilder.TypeLanguage;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -41,6 +41,7 @@ import javax.swing.event.DocumentListener;
 import logicalexpressionbuilder.LogicalExpression;
 import matrixexpressionbuilder.MatrixExpression;
 import translator.Translator;
+import utilities.Utilities;
 
 public class MathToolForm extends JFrame implements MouseListener {
 
@@ -272,7 +273,7 @@ public class MathToolForm extends JFrame implements MouseListener {
      * Gibt den aktuellen Modus zurück.
      */
     public static TypeMode getMode() {
-        return MathToolForm.typeMode;
+        return typeMode;
     }
 
     /**
@@ -487,6 +488,8 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemRepresentationMenu = new javax.swing.JMenu();
         menuItemRepresentationFormula = new javax.swing.JMenuItem();
         menuItemRepresentationText = new javax.swing.JMenuItem();
+        menuItemOptionsMenu = new javax.swing.JMenu();
+        menuItemOutputOptions = new javax.swing.JMenuItem();
         menuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -655,6 +658,18 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemRepresentationMenu.add(menuItemRepresentationText);
 
         menuMathTool.add(menuItemRepresentationMenu);
+
+        menuItemOptionsMenu.setText("Optionen");
+
+        menuItemOutputOptions.setText("Ausgabeoptionen");
+        menuItemOutputOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOutputOptionsActionPerformed(evt);
+            }
+        });
+        menuItemOptionsMenu.add(menuItemOutputOptions);
+
+        menuMathTool.add(menuItemOptionsMenu);
 
         menuItemAbout.setText("Über MathTool");
         menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -1186,69 +1201,11 @@ public class MathToolForm extends JFrame implements MouseListener {
         computingSwingWorker.cancel(true);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    /**
-     * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
-     * Kommata bei einer gültigen Eingabe.
-     */
-    private int getNumberOfComma(String operatorOrCommandName) {
-
-        if (operatorOrCommandName.equals("diff")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("gcd")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("int")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("lcm")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("mod")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("prod")) {
-            return 3;
-        }
-        if (operatorOrCommandName.equals("sum")) {
-            return 3;
-        }
-        if (operatorOrCommandName.equals("taylor")) {
-            return 3;
-        }
-
-        if (operatorOrCommandName.equals("plot2d")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("plot3d")) {
-            return 4;
-        }
-        if (operatorOrCommandName.equals("plotcurve")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("plotpolar")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("solvedeq")) {
-            return 5;
-        }
-        if (operatorOrCommandName.equals("tangent")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("taylordeq")) {
-            return 5;
-        }
-
-        // Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument benötigen.
-        return 0;
-
-    }
-
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
 
             String insertedOperator = (String) operatorChoice.getSelectedItem() + "(";
-            int numberOfCommata = getNumberOfComma((String) operatorChoice.getSelectedItem());
+            int numberOfCommata = Utilities.getNumberOfComma((String) operatorChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedOperator = insertedOperator + ",";
             }
@@ -1267,7 +1224,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         if (commandChoice.getSelectedIndex() > 0) {
 
             String insertedCommand = (String) commandChoice.getSelectedItem() + "(";
-            int numberOfCommata = getNumberOfComma((String) commandChoice.getSelectedItem());
+            int numberOfCommata = Utilities.getNumberOfComma((String) commandChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedCommand = insertedCommand + ",";
             }
@@ -1329,6 +1286,26 @@ public class MathToolForm extends JFrame implements MouseListener {
         scrollPaneText.setVisible(false);
         refreshInterface();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
+
+    private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed
+
+        String simplifyOptionsTitle = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME");
+        ArrayList<String> simplifyOptions = new ArrayList<>();
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS");
+        String saveButtonLabel = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SAVE_BUTTON");
+        String cancelButtonLabel = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_CANCEL_BUTTON");
+
+        OutputOptionsDialogGUI outputOptionsDialogGUI = new OutputOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+        2, simplifyOptionsTitle, simplifyOptions, saveButtonLabel, cancelButtonLabel);
+        outputOptionsDialogGUI.setVisible(true);
+        
+    }//GEN-LAST:event_menuItemOutputOptionsActionPerformed
 
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
         switch (evt.getKeyCode()) {
@@ -1498,6 +1475,8 @@ public class MathToolForm extends JFrame implements MouseListener {
     private javax.swing.JMenu menuItemLanguageMenu;
     private javax.swing.JMenuItem menuItemLanguageRussian;
     private javax.swing.JMenuItem menuItemLanguageUkrainian;
+    private javax.swing.JMenu menuItemOptionsMenu;
+    private javax.swing.JMenuItem menuItemOutputOptions;
     private javax.swing.JMenuItem menuItemRepresentationFormula;
     private javax.swing.JMenu menuItemRepresentationMenu;
     private javax.swing.JMenuItem menuItemRepresentationText;

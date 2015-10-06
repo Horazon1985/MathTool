@@ -95,18 +95,17 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
         this.fileNames = files;
 
         // Größe der Komponente festlegen.
+        int height = 80 + 20 * numberOfLabels + this.heightTextArea, width;
         if (this.headerImage != null) {
-            int height = 80 + this.headerImage.getIconHeight() + 20 * numberOfLabels 
-                            + this.heightTextArea;
-            this.setBounds((mathtoolformWidth - this.headerImage.getIconWidth()) / 2 + mathtoolformX,
-                    (mathtoolformHeight - height) / 2 + mathtoolformY,
-                    this.headerImage.getIconWidth(), height);
+            height = height + this.headerImage.getIconHeight();
+            width = this.headerImage.getIconWidth();
         } else {
-            int height = 80 + 20 * numberOfLabels + this.heightTextArea;
-            this.setBounds((mathtoolformWidth - this.headerImage.getIconWidth()) / 2 + mathtoolformX,
-                    (mathtoolformHeight - height) / 2 + mathtoolformY,
-                    500, height);
+            // Standardbreite = 500 Pixel.
+            width = 500;
         }
+        this.setBounds((mathtoolformWidth - width) / 2 + mathtoolformX,
+                (mathtoolformHeight - height) / 2 + mathtoolformY,
+                width, height);
 
         // Info-Labels einfügen
         this.infoLabels = new ArrayList<>();

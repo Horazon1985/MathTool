@@ -100,6 +100,21 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <Menu class="javax.swing.JMenu" name="menuItemOptionsMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Optionen"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemOutputOptions">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Ausgabeoptionen"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemOutputOptionsActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemAbout">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xdc;ber MathTool"/>
