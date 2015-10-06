@@ -869,7 +869,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 try {
 
-                    Expression expr = Expression.build(input, new HashSet());
+                    Expression expr = Expression.build(input, null);
 
                     /*
                      Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -935,7 +935,7 @@ public class MathToolForm extends JFrame implements MouseListener {
 
                 try {
 
-                    MatrixExpression matExpr = MatrixExpression.build(input, new HashSet());
+                    MatrixExpression matExpr = MatrixExpression.build(input, null);
 
                     /*
                      Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
@@ -996,7 +996,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 try {
 
-                    LogicalExpression logExpr = LogicalExpression.build(input, new HashSet());
+                    LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
                     // Hinzufügen zum textlichen Ausgabefeld.
                     mathToolTextArea.append(logExpr.writeLogicalExpression() + Translator.translateExceptionMessage("MTF_EQUIVALENT_TO") + logExprSimplified.writeLogicalExpression() + " \n \n");
