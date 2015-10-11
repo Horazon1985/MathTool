@@ -4,10 +4,10 @@ import command.Command;
 import command.TypeCommand;
 import computation.AnalysisMethods;
 import computation.NumericalMethods;
-import expressionbuilder.Constant;
 import exceptions.EvaluationException;
-import expressionbuilder.Expression;
 import exceptions.ExpressionException;
+import expressionbuilder.Constant;
+import expressionbuilder.Expression;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
@@ -296,7 +296,7 @@ public class MathCommandCompiler {
          übergangen wird.
          */
         vars.clear();
-        expr.getContainedVars(vars);
+        expr.addContainedVars(vars);
 
         /*
          WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
@@ -642,7 +642,8 @@ public class MathCommandCompiler {
 
             for (int i = 0; i < params.length - 2; i++) {
                 try {
-                    commandParams[i] = Expression.build(params[i], vars);
+                    commandParams[i] = Expression.build(params[i], null);
+                    ((Expression) commandParams[i]).addContainedVars(vars);
                 } catch (ExpressionException e) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
                             + (i + 1)
@@ -658,7 +659,8 @@ public class MathCommandCompiler {
 
             HashSet<String> varsInLimits = new HashSet<>();
             try {
-                commandParams[params.length - 2] = Expression.build(params[params.length - 2], varsInLimits);
+                commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
+                ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                             + (params.length - 1)
@@ -671,7 +673,8 @@ public class MathCommandCompiler {
             }
 
             try {
-                commandParams[params.length - 1] = Expression.build(params[params.length - 1], varsInLimits);
+                commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
+                ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                             + params.length
@@ -694,8 +697,10 @@ public class MathCommandCompiler {
             commandParams = new Object[6];
 
             try {
-                commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-                commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
+                commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
+                commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), null);
+                ((Expression) commandParams[0]).addContainedVars(vars);
+                ((Expression) commandParams[1]).addContainedVars(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
             }
@@ -709,7 +714,8 @@ public class MathCommandCompiler {
             HashSet<String> varsInLimits = new HashSet<>();
             for (int i = 1; i <= 4; i++) {
                 try {
-                    commandParams[i + 1] = Expression.build(params[i], varsInLimits);
+                    commandParams[i + 1] = Expression.build(params[i], null);
+                    ((Expression) commandParams[i + 1]).addContainedVars(varsInLimits);
                     if (!varsInLimits.isEmpty()) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
                                 + (i + 1)
@@ -744,7 +750,8 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
 
         try {
-            commandParams[0] = Expression.build(params[0], vars);
+            commandParams[0] = Expression.build(params[0], null);
+            ((Expression) commandParams[0]).addContainedVars(vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOT3D") + e.getMessage());
         }
@@ -758,7 +765,8 @@ public class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 1; i <= 4; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], varsInLimits);
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedVars(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
                             + (i + 1)
@@ -812,7 +820,8 @@ public class MathCommandCompiler {
 
         for (int i = 0; i < curveComponents.length; i++) {
             try {
-                commandParams[i] = Expression.build(curveComponents[i], vars);
+                commandParams[i] = Expression.build(curveComponents[i], null);
+                ((Expression) commandParams[i]).addContainedVars(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
                         + (i + 1)
@@ -828,7 +837,8 @@ public class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 0; i <= 1; i++) {
             try {
-                commandParams[curveComponents.length + i] = Expression.build(params[i + 1], varsInLimits);
+                commandParams[curveComponents.length + i] = Expression.build(params[i + 1], null);
+                ((Expression) commandParams[curveComponents.length + i]).addContainedVars(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
                             + (i + 2)
@@ -866,7 +876,8 @@ public class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 2; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], vars);
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedVars(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
                         + (i + 1)
@@ -882,7 +893,8 @@ public class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            commandParams[params.length - 2] = Expression.build(params[params.length - 2], varsInLimits);
+            commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
+            ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + (params.length - 1)
@@ -895,7 +907,8 @@ public class MathCommandCompiler {
         }
 
         try {
-            commandParams[params.length - 1] = Expression.build(params[params.length - 1], varsInLimits);
+            commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
+            ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + params.length
@@ -975,7 +988,7 @@ public class MathCommandCompiler {
             HashSet<String> varsInLimits = new HashSet<>();
             for (int i = 1; i <= 2; i++) {
                 try {
-                    Expression.build(params[i], new HashSet<String>()).getContainedVars(varsInLimits);
+                    Expression.build(params[i], new HashSet<String>()).addContainedVars(varsInLimits);
                     if (!varsInLimits.isEmpty()) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
                                 + (i + 1)
@@ -1975,24 +1988,22 @@ public class MathCommandCompiler {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] exprs = new Expression[command.getParams().length - 2];
-        
-//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-//        simplifyTypes.add(TypeSimplify.simplify_trivial);
-//        simplifyTypes.add(TypeSimplify.simplify_powers);
-//        simplifyTypes.add(TypeSimplify.collect_products);
-//        simplifyTypes.add(TypeSimplify.reduce_quotients);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
-        
+
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
         for (int i = 0; i < command.getParams().length - 2; i++) {
             exprs[i] = (Expression) command.getParams()[i];
-//            exprs[i] = exprs[i].simplify(simplifyTypes);
-            exprs[i].getContainedVars(vars);
+            exprs[i] = exprs[i].simplify(simplifyTypes);
+            exprs[i].addContainedVars(vars);
         }
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
@@ -2024,23 +2035,25 @@ public class MathCommandCompiler {
     private static void executePlot3D(Command command, GraphicPanel3D graphicMethods3D) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
-        Expression expr = (Expression) command.getParams()[0];
+
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
         
-//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-//        simplifyTypes.add(TypeSimplify.simplify_trivial);
-//        simplifyTypes.add(TypeSimplify.simplify_powers);
-//        simplifyTypes.add(TypeSimplify.collect_products);
-//        simplifyTypes.add(TypeSimplify.reduce_quotients);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
-        
-//        expr = expr.simplify(simplifyTypes);
-        expr.getContainedVars(vars);
+        Expression expr = ((Expression) command.getParams()[0]).simplify(simplifyTypes);
+        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypes);
+        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
+        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
+        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
+        expr.addContainedVars(vars);
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (expr.isConstant()) {
@@ -2060,11 +2073,6 @@ public class MathCommandCompiler {
                 vars.add("y");
             }
         }
-
-        Expression x_0 = (Expression) command.getParams()[1];
-        Expression x_1 = (Expression) command.getParams()[2];
-        Expression y_0 = (Expression) command.getParams()[3];
-        Expression y_1 = (Expression) command.getParams()[4];
 
         Iterator iter = vars.iterator();
         String varOne = (String) iter.next();
@@ -2095,9 +2103,27 @@ public class MathCommandCompiler {
 
     private static void executeImplicitPlot2D(Command command, GraphicPanel2D graphicMethods2D) throws EvaluationException {
 
+        
         HashSet<String> vars = new HashSet<>();
-        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify();
-        expr.getContainedVars(vars);
+        
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        
+        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify(simplifyTypes);
+        Expression x_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
+        Expression x_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
+        Expression y_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
+        Expression y_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypes);
+        expr.addContainedVars(vars);
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (vars.isEmpty()) {
@@ -2112,11 +2138,6 @@ public class MathCommandCompiler {
                 vars.add("y");
             }
         }
-
-        Expression x_0 = (Expression) command.getParams()[2];
-        Expression x_1 = (Expression) command.getParams()[3];
-        Expression y_0 = (Expression) command.getParams()[4];
-        Expression y_1 = (Expression) command.getParams()[5];
 
         Iterator iter = vars.iterator();
         String varOne = (String) iter.next();
@@ -2164,33 +2185,31 @@ public class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[2];
 
-//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-//        simplifyTypes.add(TypeSimplify.simplify_trivial);
-//        simplifyTypes.add(TypeSimplify.simplify_powers);
-//        simplifyTypes.add(TypeSimplify.collect_products);
-//        simplifyTypes.add(TypeSimplify.reduce_quotients);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
-        
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+
         expr[0] = (Expression) command.getParams()[0];
-        expr[0].getContainedVars(vars);
-//        expr[0] = expr[0].simplify(simplifyTypes);
+        expr[0].addContainedVars(vars);
+        expr[0] = expr[0].simplify(simplifyTypes);
         expr[1] = (Expression) command.getParams()[1];
-        expr[1].getContainedVars(vars);
-//        expr[1] = expr[1].simplify(simplifyTypes);
+        expr[1].addContainedVars(vars);
+        expr[1] = expr[1].simplify(simplifyTypes);
+        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
+        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
             vars.add("t");
         }
-
-        Expression t_0 = (Expression) command.getParams()[2];
-        Expression t_1 = (Expression) command.getParams()[3];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2209,37 +2228,35 @@ public class MathCommandCompiler {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[3];
-        
-//        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-//        simplifyTypes.add(TypeSimplify.sort_difference_and_division);
-//        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-//        simplifyTypes.add(TypeSimplify.simplify_trivial);
-//        simplifyTypes.add(TypeSimplify.simplify_powers);
-//        simplifyTypes.add(TypeSimplify.collect_products);
-//        simplifyTypes.add(TypeSimplify.reduce_quotients);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-//        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-//        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-//        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-//        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
-        
+
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+
         expr[0] = (Expression) command.getParams()[0];
-        expr[0].getContainedVars(vars);
-//        expr[0] = expr[0].simplify(simplifyTypes);
+        expr[0].addContainedVars(vars);
+        expr[0] = expr[0].simplify(simplifyTypes);
         expr[1] = (Expression) command.getParams()[1];
-        expr[1].getContainedVars(vars);
-//        expr[1] = expr[1].simplify(simplifyTypes);
+        expr[1].addContainedVars(vars);
+        expr[1] = expr[1].simplify(simplifyTypes);
         expr[2] = (Expression) command.getParams()[2];
-        expr[2].getContainedVars(vars);
-//        expr[2] = expr[2].simplify(simplifyTypes);
+        expr[2].addContainedVars(vars);
+        expr[2] = expr[2].simplify(simplifyTypes);
+        Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
+        Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("t");
         }
-
-        Expression t_0 = (Expression) command.getParams()[3];
-        Expression t_1 = (Expression) command.getParams()[4];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2258,7 +2275,7 @@ public class MathCommandCompiler {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] exprs = new Expression[command.getParams().length - 2];
-        
+
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
@@ -2270,21 +2287,19 @@ public class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
         simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
         simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.simplify_expand_logarithms);
-        
+
         for (int i = 0; i < command.getParams().length - 2; i++) {
             exprs[i] = (Expression) command.getParams()[i];
             exprs[i] = exprs[i].simplify(simplifyTypes);
-            exprs[i].getContainedVars(vars);
+            exprs[i].addContainedVars(vars);
         }
+        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypes);
+        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypes);
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
         }
-
-        Expression phi_0 = (Expression) command.getParams()[command.getParams().length - 2];
-        Expression phi_1 = (Expression) command.getParams()[command.getParams().length - 1];
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
@@ -2310,8 +2325,8 @@ public class MathCommandCompiler {
 
         if (command.getParams().length <= 3) {
 
-            f.getContainedVars(vars);
-            g.getContainedVars(vars);
+            f.addContainedVars(vars);
+            g.addContainedVars(vars);
 
             // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var;
@@ -2417,7 +2432,7 @@ public class MathCommandCompiler {
         } else {
 
             Expression equation = f.sub(g).simplify();
-            equation.getContainedVars(vars);
+            equation.addContainedVars(vars);
             // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var = "x";
             if (!vars.isEmpty()) {
@@ -2540,7 +2555,7 @@ public class MathCommandCompiler {
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
         Expression expr = ((Expression) command.getParams()[0]).simplify();
-        expr.getContainedVars(vars);
+        expr.addContainedVars(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
         Iterator iter = vars.iterator();
@@ -2861,7 +2876,7 @@ public class MathCommandCompiler {
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
         Expression expr = ((Expression) command.getParams()[0]).simplify();
-        expr.getContainedVars(vars);
+        expr.addContainedVars(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
         Iterator iter = vars.iterator();
