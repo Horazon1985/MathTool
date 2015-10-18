@@ -1868,7 +1868,7 @@ public class MathCommandCompiler {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.simplify_trivial);
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.expand);
+        simplifyTypes.add(TypeSimplify.expand_powerful);
         simplifyTypes.add(TypeSimplify.collect_products);
         simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
         simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
