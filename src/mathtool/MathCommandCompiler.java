@@ -43,12 +43,47 @@ import translator.Translator;
 
 public class MathCommandCompiler {
 
+    private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
+    private static final HashSet simplifyTypesPlot = getSimplifyTypesPolt();
+
     /**
      * Hier werden Berechnungsergebnisse/zusätzliche
      * Hinweise/Meldungen/Warnungen etc. gespeichert, die dem Benutzer nach
      * Beenden der Befehlsausführung mitgeteilt werden.
      */
     private static final ArrayList<String> output = new ArrayList<>();
+
+    private static HashSet<TypeSimplify> getSimplifyTypesExpand() {
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.expand_powerful);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        return simplifyTypes;
+    }
+    
+    private static HashSet<TypeSimplify> getSimplifyTypesPolt() {
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_powers);
+        simplifyTypes.add(TypeSimplify.collect_products);
+        simplifyTypes.add(TypeSimplify.reduce_quotients);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        return simplifyTypes;
+    }
 
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
@@ -1435,9 +1470,9 @@ public class MathCommandCompiler {
      * @throws EvaluationException
      */
     public static void executeCommand(String input, GraphicArea graphicArea,
-            JTextArea textArea, GraphicPanel2D graphicMethods2D, GraphicPanel3D graphicMethods3D,
-            GraphicPanelCurves2D graphicMethodsCurves2D, GraphicPanelCurves3D graphicMethodsCurves3D,
-            GraphicPanelPolar2D graphicMethodsPolar2D, HashMap<String, Expression> definedVars,
+            JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D,
+            GraphicPanelCurves2D graphicPanelCurves2D, GraphicPanelCurves3D graphicPanelCurves3D,
+            GraphicPanelPolar2D graphicPanelPolar2D, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
@@ -1484,26 +1519,26 @@ public class MathCommandCompiler {
             executePi(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plot2d)) {
             if (params[0].contains("=")) {
-                executeImplicitPlot2D(command, graphicMethods2D);
+                executeImplicitPlot2D(command, graphicPanel2D);
             } else {
-                executePlot2D(command, graphicMethods2D);
+                executePlot2D(command, graphicPanel2D, graphicArea);
             }
         } else if (command.getTypeCommand().equals(TypeCommand.plot3d)) {
-            executePlot3D(command, graphicMethods3D);
+            executePlot3D(command, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 4) {
-            executePlotCurve2D(command, graphicMethodsCurves2D);
+            executePlotCurve2D(command, graphicPanelCurves2D);
         } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 5) {
-            executePlotCurve3D(command, graphicMethodsCurves3D);
+            executePlotCurve3D(command, graphicPanelCurves3D);
         } else if (command.getTypeCommand().equals(TypeCommand.plotpolar)) {
-            executePlotPolar2D(command, graphicMethodsPolar2D);
+            executePlotPolar2D(command, graphicPanelPolar2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solve)) {
-            executeSolve(command, graphicMethods2D, graphicArea);
+            executeSolve(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solvedeq)) {
-            executeSolveDEQ(command, graphicMethods2D, graphicArea);
+            executeSolveDEQ(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.table)) {
             executeTable(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.tangent)) {
-            executeTangent(command, graphicMethods2D, graphicArea);
+            executeTangent(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undef)) {
@@ -1864,23 +1899,8 @@ public class MathCommandCompiler {
     }
 
     private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
-        // Es wird definiert, welche Arten von Vereinfachungen durchgeführt werden müssen.
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.expand_powerful);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-
         Expression expr = (Expression) command.getParams()[0];
-        expr = expr.simplify(simplifyTypes);
+        expr = expr.simplify(simplifyTypesExpand);
         // Textliche Ausgabe
         output.add(expr.writeExpression() + "\n \n");
         // Graphische Ausgabe
@@ -1983,26 +2003,28 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot2D(Command command, GraphicPanel2D graphicMethods2D) throws ExpressionException,
+    private static void executePlot2D(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea) throws ExpressionException,
             EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] exprs = new Expression[command.getParams().length - 2];
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        Expression expr;
         for (int i = 0; i < command.getParams().length - 2; i++) {
             exprs[i] = (Expression) command.getParams()[i];
-            exprs[i] = exprs[i].simplify(simplifyTypes);
+            expr = exprs[i].simplify(simplifyTypesPlot);
+
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (expr.containsOperator()) {
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            }
+
+            exprs[i] = expr;
             exprs[i].addContainedVars(vars);
         }
 
@@ -2011,48 +2033,56 @@ public class MathCommandCompiler {
             vars.add("x");
         }
 
-        Expression x_0 = (Expression) command.getParams()[command.getParams().length - 2];
-        Expression x_1 = (Expression) command.getParams()[command.getParams().length - 1];
+        Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setIsExplicit(true);
-        graphicMethods2D.setIsFixed(false);
-        graphicMethods2D.clearExpressionAndGraph();
+        graphicPanel2D.setIsInitialized(true);
+        graphicPanel2D.setIsExplicit(true);
+        graphicPanel2D.setIsFixed(false);
+        graphicPanel2D.clearExpressionAndGraph();
+
         for (int i = 0; i < command.getParams().length - 2; i++) {
-            graphicMethods2D.addExpression(exprs[i]);
+            if (!exprs[i].containsOperator()) {
+                graphicPanel2D.addExpression(exprs[i]);
+            }
         }
-        graphicMethods2D.setVarAbsc(var);
-        graphicMethods2D.computeScreenSizes(x_0, x_1);
-        graphicMethods2D.expressionToGraph(var, x_0, x_1);
-        graphicMethods2D.setSpecialPointsOccur(false);
-        graphicMethods2D.drawGraph2D();
+        if (graphicPanel2D.getExpressions().isEmpty()) {
+            return;
+        }
+
+        graphicPanel2D.setVarAbsc(var);
+        graphicPanel2D.computeScreenSizes(x_0, x_1);
+        graphicPanel2D.expressionToGraph(var, x_0, x_1);
+        graphicPanel2D.setSpecialPointsOccur(false);
+        graphicPanel2D.drawGraph2D();
 
     }
 
-    private static void executePlot3D(Command command, GraphicPanel3D graphicMethods3D) throws EvaluationException {
+    private static void executePlot3D(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        
-        Expression expr = ((Expression) command.getParams()[0]).simplify(simplifyTypes);
-        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypes);
-        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
-        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
-        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
+        Expression expr = ((Expression) command.getParams()[0]).simplify(simplifyTypesPlot);
+
+        // Falls eines der Graphen nicht gezeichnet werden kann.
+        if (expr.containsOperator()) {
+
+            // Texttliche Ausgabe
+            output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                    + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            // Graphische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                    expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+
+        }
+
+        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
         expr.addContainedVars(vars);
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2094,18 +2124,17 @@ public class MathCommandCompiler {
             varOrd = varOne;
         }
 
-        graphicMethods3D.setExpression(expr);
-        graphicMethods3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-        graphicMethods3D.expressionToGraph(x_0, x_1, y_0, y_1);
-        graphicMethods3D.drawGraph3D();
+        graphicPanel3D.setExpression(expr);
+        graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+        graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
+        graphicPanel3D.drawGraph3D();
 
     }
 
-    private static void executeImplicitPlot2D(Command command, GraphicPanel2D graphicMethods2D) throws EvaluationException {
+    private static void executeImplicitPlot2D(Command command, GraphicPanel2D graphicPanel2D) throws EvaluationException {
 
-        
         HashSet<String> vars = new HashSet<>();
-        
+
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
@@ -2117,7 +2146,7 @@ public class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
         simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
         simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        
+
         Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify(simplifyTypes);
         Expression x_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
         Expression x_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
@@ -2165,46 +2194,34 @@ public class MathCommandCompiler {
             }
         }
 
-        graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setIsExplicit(false);
-        graphicMethods2D.setIsFixed(false);
-        graphicMethods2D.clearExpressionAndGraph();
-        graphicMethods2D.addExpression(expr);
-        graphicMethods2D.setVars(varAbsc, varOrd);
-        graphicMethods2D.computeScreenSizes(x_0, x_1, y_0, y_1);
-        graphicMethods2D.setSpecialPointsOccur(false);
+        graphicPanel2D.setIsInitialized(true);
+        graphicPanel2D.setIsExplicit(false);
+        graphicPanel2D.setIsFixed(false);
+        graphicPanel2D.clearExpressionAndGraph();
+        graphicPanel2D.addExpression(expr);
+        graphicPanel2D.setVars(varAbsc, varOrd);
+        graphicPanel2D.computeScreenSizes(x_0, x_1, y_0, y_1);
+        graphicPanel2D.setSpecialPointsOccur(false);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        graphicMethods2D.setImplicitGraph(implicitGraph);
-        graphicMethods2D.drawGraph2D();
+        graphicPanel2D.setImplicitGraph(implicitGraph);
+        graphicPanel2D.drawGraph2D();
 
     }
 
-    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicMethodsCurves2D) throws EvaluationException {
+    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicPanelCurves2D) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[2];
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-
         expr[0] = (Expression) command.getParams()[0];
         expr[0].addContainedVars(vars);
-        expr[0] = expr[0].simplify(simplifyTypes);
+        expr[0] = expr[0].simplify(simplifyTypesPlot);
         expr[1] = (Expression) command.getParams()[1];
         expr[1].addContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypes);
-        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
-        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
+        expr[1] = expr[1].simplify(simplifyTypesPlot);
+        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2214,44 +2231,32 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethodsCurves2D.setIsInitialized(true);
-        graphicMethodsCurves2D.setExpression(expr);
-        graphicMethodsCurves2D.setVar(var);
-        graphicMethodsCurves2D.computeScreenSizes(t_0, t_1);
-        graphicMethodsCurves2D.expressionToGraph(t_0, t_1);
-        graphicMethodsCurves2D.drawCurve2D();
+        graphicPanelCurves2D.setIsInitialized(true);
+        graphicPanelCurves2D.setExpression(expr);
+        graphicPanelCurves2D.setVar(var);
+        graphicPanelCurves2D.computeScreenSizes(t_0, t_1);
+        graphicPanelCurves2D.expressionToGraph(t_0, t_1);
+        graphicPanelCurves2D.drawCurve2D();
 
     }
 
-    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicMethodsCurves3D) throws ExpressionException,
+    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D) throws ExpressionException,
             EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] expr = new Expression[3];
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-
         expr[0] = (Expression) command.getParams()[0];
         expr[0].addContainedVars(vars);
-        expr[0] = expr[0].simplify(simplifyTypes);
+        expr[0] = expr[0].simplify(simplifyTypesPlot);
         expr[1] = (Expression) command.getParams()[1];
         expr[1].addContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypes);
+        expr[1] = expr[1].simplify(simplifyTypesPlot);
         expr[2] = (Expression) command.getParams()[2];
         expr[2].addContainedVars(vars);
-        expr[2] = expr[2].simplify(simplifyTypes);
-        Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
-        Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
+        expr[2] = expr[2].simplify(simplifyTypesPlot);
+        Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
@@ -2261,40 +2266,41 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethodsCurves3D.setIsInitialized(true);
-        graphicMethodsCurves3D.setExpression(expr);
-        graphicMethodsCurves3D.setVar(var);
-        graphicMethodsCurves3D.setParameters(150, 200, 30, 30);
-        graphicMethodsCurves3D.computeScreenSizes(t_0, t_1);
-        graphicMethodsCurves3D.expressionToGraph(t_0, t_1);
-        graphicMethodsCurves3D.drawCurve3D();
+        graphicPanelCurves3D.setIsInitialized(true);
+        graphicPanelCurves3D.setExpression(expr);
+        graphicPanelCurves3D.setVar(var);
+        graphicPanelCurves3D.setParameters(150, 200, 30, 30);
+        graphicPanelCurves3D.computeScreenSizes(t_0, t_1);
+        graphicPanelCurves3D.expressionToGraph(t_0, t_1);
+        graphicPanelCurves3D.drawCurve3D();
 
     }
 
-    private static void executePlotPolar2D(Command command, GraphicPanelPolar2D graphicMethodsPolar2D) throws EvaluationException {
+    private static void executePlotPolar2D(Command command, GraphicPanelPolar2D graphicPanelPolar2D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
         Expression[] exprs = new Expression[command.getParams().length - 2];
 
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-
+        Expression expr;
         for (int i = 0; i < command.getParams().length - 2; i++) {
             exprs[i] = (Expression) command.getParams()[i];
-            exprs[i] = exprs[i].simplify(simplifyTypes);
+            expr = exprs[i].simplify(simplifyTypesPlot);
+
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (expr.containsOperator()) {
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + expr + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            }
+
+            exprs[i] = expr;
             exprs[i].addContainedVars(vars);
         }
-        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypes);
-        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypes);
+        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
@@ -2304,15 +2310,15 @@ public class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicMethodsPolar2D.setIsInitialized(true);
-        graphicMethodsPolar2D.clearExpressionAndGraph();
+        graphicPanelPolar2D.setIsInitialized(true);
+        graphicPanelPolar2D.clearExpressionAndGraph();
         for (int i = 0; i < command.getParams().length - 2; i++) {
-            graphicMethodsPolar2D.addExpression(exprs[i]);
+            graphicPanelPolar2D.addExpression(exprs[i]);
         }
-        graphicMethodsPolar2D.setVar(var);
-        graphicMethodsPolar2D.computeScreenSizes(phi_0, phi_1);
-        graphicMethodsPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
-        graphicMethodsPolar2D.drawPolarGraph2D();
+        graphicPanelPolar2D.setVar(var);
+        graphicPanelPolar2D.computeScreenSizes(phi_0, phi_1);
+        graphicPanelPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
+        graphicPanelPolar2D.drawPolarGraph2D();
 
     }
 

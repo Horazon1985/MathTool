@@ -336,6 +336,8 @@ public class MathToolForm extends JFrame implements MouseListener {
         menuItemRepresentationMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_REPRESENTATION_MODE"));
         menuItemRepresentationText.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_TEXT_MODE"));
         menuItemRepresentationFormula.setText(Translator.translateExceptionMessage("GUI_MathToolForm_FORMULA_MODE"));
+        menuItemOptionsMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_OPTIONS"));
+        menuItemOutputOptions.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_OUTPUT_OPTIONS"));
 
         // Restliche Komponenten aktualisieren.
         // Operatorbox aktualisieren.
