@@ -282,7 +282,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="26">
+          <StringArray count="27">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
             <StringItem index="2" value="ccnf"/>
@@ -299,16 +299,17 @@
             <StringItem index="13" value="latex"/>
             <StringItem index="14" value="pi"/>
             <StringItem index="15" value="plot2d"/>
-            <StringItem index="16" value="plot3d"/>
-            <StringItem index="17" value="plotcurve"/>
-            <StringItem index="18" value="plotpolar"/>
-            <StringItem index="19" value="solve"/>
-            <StringItem index="20" value="solvedeq"/>
-            <StringItem index="21" value="table"/>
-            <StringItem index="22" value="tangent"/>
-            <StringItem index="23" value="taylordeq"/>
-            <StringItem index="24" value="undef"/>
-            <StringItem index="25" value="undefall"/>
+            <StringItem index="16" value="plotimplicit"/>
+            <StringItem index="17" value="plot3d"/>
+            <StringItem index="18" value="plotcurve"/>
+            <StringItem index="19" value="plotpolar"/>
+            <StringItem index="20" value="solve"/>
+            <StringItem index="21" value="solvedeq"/>
+            <StringItem index="22" value="table"/>
+            <StringItem index="23" value="tangent"/>
+            <StringItem index="24" value="taylordeq"/>
+            <StringItem index="25" value="undef"/>
+            <StringItem index="26" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>

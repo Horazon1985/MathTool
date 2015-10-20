@@ -69,7 +69,7 @@ public class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
         return simplifyTypes;
     }
-    
+
     private static HashSet<TypeSimplify> getSimplifyTypesPolt() {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
@@ -178,6 +178,8 @@ public class MathCommandCompiler {
                 return getCommandPi(params);
             case "plot2d":
                 return getCommandPlot2D(params);
+            case "plotimplicit":
+                return getCommandPlotImplicit(params);
             case "plot3d":
                 return getCommandPlot3D(params);
             case "plotcurve":
@@ -659,12 +661,7 @@ public class MathCommandCompiler {
         /*
          Struktur: plot2d(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
          value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         value_2: Grenzen des Zeichenbereichs ODER: plot2d(EXPRESSION_1(var1,
-         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
+         value_2: Grenzen des Zeichenbereichs.
          */
         if (params.length < 3) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
@@ -673,99 +670,108 @@ public class MathCommandCompiler {
         Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
-        if (!params[0].contains("=")) {
-
-            for (int i = 0; i < params.length - 2; i++) {
-                try {
-                    commandParams[i] = Expression.build(params[i], null);
-                    ((Expression) commandParams[i]).addContainedVars(vars);
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
-                }
-            }
-
-            if (vars.size() > 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
-                        + vars.size()
-                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 0; i < params.length - 2; i++) {
             try {
-                commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
-                ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                            + (params.length - 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                }
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedVars(vars);
             } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
+            }
+        }
+
+        if (vars.size() > 1) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
+                    + vars.size()
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        try {
+            commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
+            ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                         + (params.length - 1)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
             }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                    + (params.length - 1)
+                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+        }
 
-            try {
-                commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
-                ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                            + params.length
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
-                }
-            } catch (ExpressionException e) {
+        try {
+            commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
+            ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                         + params.length
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
             }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
+                    + params.length
+                    + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+        }
 
-            return new Command(TypeCommand.plot2d, commandParams);
+        return new Command(TypeCommand.plot2d, commandParams);
 
-        } else {
+    }
 
-            if (params.length != 5) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
-            }
+    private static Command getCommandPlotImplicit(String[] params) throws ExpressionException {
 
-            commandParams = new Object[6];
+        /*
+         Struktur: plotimplicit(F(x, y) = G(x, y), x_1, x_2, y_1, y_2)
+         (Plot der Lösungsmenge {F = G}) F, G: Ausdrücke in höchstens zwei Variablen. x_1 <
+         x_2, y_1 < y_2: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length < 3) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
+        }
 
+        Object[] commandParams = new Object[6];
+        HashSet<String> vars = new HashSet<>();
+
+        if (params.length != 5) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
+        }
+
+        try {
+            commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
+            commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), null);
+            ((Expression) commandParams[0]).addContainedVars(vars);
+            ((Expression) commandParams[1]).addContainedVars(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
+        }
+
+        if (vars.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
+                    + String.valueOf(vars.size())
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 1; i <= 4; i++) {
             try {
-                commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
-                commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), null);
-                ((Expression) commandParams[0]).addContainedVars(vars);
-                ((Expression) commandParams[1]).addContainedVars(vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
-            }
-
-            if (vars.size() > 2) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
-                        + String.valueOf(vars.size())
-                        + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
-            for (int i = 1; i <= 4; i++) {
-                try {
-                    commandParams[i + 1] = Expression.build(params[i], null);
-                    ((Expression) commandParams[i + 1]).addContainedVars(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
-                    }
-                } catch (ExpressionException e) {
+                commandParams[i + 1] = Expression.build(params[i], null);
+                ((Expression) commandParams[i + 1]).addContainedVars(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
                             + (i + 1)
                             + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
                 }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
             }
-
-            return new Command(TypeCommand.plot2d, commandParams);
-
         }
+
+        return new Command(TypeCommand.plotimplicit, commandParams);
 
     }
 
@@ -1518,17 +1524,15 @@ public class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.pi)) {
             executePi(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plot2d)) {
-            if (params[0].contains("=")) {
-                executeImplicitPlot2D(command, graphicPanel2D);
-            } else {
-                executePlot2D(command, graphicPanel2D, graphicArea);
-            }
+            executePlot2D(command, graphicPanel2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.plotimplicit)) {
+            executePlotImplicit(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plot3d)) {
             executePlot3D(command, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 4) {
-            executePlotCurve2D(command, graphicPanelCurves2D);
+            executePlotCurve2D(command, graphicPanelCurves2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 5) {
-            executePlotCurve3D(command, graphicPanelCurves3D);
+            executePlotCurve3D(command, graphicPanelCurves3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotpolar)) {
             executePlotPolar2D(command, graphicPanelPolar2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solve)) {
@@ -1595,7 +1599,7 @@ public class MathCommandCompiler {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
-        logExpr.getContainedVars(vars);
+        logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1")
                     + logExpr.writeLogicalExpression()
@@ -1614,7 +1618,7 @@ public class MathCommandCompiler {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
-        logExpr.getContainedVars(vars);
+        logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
                     + logExpr.writeLogicalExpression()
@@ -2007,25 +2011,29 @@ public class MathCommandCompiler {
             EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] exprs = new Expression[command.getParams().length - 2];
+        ArrayList<Expression> exprs = new ArrayList<>();
 
-        Expression expr;
+        Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 2; i++) {
-            exprs[i] = (Expression) command.getParams()[i];
-            expr = exprs[i].simplify(simplifyTypesPlot);
+            expr = (Expression) command.getParams()[i];
+            exprSimplified = expr.simplify(simplifyTypesPlot);
 
             // Falls eines der Graphen nicht gezeichnet werden kann.
-            if (expr.containsOperator()) {
+            if (exprSimplified.containsOperator()) {
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            } else {
+                exprs.add(expr);
+                expr.addContainedVars(vars);
             }
 
-            exprs[i] = expr;
-            exprs[i].addContainedVars(vars);
+        }
+        if (exprs.isEmpty()) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED_PLOT2D"));
         }
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
@@ -2043,16 +2051,7 @@ public class MathCommandCompiler {
         graphicPanel2D.setIsExplicit(true);
         graphicPanel2D.setIsFixed(false);
         graphicPanel2D.clearExpressionAndGraph();
-
-        for (int i = 0; i < command.getParams().length - 2; i++) {
-            if (!exprs[i].containsOperator()) {
-                graphicPanel2D.addExpression(exprs[i]);
-            }
-        }
-        if (graphicPanel2D.getExpressions().isEmpty()) {
-            return;
-        }
-
+        graphicPanel2D.setExpressions(exprs);
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.computeScreenSizes(x_0, x_1);
         graphicPanel2D.expressionToGraph(var, x_0, x_1);
@@ -2061,97 +2060,31 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot3D(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotImplicit(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
 
-        Expression expr = ((Expression) command.getParams()[0]).simplify(simplifyTypesPlot);
+        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
 
         // Falls eines der Graphen nicht gezeichnet werden kann.
         if (expr.containsOperator()) {
 
+            Expression difference = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]);
             // Texttliche Ausgabe
             output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
-                    + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                    + difference.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Graphische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                    expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                    difference, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            // Schließlich noch Fehler werfen.
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_IMPLICIT_GRAPH_CANNOT_BE_PLOTTED_PLOT2D"));
 
         }
 
-        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
-        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
-        expr.addContainedVars(vars);
-
-        // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
-        if (expr.isConstant()) {
-            vars.add("x");
-            vars.add("y");
-        }
-
-        /*
-         Falls der Ausdruck expr nur von einer Variablen abhängt, sollen die
-         andere Achse eine fest gewählte Bezeichnung tragen. Dies wirdim
-         Folgenden geregelt.
-         */
-        if (vars.size() == 1) {
-            if (vars.contains("y")) {
-                vars.add("z");
-            } else {
-                vars.add("y");
-            }
-        }
-
-        Iterator iter = vars.iterator();
-        String varOne = (String) iter.next();
-        String varTwo = (String) iter.next();
-
-        /*
-         Die Variablen varOne und varTwo sind evtl. noch nicht in
-         alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
-         Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
-         Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
-         beiden bilden die Grenzen für die Abszisse, die anderen beiden für
-         die Ordinate.
-         */
-        String varAbsc = varOne;
-        String varOrd = varTwo;
-
-        if (varAbsc.compareTo(varOrd) > 0) {
-            varAbsc = varTwo;
-            varOrd = varOne;
-        }
-
-        graphicPanel3D.setExpression(expr);
-        graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-        graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
-        graphicPanel3D.drawGraph3D();
-
-    }
-
-    private static void executeImplicitPlot2D(Command command, GraphicPanel2D graphicPanel2D) throws EvaluationException {
-
-        HashSet<String> vars = new HashSet<>();
-
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
-        simplifyTypes.add(TypeSimplify.simplify_powers);
-        simplifyTypes.add(TypeSimplify.collect_products);
-        simplifyTypes.add(TypeSimplify.reduce_quotients);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_sums);
-        simplifyTypes.add(TypeSimplify.factorize_all_but_rationals_in_differences);
-        simplifyTypes.add(TypeSimplify.reduce_leadings_coefficients);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-
-        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify(simplifyTypes);
-        Expression x_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypes);
-        Expression x_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypes);
-        Expression y_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypes);
-        Expression y_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypes);
+        Expression x_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
         expr.addContainedVars(vars);
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2209,17 +2142,107 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicPanelCurves2D) throws EvaluationException {
+    private static void executePlot3D(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] expr = new Expression[2];
 
-        expr[0] = (Expression) command.getParams()[0];
-        expr[0].addContainedVars(vars);
-        expr[0] = expr[0].simplify(simplifyTypesPlot);
-        expr[1] = (Expression) command.getParams()[1];
-        expr[1].addContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypesPlot);
+        Expression expr = ((Expression) command.getParams()[0]).simplify(simplifyTypesPlot);
+
+        // Falls eines der Graphen nicht gezeichnet werden kann.
+        if (expr.containsOperator()) {
+
+            // Texttliche Ausgabe
+            output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                    + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            // Graphische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                    expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            // Schließlich noch Fehler werfen.
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+
+        }
+
+        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        expr.addContainedVars(vars);
+
+        // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
+        if (expr.isConstant()) {
+            vars.add("x");
+            vars.add("y");
+        }
+
+        /*
+         Falls der Ausdruck expr nur von einer Variablen abhängt, sollen die
+         andere Achse eine fest gewählte Bezeichnung tragen. Dies wirdim
+         Folgenden geregelt.
+         */
+        if (vars.size() == 1) {
+            if (vars.contains("y")) {
+                vars.add("z");
+            } else {
+                vars.add("y");
+            }
+        }
+
+        Iterator iter = vars.iterator();
+        String varOne = (String) iter.next();
+        String varTwo = (String) iter.next();
+
+        /*
+         Die Variablen varOne und varTwo sind evtl. noch nicht in
+         alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
+         Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
+         Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
+         beiden bilden die Grenzen für die Abszisse, die anderen beiden für
+         die Ordinate.
+         */
+        String varAbsc = varOne;
+        String varOrd = varTwo;
+
+        if (varAbsc.compareTo(varOrd) > 0) {
+            varAbsc = varTwo;
+            varOrd = varOne;
+        }
+
+        graphicPanel3D.setExpression(expr);
+        graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+        graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
+        graphicPanel3D.drawGraph3D();
+
+    }
+
+    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicPanelCurves2D, GraphicArea graphicArea) throws EvaluationException {
+
+        HashSet<String> vars = new HashSet<>();
+        Expression[] components = new Expression[2];
+
+        Expression expr;
+        for (int i = 0; i < 2; i++) {
+
+            components[i] = (Expression) command.getParams()[i];
+            components[i].addContainedVars(vars);
+            expr = components[i].simplify(simplifyTypesPlot);
+
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (expr.containsOperator()) {
+
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
+
+            }
+
+            components[i] = expr;
+
+        }
         Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
         Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
 
@@ -2232,7 +2255,7 @@ public class MathCommandCompiler {
         String var = (String) iter.next();
 
         graphicPanelCurves2D.setIsInitialized(true);
-        graphicPanelCurves2D.setExpression(expr);
+        graphicPanelCurves2D.setExpression(components);
         graphicPanelCurves2D.setVar(var);
         graphicPanelCurves2D.computeScreenSizes(t_0, t_1);
         graphicPanelCurves2D.expressionToGraph(t_0, t_1);
@@ -2240,21 +2263,36 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D) throws ExpressionException,
+    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D, GraphicArea graphicArea) throws ExpressionException,
             EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] expr = new Expression[3];
+        Expression[] components = new Expression[3];
 
-        expr[0] = (Expression) command.getParams()[0];
-        expr[0].addContainedVars(vars);
-        expr[0] = expr[0].simplify(simplifyTypesPlot);
-        expr[1] = (Expression) command.getParams()[1];
-        expr[1].addContainedVars(vars);
-        expr[1] = expr[1].simplify(simplifyTypesPlot);
-        expr[2] = (Expression) command.getParams()[2];
-        expr[2].addContainedVars(vars);
-        expr[2] = expr[2].simplify(simplifyTypesPlot);
+        Expression expr;
+        for (int i = 0; i < 3; i++) {
+
+            components[i] = (Expression) command.getParams()[i];
+            components[i].addContainedVars(vars);
+            expr = components[i].simplify(simplifyTypesPlot);
+
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (expr.containsOperator()) {
+
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
+
+            }
+
+            components[i] = expr;
+
+        }
         Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
         Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
 
@@ -2267,7 +2305,7 @@ public class MathCommandCompiler {
         String var = (String) iter.next();
 
         graphicPanelCurves3D.setIsInitialized(true);
-        graphicPanelCurves3D.setExpression(expr);
+        graphicPanelCurves3D.setExpression(components);
         graphicPanelCurves3D.setVar(var);
         graphicPanelCurves3D.setParameters(150, 200, 30, 30);
         graphicPanelCurves3D.computeScreenSizes(t_0, t_1);
@@ -2705,7 +2743,7 @@ public class MathCommandCompiler {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
-        logExpr.getContainedVars(vars);
+        logExpr.addContainedVars(vars);
         int numberOfVars = vars.size();
         if (numberOfVars > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")

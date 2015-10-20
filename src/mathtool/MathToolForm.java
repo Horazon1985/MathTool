@@ -420,6 +420,10 @@ public class MathToolForm extends JFrame implements MouseListener {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
+        } else if (commandName.equals("plotimplicit")) {
+            graphicPanel2D.setVisible(true);
+            legendLabel.setVisible(true);
+            typeGraphic = TypeGraphic.GRAPHIMPLICIT;
         } else if (commandName.equals("plot3d")) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
@@ -562,7 +566,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "expand", "ker", "latex", "pi", "plot2d", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "expand", "ker", "latex", "pi", "plot2d", "plotimplicit", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "table", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
@@ -866,7 +870,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                  */
                 boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
                         && !input.contains(">") && !input.contains("=") && !input.contains("[")
-                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!' 
+                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!'
                         && !input.contains("grad");
 
                 try {
@@ -1304,9 +1308,9 @@ public class MathToolForm extends JFrame implements MouseListener {
         String cancelButtonLabel = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_CANCEL_BUTTON");
 
         OutputOptionsDialogGUI outputOptionsDialogGUI = new OutputOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-        2, simplifyOptionsTitle, simplifyOptions, saveButtonLabel, cancelButtonLabel);
+                2, simplifyOptionsTitle, simplifyOptions, saveButtonLabel, cancelButtonLabel);
         outputOptionsDialogGUI.setVisible(true);
-        
+
     }//GEN-LAST:event_menuItemOutputOptionsActionPerformed
 
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
