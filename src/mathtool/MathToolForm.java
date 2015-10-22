@@ -715,6 +715,8 @@ public class MathToolForm extends JFrame implements MouseListener {
      */
     private void checkInputValidity() {
 
+        // ToolTipText im Vorfeld entfernen (falls die Validierung doch korrekt ist).
+        mathToolTextField.setToolTipText("");
         String s = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
 
         if (mathToolTextField.getText().equals("")) {
@@ -748,6 +750,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                         MatrixExpression.build(s, new HashSet<String>());
                     } catch (ExpressionException eMatExpr) {
                         mathToolTextField.setForeground(Color.red);
+                        mathToolTextField.setToolTipText(eMatExpr.getMessage());
                         return;
                     }
                 }
