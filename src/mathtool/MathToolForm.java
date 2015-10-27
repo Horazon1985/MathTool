@@ -64,7 +64,6 @@ public class MathToolForm extends JFrame implements MouseListener {
     // Zeitabhängige Komponenten
     private Thread rotateThread;
     private SwingWorker<Void, Void> computingSwingWorker;
-    private SwingWorker<Void, Void> validitySwingWorker;
     private Timer computingTimer;
 
     /*
@@ -288,7 +287,7 @@ public class MathToolForm extends JFrame implements MouseListener {
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
-    private void refreshInterface() {
+    private void refreshAPI() {
 
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
         if (Expression.getLanguage().equals(TypeLanguage.EN)) {
@@ -1149,7 +1148,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(true);
             }
             rotateThread.start();
-            rotateButton.setText("Rotation stoppen");
+            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION"));
         } else {
             isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
@@ -1158,7 +1157,7 @@ public class MathToolForm extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
-            rotateButton.setText("Graphen rotieren lassen");
+            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
         }
     }//GEN-LAST:event_rotateButtonActionPerformed
 
@@ -1264,36 +1263,36 @@ public class MathToolForm extends JFrame implements MouseListener {
 
     private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
         Expression.setLanguage(TypeLanguage.EN);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemLanguageEnglishActionPerformed
 
     private void menuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageGermanActionPerformed
         Expression.setLanguage(TypeLanguage.DE);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemLanguageGermanActionPerformed
 
     private void menuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageRussianActionPerformed
         Expression.setLanguage(TypeLanguage.RU);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemLanguageRussianActionPerformed
 
     private void menuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageUkrainianActionPerformed
         Expression.setLanguage(TypeLanguage.UA);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
         typeMode = TypeMode.TEXT;
         scrollPaneGraphic.setVisible(false);
         scrollPaneText.setVisible(true);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
         typeMode = TypeMode.GRAPHIC;
         scrollPaneGraphic.setVisible(true);
         scrollPaneText.setVisible(false);
-        refreshInterface();
+        refreshAPI();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed
