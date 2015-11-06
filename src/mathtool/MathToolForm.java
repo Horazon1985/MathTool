@@ -128,7 +128,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         scrollPaneText.setVisible(false);
 
         mathToolTextField = new MathToolTextField();
-        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12)); 
         mathToolTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
