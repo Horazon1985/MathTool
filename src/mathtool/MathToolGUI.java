@@ -12,7 +12,6 @@ import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
-import graphic.GraphicPanelFormula;
 import graphic.GraphicPanelPolar2D;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,9 +40,8 @@ import javax.swing.event.DocumentListener;
 import logicalexpressionbuilder.LogicalExpression;
 import matrixexpressionbuilder.MatrixExpression;
 import translator.Translator;
-import utilities.Utilities;
 
-public class MathToolForm extends JFrame implements MouseListener {
+public class MathToolGUI extends JFrame implements MouseListener {
 
     public static final Color backgroundColor = new Color(255, 150, 0);
 
@@ -72,8 +70,7 @@ public class MathToolForm extends JFrame implements MouseListener {
      */
     static HashMap<String, Expression> definedVars = new HashMap<>();
     static HashMap<String, Expression> definedFunctions = new HashMap<>();
-    public ArrayList<String> listOfCommands = new ArrayList<>();
-    public ArrayList<GraphicPanelFormula> listOfFormulas = new ArrayList<>();
+    private static final ArrayList<String> listOfCommands = new ArrayList<>();
 
     // Laufzeitvariablen.
     private static TypeGraphic typeGraphic;
@@ -87,10 +84,10 @@ public class MathToolForm extends JFrame implements MouseListener {
     public static int mathToolGraphicAreaWidth;
     public static int mathToolGraphicAreaHeight;
 
-    // logPosition = Index des aktuellen befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
+    // logPosition = Index des aktuellen Befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
     public static int logPosition = 0;
 
-    public MathToolForm() {
+    public MathToolGUI() {
 
         initComponents();
         this.setLayout(null);
@@ -128,7 +125,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         scrollPaneText.setVisible(false);
 
         mathToolTextField = new MathToolTextField();
-        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12)); 
+        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12));
         mathToolTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -138,17 +135,17 @@ public class MathToolForm extends JFrame implements MouseListener {
         mathToolTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
-                checkInputValidity();
+                MathToolController.checkInputValidity(mathToolTextField);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                checkInputValidity();
+                MathToolController.checkInputValidity(mathToolTextField);
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                checkInputValidity();
+                MathToolController.checkInputValidity(mathToolTextField);
             }
         });
 
@@ -269,19 +266,17 @@ public class MathToolForm extends JFrame implements MouseListener {
     }
 
     /**
-     * Gibt den aktuellen Modus zurück.
+     * Getter für Mode.
      */
     public static TypeMode getMode() {
         return typeMode;
     }
 
     /**
-     * Gibt den i-ten geloggten Befehl zurück.
+     * Getter für listOfCommands.
      */
-    private void showLoggedCommand(int i) {
-        if (!listOfCommands.isEmpty() && listOfCommands.get(i) != null) {
-            mathToolTextField.setText(listOfCommands.get(i));
-        }
+    public static ArrayList<String> getListOfCommands() {
+        return listOfCommands;
     }
 
     /**
@@ -710,64 +705,13 @@ public class MathToolForm extends JFrame implements MouseListener {
     }
 
     /**
-     * Prüft, ob die Eingabe korrekt ist.
-     */
-    private void checkInputValidity() {
-
-        // ToolTipText im Vorfeld entfernen (falls die Validierung doch korrekt ist).
-        mathToolTextField.setToolTipText("");
-        String s = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
-
-        if (mathToolTextField.getText().equals("")) {
-            mathToolTextField.setForeground(Color.black);
-            return;
-        }
-
-        try {
-            String[] commandName = Expression.getOperatorAndArguments(s);
-            boolean validCommand = false;
-            for (TypeCommand commandType : TypeCommand.values()) {
-                validCommand = validCommand || commandName[0].equals(commandType.toString());
-                if (validCommand) {
-                    break;
-                }
-            }
-            if (!validCommand) {
-                // Dafür da, damit man in den Catch-Block springt.
-                throw new ExpressionException("");
-            }
-            String[] params = Expression.getArguments(commandName[1]);
-            MathCommandCompiler.getCommand(commandName[0], params);
-        } catch (ExpressionException eCommand) {
-            try {
-                Expression.build(s, new HashSet<String>());
-            } catch (ExpressionException eExpr) {
-                try {
-                    LogicalExpression.build(s, new HashSet<String>());
-                } catch (ExpressionException eLogExpr) {
-                    try {
-                        MatrixExpression.build(s, new HashSet<String>());
-                    } catch (ExpressionException eMatExpr) {
-                        mathToolTextField.setForeground(Color.red);
-                        mathToolTextField.setToolTipText(eMatExpr.getMessage());
-                        return;
-                    }
-                }
-            }
-        }
-
-        mathToolTextField.setForeground(Color.black);
-
-    }
-
-    /**
      * Hauptmethode zum Ausführen eines Befehls.
      */
     private void executeCommand() {
 
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
-        final MathToolForm mtf = this;
+        final MathToolGUI mtf = this;
 
         computingSwingWorker = new SwingWorker<Void, Void>() {
 
@@ -1213,7 +1157,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         if (operatorChoice.getSelectedIndex() > 0) {
 
             String insertedOperator = (String) operatorChoice.getSelectedItem() + "(";
-            int numberOfCommata = Utilities.getNumberOfComma((String) operatorChoice.getSelectedItem());
+            int numberOfCommata = MathToolController.getNumberOfComma((String) operatorChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedOperator = insertedOperator + ",";
             }
@@ -1232,7 +1176,7 @@ public class MathToolForm extends JFrame implements MouseListener {
         if (commandChoice.getSelectedIndex() > 0) {
 
             String insertedCommand = (String) commandChoice.getSelectedItem() + "(";
-            int numberOfCommata = Utilities.getNumberOfComma((String) commandChoice.getSelectedItem());
+            int numberOfCommata = MathToolController.getNumberOfComma((String) commandChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedCommand = insertedCommand + ",";
             }
@@ -1327,17 +1271,14 @@ public class MathToolForm extends JFrame implements MouseListener {
                 if (logPosition > 0) {
                     logPosition--;
                 }
-                if (logPosition == listOfCommands.size()) {
-                    logPosition--;
-                }
-                showLoggedCommand(logPosition);
+                MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
 
             case KeyEvent.VK_DOWN:
                 if (logPosition < listOfCommands.size() - 1) {
                     logPosition++;
                 }
-                showLoggedCommand(logPosition);
+                MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
 
             case KeyEvent.VK_ESCAPE:
@@ -1451,13 +1392,13 @@ public class MathToolForm extends JFrame implements MouseListener {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MathToolForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MathToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MathToolForm mathToolForm = new MathToolForm();
+                MathToolGUI mathToolForm = new MathToolGUI();
                 mathToolForm.setVisible(true);
                 mathToolForm.setBounds(50, 50, 1300, 670);
                 mathToolForm.setExtendedState(MAXIMIZED_BOTH);
