@@ -898,7 +898,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                         MatrixExpression matExprSimplified = matExpr.simplify();
                         // Hinzufügen zum textlichen Ausgabefeld.
-                        mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
+                        if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
+                            mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + ((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()).writeExpression() + "\n \n");
+                        } else {
+                            mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
+                        }
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         mathToolTextField.setText("");
