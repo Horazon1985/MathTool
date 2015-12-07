@@ -20,6 +20,7 @@ import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
+import graphic.MultiIndexVariable;
 import graphic.TypeBracket;
 import java.awt.Dimension;
 import java.math.BigDecimal;
@@ -2434,13 +2435,6 @@ public class MathCommandCompiler {
 
             }
 
-            if (var.length() > 1) {
-                /*
-                 Falls var etwa x_1 oder x' ist, so sollen die Lösungen
-                 (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
-                 */
-                var = "(" + var + ")";
-            }
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
                     + ((Expression) command.getParams()[0]).writeExpression()
@@ -2450,7 +2444,15 @@ public class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
                 for (int i = 0; i < zeros.getBound(); i++) {
-                    output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                    /*
+                     Falls var etwa x_1 ist, so sollen die Lösungen
+                     (x_1)_i, i = 1, 2, 3, ... heißen.
+                     */
+                    if (var.contains("_")) {
+                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                    } else {
+                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                    }
                 }
             }
             // Grafische Ausgabe
@@ -2459,8 +2461,19 @@ public class MathCommandCompiler {
             if (zeros == SolveMethods.ALL_REALS) {
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
+                MultiIndexVariable multiVar;
+                BigInteger[] multiIndex;
                 for (int i = 0; i < zeros.getBound(); i++) {
-                    graphicArea.addComponent(var + "_" + (i + 1) + " = ", zeros.get(i));
+                    multiVar = new MultiIndexVariable(Variable.create(var));
+                    multiIndex = new BigInteger[multiVar.getIndices().length + 1];
+                    if (var.contains("_")) {
+                        multiIndex[0] = multiVar.getIndices()[0];
+                        multiIndex[1] = BigInteger.valueOf(i + 1);
+                    } else {
+                        multiIndex[0] = BigInteger.valueOf(i + 1);
+                    }
+                    multiVar.setIndices(multiIndex);
+                    graphicArea.addComponent(multiVar, " = ", zeros.get(i));
                 }
             }
 
