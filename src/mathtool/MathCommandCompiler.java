@@ -2394,45 +2394,7 @@ public class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
                 // Graphische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
-
                 return;
-            }
-
-            /*
-             Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
-             ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
-             */
-            boolean solutionContainsFreeParameter = false;
-            String messageAboutFreeParameters = "";
-            for (int i = 0; i < zeros.getBound(); i++) {
-                solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
-            }
-            if (solutionContainsFreeParameter) {
-                boolean solutionContainsFreeParameterOfGivenIndex = true;
-                int maxIndex = 1;
-                while (solutionContainsFreeParameterOfGivenIndex) {
-                    maxIndex++;
-                    solutionContainsFreeParameterOfGivenIndex = false;
-                    for (int i = 0; i < zeros.getBound(); i++) {
-                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
-                                || zeros.get(i).contains("K_" + maxIndex);
-                    }
-                }
-                maxIndex--;
-
-                messageAboutFreeParameters = "K_1, ";
-                for (int i = 2; i <= maxIndex; i++) {
-                    messageAboutFreeParameters = messageAboutFreeParameters + "K_" + i + ", ";
-                }
-                messageAboutFreeParameters = messageAboutFreeParameters.substring(0, messageAboutFreeParameters.length() - 2);
-                if (maxIndex == 1) {
-                    messageAboutFreeParameters = messageAboutFreeParameters
-                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
-                } else {
-                    messageAboutFreeParameters = messageAboutFreeParameters
-                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
-                }
-
             }
 
             // Textliche Ausgabe
@@ -2451,7 +2413,7 @@ public class MathCommandCompiler {
                     if (var.contains("_")) {
                         output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
                     } else {
-                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                        output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
                     }
                 }
             }
@@ -2462,27 +2424,67 @@ public class MathCommandCompiler {
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
                 MultiIndexVariable multiVar;
-                BigInteger[] multiIndex;
+                ArrayList<BigInteger> multiIndex;
                 for (int i = 0; i < zeros.getBound(); i++) {
                     multiVar = new MultiIndexVariable(Variable.create(var));
-                    multiIndex = new BigInteger[multiVar.getIndices().length + 1];
-                    if (var.contains("_")) {
-                        multiIndex[0] = multiVar.getIndices()[0];
-                        multiIndex[1] = BigInteger.valueOf(i + 1);
-                    } else {
-                        multiIndex[0] = BigInteger.valueOf(i + 1);
-                    }
-                    multiVar.setIndices(multiIndex);
+                    multiIndex = multiVar.getIndices();
+                    multiIndex.add(BigInteger.valueOf(i + 1));
                     graphicArea.addComponent(multiVar, " = ", zeros.get(i));
                 }
             }
 
+            /*
+             Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+             ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+             */
+            boolean solutionContainsFreeParameter = false;
+            String freeParameters = "";
+            String infoAboutFreeParameters = "";
+
+            for (int i = 0; i < zeros.getBound(); i++) {
+                solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
+            }
+
             if (solutionContainsFreeParameter) {
+                boolean solutionContainsFreeParameterOfGivenIndex = true;
+                int maxIndex = 1;
+                while (solutionContainsFreeParameterOfGivenIndex) {
+                    maxIndex++;
+                    solutionContainsFreeParameterOfGivenIndex = false;
+                    for (int i = 0; i < zeros.getBound(); i++) {
+                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
+                                || zeros.get(i).contains("K_" + maxIndex);
+                    }
+                }
+                maxIndex--;
+
+                freeParameters = "";
+                ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+                for (int i = 1; i <= maxIndex; i++) {
+                    freeParameters = freeParameters + "K_" + i + ", ";
+                    freeParameterVars.add(new MultiIndexVariable("K_" + i));
+                }
+                freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
+                if (maxIndex == 1) {
+                    infoAboutFreeParameters = infoAboutFreeParameters
+                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+                } else {
+                    infoAboutFreeParameters = infoAboutFreeParameters
+                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+                }
 
                 // Textliche Ausgabe
-                output.add(messageAboutFreeParameters);
+                output.add(freeParameters + infoAboutFreeParameters);
                 // Grafische Ausgabe
-                graphicArea.addComponent(messageAboutFreeParameters);
+                ArrayList infoAboutFreeParametersForGraphicalOutput = new ArrayList();
+                for (int i = 0; i < freeParameterVars.size(); i++) {
+                    infoAboutFreeParametersForGraphicalOutput.add(freeParameterVars.get(i));
+                    if (i < freeParameterVars.size() - 1){
+                        infoAboutFreeParametersForGraphicalOutput.add(", ");
+                    }
+                }
+                infoAboutFreeParametersForGraphicalOutput.add(infoAboutFreeParameters);
+                graphicArea.addComponent(infoAboutFreeParametersForGraphicalOutput);
 
             }
 
