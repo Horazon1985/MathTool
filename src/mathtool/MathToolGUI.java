@@ -2,6 +2,7 @@ package mathtool;
 
 import command.Command;
 import command.TypeCommand;
+import components.MathToolSaveGraphicDialog;
 import enumerations.TypeGraphic;
 import enumerations.TypeLanguage;
 import exceptions.EvaluationException;
@@ -46,6 +47,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public static final Color backgroundColor = new Color(255, 150, 0);
 
     private final JLabel legendLabel;
+    private final JLabel saveLabel;
     private final JTextArea mathToolTextArea;
     private final JScrollPane scrollPaneText;
     private final GraphicArea mathToolGraphicArea;
@@ -110,6 +112,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
+
+        saveLabel = new JLabel("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
+        saveLabel.setVisible(false);
+        add(saveLabel);
+        saveLabel.addMouseListener(this);
 
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
@@ -234,7 +241,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
                 legendLabel.setBounds(graphicPanel3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
-                rotateButton.setBounds(graphicPanel3D.getX() + 140, scrollPaneText.getHeight() + 20, 220, 30);
+                saveLabel.setBounds(graphicPanel3D.getX() + 100, scrollPaneText.getHeight() + 25, 150, 25);
+                rotateButton.setBounds(graphicPanel3D.getX() + 280, scrollPaneText.getHeight() + 20, 220, 30);
 
                 if (computingDialog != null) {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
@@ -354,13 +362,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         for (String c : newEntries) {
             commandChoice.addItem(c);
         }
-        //Buttons aktualisieren
+        //Buttons und Labels aktualisieren
         approxButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_APPROX"));
         latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
         clearButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CLEAR"));
         inputButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_INPUT"));
         cancelButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CANCEL"));
         legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
+        saveLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
         if (isRotating) {
             rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION"));
         } else {
@@ -403,6 +412,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelCurves3D.setVisible(false);
         rotateButton.setVisible(false);
         legendLabel.setVisible(false);
+        saveLabel.setVisible(false);
 
         graphicPanel2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
         graphicPanel3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
@@ -413,32 +423,39 @@ public class MathToolGUI extends JFrame implements MouseListener {
         if (commandName.equals("plot2d")) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else if (commandName.equals("plotimplicit")) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPHIMPLICIT;
         } else if (commandName.equals("plot3d")) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH3D;
         } else if (commandName.equals("plotcurve") && c.getParams().length == 4) {
             graphicPanelCurves2D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.CURVE2D;
         } else if (commandName.equals("plotcurve") && c.getParams().length == 5) {
             graphicPanelCurves3D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             rotateButton.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
         } else if (commandName.equals("plotpolar")) {
             graphicPanelPolar2D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.POLARGRAPH2D;
         } else if ((commandName.equals("solve") && c.getParams().length >= 4) || (commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH2D;
         } else if (commandName.equals("solvedeq")) {
             graphicPanel2D.setVisible(true);
@@ -1292,6 +1309,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     mathToolTextField.setText("");
                 }
                 break;
+
+//            case KeyEvent.VK_CONTROL:
+//                graphicPanel3D.export();
+//                break;
         }
     }
 
@@ -1299,6 +1320,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e) {
 
         LegendGUI legendGUI = null;
+        MathToolSaveGraphicDialog saveDialog = null;
 
         ArrayList<String> instructions = new ArrayList<>();
         ArrayList<String> exprs = new ArrayList<>();
@@ -1355,10 +1377,34 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         instructions, graphicPanelPolar2D.getColors(), exprs);
             }
+        } else if (e.getSource() == saveLabel) {
+
+            if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
+            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanel3D);
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
+            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
+            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves3D);
+            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanelPolar2D);
+            }
+
         }
 
         if (legendGUI != null) {
             legendGUI.setVisible(true);
+        }
+        if (saveDialog != null) {
+            saveDialog.showSaveDialog(this);
+            try {
+                String path = saveDialog.getSelectedFile().getPath();
+                saveDialog.save(path);
+            } catch (Exception exception) {
+            }
         }
 
     }
@@ -1379,6 +1425,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</u></b></html>");
             validate();
             repaint();
+        } else if (e.getSource() == saveLabel) {
+            saveLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</u></b></html>");
+            validate();
+            repaint();
         }
     }
 
@@ -1386,6 +1436,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
             legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
+            validate();
+            repaint();
+        } else if (e.getSource() == saveLabel) {
+            saveLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
             validate();
             repaint();
         }
