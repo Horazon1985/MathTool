@@ -2458,7 +2458,6 @@ public class MathCommandCompiler {
                 }
                 maxIndex--;
 
-                freeParameters = "";
                 ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
                 for (int i = 1; i <= maxIndex; i++) {
                     freeParameters = freeParameters + "K_" + i + ", ";
@@ -2476,15 +2475,15 @@ public class MathCommandCompiler {
                 // Textliche Ausgabe
                 output.add(freeParameters + infoAboutFreeParameters);
                 // Grafische Ausgabe
-                ArrayList infoAboutFreeParametersForGraphicalOutput = new ArrayList();
+                ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
                 for (int i = 0; i < freeParameterVars.size(); i++) {
-                    infoAboutFreeParametersForGraphicalOutput.add(freeParameterVars.get(i));
-                    if (i < freeParameterVars.size() - 1){
-                        infoAboutFreeParametersForGraphicalOutput.add(", ");
+                    infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                    if (i < freeParameterVars.size() - 1) {
+                        infoAboutFreeParametersForGraphicArea.add(", ");
                     }
                 }
-                infoAboutFreeParametersForGraphicalOutput.add(infoAboutFreeParameters);
-                graphicArea.addComponent(infoAboutFreeParametersForGraphicalOutput);
+                infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+                graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
 
             }
 
@@ -2549,10 +2548,10 @@ public class MathCommandCompiler {
 
             HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
-            if (var.length() > 1) {
+            if (var.contains("_")) {
                 /*
-                 Falls var etwa x_1 oder x' ist, so sollen die Lösungen
-                 (x_1)_i bzw. (x')_i, i = 1, 2, 3, ... heißen.
+                 Falls var etwa x_1 ist, so sollen die Lösungen
+                 (x_1)_i, i = 1, 2, 3, ... heißen.
                  */
                 var = "(" + var + ")";
             }
@@ -2565,11 +2564,16 @@ public class MathCommandCompiler {
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
                     " = ", (Expression) command.getParams()[1], " :");
 
+            MultiIndexVariable multiVar;
+            ArrayList<BigInteger> multiIndex;
             for (int i = 0; i < zeros.size(); i++) {
                 // Textliche Ausgabe
                 output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(var + "_" + (i + 1) + " = " + zeros.get(i));
+                multiVar = new MultiIndexVariable(Variable.create(var));
+                multiIndex = multiVar.getIndices();
+                multiIndex.add(BigInteger.valueOf(i + 1));
+                graphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
             }
 
             if (zeros.isEmpty()) {
@@ -2870,32 +2874,32 @@ public class MathCommandCompiler {
         Expression expr = (Expression) command.getParams()[0];
         HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
 
-        String tangentAnnouncementForTextArea = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
+        String tangentInfoForTextArea = Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
                 + expr.writeExpression()
                 + Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
-        ArrayList tangentAnnouncementForGraphicArea = new ArrayList();
-        tangentAnnouncementForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
-        tangentAnnouncementForGraphicArea.add(expr);
-        tangentAnnouncementForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
+        ArrayList tangentInfoForGraphicArea = new ArrayList();
+        tangentInfoForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
+        tangentInfoForGraphicArea.add(expr);
+        tangentInfoForGraphicArea.add(Translator.translateExceptionMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
-            tangentAnnouncementForTextArea = tangentAnnouncementForTextArea + var + " = " + vars.get(var).writeExpression() + ", ";
-            tangentAnnouncementForGraphicArea.add(var + " = ");
-            tangentAnnouncementForGraphicArea.add(vars.get(var));
-            tangentAnnouncementForGraphicArea.add(", ");
+            tangentInfoForTextArea = tangentInfoForTextArea + var + " = " + vars.get(var).writeExpression() + ", ";
+            tangentInfoForGraphicArea.add(var + " = ");
+            tangentInfoForGraphicArea.add(vars.get(var));
+            tangentInfoForGraphicArea.add(", ");
         }
         // In der textlichen und in der grafischen Ausgabe das letzte (überflüssige) Komma entfernen.
-        tangentAnnouncementForTextArea = tangentAnnouncementForTextArea.substring(0, tangentAnnouncementForTextArea.length() - 2) + ": \n \n";
-        tangentAnnouncementForGraphicArea.remove(tangentAnnouncementForGraphicArea.size() - 1);
-        tangentAnnouncementForGraphicArea.add(":");
+        tangentInfoForTextArea = tangentInfoForTextArea.substring(0, tangentInfoForTextArea.length() - 2) + ": \n \n";
+        tangentInfoForGraphicArea.remove(tangentInfoForGraphicArea.size() - 1);
+        tangentInfoForGraphicArea.add(" :");
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
 
         // Texttliche Ausgabe
-        output.add(tangentAnnouncementForTextArea);
+        output.add(tangentInfoForTextArea);
         output.add("Y = " + tangent.writeExpression() + "\n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(tangentAnnouncementForGraphicArea);
+        graphicArea.addComponent(tangentInfoForGraphicArea);
         graphicArea.addComponent("Y = ", tangent);
 
         if (vars.size() == 1) {
