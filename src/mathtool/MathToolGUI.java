@@ -48,6 +48,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private final JLabel legendLabel;
     private final JLabel saveLabel;
+    private final JLabel rotateLabel;
     private final JTextArea mathToolTextArea;
     private final JScrollPane scrollPaneText;
     private final GraphicArea mathToolGraphicArea;
@@ -118,6 +119,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         add(saveLabel);
         saveLabel.addMouseListener(this);
 
+        rotateLabel = new JLabel("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel.setVisible(false);
+        add(rotateLabel);
+        rotateLabel.addMouseListener(this);
+
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
         Font mathToolAreaFont = new Font("Arial", Font.BOLD, 14);
@@ -172,7 +178,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         add(scrollPaneGraphic);
 
         // Buttons ausrichten
-        rotateButton.setVisible(false);
         cancelButton.setVisible(false);
 
         // 2D-Grafikobjekte initialisieren
@@ -210,7 +215,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         });
 
         // ComponentListener für das Ausrichten von Komponenten bei Änderung der Maße von MathTool.
-        this.addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() {
 
             @Override
             public void componentResized(ComponentEvent e) {
@@ -241,8 +246,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
                 legendLabel.setBounds(graphicPanel3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
-                saveLabel.setBounds(graphicPanel3D.getX() + 100, scrollPaneText.getHeight() + 25, 150, 25);
-                rotateButton.setBounds(graphicPanel3D.getX() + 280, scrollPaneText.getHeight() + 20, 220, 30);
+                saveLabel.setBounds(graphicPanel3D.getX() + 150, scrollPaneText.getHeight() + 25, 150, 25);
+                rotateLabel.setBounds(graphicPanel3D.getX() + 300, scrollPaneText.getHeight() + 25, 150, 25);
 
                 if (computingDialog != null) {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
@@ -371,9 +376,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
         saveLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
         if (isRotating) {
-            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION"));
+            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
         } else {
-            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
+            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
         }
 
     }
@@ -410,7 +415,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelPolar2D.setVisible(false);
         graphicPanelCurves2D.setVisible(false);
         graphicPanelCurves3D.setVisible(false);
-        rotateButton.setVisible(false);
+        rotateLabel.setVisible(false);
         legendLabel.setVisible(false);
         saveLabel.setVisible(false);
 
@@ -434,7 +439,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            rotateButton.setVisible(true);
+            rotateLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPH3D;
         } else if (commandName.equals("plotcurve") && c.getParams().length == 4) {
             graphicPanelCurves2D.setVisible(true);
@@ -445,7 +450,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanelCurves3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            rotateButton.setVisible(true);
+            rotateLabel.setVisible(true);
             typeGraphic = TypeGraphic.CURVE3D;
         } else if (commandName.equals("plotpolar")) {
             graphicPanelPolar2D.setVisible(true);
@@ -485,7 +490,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void initComponents() {
 
         inputButton = new javax.swing.JButton();
-        rotateButton = new javax.swing.JButton();
         latexButton = new javax.swing.JButton();
         approxButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -525,16 +529,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         });
         getContentPane().add(inputButton);
         inputButton.setBounds(560, 330, 100, 30);
-
-        rotateButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        rotateButton.setText("Graphen rotieren lassen");
-        rotateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rotateButtonActionPerformed(evt);
-            }
-        });
-        getContentPane().add(rotateButton);
-        rotateButton.setBounds(10, 410, 205, 30);
 
         latexButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -717,7 +711,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
-            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
+            rotateLabel.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
         }
     }
 
@@ -1100,8 +1094,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         executeCommand();
     }//GEN-LAST:event_inputButtonActionPerformed
 
-
-    private void rotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotateButtonActionPerformed
+    private void rotateLabelClick() {
         if (!isRotating) {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 rotateThread = new Thread(graphicPanel3D, "rotateGraph");
@@ -1113,7 +1106,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(true);
             }
             rotateThread.start();
-            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION"));
+            rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
         } else {
             isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
@@ -1122,9 +1115,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
-            rotateButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
+            rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
         }
-    }//GEN-LAST:event_rotateButtonActionPerformed
+    }
 
     private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
         ArrayList<String> menuCaptions = new ArrayList<>();
@@ -1287,21 +1280,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 stopPossibleRotation();
                 executeCommand();
                 break;
-
             case KeyEvent.VK_UP:
                 if (logPosition > 0) {
                     logPosition--;
                 }
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
-
             case KeyEvent.VK_DOWN:
                 if (logPosition < listOfCommands.size() - 1) {
                     logPosition++;
                 }
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
-
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
                     computingSwingWorker.cancel(true);
@@ -1309,10 +1299,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     mathToolTextField.setText("");
                 }
                 break;
-
-//            case KeyEvent.VK_CONTROL:
-//                graphicPanel3D.export();
-//                break;
         }
     }
 
@@ -1393,12 +1379,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanelPolar2D);
             }
 
+        } else if (e.getSource() == rotateLabel) {
+            if (rotateLabel.isVisible()){
+                rotateLabelClick();
+            }
         }
 
         if (legendGUI != null) {
             legendGUI.setVisible(true);
         }
         if (saveDialog != null) {
+            stopPossibleRotation();
             saveDialog.showSaveDialog(this);
             try {
                 String path = saveDialog.getSelectedFile().getPath();
@@ -1429,6 +1420,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
             saveLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</u></b></html>");
             validate();
             repaint();
+        } else if (e.getSource() == rotateLabel) {
+            if (isRotating) {
+                rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
+            } else {
+                rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
+            }
+            validate();
+            repaint();
         }
     }
 
@@ -1440,6 +1439,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
             repaint();
         } else if (e.getSource() == saveLabel) {
             saveLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
+            validate();
+            repaint();
+        } else if (e.getSource() == rotateLabel) {
+            if (isRotating) {
+                rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
+            } else {
+                rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+            }
             validate();
             repaint();
         }
@@ -1489,7 +1496,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JMenuItem menuItemRepresentationText;
     private javax.swing.JMenu menuMathTool;
     private javax.swing.JComboBox operatorChoice;
-    private javax.swing.JButton rotateButton;
     // End of variables declaration//GEN-END:variables
 
 }
