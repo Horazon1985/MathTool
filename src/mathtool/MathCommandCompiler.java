@@ -2888,8 +2888,8 @@ public class MathCommandCompiler {
         // Alle Variablen durch 0 ersetzen.
         for (int i = 0; i < numberOfEquations; i++) {
             vectorEntries[i] = equations[i];
-            for (int j = 0; j < solutionVars.size(); j++) {
-                vectorEntries[i] = vectorEntries[i].replaceVariable(solutionVars.get(j), ZERO);
+            for (String solutionVar : solutionVars) {
+                vectorEntries[i] = vectorEntries[i].replaceVariable(solutionVar, ZERO);
             }
             vectorEntries[i] = MINUS_ONE.mult(vectorEntries[i]).simplify();
         }
