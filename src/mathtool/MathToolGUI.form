@@ -266,7 +266,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="27">
+          <StringArray count="28">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
             <StringItem index="2" value="ccnf"/>
@@ -289,11 +289,12 @@
             <StringItem index="19" value="plotpolar"/>
             <StringItem index="20" value="solve"/>
             <StringItem index="21" value="solvedeq"/>
-            <StringItem index="22" value="table"/>
-            <StringItem index="23" value="tangent"/>
-            <StringItem index="24" value="taylordeq"/>
-            <StringItem index="25" value="undef"/>
-            <StringItem index="26" value="undefall"/>
+            <StringItem index="22" value="solvesystem"/>
+            <StringItem index="23" value="table"/>
+            <StringItem index="24" value="tangent"/>
+            <StringItem index="25" value="taylordeq"/>
+            <StringItem index="26" value="undef"/>
+            <StringItem index="27" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>

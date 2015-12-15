@@ -1254,11 +1254,17 @@ public class MathCommandCompiler {
                         + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_EQUATION_PARAMETER_IN_SOLVESYSTEM_2"));
             }
         }
+        HashSet<String> vars = new HashSet<>();
         for (int i = numberOfEquations; i < params.length; i++) {
             if (!Expression.isValidDerivateOfVariable(params[i])) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_1")
                         + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_2"));
             }
+            // Prüfung, ob Variablen mehrfach vorkommen.
+            if (vars.contains(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_EQUAL_VARIABLES_IN_SOLVESYSTEM"));
+            }
+            vars.add(params[i]);
             commandParams[i + numberOfEquations] = params[i];
         }
 
@@ -2898,7 +2904,7 @@ public class MathCommandCompiler {
         Matrix b = new Matrix(vectorEntries);
 
         try {
-            
+
             Expression[] solutions = GaussAlgorithm.solveLinearSystemOfEquations(m, b);
             // Texttliche Ausgabe
             for (int i = 0; i < solutions.length; i++) {
@@ -2908,7 +2914,7 @@ public class MathCommandCompiler {
             for (int i = 0; i < solutions.length; i++) {
                 graphicArea.addComponent(solutionVars.get(i), " = ", solutions[i]);
             }
-            
+
             /*
              Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
              ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
@@ -2961,7 +2967,7 @@ public class MathCommandCompiler {
                 graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
 
             }
-            
+
         } catch (EvaluationException e) {
             // Texttliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));

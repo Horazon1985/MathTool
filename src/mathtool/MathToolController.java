@@ -125,6 +125,9 @@ public class MathToolController {
         if (operatorOrCommandName.equals("solvedeq")) {
             return 5;
         }
+        if (operatorOrCommandName.equals("solvesystem")) {
+            return 1;
+        }
         if (operatorOrCommandName.equals("tangent")) {
             return 1;
         }
