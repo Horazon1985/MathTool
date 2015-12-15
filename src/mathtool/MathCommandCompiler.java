@@ -8,12 +8,15 @@ import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Constant;
 import expressionbuilder.Expression;
+import static expressionbuilder.Expression.MINUS_ONE;
+import static expressionbuilder.Expression.ZERO;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
 import expressionbuilder.TypeSimplify;
 import expressionbuilder.Variable;
 import expressionsimplifymethods.ExpressionCollection;
+import expressionsimplifymethods.SimplifyPolynomialMethods;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -46,6 +49,7 @@ public class MathCommandCompiler {
 
     private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
     private static final HashSet simplifyTypesPlot = getSimplifyTypesPolt();
+    private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
 
     /**
      * Hier werden Berechnungsergebnisse/zusätzliche
@@ -83,6 +87,23 @@ public class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals_in_differences);
         simplifyTypes.add(TypeSimplify.simplify_reduce_leadings_coefficients);
         simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        return simplifyTypes;
+    }
+
+    private static HashSet<TypeSimplify> getSimplifyTypesSolveSystem() {
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
+        simplifyTypes.add(TypeSimplify.simplify_collect_products);
+        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals_in_sums);
+        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals_in_differences);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
         return simplifyTypes;
     }
 
@@ -191,6 +212,8 @@ public class MathCommandCompiler {
                 return getCommandSolve(params);
             case "solvedeq":
                 return getCommandSolveDEQ(params);
+            case "solvesystem":
+                return getCommandSolveSystem(params);
             case "table":
                 return getCommandTable(params);
             case "tangent":
@@ -1193,6 +1216,56 @@ public class MathCommandCompiler {
 
     }
 
+    private static Command getCommandSolveSystem(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: solvesystem(f_1(x_1, ..., x_n), ..., f_m(x_1, ..., x_n), 
+         x_1, ..., x_n). f_i = Ausdrücke, x_i = Variablen.
+         */
+        if (params.length < 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVESYSTEM"));
+        }
+
+        // Anzahl der Gleichungen ermitteln.
+        int numberOfEquations = 0;
+        for (String param : params) {
+            if (param.contains("=")) {
+                numberOfEquations++;
+            } else {
+                break;
+            }
+        }
+
+        if (numberOfEquations == 0) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_EQUATIONS_IN_SOLVESYSTEM"));
+        }
+
+        if (numberOfEquations == params.length) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_VARIABLES_IN_SOLVESYSTEM"));
+        }
+
+        Object[] commandParams = new Object[params.length + numberOfEquations];
+        for (int i = 0; i < numberOfEquations; i++) {
+            try {
+                commandParams[2 * i] = Expression.build(params[i].substring(0, params[i].indexOf("=")), null);
+                commandParams[2 * i + 1] = Expression.build(params[i].substring(params[i].indexOf("=") + 1), null);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_EQUATION_PARAMETER_IN_SOLVESYSTEM_1")
+                        + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_EQUATION_PARAMETER_IN_SOLVESYSTEM_2"));
+            }
+        }
+        for (int i = numberOfEquations; i < params.length; i++) {
+            if (!Expression.isValidDerivateOfVariable(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_1")
+                        + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_2"));
+            }
+            commandParams[i + numberOfEquations] = params[i];
+        }
+
+        return new Command(TypeCommand.solvesystem, commandParams);
+
+    }
+
     private static Command getCommandTable(String[] params) throws ExpressionException {
 
         // Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer Ausdruck.
@@ -1540,6 +1613,8 @@ public class MathCommandCompiler {
             executeSolve(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solvedeq)) {
             executeSolveDEQ(command, graphicPanel2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.solvesystem)) {
+            executeSolveSystem(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.table)) {
             executeTable(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.tangent)) {
@@ -2755,6 +2830,144 @@ public class MathCommandCompiler {
         graphicMethods2D.computeScreenSizes();
         graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
+
+    }
+
+    private static void executeSolveSystem(Command command, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        Object[] params = command.getParams();
+
+        // Die Anzahl der Parameter, welche Instanzen von Expression sind, ist gerade und beträgt mindestens 2.
+        int numberOfEquations = 0;
+        for (Object param : params) {
+            if (param instanceof Expression) {
+                numberOfEquations++;
+            } else {
+                break;
+            }
+        }
+        numberOfEquations = numberOfEquations / 2;
+
+        // Die Anzahl der Parameter, welche Instanzen von String sind, beträgt mindestens 1.
+        ArrayList<String> solutionVars = new ArrayList<>();
+        for (int i = 2 * numberOfEquations; i < params.length; i++) {
+            solutionVars.add((String) params[i]);
+        }
+
+        // Lineares Gleichungssystem bilden.
+        Expression[] equations = new Expression[numberOfEquations];
+        for (int i = 0; i < numberOfEquations; i++) {
+            equations[i] = ((Expression) params[2 * i]).sub(((Expression) params[2 * i + 1])).simplify(simplifyTypesSolveSystem);
+        }
+
+        // Prüfung, ob alle Gleichungen linear in den angegebenen Variablen sind.
+        BigInteger degInVar;
+        for (int i = 0; i < numberOfEquations; i++) {
+            for (String solutionVar : solutionVars) {
+                degInVar = SimplifyPolynomialMethods.degreeOfPolynomial(equations[i], solutionVar);
+                if (degInVar.compareTo(BigInteger.ONE) > 0) {
+                    throw new EvaluationException(Translator.translateExceptionMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_2")
+                            + solutionVar
+                            + Translator.translateExceptionMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_3"));
+                }
+            }
+        }
+
+        Expression[][] matrixEntries = new Expression[numberOfEquations][solutionVars.size()];
+        Expression[] vectorEntries = new Expression[numberOfEquations];
+
+        for (int i = 0; i < numberOfEquations; i++) {
+            for (int j = 0; j < solutionVars.size(); j++) {
+                matrixEntries[i][j] = equations[i].diff(solutionVars.get(j)).simplify();
+            }
+        }
+
+        // Alle Variablen durch 0 ersetzen.
+        for (int i = 0; i < numberOfEquations; i++) {
+            vectorEntries[i] = equations[i];
+            for (int j = 0; j < solutionVars.size(); j++) {
+                vectorEntries[i] = vectorEntries[i].replaceVariable(solutionVars.get(j), ZERO);
+            }
+            vectorEntries[i] = MINUS_ONE.mult(vectorEntries[i]).simplify();
+        }
+
+        Matrix m = new Matrix(matrixEntries);
+        Matrix b = new Matrix(vectorEntries);
+
+        try {
+            
+            Expression[] solutions = GaussAlgorithm.solveLinearSystemOfEquations(m, b);
+            // Texttliche Ausgabe
+            for (int i = 0; i < solutions.length; i++) {
+                output.add(solutionVars.get(i) + " = " + solutions[i] + ": \n \n");
+            }
+            // Grafische Ausgabe
+            for (int i = 0; i < solutions.length; i++) {
+                graphicArea.addComponent(solutionVars.get(i), " = ", solutions[i]);
+            }
+            
+            /*
+             Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
+             ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
+             */
+            boolean solutionContainsFreeParameter = false;
+            String freeParameters = "";
+            String infoAboutFreeParameters = "";
+
+            for (int i = 0; i < solutions.length; i++) {
+                solutionContainsFreeParameter = solutionContainsFreeParameter || solutions[i].contains("T_0");
+            }
+
+            if (solutionContainsFreeParameter) {
+                boolean solutionContainsFreeParameterOfGivenIndex = true;
+                int maxIndex = 0;
+                while (solutionContainsFreeParameterOfGivenIndex) {
+                    maxIndex++;
+                    solutionContainsFreeParameterOfGivenIndex = false;
+                    for (Expression solution : solutions) {
+                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solution.contains("T_" + maxIndex);
+                    }
+                }
+                maxIndex--;
+
+                ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+                for (int i = 0; i <= maxIndex; i++) {
+                    freeParameters = freeParameters + "T_" + i + ", ";
+                    freeParameterVars.add(new MultiIndexVariable("T_" + i));
+                }
+                freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
+                if (maxIndex == 0) {
+                    infoAboutFreeParameters = infoAboutFreeParameters
+                            + Translator.translateExceptionMessage("MCC_IS_FREE_VARIABLE_IN_SOLVESYSTEM") + " \n \n";
+                } else {
+                    infoAboutFreeParameters = infoAboutFreeParameters
+                            + Translator.translateExceptionMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM") + " \n \n";
+                }
+
+                // Textliche Ausgabe
+                output.add(freeParameters + infoAboutFreeParameters);
+                // Grafische Ausgabe
+                ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+                for (int i = 0; i < freeParameterVars.size(); i++) {
+                    infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                    if (i < freeParameterVars.size() - 1) {
+                        infoAboutFreeParametersForGraphicArea.add(", ");
+                    }
+                }
+                infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+                graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+
+            }
+            
+        } catch (EvaluationException e) {
+            // Texttliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));
+            // Grafische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));
+        }
 
     }
 
