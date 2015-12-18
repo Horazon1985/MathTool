@@ -19,7 +19,7 @@ import expressionsimplifymethods.ExpressionCollection;
 import expressionsimplifymethods.SimplifyPolynomialMethods;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
-import graphic.GraphicPanel3D;
+import graphic.GraphicPanel3D2;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
@@ -1556,7 +1556,7 @@ public class MathCommandCompiler {
      * @throws EvaluationException
      */
     public static void executeCommand(String input, GraphicArea graphicArea,
-            JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D,
+            JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D2 graphicPanel3D,
             GraphicPanelCurves2D graphicPanelCurves2D, GraphicPanelCurves3D graphicPanelCurves3D,
             GraphicPanelPolar2D graphicPanelPolar2D, HashMap<String, Expression> definedVars,
             HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
@@ -2224,7 +2224,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executePlot3D(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlot3D(Command command, GraphicPanel3D2 graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
 
@@ -2289,7 +2289,7 @@ public class MathCommandCompiler {
             varOrd = varOne;
         }
 
-        graphicPanel3D.setExpression(expr);
+        graphicPanel3D.addExpression(expr);
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
         graphicPanel3D.drawGraph3D();

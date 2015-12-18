@@ -11,6 +11,7 @@ import expressionbuilder.Expression;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
+import graphic.GraphicPanel3D2;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
@@ -57,7 +58,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final MathToolTextField mathToolTextField;
 
     private final GraphicPanel2D graphicPanel2D;
-    private final GraphicPanel3D graphicPanel3D;
+    private final GraphicPanel3D2 graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
     private final GraphicPanelCurves3D graphicPanelCurves3D;
     private final GraphicPanelPolar2D graphicPanelPolar2D;
@@ -194,7 +195,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelPolar2D.setVisible(false);
 
         // 3D-Grafikobjekte initialisieren
-        graphicPanel3D = new GraphicPanel3D();
+        graphicPanel3D = new GraphicPanel3D2();
         add(graphicPanel3D);
         graphicPanel3D.setVisible(false);
 
@@ -1329,7 +1330,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 instructions.addAll(GraphicPanel3D.getInstructions());
-                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + ": " + graphicPanel3D.getExpression().writeExpression());
+                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + ": " + graphicPanel3D.getExpression().get(0).writeExpression());
                 ArrayList<Color> colors = new ArrayList<>();
                 colors.add(Color.blue);
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
