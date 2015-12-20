@@ -2289,7 +2289,7 @@ public class MathCommandCompiler {
             varOrd = varOne;
         }
 
-        graphicPanel3D.addExpression(expr);
+        graphicPanel3D.setExpression(expr);
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
         graphicPanel3D.drawGraph3D();
