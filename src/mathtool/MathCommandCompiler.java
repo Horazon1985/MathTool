@@ -2137,7 +2137,6 @@ public class MathCommandCompiler {
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.computeScreenSizes(x_0, x_1);
         graphicPanel2D.expressionToGraph(var, x_0, x_1);
-        graphicPanel2D.setSpecialPointsOccur(false);
         graphicPanel2D.drawGraph2D();
 
     }
@@ -2216,7 +2215,6 @@ public class MathCommandCompiler {
         graphicPanel2D.addExpression(expr);
         graphicPanel2D.setVars(varAbsc, varOrd);
         graphicPanel2D.computeScreenSizes(x_0, x_1, y_0, y_1);
-        graphicPanel2D.setSpecialPointsOccur(false);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicPanel2D.setImplicitGraph(implicitGraph);
@@ -2621,7 +2619,6 @@ public class MathCommandCompiler {
                 graphicMethods2D.setVarAbsc(var);
                 graphicMethods2D.computeScreenSizes(x_0, x_1);
                 graphicMethods2D.expressionToGraph(var, x_0, x_1);
-                graphicMethods2D.setSpecialPointsOccur(false);
                 graphicMethods2D.drawGraph2D();
                 return;
 
@@ -2685,7 +2682,6 @@ public class MathCommandCompiler {
             graphicMethods2D.setVarAbsc(var);
             graphicMethods2D.computeScreenSizes(x_0, x_1);
             graphicMethods2D.expressionToGraph(var, x_0, x_1);
-            graphicMethods2D.setSpecialPointsOccur(true);
             graphicMethods2D.setSpecialPoints(zerosAsArray);
             graphicMethods2D.drawGraph2D();
 
@@ -2834,7 +2830,6 @@ public class MathCommandCompiler {
         graphicMethods2D.addGraph(solutionOfDifferentialEquation);
         graphicMethods2D.setVars(varAbsc, varOrd);
         graphicMethods2D.computeScreenSizes();
-        graphicMethods2D.setSpecialPointsOccur(false);
         graphicMethods2D.drawGraph2D();
 
     }
@@ -3146,7 +3141,6 @@ public class MathCommandCompiler {
                 graphicPanel2D.setVarAbsc(var);
                 graphicPanel2D.computeScreenSizes(new Constant(x_0), new Constant(x_1));
                 graphicPanel2D.expressionToGraph(var, new Constant(x_0), new Constant(x_1));
-                graphicPanel2D.setSpecialPointsOccur(true);
                 graphicPanel2D.setSpecialPoints(tangentPoint);
                 graphicPanel2D.drawGraph2D();
 
