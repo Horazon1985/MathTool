@@ -1624,7 +1624,7 @@ public class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.table)) {
             executeTable(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.tangent)) {
-            executeTangent(command, graphicPanel2D, graphicArea);
+            executeTangent(command, graphicPanel2D, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undef)) {
@@ -2132,7 +2132,7 @@ public class MathCommandCompiler {
         graphicPanel2D.setIsInitialized(true);
         graphicPanel2D.setIsExplicit(true);
         graphicPanel2D.setIsFixed(false);
-        graphicPanel2D.clearExpressionAndGraph();
+        graphicPanel2D.clearExpressionsAndGraphs();
         graphicPanel2D.setExpressions(exprs);
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.computeScreenSizes(x_0, x_1);
@@ -2212,7 +2212,7 @@ public class MathCommandCompiler {
         graphicPanel2D.setIsInitialized(true);
         graphicPanel2D.setIsExplicit(false);
         graphicPanel2D.setIsFixed(false);
-        graphicPanel2D.clearExpressionAndGraph();
+        graphicPanel2D.clearExpressionsAndGraphs();
         graphicPanel2D.addExpression(expr);
         graphicPanel2D.setVars(varAbsc, varOrd);
         graphicPanel2D.computeScreenSizes(x_0, x_1, y_0, y_1);
@@ -2615,7 +2615,7 @@ public class MathCommandCompiler {
                 graphicMethods2D.setIsInitialized(true);
                 graphicMethods2D.setIsExplicit(true);
                 graphicMethods2D.setIsFixed(false);
-                graphicMethods2D.clearExpressionAndGraph();
+                graphicMethods2D.clearExpressionsAndGraphs();
                 graphicMethods2D.addExpression(f);
                 graphicMethods2D.addExpression(g);
                 graphicMethods2D.setVarAbsc(var);
@@ -2679,7 +2679,7 @@ public class MathCommandCompiler {
             graphicMethods2D.setIsInitialized(true);
             graphicMethods2D.setIsExplicit(true);
             graphicMethods2D.setIsFixed(false);
-            graphicMethods2D.clearExpressionAndGraph();
+            graphicMethods2D.clearExpressionsAndGraphs();
             graphicMethods2D.addExpression(f);
             graphicMethods2D.addExpression(g);
             graphicMethods2D.setVarAbsc(var);
@@ -2830,7 +2830,7 @@ public class MathCommandCompiler {
         graphicMethods2D.setIsInitialized(true);
         graphicMethods2D.setIsExplicit(true);
         graphicMethods2D.setIsFixed(true);
-        graphicMethods2D.clearExpressionAndGraph();
+        graphicMethods2D.clearExpressionsAndGraphs();
         graphicMethods2D.addGraph(solutionOfDifferentialEquation);
         graphicMethods2D.setVars(varAbsc, varOrd);
         graphicMethods2D.computeScreenSizes();
@@ -3087,7 +3087,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeTangent(Command command, GraphicPanel2D graphicPanel2D, GraphicPanel3D2 graphicPanel3D, GraphicArea graphicArea)
             throws EvaluationException {
 
         Expression expr = (Expression) command.getParams()[0];
@@ -3128,27 +3128,58 @@ public class MathCommandCompiler {
             for (String uniqueVar : vars.keySet()) {
                 var = uniqueVar;
             }
-            double x_0 = vars.get(var).evaluate() - 1;
-            double x_1 = x_0 + 2;
 
-            double[][] tangentPoint = new double[1][2];
-            tangentPoint[0][0] = vars.get(var).evaluate();
-            tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
+            try {
+                double x_0 = vars.get(var).evaluate() - 1;
+                double x_1 = x_0 + 2;
+                double[][] tangentPoint = new double[1][2];
+                tangentPoint[0][0] = vars.get(var).evaluate();
+                tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
 
-            // Im Falle einer Veränderlichen: den Graphen der Funktion und die Tangente zeichnen.
-            graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setIsExplicit(true);
-            graphicMethods2D.setIsFixed(false);
-            graphicMethods2D.clearExpressionAndGraph();
-            graphicMethods2D.addExpression(expr);
-            graphicMethods2D.addExpression(tangent);
-            graphicMethods2D.setVarAbsc(var);
-            graphicMethods2D.computeScreenSizes(new Constant(x_0), new Constant(x_1));
-            graphicMethods2D.expressionToGraph(var, new Constant(x_0), new Constant(x_1));
-            graphicMethods2D.setSpecialPointsOccur(true);
-            graphicMethods2D.setSpecialPoints(tangentPoint);
-            graphicMethods2D.drawGraph2D();
+                // Im Falle einer Veränderlichen: den Graphen der Funktion und die Tangente zeichnen.
+                graphicPanel2D.setIsInitialized(true);
+                graphicPanel2D.setIsExplicit(true);
+                graphicPanel2D.setIsFixed(false);
+                graphicPanel2D.clearExpressionsAndGraphs();
+                graphicPanel2D.addExpression(expr);
+                graphicPanel2D.addExpression(tangent);
+                graphicPanel2D.setVarAbsc(var);
+                graphicPanel2D.computeScreenSizes(new Constant(x_0), new Constant(x_1));
+                graphicPanel2D.expressionToGraph(var, new Constant(x_0), new Constant(x_1));
+                graphicPanel2D.setSpecialPointsOccur(true);
+                graphicPanel2D.setSpecialPoints(tangentPoint);
+                graphicPanel2D.drawGraph2D();
 
+            } catch (EvaluationException e) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
+            }
+
+        } else if (vars.size() == 2) {
+
+            Iterator iter = vars.keySet().iterator();
+            String varOne = (String) iter.next();
+            String varTwo = (String) iter.next();
+
+            /*
+             Die Variablen varOne und varTwo sind evtl. noch nicht in
+             alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
+             Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
+             Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
+             beiden bilden die Grenzen für die Abszisse, die anderen beiden für
+             die Ordinate.
+             */
+//            String varAbsc = varOne;
+//            String varOrd = varTwo;
+//
+//            if (varAbsc.compareTo(varOrd) > 0) {
+//                varAbsc = varTwo;
+//                varOrd = varOne;
+//            }
+//
+//            graphicPanel3D.setExpression(expr);
+//            graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+//            graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
+//            graphicPanel3D.drawGraph3D();
         }
 
     }
