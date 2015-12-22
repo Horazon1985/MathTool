@@ -3129,6 +3129,7 @@ public class MathCommandCompiler {
                 var = uniqueVar;
             }
 
+            // Im Falle einer oder zweier Veränderlichen: den Graphen der Funktion und den Tangentialraum zeichnen.
             try {
                 double x_0 = vars.get(var).evaluate() - 1;
                 double x_1 = x_0 + 2;
@@ -3136,7 +3137,6 @@ public class MathCommandCompiler {
                 tangentPoint[0][0] = vars.get(var).evaluate();
                 tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
 
-                // Im Falle einer Veränderlichen: den Graphen der Funktion und die Tangente zeichnen.
                 graphicPanel2D.setIsInitialized(true);
                 graphicPanel2D.setIsExplicit(true);
                 graphicPanel2D.setIsFixed(false);
@@ -3168,18 +3168,26 @@ public class MathCommandCompiler {
              beiden bilden die Grenzen für die Abszisse, die anderen beiden für
              die Ordinate.
              */
-//            String varAbsc = varOne;
-//            String varOrd = varTwo;
-//
-//            if (varAbsc.compareTo(varOrd) > 0) {
-//                varAbsc = varTwo;
-//                varOrd = varOne;
-//            }
-//
-//            graphicPanel3D.setExpression(expr);
-//            graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-//            graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
-//            graphicPanel3D.drawGraph3D();
+            String varAbsc = varOne;
+            String varOrd = varTwo;
+
+            if (varAbsc.compareTo(varOrd) > 0) {
+                varAbsc = varTwo;
+                varOrd = varOne;
+            }
+
+            try {
+                double x_0 = 2 * Math.abs(vars.get(varAbsc).evaluate());
+                double y_0 = 2 * Math.abs(vars.get(varOrd).evaluate());
+
+                graphicPanel3D.setExpression(expr, tangent);
+                graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+                graphicPanel3D.expressionToGraph(new Constant(-x_0), new Constant(x_0), new Constant(-y_0), new Constant(y_0));
+                graphicPanel3D.drawGraph3D();
+            } catch (EvaluationException e) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
+            }
+
         }
 
     }
