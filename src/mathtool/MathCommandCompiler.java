@@ -3173,6 +3173,12 @@ public class MathCommandCompiler {
             try {
                 double x_0 = 2 * Math.abs(vars.get(varAbsc).evaluate());
                 double y_0 = 2 * Math.abs(vars.get(varOrd).evaluate());
+                if (x_0 == 0){
+                    x_0 = 1;
+                }
+                if (y_0 == 0){
+                    y_0 = 1;
+                }
 
                 graphicPanel3D.setExpression(expr, tangent);
                 graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);

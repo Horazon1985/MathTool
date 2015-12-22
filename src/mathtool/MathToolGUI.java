@@ -436,7 +436,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.GRAPHIMPLICIT;
-        } else if (commandName.equals("plot3d")) {
+        } else if (commandName.equals("plot3d") || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 2) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
@@ -458,7 +458,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             typeGraphic = TypeGraphic.POLARGRAPH2D;
-        } else if ((commandName.equals("solve") && c.getParams().length >= 4) || (commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1)) {
+        } else if (commandName.equals("solve") && c.getParams().length >= 4 || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
