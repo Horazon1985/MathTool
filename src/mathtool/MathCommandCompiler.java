@@ -2287,7 +2287,83 @@ public class MathCommandCompiler {
             varOrd = varOne;
         }
 
-        graphicPanel3D.setExpression(expr);
+        graphicPanel3D.setExpressions(expr);
+        graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+        graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
+        graphicPanel3D.drawGraph3D();
+
+    }
+
+    private static void executePlot3D2(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
+
+        HashSet<String> vars = new HashSet<>();
+
+        ArrayList<Expression> exprs = new ArrayList<>();
+        for (int i = 0; i < command.getParams().length - 4; i++) {
+            exprs.add(((Expression) command.getParams()[i]).simplify(simplifyTypesPlot));
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprs.get(i).containsOperator()) {
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + exprs.get(i).writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        exprs.get(i), Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+            }
+        }
+
+        Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[command.getParams().length - 3]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
+        
+        // Vorkommende Variablen ermitteln.
+        for (Expression expr : exprs) {
+            expr.addContainedVars(vars);
+        }
+
+        // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
+        if (vars.isEmpty()) {
+            vars.add("x");
+            vars.add("y");
+        }
+
+        /*
+         Falls alle Ausdrück exprs nur von einer Variablen abhängen, sollen die
+         andere Achse eine fest gewählte Bezeichnung tragen. Dies wirdim
+         Folgenden geregelt.
+         */
+        if (vars.size() == 1) {
+            if (vars.contains("y")) {
+                vars.add("z");
+            } else {
+                vars.add("y");
+            }
+        }
+
+        Iterator iter = vars.iterator();
+        String varOne = (String) iter.next();
+        String varTwo = (String) iter.next();
+
+        /*
+         Die Variablen varOne und varTwo sind evtl. noch nicht in
+         alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
+         Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
+         Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
+         beiden bilden die Grenzen für die Abszisse, die anderen beiden für
+         die Ordinate.
+         */
+        String varAbsc = varOne;
+        String varOrd = varTwo;
+
+        if (varAbsc.compareTo(varOrd) > 0) {
+            varAbsc = varTwo;
+            varOrd = varOne;
+        }
+
+        graphicPanel3D.setExpressions(exprs);
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
         graphicPanel3D.drawGraph3D();
@@ -3173,14 +3249,14 @@ public class MathCommandCompiler {
             try {
                 double x_0 = 2 * Math.abs(vars.get(varAbsc).evaluate());
                 double y_0 = 2 * Math.abs(vars.get(varOrd).evaluate());
-                if (x_0 == 0){
+                if (x_0 == 0) {
                     x_0 = 1;
                 }
-                if (y_0 == 0){
+                if (y_0 == 0) {
                     y_0 = 1;
                 }
 
-                graphicPanel3D.setExpression(expr, tangent);
+                graphicPanel3D.setExpressions(expr, tangent);
                 graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
                 graphicPanel3D.expressionToGraph(new Constant(-x_0), new Constant(x_0), new Constant(-y_0), new Constant(y_0));
                 graphicPanel3D.drawGraph3D();
