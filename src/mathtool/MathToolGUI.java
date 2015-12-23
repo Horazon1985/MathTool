@@ -11,7 +11,6 @@ import expressionbuilder.Expression;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
-import graphic.GraphicPanel3D2;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelPolar2D;
@@ -58,7 +57,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final MathToolTextField mathToolTextField;
 
     private final GraphicPanel2D graphicPanel2D;
-    private final GraphicPanel3D2 graphicPanel3D;
+    private final GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
     private final GraphicPanelCurves3D graphicPanelCurves3D;
     private final GraphicPanelPolar2D graphicPanelPolar2D;
@@ -195,7 +194,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelPolar2D.setVisible(false);
 
         // 3D-Grafikobjekte initialisieren
-        graphicPanel3D = new GraphicPanel3D2();
+        graphicPanel3D = new GraphicPanel3D();
         add(graphicPanel3D);
         graphicPanel3D.setVisible(false);
 
@@ -712,7 +711,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 graphicPanelCurves3D.setIsRotating(false);
             }
             rotateThread.interrupt();
-            rotateLabel.setText(Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH"));
+            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
         }
     }
 
