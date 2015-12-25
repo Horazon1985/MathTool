@@ -2298,8 +2298,7 @@ public class MathCommandCompiler {
 
         graphicPanel3D.setExpressions(exprs);
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-        graphicPanel3D.expressionToGraph(x_0, x_1, y_0, y_1);
-        graphicPanel3D.drawGraph3D();
+        graphicPanel3D.drawGraphs3D(x_0, x_1, y_0, y_1);
 
     }
 
@@ -3191,8 +3190,7 @@ public class MathCommandCompiler {
 
                 graphicPanel3D.setExpressions(expr, tangent);
                 graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-                graphicPanel3D.expressionToGraph(new Constant(-x_0), new Constant(x_0), new Constant(-y_0), new Constant(y_0));
-                graphicPanel3D.drawGraph3D();
+                graphicPanel3D.drawGraphs3D(new Constant(-x_0), new Constant(x_0), new Constant(-y_0), new Constant(y_0));
             } catch (EvaluationException e) {
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
             }
