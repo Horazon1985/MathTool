@@ -9,6 +9,8 @@ import exceptions.ExpressionException;
 import expressionbuilder.Constant;
 import expressionbuilder.Expression;
 import static expressionbuilder.Expression.MINUS_ONE;
+import static expressionbuilder.Expression.ONE;
+import static expressionbuilder.Expression.TWO;
 import static expressionbuilder.Expression.ZERO;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.TypeFunction;
@@ -2296,9 +2298,8 @@ public class MathCommandCompiler {
             varOrd = varOne;
         }
 
-        graphicPanel3D.setExpressions(exprs);
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-        graphicPanel3D.drawGraphs3D(x_0, x_1, y_0, y_1);
+        graphicPanel3D.drawGraphs3D(x_0, x_1, y_0, y_1, exprs);
 
     }
 
@@ -3179,18 +3180,17 @@ public class MathCommandCompiler {
             }
 
             try {
-                double x_0 = 2 * Math.abs(vars.get(varAbsc).evaluate());
-                double y_0 = 2 * Math.abs(vars.get(varOrd).evaluate());
-                if (x_0 == 0) {
-                    x_0 = 1;
+                Expression x_0 = TWO.mult(vars.get(varAbsc).abs()).simplify(simplifyTypesPlot);
+                Expression y_0 = TWO.mult(vars.get(varOrd).abs()).simplify(simplifyTypesPlot);
+                if (x_0.equals(ZERO)) {
+                    x_0 = ONE;
                 }
-                if (y_0 == 0) {
-                    y_0 = 1;
+                if (y_0.equals(ZERO)) {
+                    y_0 = ONE;
                 }
 
-                graphicPanel3D.setExpressions(expr, tangent);
                 graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-                graphicPanel3D.drawGraphs3D(new Constant(-x_0), new Constant(x_0), new Constant(-y_0), new Constant(y_0));
+                graphicPanel3D.drawGraphs3D(MINUS_ONE.mult(x_0), x_0, MINUS_ONE.mult(y_0), y_0, expr, tangent);
             } catch (EvaluationException e) {
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
             }
