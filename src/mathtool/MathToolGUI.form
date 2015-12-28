@@ -233,7 +233,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="14">
+          <StringArray count="17">
             <StringItem index="0" value="Operator"/>
             <StringItem index="1" value="diff"/>
             <StringItem index="2" value="div"/>
@@ -244,10 +244,13 @@
             <StringItem index="7" value="laplace"/>
             <StringItem index="8" value="lcm"/>
             <StringItem index="9" value="mod"/>
-            <StringItem index="10" value="prod"/>
-            <StringItem index="11" value="rot"/>
-            <StringItem index="12" value="sum"/>
-            <StringItem index="13" value="taylor"/>
+            <StringItem index="10" value="mu"/>
+            <StringItem index="11" value="prod"/>
+            <StringItem index="12" value="rot"/>
+            <StringItem index="13" value="sigma"/>
+            <StringItem index="14" value="sum"/>
+            <StringItem index="15" value="taylor"/>
+            <StringItem index="16" value="var"/>
           </StringArray>
         </Property>
       </Properties>
@@ -266,7 +269,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="28">
+          <StringArray count="29">
             <StringItem index="0" value="Befehl"/>
             <StringItem index="1" value="approx"/>
             <StringItem index="2" value="ccnf"/>
@@ -287,14 +290,15 @@
             <StringItem index="17" value="plot3d"/>
             <StringItem index="18" value="plotcurve"/>
             <StringItem index="19" value="plotpolar"/>
-            <StringItem index="20" value="solve"/>
-            <StringItem index="21" value="solvedeq"/>
-            <StringItem index="22" value="solvesystem"/>
-            <StringItem index="23" value="table"/>
-            <StringItem index="24" value="tangent"/>
-            <StringItem index="25" value="taylordeq"/>
-            <StringItem index="26" value="undef"/>
-            <StringItem index="27" value="undefall"/>
+            <StringItem index="20" value="regressionline"/>
+            <StringItem index="21" value="solve"/>
+            <StringItem index="22" value="solvedeq"/>
+            <StringItem index="23" value="solvesystem"/>
+            <StringItem index="24" value="table"/>
+            <StringItem index="25" value="tangent"/>
+            <StringItem index="26" value="taylordeq"/>
+            <StringItem index="27" value="undef"/>
+            <StringItem index="28" value="undefall"/>
           </StringArray>
         </Property>
       </Properties>

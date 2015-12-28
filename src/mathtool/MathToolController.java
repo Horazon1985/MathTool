@@ -122,6 +122,9 @@ public class MathToolController {
         if (operatorOrCommandName.equals("plotpolar")) {
             return 2;
         }
+        if (operatorOrCommandName.equals("regressionline")) {
+            return 1;
+        }
         if (operatorOrCommandName.equals("solvedeq")) {
             return 5;
         }
@@ -135,7 +138,7 @@ public class MathToolController {
             return 5;
         }
 
-        // Default-Case! Alle Operatoren/Befehle, welche höchstens ein Argument benötigen.
+        // Default-Case! Alle Operatoren/Befehle, welche beliebig viele Argumente vertragen.
         return 0;
 
     }

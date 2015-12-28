@@ -561,7 +561,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         cancelButton.setBounds(560, 300, 100, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "grad", "int", "laplace", "lcm", "mod", "prod", "rot", "sum", "taylor" }));
+        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "grad", "int", "laplace", "lcm", "mod", "mu", "prod", "rot", "sigma", "sum", "taylor", "var" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 operatorChoiceActionPerformed(evt);
@@ -571,14 +571,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "expand", "ker", "latex", "pi", "plot2d", "plotimplicit", "plot3d", "plotcurve", "plotpolar", "solve", "solvedeq", "solvesystem", "table", "tangent", "taylordeq", "undef", "undefall" }));
+        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "expand", "ker", "latex", "pi", "plot2d", "plotimplicit", "plot3d", "plotcurve", "plotpolar", "regressionline", "solve", "solvedeq", "solvesystem", "table", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 122, 23);
+        commandChoice.setBounds(560, 370, 131, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Leeren");

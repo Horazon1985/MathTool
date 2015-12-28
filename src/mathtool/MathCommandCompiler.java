@@ -210,6 +210,8 @@ public class MathCommandCompiler {
                 return getCommandPlotCurve(params);
             case "plotpolar":
                 return getCommandPlotPolar(params);
+            case "regressionline":
+                return getCommandRegressionLine(params);
             case "solve":
                 return getCommandSolve(params);
             case "solvedeq":
@@ -996,6 +998,31 @@ public class MathCommandCompiler {
 
     }
 
+    private static Command getCommandRegressionLine(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: regressionline([x_1, y_1], ..., [x_n, y_n]), n >= 2.
+         */
+        if (params.length < 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_REGRESSIONLINE"));
+        }
+
+        Object[] commandParams = new Object[params.length];
+        for (int i = 0; i < params.length; i++) {
+            try {
+                commandParams[i] = MatrixExpression.build(params[i], null);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_REGRESSIONLINE_WITH_REPORTED_ERROR_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_REGRESSIONLINE_WITH_REPORTED_ERROR_2")
+                        + e.getMessage());
+            }
+        }
+
+        return new Command(TypeCommand.regressionline, commandParams);
+
+    }
+
     private static Command getCommandSolve(String[] params) throws ExpressionException {
 
         /*
@@ -1622,6 +1649,8 @@ public class MathCommandCompiler {
             executePlotCurve3D(command, graphicPanelCurves3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotpolar)) {
             executePlotPolar2D(command, graphicPanelPolar2D, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.regressionline)) {
+            executeRegressionLine(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solve)) {
             executeSolve(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solvedeq)) {
@@ -2449,6 +2478,13 @@ public class MathCommandCompiler {
 
     }
 
+    private static void executeRegressionLine(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        // TO DO.
+        
+    }    
+    
     private static void executeSolve(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
