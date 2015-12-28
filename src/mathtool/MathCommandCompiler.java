@@ -4,6 +4,7 @@ import command.Command;
 import command.TypeCommand;
 import computation.AnalysisMethods;
 import computation.NumericalMethods;
+import computation.StatisticMethods;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Constant;
@@ -2481,10 +2482,36 @@ public class MathCommandCompiler {
     private static void executeRegressionLine(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
-        // TO DO.
+        MatrixExpression[] points = new MatrixExpression[command.getParams().length];
+        Dimension dim;
+
+        for (int i = 0; i < points.length; i++) {
+            try {
+                points[i] = ((MatrixExpression) command.getParams()[i]).simplify();
+                dim = points[i].getDimension();
+            } catch (EvaluationException e) {
+                throw new EvaluationException("TO DO");
+            }
+            if (!points[i].isMatrix() || dim.width != 1 || dim.height != 2) {
+                throw new EvaluationException("TO DO");
+            }
+        }
+
+        // Koeffizienten für die Regressionsgerade berechnen.
+        Matrix[] pts = new Matrix[points.length];
+        for (int i = 0; i < points.length; i++){
+            pts[i] = (Matrix) points[i];
+        }
+        ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
         
-    }    
-    
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE") + "Y = " + SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X"));
+        // Grafische Ausgabe
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
+                "Y = ", SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X"));
+
+    }
+
     private static void executeSolve(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
             throws EvaluationException {
 
