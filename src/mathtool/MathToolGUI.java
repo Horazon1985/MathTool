@@ -1334,11 +1334,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 instructions.addAll(GraphicPanel3D.getInstructions());
-                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + ": " + graphicPanel3D.getExpression().get(0).writeExpression());
-                ArrayList<Color> colors = new ArrayList<>();
-                colors.add(Color.blue);
+                for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).writeExpression());
+                }
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, colors, exprs);
+                        instructions, graphicPanel3D.getColors(), exprs);
             } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
                 instructions.addAll(GraphicPanelCurves2D.getInstructions());
                 ArrayList<Color> colors = new ArrayList<>();
@@ -1385,7 +1385,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
 
         } else if (e.getSource() == rotateLabel) {
-            if (rotateLabel.isVisible()){
+            if (rotateLabel.isVisible()) {
                 rotateLabelClick();
             }
         }

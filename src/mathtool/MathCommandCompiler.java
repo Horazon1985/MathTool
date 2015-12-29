@@ -2534,6 +2534,7 @@ public class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
             // Grafische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
         }
 
     }
