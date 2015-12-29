@@ -2499,16 +2499,42 @@ public class MathCommandCompiler {
 
         // Koeffizienten für die Regressionsgerade berechnen.
         Matrix[] pts = new Matrix[points.length];
-        for (int i = 0; i < points.length; i++){
+        for (int i = 0; i < points.length; i++) {
             pts[i] = (Matrix) points[i];
         }
-        ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
-        
-        // Textliche Ausgabe
-        output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE") + "Y = " + SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X"));
-        // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
-                "Y = ", SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X"));
+
+        try {
+            
+            ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
+            Expression regressionLine = SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE") + "Y = " + regressionLine.writeExpression());
+            // Grafische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
+                    "Y = ", regressionLine);
+            
+            // Graphen der Regressionsgeraden zeichnen, inkl. der Stichproben (als rot markierte Punkte).
+            Expression x_0 = StatisticMethods.getMinimum(pts, 0);
+            Expression x_1 = StatisticMethods.getMaximum(pts, 0);
+            Expression y_0 = StatisticMethods.getMinimum(pts, 1);
+            Expression y_1 = StatisticMethods.getMaximum(pts, 1);
+            graphicMethods2D.setIsInitialized(true);
+            graphicMethods2D.setIsExplicit(true);
+            graphicMethods2D.setIsFixed(false);
+            graphicMethods2D.clearExpressionsAndGraphs();
+            graphicMethods2D.addExpression(regressionLine);
+            graphicMethods2D.setVars("X", "Y");
+            graphicMethods2D.computeScreenSizes(x_0, x_1, y_0, y_1);
+            graphicMethods2D.expressionToGraph("X", x_0, x_1);
+            graphicMethods2D.setSpecialPoints(pts);
+            graphicMethods2D.drawGraph2D();
+            
+        } catch (EvaluationException e) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
+            // Grafische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
+        }
 
     }
 
@@ -2699,10 +2725,7 @@ public class MathCommandCompiler {
             HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
             if (var.contains("_")) {
-                /*
-                 Falls var etwa x_1 ist, so sollen die Lösungen
-                 (x_1)_i, i = 1, 2, 3, ... heißen.
-                 */
+                // Falls var etwa x_1 ist, so sollen die Lösungen (x_1)_i, i = 1, 2, 3, ... heißen.
                 var = "(" + var + ")";
             }
             // Textliche Ausgabe
