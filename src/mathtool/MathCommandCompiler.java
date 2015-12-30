@@ -7,7 +7,6 @@ import computation.NumericalMethods;
 import computation.StatisticMethods;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
-import expressionbuilder.Constant;
 import expressionbuilder.Expression;
 import static expressionbuilder.Expression.MINUS_ONE;
 import static expressionbuilder.Expression.ONE;
@@ -2169,11 +2168,9 @@ public class MathCommandCompiler {
 //        graphicPanel2D.setIsInitialized(true);
         graphicPanel2D.setIsExplicit(true);
         graphicPanel2D.setIsFixed(false);
-        graphicPanel2D.setExpressions(exprs);
         graphicPanel2D.setVarAbsc(var);
-        graphicPanel2D.computeScreenSizes(x_0, x_1);
-        graphicPanel2D.expressionToGraph(x_0, x_1);
-        graphicPanel2D.drawGraph2D();
+        graphicPanel2D.setSpecialPoints(false);
+        graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
 
     }
 
@@ -2244,16 +2241,16 @@ public class MathCommandCompiler {
             }
         }
 
-//        graphicPanel2D.setIsInitialized(true);
         graphicPanel2D.setIsExplicit(false);
         graphicPanel2D.setIsFixed(false);
         graphicPanel2D.setExpressions(expr);
         graphicPanel2D.setVars(varAbsc, varOrd);
+        graphicPanel2D.setSpecialPoints(false);
         graphicPanel2D.computeScreenSizes(x_0, x_1, y_0, y_1);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicPanel2D.setImplicitGraph(implicitGraph);
-        graphicPanel2D.drawGraph2D();
+        graphicPanel2D.drawGraphs2D();
 
     }
 
@@ -2477,7 +2474,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeRegressionLine(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeRegressionLine(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         MatrixExpression[] points = new MatrixExpression[command.getParams().length];
@@ -2502,7 +2499,7 @@ public class MathCommandCompiler {
         }
 
         try {
-            
+
             ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
             Expression regressionLine = SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
             // Textliche Ausgabe
@@ -2510,22 +2507,21 @@ public class MathCommandCompiler {
             // Grafische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
                     "Y = ", regressionLine);
-            
+
             // Graphen der Regressionsgeraden zeichnen, inkl. der Stichproben (als rot markierte Punkte).
             Expression x_0 = StatisticMethods.getMinimum(pts, 0);
             Expression x_1 = StatisticMethods.getMaximum(pts, 0);
             Expression y_0 = StatisticMethods.getMinimum(pts, 1);
             Expression y_1 = StatisticMethods.getMaximum(pts, 1);
-//            graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setIsExplicit(true);
-            graphicMethods2D.setIsFixed(false);
-            graphicMethods2D.setExpressions(regressionLine);
-            graphicMethods2D.setVars("X", "Y");
-            graphicMethods2D.setSpecialPoints(pts);
-            graphicMethods2D.computeScreenSizes(x_0, x_1, y_0, y_1);
-            graphicMethods2D.expressionToGraph(x_0, x_1);
-            graphicMethods2D.drawGraph2D();
             
+            ArrayList<Expression> exprs = new ArrayList<>();
+            exprs.add(regressionLine);
+            graphicPanel2D.setIsExplicit(true);
+            graphicPanel2D.setIsFixed(false);
+            graphicPanel2D.setVars("X", "Y");
+            graphicPanel2D.setSpecialPoints(pts);
+            graphicPanel2D.drawGraphs2D(x_0, x_1, y_0, y_1, exprs);
+
         } catch (EvaluationException e) {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
@@ -2536,7 +2532,7 @@ public class MathCommandCompiler {
 
     }
 
-    private static void executeSolve(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeSolve(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
@@ -2707,18 +2703,18 @@ public class MathCommandCompiler {
 
                 // Graphen der linken und der rechten Seite zeichnen.
 //                graphicMethods2D.setIsInitialized(true);
-                graphicMethods2D.setIsExplicit(true);
-                graphicMethods2D.setIsFixed(false);
-                graphicMethods2D.setExpressions(f, g);
-                graphicMethods2D.setVarAbsc(var);
-                graphicMethods2D.computeScreenSizes(x_0, x_1);
-                graphicMethods2D.expressionToGraph(x_0, x_1);
-                graphicMethods2D.drawGraph2D();
+                ArrayList<Expression> exprs = new ArrayList<>();
+                exprs.add(f);
+                exprs.add(g);
+                graphicPanel2D.setIsExplicit(true);
+                graphicPanel2D.setIsFixed(false);
+                graphicPanel2D.setVarAbsc(var);
+                graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
                 return;
 
             }
 
-            HashMap<Integer, Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
+            ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
             if (var.contains("_")) {
                 // Falls var etwa x_1 ist, so sollen die Lösungen (x_1)_i, i = 1, 2, 3, ... heißen.
@@ -2764,21 +2760,20 @@ public class MathCommandCompiler {
              Graphen der linken und der rechten Seite zeichnen, inkl. der
              Lösungen (als rot markierte Punkte).
              */
-//            graphicMethods2D.setIsInitialized(true);
-            graphicMethods2D.setIsExplicit(true);
-            graphicMethods2D.setIsFixed(false);
-            graphicMethods2D.setExpressions(f, g);
-            graphicMethods2D.setVarAbsc(var);
-            graphicMethods2D.setSpecialPoints(zerosAsArray);
-            graphicMethods2D.computeScreenSizes(x_0, x_1);
-            graphicMethods2D.expressionToGraph(x_0, x_1);
-            graphicMethods2D.drawGraph2D();
+            ArrayList<Expression> exprs = new ArrayList<>();
+            exprs.add(f);
+            exprs.add(g);
+            graphicPanel2D.setIsExplicit(true);
+            graphicPanel2D.setIsFixed(false);
+            graphicPanel2D.setVarAbsc(var);
+            graphicPanel2D.setSpecialPoints(zerosAsArray);
+            graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
 
         }
 
     }
 
-    private static void executeSolveDEQ(Command command, GraphicPanel2D graphicMethods2D, GraphicArea graphicArea)
+    private static void executeSolveDEQ(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
             throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
@@ -2912,13 +2907,10 @@ public class MathCommandCompiler {
         }
 
         // Lösungsgraphen zeichnen.
-//        graphicMethods2D.setIsInitialized(true);
-        graphicMethods2D.setIsExplicit(true);
-        graphicMethods2D.setIsFixed(true);
-        graphicMethods2D.setGraph(solutionOfDifferentialEquation);
-        graphicMethods2D.setVars(varAbsc, varOrd);
-        graphicMethods2D.computeScreenSizes();
-        graphicMethods2D.drawGraph2D();
+        graphicPanel2D.setIsExplicit(true);
+        graphicPanel2D.setIsFixed(true);
+        graphicPanel2D.setVars(varAbsc, varOrd);
+        graphicPanel2D.drawGraphs2D(solutionOfDifferentialEquation);
 
     }
 
@@ -3218,15 +3210,14 @@ public class MathCommandCompiler {
                 tangentPoint[0][0] = vars.get(var).evaluate();
                 tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
 
-//                graphicPanel2D.setIsInitialized(true);
+                ArrayList<Expression> exprs = new ArrayList<>();
+                exprs.add(expr);
+                exprs.add(tangent);
                 graphicPanel2D.setIsExplicit(true);
                 graphicPanel2D.setIsFixed(false);
-                graphicPanel2D.setExpressions(expr, tangent);
                 graphicPanel2D.setVarAbsc(var);
                 graphicPanel2D.setSpecialPoints(tangentPoint);
-//                graphicPanel2D.computeScreenSizes(new Constant(x_0), new Constant(x_1));
-//                graphicPanel2D.expressionToGraph(var, new Constant(x_0), new Constant(x_1));
-                graphicPanel2D.drawGraph2D(Variable.create(var).sub(1), Variable.create(var).add(1), expr, tangent);
+                graphicPanel2D.drawGraphs2D(Variable.create(var).sub(1), Variable.create(var).add(1), exprs);
 
             } catch (EvaluationException e) {
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
