@@ -1320,18 +1320,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
         if (e.getSource() == legendLabel) {
             if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
                 instructions.addAll(graphicPanel2D.getInstructions());
-                if (graphicPanel2D.getIsExplicit()) {
-                    for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
-                    }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            instructions, graphicPanel2D.getColors(), exprs);
-                } else {
-                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
-                            + graphicPanel2D.getExpressions().get(0).writeExpression() + " = 0");
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            instructions, graphicPanel2D.getColors(), exprs);
+                for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
                 }
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, graphicPanel2D.getColors(), exprs);
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT)) {
+                instructions.addAll(graphicPanel2D.getInstructions());
+                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
+                        + graphicPanel2D.getExpressions().get(0).writeExpression() + " = 0");
+                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                        instructions, graphicPanel2D.getColors(), exprs);
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 instructions.addAll(GraphicPanel3D.getInstructions());
                 for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
