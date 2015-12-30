@@ -6,6 +6,7 @@ import expressionbuilder.Expression;
 import java.awt.Color;
 import java.util.HashSet;
 import logicalexpressionbuilder.LogicalExpression;
+import mathcommandcompiler.MathCommandCompiler;
 import matrixexpressionbuilder.MatrixExpression;
 
 public class MathToolController {

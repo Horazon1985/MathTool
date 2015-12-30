@@ -1,4 +1,4 @@
-package mathtool;
+package mathcommandcompiler;
 
 import command.Command;
 import command.TypeCommand;
@@ -46,8 +46,9 @@ import matrixexpressionbuilder.MatrixExpression;
 import matrixsimplifymethods.MatrixExpressionCollection;
 import solveequationmethods.SolveMethods;
 import translator.Translator;
+import mathtool.MathToolGUI;
 
-public class MathCommandCompiler {
+public abstract class MathCommandCompiler {
 
     private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
     private static final HashSet simplifyTypesPlot = getSimplifyTypesPolt();

@@ -39,6 +39,7 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import logicalexpressionbuilder.LogicalExpression;
+import mathcommandcompiler.MathCommandCompiler;
 import matrixexpressionbuilder.MatrixExpression;
 import translator.Translator;
 
