@@ -62,6 +62,8 @@ MathTool знає такі консольні команди:<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Будує графіки функцій F<sub>1</sub>, ..., F<sub>n</sub> від t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, де t - це кут та F<sub>i</sub>(t) - це радіус у полярних координатах. Коефіцієнт масштабуванняcan може приймати всі значення між 0.1 та 10.<br><br>
 
+<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Computes the equation of the regression line for the points P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, and also plots it, if possible. The points P<sub>i</sub> must be (after simplifying) of the form [a;b], i.e. they must be (2x1)-matrices.<br><br>
+
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Повертає алгебраїчні (точні) розв'язки рівняння F<sub>1</sub>(x) = F<sub>2</sub>(x) у x, якщо це можливо. Помітимо, що не кожне рівняння може бути розв'язано точно. Наприклад, рівняння виду exp(x) - x = 3 не має розв'язків, що що можна виразити алгебраїчно або від елементарних функцій. В цьому випадку MathTool не поверне (точних) розв'язків.
 
 <em>Приклад:</em> Розглянемо рівняння x^18 - 3*x^6 - 11 = 0. Команда solve(x^18 - 3*x^6 - 11 = 0) повертає розв'язки

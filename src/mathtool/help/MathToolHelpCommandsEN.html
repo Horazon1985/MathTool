@@ -62,6 +62,8 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graph of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
+<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Computes the equation of the regression line for the points P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, and also plots it, if possible. The points P<sub>i</sub> must be (after simplifying) of the form [a;b], i.e. they must be (2x1)-matrices.<br><br>
+
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functionsl. In these cases, MathTool will not return any (exact) solution.
 
 <span style="color: #3366ff;"><em>Example:</em></span> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
