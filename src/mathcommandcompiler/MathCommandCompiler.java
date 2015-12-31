@@ -2509,12 +2509,21 @@ public abstract class MathCommandCompiler {
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
                     "Y = ", regressionLine);
 
-            // Graphen der Regressionsgeraden zeichnen, inkl. der Stichproben (als rot markierte Punkte).
+            /* 
+             Graphen der Regressionsgeraden zeichnen, inkl. der Stichproben (als rot markierte Punkte),
+             falls keines der Stichproben Parameter enthält.
+             */
+            for (Matrix point : pts) {
+                if (!point.isConstant()){
+                    throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
+                }
+            }
+
             Expression x_0 = StatisticMethods.getMinimum(pts, 0);
             Expression x_1 = StatisticMethods.getMaximum(pts, 0);
             Expression y_0 = StatisticMethods.getMinimum(pts, 1);
             Expression y_1 = StatisticMethods.getMaximum(pts, 1);
-            
+
             ArrayList<Expression> exprs = new ArrayList<>();
             exprs.add(regressionLine);
             graphicPanel2D.setIsExplicit(true);
@@ -2524,10 +2533,6 @@ public abstract class MathCommandCompiler {
             graphicPanel2D.drawGraphs2D(x_0, x_1, y_0, y_1, exprs);
 
         } catch (EvaluationException e) {
-            // Textliche Ausgabe
-            output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
-            // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
         }
 
