@@ -2134,6 +2134,7 @@ public abstract class MathCommandCompiler {
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 2; i++) {
+            
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
 
@@ -2146,7 +2147,7 @@ public abstract class MathCommandCompiler {
                 graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
-                exprs.add(expr);
+                exprs.add(exprSimplified);
                 expr.addContainedVars(vars);
             }
 
@@ -2166,7 +2167,6 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-//        graphicPanel2D.setIsInitialized(true);
         graphicPanel2D.setIsExplicit(true);
         graphicPanel2D.setIsFixed(false);
         graphicPanel2D.setVarAbsc(var);
@@ -2261,6 +2261,7 @@ public abstract class MathCommandCompiler {
 
         ArrayList<Expression> exprs = new ArrayList<>();
         for (int i = 0; i < command.getParams().length - 4; i++) {
+            
             exprs.add(((Expression) command.getParams()[i]).simplify(simplifyTypesPlot));
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprs.get(i).containsOperator()) {
@@ -2273,6 +2274,7 @@ public abstract class MathCommandCompiler {
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
             }
+            
         }
 
         Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
