@@ -62,7 +62,7 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>, ..., F<sub>n</sub> от t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, где t - угол и F<sub>i</sub>(t) - радиус в полярных координатах. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
 
-<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Computes the equation of the regression line for the points P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, and also plots it, if possible. The points P<sub>i</sub> must be (after simplifying) of the form [a;b], i.e. they must be (2x1)-matrices.<br><br>
+<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Вычисляет уравнение регрессионной прямой для точек P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, и строит её график, если это возможно. Точки P<sub>i</sub> должны быть (после упрощения) в форме [a;b], то есть должны быть (2x1)-матрицами.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Возвращает алгебраические (точные) решения уравнения F<sub>1</sub>(x) = F<sub>2</sub>(x) по переменной x, если это возможно. Например уравнение вида exp(x) - x = 3 не имеют решений, которые можна выразить алгебраически или при помощи элементарных функций. В таком случае MathTool не вернёт никаких (точных) решений.
 
