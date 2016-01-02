@@ -30,8 +30,10 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
@@ -62,6 +64,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final GraphicPanelCurves2D graphicPanelCurves2D;
     private final GraphicPanelCurves3D graphicPanelCurves3D;
     private final GraphicPanelPolar2D graphicPanelPolar2D;
+
+    private JPanel[] graphicPanels;
+    private JComponent[] buttonsAndDropDowns;
 
     // Zeitabhängige Komponenten
     private Thread rotateThread;
@@ -184,25 +189,27 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // 2D-Grafikobjekte initialisieren
         graphicPanel2D = new GraphicPanel2D();
         add(graphicPanel2D);
-        graphicPanel2D.setVisible(false);
 
         graphicPanelCurves2D = new GraphicPanelCurves2D();
         add(graphicPanelCurves2D);
-        graphicPanelCurves2D.setVisible(false);
 
         graphicPanelPolar2D = new GraphicPanelPolar2D();
         add(graphicPanelPolar2D);
-        graphicPanelPolar2D.setVisible(false);
 
         // 3D-Grafikobjekte initialisieren
         graphicPanel3D = new GraphicPanel3D();
         add(graphicPanel3D);
-        graphicPanel3D.setVisible(false);
 
         graphicPanelCurves3D = new GraphicPanelCurves3D();
         add(graphicPanelCurves3D);
-        graphicPanelCurves3D.setVisible(false);
 
+        // Alle Grafikpanels unsichtbar machen.
+        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D};
+        MathToolController.setGraphicPanelsVisible(graphicPanels, false);
+
+        // Alle Buttons und Dropdowns ausrichten.
+        buttonsAndDropDowns = new JComponent[]{approxButton, latexButton, clearButton, operatorChoice, commandChoice};
+        
         validate();
         repaint();
 
@@ -234,17 +241,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
                 inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
                 cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
-                approxButton.setBounds(10, scrollPaneText.getHeight() + 60, 130, 30);
-                latexButton.setBounds(145, scrollPaneText.getHeight() + 60, 130, 30);
-                clearButton.setBounds(280, scrollPaneText.getHeight() + 60, 130, 30);
-                operatorChoice.setBounds(415, scrollPaneText.getHeight() + 60, 130, 30);
-                commandChoice.setBounds(550, scrollPaneText.getHeight() + 60, 130, 30);
 
-                graphicPanel2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicPanel3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicPanelCurves2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicPanelCurves3D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
-                graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
+                // Alle Grafikpanels korrekt ausrichten.
+                MathToolController.locateButtonsAndDropDowns(buttonsAndDropDowns, 10, scrollPaneText.getHeight() + 60, 130, 30, 135);
+
+                // Alle Grafikpanels korrekt ausrichten.
+                MathToolController.locateGraphicPanels(graphicPanels, scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
                 legendLabel.setBounds(graphicPanel3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
                 saveLabel.setBounds(graphicPanel3D.getX() + 150, scrollPaneText.getHeight() + 25, 150, 25);
@@ -410,21 +412,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
         cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
 
-        //Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
-        graphicPanel2D.setVisible(false);
-        graphicPanel3D.setVisible(false);
-        graphicPanelPolar2D.setVisible(false);
-        graphicPanelCurves2D.setVisible(false);
-        graphicPanelCurves3D.setVisible(false);
+        // Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
+        MathToolController.setGraphicPanelsVisible(graphicPanels, false);
         rotateLabel.setVisible(false);
         legendLabel.setVisible(false);
         saveLabel.setVisible(false);
 
-        graphicPanel2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicPanel3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicPanelPolar2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicPanelCurves2D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
-        graphicPanelCurves3D.setBounds(scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        // Alle Grafikpanels korrekt ausrichten.
+        MathToolController.locateGraphicPanels(graphicPanels, scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
 
         if (commandName.equals("plot2d")) {
             graphicPanel2D.setVisible(true);

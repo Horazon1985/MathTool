@@ -5,6 +5,8 @@ import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import java.awt.Color;
 import java.util.HashSet;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import logicalexpressionbuilder.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import matrixexpressionbuilder.MatrixExpression;
@@ -19,7 +21,7 @@ public class MathToolController {
             mathToolTextField.setText(MathToolGUI.getListOfCommands().get(i));
         }
     }
-    
+
     /**
      * Prüft, ob die Eingabe gültig ist. Bei gültiger (kompilierbarer) Eingabe
      * wird der Text schwary gefärbt, bei ungültiger Eingabe rot.
@@ -58,7 +60,7 @@ public class MathToolController {
                 mathToolTextField.setToolTipText(eCommand.getMessage());
                 return;
             }
-            
+
             try {
                 Expression.build(s, new HashSet<String>());
             } catch (ExpressionException eExpr) {
@@ -79,7 +81,7 @@ public class MathToolController {
         mathToolTextField.setForeground(Color.black);
 
     }
-    
+
     /**
      * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
      * Kommata bei einer gültigen Eingabe.
@@ -142,6 +144,35 @@ public class MathToolController {
         // Default-Case! Alle Operatoren/Befehle, welche beliebig viele Argumente vertragen.
         return 0;
 
+    }
+
+    /**
+     * Richtet alle Grafikpanels an der Stelle (x, y) aus und setzt ihre Breite
+     * / Höhe gemäß width / height.
+     */
+    public static void locateGraphicPanels(JPanel[] panels, int x, int y, int width, int height) {
+        for (JPanel panel : panels) {
+            panel.setBounds(x, y, width, height);
+        }
+    }
+
+    /**
+     * Setzt alle Grafikpanels auf sichtbar / unsichtbar (gemäß visible).
+     */
+    public static void setGraphicPanelsVisible(JPanel[] panels, boolean visible) {
+        for (JPanel panel : panels) {
+            panel.setVisible(visible);
+        }
+    }
+
+    /**
+     * Richtet alle Komponenten in components an der Stelle (x, y) aus und
+     * verschieben die nachfolgenden Komponenten (äquidistant) um jeweils delta.
+     */
+    public static void locateButtonsAndDropDowns(JComponent[] components, int x, int y, int width, int height, int delta) {
+        for (int i = 0; i < components.length; i++) {
+            components[i].setBounds(x + i * delta, y, width, height);
+        }
     }
 
 }
