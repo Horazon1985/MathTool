@@ -5,6 +5,9 @@ import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import logicalexpressionbuilder.LogicalExpression;
@@ -12,6 +15,10 @@ import mathcommandcompiler.MathCommandCompiler;
 import matrixexpressionbuilder.MatrixExpression;
 
 public class MathToolController {
+
+    final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesOpen.png"));
+    final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
+    final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
 
     /**
      * Gibt den i-ten geloggten Befehl zurück.
@@ -173,6 +180,103 @@ public class MathToolController {
         for (int i = 0; i < components.length; i++) {
             components[i].setBounds(x + i * delta, y, width, height);
         }
+    }
+
+    public static void initializeTimer(Timer computingTimer, final ComputingDialogGUI computingDialog) {
+
+        // Es folgen die TimerTasks, welche die Eule veranlassen, mit den Augen zu zwinkern.
+        TimerTask start = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.setVisible(true);
+                }
+            }
+        };
+        TimerTask openEyes = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
+            }
+        };
+        TimerTask halfOpenEyes = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
+            }
+        };
+        TimerTask closedEyes = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesClosed);
+                }
+            }
+        };
+        TimerTask halfOpenEyesAgain = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
+            }
+        };
+        TimerTask openEyesAgain = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
+            }
+        };
+        TimerTask halfOpenEyes2 = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
+            }
+        };
+        TimerTask closedEyes2 = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesClosed);
+                }
+            }
+        };
+        TimerTask halfOpenEyesAgain2 = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
+                }
+            }
+        };
+        TimerTask openEyesAgain2 = new TimerTask() {
+            @Override
+            public void run() {
+                if (computingDialog != null) {
+                    computingDialog.changeIcon(computingOwlEyesOpen);
+                }
+            }
+        };
+
+        computingTimer.schedule(start, 1000);
+        computingTimer.schedule(openEyes, 0, 2000);
+        computingTimer.schedule(halfOpenEyes, 100, 2000);
+        computingTimer.schedule(closedEyes, 200, 2000);
+        computingTimer.schedule(halfOpenEyesAgain, 300, 2000);
+        computingTimer.schedule(openEyesAgain, 400, 2000);
+        computingTimer.schedule(halfOpenEyes2, 500, 2000);
+        computingTimer.schedule(closedEyes2, 600, 2000);
+        computingTimer.schedule(halfOpenEyesAgain2, 700, 2000);
+        computingTimer.schedule(openEyesAgain2, 800, 2000);
+
     }
 
 }

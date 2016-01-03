@@ -8,6 +8,8 @@ import enumerations.TypeLanguage;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
+import expressionbuilder.Operator;
+import expressionbuilder.TypeOperator;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -353,8 +355,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Operatorbox aktualisieren.
         ArrayList<String> newEntries = new ArrayList<>();
         newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
-        for (int i = 1; i < operatorChoice.getModel().getSize(); i++) {
-            newEntries.add((String) operatorChoice.getItemAt(i));
+        for (TypeOperator value :  TypeOperator.values()){
+            newEntries.add(Operator.getNameFromType(value));
         }
         operatorChoice.removeAllItems();
         for (String op : newEntries) {
@@ -363,8 +365,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         //Befehlbox aktualisieren.
         newEntries.clear();
         newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
-        for (int i = 1; i < commandChoice.getModel().getSize(); i++) {
-            newEntries.add((String) commandChoice.getItemAt(i));
+        for (TypeCommand value :  TypeCommand.values()){
+            newEntries.add(value.toString());
         }
         commandChoice.removeAllItems();
         for (String c : newEntries) {
@@ -723,7 +725,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         cancelButton.setVisible(true);
         inputButton.setVisible(false);
-        final MathToolGUI mtf = this;
+        final MathToolGUI mathToolGUI = this;
 
         computingSwingWorker = new SwingWorker<Void, Void>() {
 
@@ -741,7 +743,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
-                computingDialog = new ComputingDialogGUI(computingSwingWorker, mtf.getX(), mtf.getY(), mtf.getWidth(), mtf.getHeight());
+                computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
+                MathToolController.initializeTimer(computingTimer, computingDialog);
 
                 boolean validCommand = false;
 
@@ -988,103 +991,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         computing = true;
         computingTimer = new Timer();
-
-        final ImageIcon computingOwlEyesOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
-        final ImageIcon computingOwlEyesHalfOpen = new ImageIcon(getClass().getResource("icons/LogoOwlEyesHalfOpen.png"));
-        final ImageIcon computingOwlEyesClosed = new ImageIcon(getClass().getResource("icons/LogoOwlEyesClosed.png"));
-
-        // Es folgen die TimerTasks, welche die Eule veranlassen, mit den Augen zu zwinkern.
-        TimerTask start = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.setVisible(true);
-                }
-            }
-        };
-        TimerTask openEyes = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesOpen);
-                }
-            }
-        };
-        TimerTask halfOpenEyes = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
-                }
-            }
-        };
-        TimerTask closedEyes = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesClosed);
-                }
-            }
-        };
-        TimerTask halfOpenEyesAgain = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
-                }
-            }
-        };
-        TimerTask openEyesAgain = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesOpen);
-                }
-            }
-        };
-        TimerTask halfOpenEyes2 = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
-                }
-            }
-        };
-        TimerTask closedEyes2 = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesClosed);
-                }
-            }
-        };
-        TimerTask halfOpenEyesAgain2 = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesHalfOpen);
-                }
-            }
-        };
-        TimerTask openEyesAgain2 = new TimerTask() {
-            @Override
-            public void run() {
-                if (computingDialog != null) {
-                    computingDialog.changeIcon(computingOwlEyesOpen);
-                }
-            }
-        };
-
-        computingTimer.schedule(start, 1000);
-        computingTimer.schedule(openEyes, 0, 2000);
-        computingTimer.schedule(halfOpenEyes, 100, 2000);
-        computingTimer.schedule(closedEyes, 200, 2000);
-        computingTimer.schedule(halfOpenEyesAgain, 300, 2000);
-        computingTimer.schedule(openEyesAgain, 400, 2000);
-        computingTimer.schedule(halfOpenEyes2, 500, 2000);
-        computingTimer.schedule(closedEyes2, 600, 2000);
-        computingTimer.schedule(halfOpenEyesAgain2, 700, 2000);
-        computingTimer.schedule(openEyesAgain2, 800, 2000);
         computingSwingWorker.execute();
 
     }
