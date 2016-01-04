@@ -234,23 +234,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             public void componentResized(ComponentEvent e) {
 
-                scrollPaneText.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
-                scrollPaneGraphic.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
-                mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
-                mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-
-                mathToolGraphicAreaX = 0;
-                mathToolGraphicAreaY = 0;
-                mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
-                mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
-
-                mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
-                inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
-                cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
-
-                // Alle Grafikpanels korrekt ausrichten.
+                // Konsolenmaße setzen.
+                MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 40, getHeight() - 170,
+                        mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
+                // Alle Buttons und Dropdowns korrekt ausrichten.
                 MathToolController.locateButtonsAndDropDowns(buttonsAndDropDowns, 10, scrollPaneText.getHeight() + 60, 130, 30, 135);
-
                 // Alle Grafikpanels korrekt ausrichten.
                 MathToolController.locateGraphicPanels(graphicPanels, scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
@@ -263,18 +251,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
 
                 if (!typeGraphic.equals(TypeGraphic.NONE)) {
-                    scrollPaneText.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
-                    scrollPaneGraphic.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
-                    mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
-                    mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-                    mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
-                    inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
-                    cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, 140, 30);
-
-                    mathToolGraphicAreaX = 0;
-                    mathToolGraphicAreaY = 0;
-                    mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
-                    mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
+                    // Konsolenmaße neu setzen, falls eine Grafik angezeigt werden muss.
+                    MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 550, getHeight() - 170,
+                            mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
                 }
 
                 mathToolGraphicArea.updateSize();
