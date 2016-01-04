@@ -3,6 +3,7 @@ package mathtool;
 import command.Command;
 import command.TypeCommand;
 import enumerations.TypeGraphic;
+import enumerations.TypeLanguage;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import expressionbuilder.Operator;
@@ -11,6 +12,7 @@ import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -402,6 +404,51 @@ public class MathToolController {
 
     }
 
+    /**
+     * Setzt je nach Sprachmodus den entsprechenden Menüeintrag auf fett.
+     */
+    public static void setFontForLanguages(JMenuItem menuItemLanguageEnglish, JMenuItem menuItemLanguageGerman,
+            JMenuItem menuItemLanguageRussian, JMenuItem menuItemLanguageUkrainian) {
+        
+        // Im Sprachmenü die gewählte Sprache fett hervorheben.
+        if (Expression.getLanguage().equals(TypeLanguage.EN)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.DE)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.RU)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (Expression.getLanguage().equals(TypeLanguage.UA)) {
+            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
+        }
+        
+    }
+    
+    /**
+     * Setzt je nach Darstellungsmodus den entsprechenden Menüeintrag auf fett.
+     */
+    public static void setFontForMode(JMenuItem menuItemRepresentationFormula, JMenuItem menuItemRepresentationText) {
+        // Im Darstellungsmenü den gewählten Modus fett hervorheben.
+        if (MathToolGUI.getMode().equals(TypeMode.GRAPHIC)) {
+            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.BOLD, 12));
+            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.PLAIN, 12));
+        } else if (MathToolGUI.getMode().equals(TypeMode.TEXT)) {
+            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.PLAIN, 12));
+            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
+        }
+    }
+    
     /**
      * Die Captions aller in componentCaptions befindlichen Komponenten werden
      * entsprechend der Sprache und der ID (im zugehörigen value) gesetzt.

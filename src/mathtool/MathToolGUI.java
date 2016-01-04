@@ -312,48 +312,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
     private void updateAPI() {
-
         // Captions neu setzen.
         initCaptions();
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
-        if (Expression.getLanguage().equals(TypeLanguage.EN)) {
-            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
-            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-        } else if (Expression.getLanguage().equals(TypeLanguage.DE)) {
-            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
-            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-        } else if (Expression.getLanguage().equals(TypeLanguage.RU)) {
-            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
-            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-        } else if (Expression.getLanguage().equals(TypeLanguage.UA)) {
-            menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageGerman.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
-        }
-
+        MathToolController.setFontForLanguages(menuItemLanguageEnglish, menuItemLanguageGerman, menuItemLanguageRussian, menuItemLanguageUkrainian);
         // Im Darstellungsmenü den gewählten Modus fett hervorheben.
-        if (typeMode.equals(TypeMode.GRAPHIC)) {
-            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.BOLD, 12));
-            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.PLAIN, 12));
-        } else if (typeMode.equals(TypeMode.TEXT)) {
-            menuItemRepresentationFormula.setFont(new Font(menuItemRepresentationFormula.getFont().getFamily(), Font.PLAIN, 12));
-            menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
-        }
-
+        MathToolController.setFontForMode(menuItemRepresentationFormula, menuItemRepresentationText);
         // Menüeinträge aktualisieren
         MathToolController.updateAllCaptions(componentCaptions);
         // Operatorbox aktualisieren.
         MathToolController.fillOperatorChoice(operatorChoice);
         // Befehlbox aktualisieren.
         MathToolController.fillCommandChoice(commandChoice);
-
     }
 
     /**
