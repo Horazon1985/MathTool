@@ -1,24 +1,74 @@
 package mathtool;
 
+import command.Command;
 import command.TypeCommand;
+import enumerations.TypeGraphic;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
+import expressionbuilder.Operator;
+import expressionbuilder.TypeOperator;
+import graphic.GraphicArea;
+import graphic.GraphicPanel3D;
+import graphic.GraphicPanelCurves3D;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import logicalexpressionbuilder.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
+import static mathtool.MathToolGUI.mathToolGraphicAreaHeight;
+import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
+import static mathtool.MathToolGUI.mathToolGraphicAreaX;
+import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import matrixexpressionbuilder.MatrixExpression;
+import translator.Translator;
 
 public class MathToolController {
 
     final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesOpen.png"));
     final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
     final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
+
+    /**
+     * Setzt die Einträge in den Operator-Dropdown.
+     */
+    public static void fillOperatorChoice(JComboBox operatorChoice) {
+        ArrayList<String> newEntries = new ArrayList<>();
+        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
+        for (TypeOperator value : TypeOperator.values()) {
+            newEntries.add(Operator.getNameFromType(value));
+        }
+        operatorChoice.removeAllItems();
+        for (String op : newEntries) {
+            operatorChoice.addItem(op);
+        }
+    }
+
+    /**
+     * Setzt die Einträge in den Befehl-Dropdown.
+     */
+    public static void fillCommandChoice(JComboBox commandChoice) {
+        ArrayList<String> newEntries = new ArrayList<>();
+        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
+        for (TypeCommand value : TypeCommand.values()) {
+            newEntries.add(value.toString());
+        }
+        commandChoice.removeAllItems();
+        for (String c : newEntries) {
+            commandChoice.addItem(c);
+        }
+    }
 
     /**
      * Gibt den i-ten geloggten Befehl zurück.
@@ -164,12 +214,69 @@ public class MathToolController {
     }
 
     /**
+     * Ermittelt den Typ des GraphicPanels, welcher zum Befehl c gehört.
+     */
+    public static TypeGraphic getTypeGraphicFromCommand(Command c) {
+        if (c.getName().equals("plot2d")) {
+            return TypeGraphic.GRAPH2D;
+        }
+        if (c.getName().equals("plotimplicit")) {
+            return TypeGraphic.GRAPHIMPLICIT;
+        }
+        if (c.getName().equals("plot3d") || c.getName().equals("tangent") && ((HashMap) c.getParams()[1]).size() == 2) {
+            return TypeGraphic.GRAPH3D;
+        }
+        if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
+            return TypeGraphic.CURVE2D;
+        }
+        if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
+            return TypeGraphic.CURVE3D;
+        }
+        if (c.getName().equals("plotpolar")) {
+            return TypeGraphic.POLARGRAPH2D;
+        }
+        if (c.getName().equals("regressionline") && c.getParams().length >= 2) {
+            return TypeGraphic.GRAPH2D;
+        }
+        if (c.getName().equals("solve") && c.getParams().length >= 4 || c.getName().equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1) {
+            return TypeGraphic.GRAPH2D;
+        }
+        if (c.getName().equals("solvedeq")) {
+            return TypeGraphic.GRAPH2D;
+        }
+        return TypeGraphic.NONE;
+    }
+
+    /**
      * Setzt alle Grafikpanels auf sichtbar / unsichtbar (gemäß visible).
      */
     public static void setGraphicPanelsVisible(JPanel[] panels, boolean visible) {
         for (JPanel panel : panels) {
             panel.setVisible(visible);
         }
+    }
+
+    /**
+     * Setzt die Maße der beiden JScrollPanes auf (x, y, width, height) und die
+     * Maße der restlichen Komponenten werden dementsprechend angepasst.
+     */
+    public static void resizeConsole(JScrollPane scrollPaneText, JScrollPane scrollPaneGraphic, int x, int y, int width, int height,
+            JTextArea mathToolTextArea, GraphicArea mathToolGraphicArea, MathToolTextField mathToolTextField,
+            JButton inputButton, JButton cancelButton) {
+
+        // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+        scrollPaneText.setBounds(x, y, width, height);
+        scrollPaneGraphic.setBounds(x, y, width, height);
+        mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
+        mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
+        mathToolGraphicAreaX = 0;
+        mathToolGraphicAreaY = 0;
+        mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
+        mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
+        mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+        inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
+        cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
+
     }
 
     /**
@@ -277,6 +384,38 @@ public class MathToolController {
         computingTimer.schedule(halfOpenEyesAgain2, 700, 2000);
         computingTimer.schedule(openEyesAgain2, 800, 2000);
 
+    }
+
+    /**
+     * Rotation bei 3D-Graphen stoppen.
+     */
+    public static void stopRotationOfGraph(GraphicPanel3D graphicPanel3D, GraphicPanelCurves3D graphicPanelCurves3D,
+            Thread rotateThread, JLabel rotateLabel) {
+
+        if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.GRAPH3D)) {
+            graphicPanel3D.setIsRotating(false);
+        } else if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.CURVE3D)) {
+            graphicPanelCurves3D.setIsRotating(false);
+        }
+        rotateThread.interrupt();
+        rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+
+    }
+
+    /**
+     * Die Captions aller in componentCaptions befindlichen Komponenten werden
+     * entsprechend der Sprache und der ID (im zugehörigen value) gesetzt.
+     */
+    public static void updateAllCaptions(HashMap<JComponent, String> componentCaptions) {
+        for (JComponent component : componentCaptions.keySet()) {
+            if (component instanceof JLabel) {
+                ((JLabel) component).setText("<html><b>" + Translator.translateExceptionMessage(componentCaptions.get(component)) + "</b></html>");
+            } else if (component instanceof JButton) {
+                ((JButton) component).setText(Translator.translateExceptionMessage(componentCaptions.get(component)));
+            } else if (component instanceof JMenuItem) {
+                ((JMenuItem) component).setText(Translator.translateExceptionMessage(componentCaptions.get(component)));
+            }
+        }
     }
 
 }

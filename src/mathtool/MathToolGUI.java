@@ -8,8 +8,6 @@ import enumerations.TypeLanguage;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
-import expressionbuilder.Operator;
-import expressionbuilder.TypeOperator;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -30,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -70,6 +66,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private JPanel[] graphicPanels;
     private JComponent[] buttonsAndDropDowns;
 
+    private HashMap<JComponent, String> componentCaptions;
+
     // Zeitabhängige Komponenten
     private Thread rotateThread;
     private SwingWorker<Void, Void> computingSwingWorker;
@@ -101,6 +99,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public MathToolGUI() {
 
         initComponents();
+        initCaptions();
         this.setLayout(null);
         isRotating = false;
 
@@ -211,7 +210,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Alle Buttons und Dropdowns ausrichten.
         buttonsAndDropDowns = new JComponent[]{approxButton, latexButton, clearButton, operatorChoice, commandChoice};
-        
+
+        // Operatorbox aktualisieren.
+        MathToolController.fillOperatorChoice(operatorChoice);
+        // Befehlbox aktualisieren.
+        MathToolController.fillCommandChoice(commandChoice);
+
         validate();
         repaint();
 
@@ -284,10 +288,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
-     * Getter für Mode.
+     * Getter für typeMode.
      */
     public static TypeMode getMode() {
         return typeMode;
+    }
+
+    /**
+     * Getter für typeGraphic.
+     */
+    public static TypeGraphic getTypeGraphic() {
+        return typeGraphic;
     }
 
     /**
@@ -300,8 +311,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
-    private void refreshAPI() {
+    private void updateAPI() {
 
+        // Captions neu setzen.
+        initCaptions();
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
         if (Expression.getLanguage().equals(TypeLanguage.EN)) {
             menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
@@ -335,56 +348,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         }
 
         // Menüeinträge aktualisieren
-        menuFile.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_FILE"));
-        MenuItemQuit.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_QUIT"));
-        menuMathTool.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_MATHTOOL"));
-        menuItemHelp.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_HELP"));
-        menuItemLanguageMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_LANGUAGES"));
-        menuItemAbout.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_ABOUT"));
-        menuItemLanguageEnglish.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_ENGLISH"));
-        menuItemLanguageGerman.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_GERMAN"));
-        menuItemLanguageRussian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_RUSSIAN"));
-        menuItemLanguageUkrainian.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_UKRAINIAN"));
-        menuItemRepresentationMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_REPRESENTATION_MODE"));
-        menuItemRepresentationText.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_TEXT_MODE"));
-        menuItemRepresentationFormula.setText(Translator.translateExceptionMessage("GUI_MathToolForm_FORMULA_MODE"));
-        menuItemOptionsMenu.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_OPTIONS"));
-        menuItemOutputOptions.setText(Translator.translateExceptionMessage("GUI_MathToolForm_MENU_OUTPUT_OPTIONS"));
-
-        // Restliche Komponenten aktualisieren.
+        MathToolController.updateAllCaptions(componentCaptions);
         // Operatorbox aktualisieren.
-        ArrayList<String> newEntries = new ArrayList<>();
-        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
-        for (TypeOperator value :  TypeOperator.values()){
-            newEntries.add(Operator.getNameFromType(value));
-        }
-        operatorChoice.removeAllItems();
-        for (String op : newEntries) {
-            operatorChoice.addItem(op);
-        }
-        //Befehlbox aktualisieren.
-        newEntries.clear();
-        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
-        for (TypeCommand value :  TypeCommand.values()){
-            newEntries.add(value.toString());
-        }
-        commandChoice.removeAllItems();
-        for (String c : newEntries) {
-            commandChoice.addItem(c);
-        }
-        //Buttons und Labels aktualisieren
-        approxButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_APPROX"));
-        latexButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_LATEX_CODE"));
-        clearButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CLEAR"));
-        inputButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_INPUT"));
-        cancelButton.setText(Translator.translateExceptionMessage("GUI_MathToolForm_CANCEL"));
-        legendLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
-        saveLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_SAVE") + "</b></html>");
-        if (isRotating) {
-            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
-        } else {
-            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
-        }
+        MathToolController.fillOperatorChoice(operatorChoice);
+        // Befehlbox aktualisieren.
+        MathToolController.fillCommandChoice(commandChoice);
 
     }
 
@@ -401,86 +369,61 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         Command c = MathCommandCompiler.getCommand(commandName, params);
 
-        //Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
-        scrollPaneText.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
-        scrollPaneGraphic.setBounds(10, 10, getWidth() - 550, getHeight() - 170);
-        mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
-        mathToolGraphicAreaX = 0;
-        mathToolGraphicAreaY = 0;
-        mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
-        mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
-        mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-        mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
-        inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
-        cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
+        // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
+        MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 550, getHeight() - 170,
+                mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
 
         // Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
-        rotateLabel.setVisible(false);
         legendLabel.setVisible(false);
         saveLabel.setVisible(false);
+        rotateLabel.setVisible(false);
 
         // Alle Grafikpanels korrekt ausrichten.
         MathToolController.locateGraphicPanels(graphicPanels, scrollPaneText.getWidth() + 20, scrollPaneText.getHeight() - 490, 500, 500);
+        // Grafiktyp neu ermitteln.
+        typeGraphic = MathToolController.getTypeGraphicFromCommand(c);
 
         if (commandName.equals("plot2d")) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPH2D;
         } else if (commandName.equals("plotimplicit")) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPHIMPLICIT;
         } else if (commandName.equals("plot3d") || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 2) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPH3D;
         } else if (commandName.equals("plotcurve") && c.getParams().length == 4) {
             graphicPanelCurves2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.CURVE2D;
         } else if (commandName.equals("plotcurve") && c.getParams().length == 5) {
             graphicPanelCurves3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
-            typeGraphic = TypeGraphic.CURVE3D;
         } else if (commandName.equals("plotpolar")) {
             graphicPanelPolar2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.POLARGRAPH2D;
         } else if (commandName.equals("regressionline") && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPH2D;
         } else if (commandName.equals("solve") && c.getParams().length >= 4 || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPH2D;
         } else if (commandName.equals("solvedeq")) {
             graphicPanel2D.setVisible(true);
-            typeGraphic = TypeGraphic.GRAPH2D;
+            saveLabel.setVisible(true);
         } else {
-            scrollPaneText.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
-            scrollPaneGraphic.setBounds(10, 10, getWidth() - 40, getHeight() - 170);
-            mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
-            mathToolGraphicAreaX = 0;
-            mathToolGraphicAreaY = 0;
-            mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
-            mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
-            mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-            mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
-            inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
-            cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
-            typeGraphic = TypeGraphic.NONE;
+            MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 40, getHeight() - 170,
+                    mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
         }
 
         validate();
@@ -564,7 +507,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         cancelButton.setBounds(560, 300, 100, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        operatorChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Operator", "diff", "div", "fac", "gcd", "grad", "int", "laplace", "lcm", "mod", "mu", "prod", "rot", "sigma", "sum", "taylor", "var" }));
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 operatorChoiceActionPerformed(evt);
@@ -574,14 +516,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
         operatorChoice.setBounds(420, 370, 130, 23);
 
         commandChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        commandChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Befehl", "approx", "ccnf", "cdnf", "clear", "def", "deffuncs", "defvars", "eigenvalues", "eigenvectors", "euler", "expand", "ker", "latex", "pi", "plot2d", "plotimplicit", "plot3d", "plotcurve", "plotpolar", "regressionline", "solve", "solvedeq", "solvesystem", "table", "tangent", "taylordeq", "undef", "undefall" }));
         commandChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 commandChoiceActionPerformed(evt);
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 131, 23);
+        commandChoice.setBounds(560, 370, 32, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Leeren");
@@ -700,6 +641,45 @@ public class MathToolGUI extends JFrame implements MouseListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initCaptions() {
+
+        componentCaptions = new HashMap<>();
+
+        // Menüeinträge
+        componentCaptions.put(menuFile, "GUI_MathToolForm_MENU_FILE");
+        componentCaptions.put(MenuItemQuit, "GUI_MathToolForm_MENU_QUIT");
+        componentCaptions.put(menuMathTool, "GUI_MathToolForm_MENU_MATHTOOL");
+        componentCaptions.put(menuItemHelp, "GUI_MathToolForm_MENU_HELP");
+        componentCaptions.put(menuItemLanguageMenu, "GUI_MathToolForm_MENU_LANGUAGES");
+        componentCaptions.put(menuItemLanguageEnglish, "GUI_MathToolForm_MENU_ENGLISH");
+        componentCaptions.put(menuItemLanguageGerman, "GUI_MathToolForm_MENU_GERMAN");
+        componentCaptions.put(menuItemLanguageRussian, "GUI_MathToolForm_MENU_RUSSIAN");
+        componentCaptions.put(menuItemLanguageUkrainian, "GUI_MathToolForm_MENU_UKRAINIAN");
+        componentCaptions.put(menuItemRepresentationMenu, "GUI_MathToolForm_MENU_REPRESENTATION_MODE");
+        componentCaptions.put(menuItemRepresentationFormula, "GUI_MathToolForm_FORMULA_MODE");
+        componentCaptions.put(menuItemRepresentationText, "GUI_MathToolForm_MENU_TEXT_MODE");
+        componentCaptions.put(menuItemAbout, "GUI_MathToolForm_MENU_ABOUT");
+        componentCaptions.put(menuItemOptionsMenu, "GUI_MathToolForm_MENU_OPTIONS");
+        componentCaptions.put(menuItemOutputOptions, "GUI_MathToolForm_MENU_OUTPUT_OPTIONS");
+
+        // Buttons
+        componentCaptions.put(approxButton, "GUI_MathToolForm_APPROX");
+        componentCaptions.put(latexButton, "GUI_MathToolForm_LATEX_CODE");
+        componentCaptions.put(clearButton, "GUI_MathToolForm_CLEAR");
+        componentCaptions.put(inputButton, "GUI_MathToolForm_INPUT");
+        componentCaptions.put(cancelButton, "GUI_MathToolForm_CANCEL");
+
+        // Labels
+        componentCaptions.put(legendLabel, "GUI_MathToolForm_LEGEND");
+        componentCaptions.put(saveLabel, "GUI_MathToolForm_SAVE");
+        if (isRotating) {
+            componentCaptions.put(rotateLabel, "GUI_MathToolForm_STOP_ROTATION");
+        } else {
+            componentCaptions.put(rotateLabel, "GUI_MathToolForm_ROTATE_GRAPH");
+        }
+
+    }
+
     /**
      * Dient dazu, dass falls ein neuer Befehl eingegeben wird, während sich
      * eine 3D-Grafik dreht, dass diese Rotation zunächst gestoppt wird. GRUND:
@@ -708,13 +688,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void stopPossibleRotation() {
         if (isRotating) {
             isRotating = false;
-            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                graphicPanel3D.setIsRotating(false);
-            } else {
-                graphicPanelCurves3D.setIsRotating(false);
-            }
-            rotateThread.interrupt();
-            rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+            MathToolController.stopRotationOfGraph(graphicPanel3D, graphicPanelCurves3D, rotateThread, rotateLabel);
         }
     }
 
@@ -1128,36 +1102,36 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
         Expression.setLanguage(TypeLanguage.EN);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemLanguageEnglishActionPerformed
 
     private void menuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageGermanActionPerformed
         Expression.setLanguage(TypeLanguage.DE);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemLanguageGermanActionPerformed
 
     private void menuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageRussianActionPerformed
         Expression.setLanguage(TypeLanguage.RU);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemLanguageRussianActionPerformed
 
     private void menuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageUkrainianActionPerformed
         Expression.setLanguage(TypeLanguage.UA);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
         typeMode = TypeMode.TEXT;
         scrollPaneGraphic.setVisible(false);
         scrollPaneText.setVisible(true);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
         typeMode = TypeMode.GRAPHIC;
         scrollPaneGraphic.setVisible(true);
         scrollPaneText.setVisible(false);
-        refreshAPI();
+        updateAPI();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed

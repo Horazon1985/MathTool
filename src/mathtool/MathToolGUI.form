@@ -233,25 +233,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="17">
-            <StringItem index="0" value="Operator"/>
-            <StringItem index="1" value="diff"/>
-            <StringItem index="2" value="div"/>
-            <StringItem index="3" value="fac"/>
-            <StringItem index="4" value="gcd"/>
-            <StringItem index="5" value="grad"/>
-            <StringItem index="6" value="int"/>
-            <StringItem index="7" value="laplace"/>
-            <StringItem index="8" value="lcm"/>
-            <StringItem index="9" value="mod"/>
-            <StringItem index="10" value="mu"/>
-            <StringItem index="11" value="prod"/>
-            <StringItem index="12" value="rot"/>
-            <StringItem index="13" value="sigma"/>
-            <StringItem index="14" value="sum"/>
-            <StringItem index="15" value="taylor"/>
-            <StringItem index="16" value="var"/>
-          </StringArray>
+          <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
@@ -269,37 +251,7 @@
           <Font name="Arial" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="29">
-            <StringItem index="0" value="Befehl"/>
-            <StringItem index="1" value="approx"/>
-            <StringItem index="2" value="ccnf"/>
-            <StringItem index="3" value="cdnf"/>
-            <StringItem index="4" value="clear"/>
-            <StringItem index="5" value="def"/>
-            <StringItem index="6" value="deffuncs"/>
-            <StringItem index="7" value="defvars"/>
-            <StringItem index="8" value="eigenvalues"/>
-            <StringItem index="9" value="eigenvectors"/>
-            <StringItem index="10" value="euler"/>
-            <StringItem index="11" value="expand"/>
-            <StringItem index="12" value="ker"/>
-            <StringItem index="13" value="latex"/>
-            <StringItem index="14" value="pi"/>
-            <StringItem index="15" value="plot2d"/>
-            <StringItem index="16" value="plotimplicit"/>
-            <StringItem index="17" value="plot3d"/>
-            <StringItem index="18" value="plotcurve"/>
-            <StringItem index="19" value="plotpolar"/>
-            <StringItem index="20" value="regressionline"/>
-            <StringItem index="21" value="solve"/>
-            <StringItem index="22" value="solvedeq"/>
-            <StringItem index="23" value="solvesystem"/>
-            <StringItem index="24" value="table"/>
-            <StringItem index="25" value="tangent"/>
-            <StringItem index="26" value="taylordeq"/>
-            <StringItem index="27" value="undef"/>
-            <StringItem index="28" value="undefall"/>
-          </StringArray>
+          <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
