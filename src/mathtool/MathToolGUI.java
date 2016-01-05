@@ -244,7 +244,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                 legendLabel.setBounds(graphicPanel3D.getX(), scrollPaneText.getHeight() + 25, 100, 25);
                 saveLabel.setBounds(graphicPanel3D.getX() + 150, scrollPaneText.getHeight() + 25, 150, 25);
-                rotateLabel.setBounds(graphicPanel3D.getX() + 300, scrollPaneText.getHeight() + 25, 150, 25);
+                rotateLabel.setBounds(graphicPanel3D.getX() + 300, scrollPaneText.getHeight() + 25, 200, 25);
 
                 if (computingDialog != null) {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
@@ -288,6 +288,20 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
+     * Getter für isRotating
+     */
+    public static boolean isIsRotating() {
+        return isRotating;
+    }
+
+    /**
+     * Setter für isRotating
+     */
+    public static void setIsRotating(boolean aIsRotating) {
+        isRotating = aIsRotating;
+    }
+    
+    /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
     private void updateAPI() {
@@ -312,9 +326,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
      * entsprechenden Maße nach links zusammengedrückt.
      *
      * @throws ExpressionException
-     * @throws EvaluationException
      */
-    private void activatePanelsForGraphs(String commandName, String[] params) throws ExpressionException, EvaluationException {
+    private void activatePanelsForGraphs(String commandName, String[] params) throws ExpressionException {
 
         Command c = MathCommandCompiler.getCommand(commandName, params);
 
@@ -333,41 +346,41 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Grafiktyp neu ermitteln.
         typeGraphic = MathToolController.getTypeGraphicFromCommand(c);
 
-        if (commandName.equals("plot2d")) {
+        if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("plotimplicit")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("plot3d") || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 2) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
-        } else if (commandName.equals("plotcurve") && c.getParams().length == 4) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 4) {
             graphicPanelCurves2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("plotcurve") && c.getParams().length == 5) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 5) {
             graphicPanelCurves3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
-        } else if (commandName.equals("plotpolar")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             graphicPanelPolar2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("regressionline") && c.getParams().length >= 2) {
+        } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("solve") && c.getParams().length >= 4 || commandName.equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1) {
+        } else if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 4 || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 1) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (commandName.equals("solvedeq")) {
+        } else if (c.getTypeCommand().equals(TypeCommand.solvedeq)) {
             graphicPanel2D.setVisible(true);
             saveLabel.setVisible(true);
         } else {
@@ -621,7 +634,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Labels
         componentCaptions.put(legendLabel, "GUI_MathToolForm_LEGEND");
         componentCaptions.put(saveLabel, "GUI_MathToolForm_SAVE");
-        if (isRotating) {
+        if (isIsRotating()) {
             componentCaptions.put(rotateLabel, "GUI_MathToolForm_STOP_ROTATION");
         } else {
             componentCaptions.put(rotateLabel, "GUI_MathToolForm_ROTATE_GRAPH");
@@ -654,11 +667,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
             @Override
             protected void done() {
+                computing = false;
                 computingTimer.cancel();
                 computingDialog.setVisible(false);
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
-                computing = false;
                 // mathToolArea nach unten scrollen lassen.
                 scrollPaneText.getVerticalScrollBar().setValue(scrollPaneText.getVerticalScrollBar().getMaximum());
             }
@@ -747,16 +760,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  mathematischen Ausdruck bildet. Ja -> Vereinfachen und
                  ausgeben. Nein -> Weitere Möglichkeiten prüfen.
                  */
-                /*
-                 inputIsAlgebraicExpression besagt, dass Eingabe, wenn
-                 überhaupt, nur ein gültiger arithmetischer Ausdruck (und kein
-                 logischer und kein Matrizenausdruck) sein kann.
-                 */
-                boolean inputIsAlgebraicExpression = !input.contains("&") && !input.contains("|")
-                        && !input.contains(">") && !input.contains("=") && !input.contains("[")
-                        && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!'
-                        && !input.contains("grad");
-
                 try {
 
                     Expression expr = Expression.build(input, null);
@@ -778,7 +781,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         return null;
 
                     } catch (EvaluationException e) {
-                        if (inputIsAlgebraicExpression) {
+                        if (MathToolController.isInputAlgebraicExpression(input)) {
                             mathToolTextArea.append(expr.writeExpression() + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(expr);
@@ -788,7 +791,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         }
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
-                        if (inputIsAlgebraicExpression) {
+                        if (MathToolController.isInputAlgebraicExpression(input)) {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                             return null;
@@ -796,7 +799,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (inputIsAlgebraicExpression) {
+                    if (MathToolController.isInputAlgebraicExpression(input)) {
                         /*
                          Dann ist der Ausdruck zumindest kein logischer
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -808,7 +811,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
-                    if (inputIsAlgebraicExpression) {
+                    if (MathToolController.isInputAlgebraicExpression(input)) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
@@ -820,9 +823,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
                  Nein -> Weitere Möglichkeiten prüfen.
                  */
-                boolean inputIsMatrixExpression = !input.contains("&") && !input.contains("|")
-                        && !input.contains(">") && !input.contains("=");
-
                 try {
 
                     MatrixExpression matExpr = MatrixExpression.build(input, null);
@@ -847,7 +847,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         return null;
 
                     } catch (EvaluationException e) {
-                        if (inputIsMatrixExpression) {
+                        if (MathToolController.isInputMatrixExpression(input)) {
                             mathToolTextArea.append(matExpr.writeMatrixExpression() + "\n \n");
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_ERROR") + e.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(matExpr);
@@ -857,7 +857,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         }
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
-                        if (inputIsMatrixExpression) {
+                        if (MathToolController.isInputMatrixExpression(input)) {
                             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                             return null;
@@ -865,7 +865,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (inputIsMatrixExpression) {
+                    if (MathToolController.isInputMatrixExpression(input)) {
                         /*
                          Dann ist der Ausdruck zumindest kein logischer
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -877,7 +877,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
-                    if (inputIsMatrixExpression) {
+                    if (MathToolController.isInputMatrixExpression(input)) {
                         mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
                         mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
@@ -925,20 +925,21 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }//GEN-LAST:event_inputButtonActionPerformed
 
     private void rotateLabelClick() {
-        if (!isRotating) {
+//        MathToolController.rotateGraph(rotateThread, graphicPanel3D, graphicPanelCurves3D, rotateLabel);
+        if (!isIsRotating()) {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 rotateThread = new Thread(graphicPanel3D, "rotateGraph");
-                isRotating = true;
+                setIsRotating(true);
                 graphicPanel3D.setIsRotating(true);
             } else {
                 rotateThread = new Thread(graphicPanelCurves3D, "rotateGraph");
-                isRotating = true;
+                setIsRotating(true);
                 graphicPanelCurves3D.setIsRotating(true);
             }
             rotateThread.start();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
         } else {
-            isRotating = false;
+            setIsRotating(false);
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicPanel3D.setIsRotating(false);
             } else {
@@ -1250,7 +1251,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
-            if (isRotating) {
+            if (isIsRotating()) {
                 rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
             } else {
                 rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
@@ -1271,7 +1272,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
-            if (isRotating) {
+            if (isIsRotating()) {
                 rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
             } else {
                 rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");

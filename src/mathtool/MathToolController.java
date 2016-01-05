@@ -38,9 +38,9 @@ import translator.Translator;
 
 public class MathToolController {
 
-    final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesOpen.png"));
-    final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
-    final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
+    private final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesOpen.png"));
+    private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
+    private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
 
     /**
      * Setzt die Einträge in den Operator-Dropdown.
@@ -409,7 +409,7 @@ public class MathToolController {
      */
     public static void setFontForLanguages(JMenuItem menuItemLanguageEnglish, JMenuItem menuItemLanguageGerman,
             JMenuItem menuItemLanguageRussian, JMenuItem menuItemLanguageUkrainian) {
-        
+
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
         if (Expression.getLanguage().equals(TypeLanguage.EN)) {
             menuItemLanguageEnglish.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
@@ -432,9 +432,9 @@ public class MathToolController {
             menuItemLanguageRussian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.PLAIN, 12));
             menuItemLanguageUkrainian.setFont(new Font(menuItemLanguageEnglish.getFont().getFamily(), Font.BOLD, 12));
         }
-        
+
     }
-    
+
     /**
      * Setzt je nach Darstellungsmodus den entsprechenden Menüeintrag auf fett.
      */
@@ -448,7 +448,7 @@ public class MathToolController {
             menuItemRepresentationText.setFont(new Font(menuItemRepresentationText.getFont().getFamily(), Font.BOLD, 12));
         }
     }
-    
+
     /**
      * Die Captions aller in componentCaptions befindlichen Komponenten werden
      * entsprechend der Sprache und der ID (im zugehörigen value) gesetzt.
@@ -463,6 +463,32 @@ public class MathToolController {
                 ((JMenuItem) component).setText(Translator.translateExceptionMessage(componentCaptions.get(component)));
             }
         }
+    }
+
+    public static void activateGraphicPanelds(Command c) {
+
+    }
+
+    /**
+     * Gibt zurück, ob input, wenn überhaupt, nur ein gültiger arithmetischer
+     * Ausdruck (und kein logischer und kein Matrizenausdruck) sein kann.
+     */
+    public static boolean isInputAlgebraicExpression(String input) {
+        return !input.contains("&") && !input.contains("|")
+                && !input.contains(">") && !input.contains("=") && !input.contains("[")
+                && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!'
+                && !input.contains("grad");
+    }
+
+    /**
+     * Gibt zurück, ob input, wenn überhaupt, ein gültiger Matrizenausdruck sein
+     * kann. Diese Prüfung muss stattfinden, nachdem mittels
+     * isInputAlgebraicExpression(input) bereits geprüft und false
+     * zurückgeliefert wurde.
+     */
+    public static boolean isInputMatrixExpression(String input) {
+        return !input.contains("&") && !input.contains("|")
+                && !input.contains(">") && !input.contains("=");
     }
 
 }
