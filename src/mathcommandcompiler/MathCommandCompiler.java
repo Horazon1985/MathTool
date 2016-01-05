@@ -41,12 +41,12 @@ import linearalgebraalgorithms.EigenvaluesEigenvectorsAlgorithms;
 import linearalgebraalgorithms.GaussAlgorithm;
 import logicalexpressionbuilder.LogicalExpression;
 import logicalexpressionbuilder.LogicalVariable;
+import mathtool.MathToolGUI;
 import matrixexpressionbuilder.Matrix;
 import matrixexpressionbuilder.MatrixExpression;
 import matrixsimplifymethods.MatrixExpressionCollection;
 import solveequationmethods.SolveMethods;
 import translator.Translator;
-import mathtool.MathToolGUI;
 
 public abstract class MathCommandCompiler {
 
@@ -2564,8 +2564,7 @@ public abstract class MathCommandCompiler {
                 }
             }
 
-            SolveMethods.setSolveTries(100);
-            ExpressionCollection zeros = SolveMethods.solveGeneralEquation(f, g, var);
+            ExpressionCollection zeros = SolveMethods.solveEquation(f, g, var);
 
             // Falls keine Lösungen ermittelt werden konnten, User informieren.
             if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
