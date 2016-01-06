@@ -24,6 +24,7 @@ import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
+import graphic.GraphicPanelImplicit2D;
 import graphic.GraphicPanelPolar2D;
 import graphic.MultiIndexVariable;
 import graphic.TypeBracket;
@@ -1593,8 +1594,8 @@ public abstract class MathCommandCompiler {
     public static void executeCommand(String input, GraphicArea graphicArea,
             JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D,
             GraphicPanelCurves2D graphicPanelCurves2D, GraphicPanelCurves3D graphicPanelCurves3D,
-            GraphicPanelPolar2D graphicPanelPolar2D, HashMap<String, Expression> definedVars,
-            HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
+            GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicPanelPolar2D graphicPanelPolar2D, 
+            HashMap<String, Expression> definedVars, HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
         input = input.replaceAll(" ", "").toLowerCase();
@@ -1641,7 +1642,7 @@ public abstract class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.plot2d)) {
             executePlot2D(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotimplicit)) {
-            executePlotImplicit(command, graphicPanel2D, graphicArea);
+            executePlotImplicit(command, graphicPanelImplicit2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plot3d)) {
             executePlot3D(command, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 4) {
@@ -2175,7 +2176,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotImplicit(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotImplicit(Command command, GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicArea graphicArea) throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
 
@@ -2243,16 +2244,11 @@ public abstract class MathCommandCompiler {
         }
 
         // Graphen zeichnen.
-        graphicPanel2D.setIsExplicit(false);
-        graphicPanel2D.setIsFixed(false);
-        graphicPanel2D.setExpressions(expr);
-        graphicPanel2D.setVars(varAbsc, varOrd);
-        graphicPanel2D.setSpecialPoints(false);
-        graphicPanel2D.computeScreenSizes(x_0, x_1, y_0, y_1);
+        graphicPanelImplicit2D.setExpressions(expr);
+        graphicPanelImplicit2D.setVars(varAbsc, varOrd);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        graphicPanel2D.setImplicitGraph(implicitGraph);
-        graphicPanel2D.drawGraphs2D();
+        graphicPanelImplicit2D.drawGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
 
     }
 
@@ -2460,6 +2456,7 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
+        // Graphen zeichnen.
         graphicPanelPolar2D.setIsInitialized(true);
         graphicPanelPolar2D.clearExpressionAndGraph();
         for (int i = 0; i < command.getParams().length - 2; i++) {

@@ -13,6 +13,7 @@ import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
+import graphic.GraphicPanelImplicit2D;
 import graphic.GraphicPanelPolar2D;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,6 +62,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
     private final GraphicPanelCurves3D graphicPanelCurves3D;
+    private final GraphicPanelImplicit2D graphicPanelImplicit2D;
     private final GraphicPanelPolar2D graphicPanelPolar2D;
 
     private JPanel[] graphicPanels;
@@ -194,6 +196,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelCurves2D = new GraphicPanelCurves2D();
         add(graphicPanelCurves2D);
 
+        graphicPanelImplicit2D = new GraphicPanelImplicit2D();
+        add(graphicPanelImplicit2D);
+
         graphicPanelPolar2D = new GraphicPanelPolar2D();
         add(graphicPanelPolar2D);
 
@@ -205,7 +210,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         add(graphicPanelCurves3D);
 
         // Alle Grafikpanels unsichtbar machen.
-        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D};
+        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D, graphicPanelPolar2D};
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
         // Alle Buttons und Dropdowns ausrichten.
@@ -351,7 +356,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
-            graphicPanel2D.setVisible(true);
+            graphicPanelImplicit2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
@@ -716,8 +721,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
-                                graphicPanel2D, graphicPanel3D,
-                                graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D,
+                                graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, 
+                                graphicPanelImplicit2D, graphicPanelPolar2D,
                                 definedVars, definedFunctions);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
@@ -1041,9 +1046,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         stopPossibleRotation();
         try {
             MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
-                    graphicPanel2D, graphicPanel3D,
-                    graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelPolar2D,
-                    definedVars, definedFunctions);
+                    graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, 
+                    graphicPanelImplicit2D, graphicPanelPolar2D, definedVars, definedFunctions);
         } catch (Exception e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());
