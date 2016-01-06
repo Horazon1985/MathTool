@@ -2242,6 +2242,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        // Graphen zeichnen.
         graphicPanel2D.setIsExplicit(false);
         graphicPanel2D.setIsFixed(false);
         graphicPanel2D.setExpressions(expr);
@@ -2326,6 +2327,7 @@ public abstract class MathCommandCompiler {
             varOrd = varOne;
         }
 
+        // Graphen zeichnen.
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicPanel3D.drawGraphs3D(x_0, x_1, y_0, y_1, exprs);
 
@@ -2371,12 +2373,9 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicPanelCurves2D.setIsInitialized(true);
-        graphicPanelCurves2D.setExpression(components);
+        // Kurve zeichnen.
         graphicPanelCurves2D.setVar(var);
-        graphicPanelCurves2D.computeScreenSizes(t_0, t_1);
-        graphicPanelCurves2D.expressionToGraph(t_0, t_1);
-        graphicPanelCurves2D.drawCurve2D();
+        graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
 
     }
 
@@ -2421,6 +2420,7 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
+        // Kurve zeichnen.
         graphicPanelCurves3D.setIsInitialized(true);
         graphicPanelCurves3D.setExpression(components);
         graphicPanelCurves3D.setVar(var);
