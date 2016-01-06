@@ -2488,10 +2488,10 @@ public abstract class MathCommandCompiler {
                 points[i] = ((MatrixExpression) command.getParams()[i]).simplify();
                 dim = points[i].getDimension();
             } catch (EvaluationException e) {
-                throw new EvaluationException("TO DO");
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_CANNOT_BE_COMPUTED"));
             }
             if (!points[i].isMatrix() || dim.width != 1 || dim.height != 2) {
-                throw new EvaluationException("TO DO");
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_PARAMETERS_ARE_NOT_POINTS"));
             }
         }
 
