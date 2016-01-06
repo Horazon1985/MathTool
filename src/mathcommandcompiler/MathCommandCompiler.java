@@ -2412,7 +2412,7 @@ public abstract class MathCommandCompiler {
         Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
         Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
 
-        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "x" tragen.
+        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
             vars.add("t");
         }
@@ -2421,13 +2421,8 @@ public abstract class MathCommandCompiler {
         String var = (String) iter.next();
 
         // Kurve zeichnen.
-        graphicPanelCurves3D.setIsInitialized(true);
-        graphicPanelCurves3D.setExpression(components);
-        graphicPanelCurves3D.setVar(var);
-        graphicPanelCurves3D.setParameters(150, 200, 30, 30);
-        graphicPanelCurves3D.computeScreenSizes(t_0, t_1);
-        graphicPanelCurves3D.expressionToGraph(t_0, t_1);
-        graphicPanelCurves3D.drawCurve3D();
+        graphicPanelCurves3D.setParameters(var, 150, 200, 30, 30);
+        graphicPanelCurves3D.drawCurve3D(t_0, t_1, components);
 
     }
 
