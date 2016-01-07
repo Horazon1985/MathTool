@@ -305,7 +305,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public static void setIsRotating(boolean aIsRotating) {
         isRotating = aIsRotating;
     }
-    
+
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
@@ -721,7 +721,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
-                                graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, 
+                                graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
                                 graphicPanelImplicit2D, graphicPanelPolar2D,
                                 definedVars, definedFunctions);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
@@ -1046,7 +1046,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         stopPossibleRotation();
         try {
             MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
-                    graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, 
+                    graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
                     graphicPanelImplicit2D, graphicPanelPolar2D, definedVars, definedFunctions);
         } catch (Exception e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
@@ -1156,11 +1156,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                         instructions, graphicPanel2D.getColors(), exprs);
             } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT)) {
-                instructions.addAll(graphicPanel2D.getInstructions());
+                instructions.addAll(graphicPanelImplicit2D.getInstructions());
                 exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
-                        + graphicPanel2D.getExpressions().get(0).writeExpression() + " = 0");
+                        + graphicPanelImplicit2D.getExpressions().get(0).writeExpression()
+                        + " = "
+                        + graphicPanelImplicit2D.getExpressions().get(1).writeExpression());
+                ArrayList<Color> colors = new ArrayList<>();
+                colors.add(graphicPanelImplicit2D.getColor());
                 legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, graphicPanel2D.getColors(), exprs);
+                        instructions, colors, exprs);
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 instructions.addAll(GraphicPanel3D.getInstructions());
                 for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {

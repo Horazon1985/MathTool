@@ -2244,9 +2244,9 @@ public abstract class MathCommandCompiler {
         }
 
         // Graphen zeichnen.
-        graphicPanelImplicit2D.setExpressions(expr);
+        graphicPanelImplicit2D.setExpressions((Expression) command.getParams()[0], (Expression) command.getParams()[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
-        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation(expr, varAbsc, varOrd,
+        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicPanelImplicit2D.drawGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
 
