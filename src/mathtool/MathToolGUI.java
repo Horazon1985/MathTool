@@ -321,6 +321,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
+     * Setter für simplifyTypes
+     */
+    public static void setSimplifyTypes(HashSet<TypeSimplify> simplifyTypes) {
+        MathToolGUI.simplifyTypes = simplifyTypes;
+    }
+    
+    /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
     private void updateAPI() {
@@ -1108,11 +1115,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Checkboxen.
         ArrayList<String> simplifyOptions = new ArrayList<>();
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
         simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
         simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
+        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
         String saveButtonLabel = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SAVE_BUTTON");
         String cancelButtonLabel = Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_CANCEL_BUTTON");
 
@@ -1120,6 +1125,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         ArrayList<String[]> dropDownOptions = new ArrayList<>();
         dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS"),
             Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS")});
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE"),
+            Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND")});
 
         OutputOptionsDialogGUI outputOptionsDialogGUI = new OutputOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, simplifyOptions, dropDownOptions, saveButtonLabel, cancelButtonLabel);
