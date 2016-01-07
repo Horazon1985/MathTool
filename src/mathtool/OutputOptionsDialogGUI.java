@@ -11,5 +11,15 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE", 
                 "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
     }
+
+    @Override
+    public void loadOptions() {
+
+    }
+
+    @Override
+    public void saveOptions() {
+
+    }
     
 }

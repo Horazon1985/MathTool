@@ -151,7 +151,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         this.saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TO DO.
+                saveOptions();
                 dispose();
             }
         });
@@ -165,12 +165,24 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
 
     }
 
-    private void loadOptions() {
-
+    public JButton getSaveButton(){
+        return this.saveButton;
+    }
+    
+    public JButton getCancelButton(){
+        return this.cancelButton;
+    }
+    
+    public ArrayList<JCheckBox> getOptionLabels() {
+        return optionLabels;
     }
 
-    private void saveOptions() {
-
+    public ArrayList<JComboBox<String>> getOptionDropDowns() {
+        return optionDropDowns;
     }
+    
+    public abstract void loadOptions();
+    
+    public abstract void saveOptions();
 
 }

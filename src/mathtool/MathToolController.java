@@ -8,6 +8,7 @@ import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import expressionbuilder.Operator;
 import expressionbuilder.TypeOperator;
+import expressionbuilder.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;
@@ -42,6 +43,24 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
 
+    public static void initSimplifyTypes(){ 
+        HashSet<TypeSimplify> simplifyTypes = MathToolGUI.getSimplifyTypes();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypes.add(TypeSimplify.simplify_collect_products);
+        simplifyTypes.add(TypeSimplify.simplify_expand_rational_factors);
+        simplifyTypes.add(TypeSimplify.simplify_factorize_in_sums);
+        simplifyTypes.add(TypeSimplify.simplify_factorize_in_differences);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypes.add(TypeSimplify.simplify_collect_logarithms);
+    }
+    
     /**
      * Setzt die Einträge in den Operator-Dropdown.
      */

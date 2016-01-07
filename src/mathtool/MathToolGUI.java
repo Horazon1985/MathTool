@@ -8,6 +8,7 @@ import enumerations.TypeLanguage;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
+import expressionbuilder.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -95,6 +96,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public static int mathToolGraphicAreaWidth;
     public static int mathToolGraphicAreaHeight;
 
+    // Optionen
+    private static HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+    
     // logPosition = Index des aktuellen Befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
     public static int logPosition = 0;
 
@@ -221,6 +225,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Befehlbox aktualisieren.
         MathToolController.fillCommandChoice(commandChoice);
 
+        // Optionen initialisieren.
+        MathToolController.initSimplifyTypes();
+        
         validate();
         repaint();
 
@@ -297,6 +304,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static boolean isIsRotating() {
         return isRotating;
+    }
+
+    /**
+     * Getter für simplifyTypes
+     */
+    public static HashSet<TypeSimplify> getSimplifyTypes() {
+        return simplifyTypes;
     }
 
     /**
@@ -777,7 +791,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     try {
 
                         Expression exprSimplified = expr.evaluate(new HashSet(definedVars.keySet()));
-                        exprSimplified = exprSimplified.simplify();
+                        exprSimplified = exprSimplified.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
                         // Hinzufügen zum graphischen Ausgabefeld.
