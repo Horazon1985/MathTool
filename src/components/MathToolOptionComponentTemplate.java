@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,10 +21,11 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
     private final int numberOfColums;
     private final JLabel optionGroupLabel;
     private final ArrayList<JCheckBox> optionLabels;
+    private final ArrayList<JComboBox<String>> optionDropDowns;
     private final JButton saveButton;
     private final JButton cancelButton;
 
-    private final int stub = 20;
+    private final int stub = 30;
 
     /**
      * Aufbau:<br>
@@ -31,13 +33,14 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
      * (2) Eine Reihe von Informationstexten.<br>
      * (3) Eine Reihe von Informationstexten.<br>
      * (4) Eine Reihe von Menüpunkten.<br>
-     * (5) Eine TextArea, die mal ein-, mal ausgeblendet werden kann.
+     * (5) Eine Reihe von Menüpunkten als DropDowns.<br>
+     * (6) Eine TextArea, die mal ein-, mal ausgeblendet werden kann.
      */
     public MathToolOptionComponentTemplate(int mathtoolformX, int mathtoolformY,
             int mathtoolformWidth, int mathtoolformHeight,
             String titleID, String headerImageFilePath,
             int numberOfColumns, String optionGroupName, ArrayList<String> options,
-            String saveButtonLabel, String cancelButtonLabel) {
+            ArrayList<String[]> optionsDropDowns, String saveButtonLabel, String cancelButtonLabel) {
 
         setTitle(Translator.translateExceptionMessage(titleID));
         setLayout(null);
@@ -66,19 +69,24 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
 
         this.numberOfColums = numberOfColumns;
 
+        int numberOfOptions = 0;
         int numberOfOptionLabels = 0;
         if (options != null) {
+            numberOfOptions = options.size();
             numberOfOptionLabels = options.size();
         }
+        if (optionsDropDowns != null) {
+            numberOfOptions += optionsDropDowns.size();
+        }
         int numberOfOptionRows;
-        if (numberOfOptionLabels % numberOfColums == 0) {
-            numberOfOptionRows = numberOfOptionLabels / numberOfColums;
+        if (numberOfOptions % numberOfColums == 0) {
+            numberOfOptionRows = numberOfOptions / numberOfColums;
         } else {
-            numberOfOptionRows = numberOfOptionLabels / numberOfColums + 1;
+            numberOfOptionRows = numberOfOptions / numberOfColums + 1;
         }
 
         // Größe der Komponente festlegen.
-        int height = 160 + 20 * numberOfOptionRows, width;
+        int height = 170 + 30 * numberOfOptionRows, width;
         if (this.headerImage != null) {
             height = height + this.headerImage.getIconHeight();
             width = this.headerImage.getIconWidth();
@@ -93,8 +101,9 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         // Die Labels werden in Spalten mit einer Breite von jeweils 300 Pixel aufgeteilt.
         this.optionGroupLabel = new JLabel("<html><b>" + optionGroupName + "</b></html>");
         this.add(this.optionGroupLabel);
-        this.optionGroupLabel.setBounds(10, currentComponentLevel, width - 10, 20);
-        currentComponentLevel += 20 + this.stub;
+        this.optionGroupLabel.setBounds(10, currentComponentLevel, width - 10, 30);
+        currentComponentLevel += 30;
+        // Checkboxen
         this.optionLabels = new ArrayList<>();
         if (options != null) {
             JCheckBox optionBox;
@@ -103,12 +112,31 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
                 optionBox.setOpaque(false);
                 this.optionLabels.add(optionBox);
                 this.add(this.optionLabels.get(i));
-                this.optionLabels.get(i).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 25);
-                if ((i + 1) % numberOfColumns == 0) {
-                    currentComponentLevel += 20;
+                this.optionLabels.get(i).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 30);
+                if ((i + 1) % numberOfColumns == 0 && i + 1 < numberOfOptions) {
+                    currentComponentLevel += 30;
                 }
             }
-            currentComponentLevel += 20;
+        }
+        // DropDowns
+        this.optionDropDowns = new ArrayList<>();
+        if (optionsDropDowns != null) {
+            JComboBox<String> optionDropDown;
+            for (int i = numberOfOptionLabels; i < numberOfOptions; i++) {
+                optionDropDown = new JComboBox();
+                // DrowDown mit Werten füllen
+                for (String opt : optionsDropDowns.get(i - numberOfOptionLabels)) {
+                    optionDropDown.addItem(opt);
+                }
+                optionDropDown.setOpaque(false);
+                this.optionDropDowns.add(optionDropDown);
+                this.add(this.optionDropDowns.get(i - numberOfOptionLabels));
+                this.optionDropDowns.get(i - numberOfOptionLabels).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 30);
+                if ((i + 1) % numberOfColumns == 0 && i + 1 < numberOfOptions) {
+                    currentComponentLevel += 30;
+                }
+            }
+            currentComponentLevel += 30;
         }
 
         currentComponentLevel += this.stub;
@@ -124,16 +152,25 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TO DO.
+                dispose();
             }
         });
-        
+
         this.cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
-        
+
+    }
+
+    private void loadOptions() {
+
+    }
+
+    private void saveOptions() {
+
     }
 
 }
