@@ -10,7 +10,7 @@ import translator.Translator;
 
 public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
 
-    private HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
+    private final HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
     private HashSet<TypeSimplify> simplifyTypes;
 
     public OutputOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
@@ -97,7 +97,7 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
         if (type.equals(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter)) {
             return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
         }
-        if (type.equals(TypeSimplify.simplify_factorize_in_sums) || type.equals(TypeSimplify.simplify_factorize_in_differences)) {
+        if (type.equals(TypeSimplify.simplify_factorize)) {
             return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
         }
         if (type.equals(TypeSimplify.simplify_expand_powerful)) {
