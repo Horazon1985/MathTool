@@ -5,6 +5,7 @@ import expressionbuilder.TypeSimplify;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import translator.Translator;
 
 public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
@@ -35,6 +36,18 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
     @Override
     public void loadOptions() {
         this.simplifyTypes = MathToolGUI.getSimplifyTypes();
+        // Checkboxen füllen.
+        for (JCheckBox checkBox : getOptionLabels()){
+            if (this.simplifyTypes.contains(null)){
+                // TO DO.
+            }
+        }
+        // Einträge in DropDowns auswählen.
+        for (JComboBox<String> comboBox : getOptionDropDowns()){
+            if (this.simplifyTypes.contains(null)){
+                // TO DO.
+            }
+        }
     }
 
     @Override
