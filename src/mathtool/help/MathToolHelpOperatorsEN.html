@@ -24,6 +24,8 @@ while approx(0.5!) returns<br>
 
 <strong>gcd(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Computes the greatest common divisor of the integers n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
+<strong>grad(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Computes the gradient grad(F) = [∂F/∂x<sub>1</sub>; ··· ; ∂F/∂x<sub>n</sub>] of the function F.<br><br>
+
 <strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Computes the indefinite integral ∫F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx of the function F(x, a<sub>1</sub>, ..., a<sub>n</sub>) (with respect to x).<br><br>
 
 <strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Computes the definite integral ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx of the function F(x, a<sub>1</sub>, ..., a<sub>n</sub>) from b<sub>1</sub> to b<sub>2</sub> (with respect to x).<br><br>
@@ -41,6 +43,8 @@ while approx(0.5!) returns<br>
 <strong>mu(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Computes the arithmetic mean of the values x<sub>1</sub>, ..., x<sub>n</sub>.<br><br>
 
 <strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Computes the produkt F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). If k<sub>1</sub> &gt; k<sub>2</sub>, then the result is 1.<br><br>
+
+<strong>rot([F<sub>1</sub>; F<sub>2</sub>; F<sub>3</sub>], x, y, z):</strong> Computes the curl rot(F) = [∂F/∂y(F<sub>3</sub>) - ∂F/∂z(F<sub>2</sub>); -∂F/∂x(F<sub>3</sub>) + ∂F/∂z(F<sub>1</sub>) ; ∂F/∂x(F<sub>2</sub>) - ∂F/∂y(F<sub>1</sub>)] of the function F.<br><br>
 
 <strong>sigma(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Computes the standard deviation of the values x<sub>1</sub>, ..., x<sub>n</sub>.<br><br>
 
