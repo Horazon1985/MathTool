@@ -34,7 +34,7 @@ MathTool kennt die folgenden Befehle:<br><br>
 
 Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
 
-<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Löst alle enthaltenen Klammern bei Multiplikationen auf (multipliziert alle Terme aus).<br><br>
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> L&ouml;st alle enthaltenen Klammern bei Multiplikationen auf (multipliziert alle Terme aus).<br><br>
 
 <em>Beispiel:</em> expand(x+(a+b)*(c+d+e)) liefert die Ausgabe
 
@@ -62,18 +62,18 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
 
 <strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die r&auml;umliche Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) und z = F<sub>3</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Auch hier gilt dasselbe wie im Falle von plotcurve im Zweidimensionalen, dass manche "schlecht" parametrisierten Kurven nicht komplett gezeichnet werden k&ouml;nnen.<br><br>
 
-<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> für t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
-<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Berechnet die Gleichung der Regressionsgeraden für die Punkte P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, und zeichnet diese, falls möglich. Die Punkte P<sub>i</sub> müssen, nach Vereinfachung, von der Form [a;b], d.h. also (2x1)-Matrizen sein.<br><br>
+<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Berechnet die Gleichung der Regressionsgeraden f&uuml;r die Punkte P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, und zeichnet diese, falls m&ouml;glich. Die Punkte P<sub>i</sub> m&uuml;ssen, nach Vereinfachung, von der Form [a;b], d.h. also (2x1)-Matrizen sein.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Bestimmt die algebraischen Lösungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, falls möglich. Beachten Sie, dass sich nicht jede Gleichung algebraisch lösen lässt. Gleichungen der Form exp(x) - x = 3 besitzen beispielsweise keine Lösung, die sich mittels algebraischer Ausdrücke oder elementarer Funktionen in geschlossener Form hinschreiben lässt. Bei solchen Eingaben würde MathTool keine (exakte) Lösung liefern.<br><br>
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Bestimmt die algebraischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, falls m&ouml;glich. Beachten Sie, dass sich nicht jede Gleichung algebraisch l&ouml;sen l&auml;sst. Gleichungen der Form exp(x) - x = 3 besitzen beispielsweise keine L&ouml;sung, die sich mittels algebraischer Ausdr&uuml;cke oder elementarer Funktionen in geschlossener Form hinschreiben l&auml;sst. Bei solchen Eingaben w&uuml;rde MathTool keine (exakte) L&ouml;sung liefern.<br><br>
 
-<em>Beispiel:</em> Die Gleichung x^18 - 3*x^6 - 11 = 0 soll gelöst werden. Der Befehl solve(x^18 - 3*x^6 - 11 = 0) liefert die Lösungen
+<em>Beispiel:</em> Die Gleichung x^18 - 3*x^6 - 11 = 0 soll gel&ouml;st werden. Der Befehl solve(x^18 - 3*x^6 - 11 = 0) liefert die L&ouml;sungen
 <p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
 <p style="text-align: center;">x_2 = -((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6).</p>
 Approximiert lauten diese x<sub>1, 2</sub> ≈ ±1.1777403511345441. Letzteres wird durch den Befehl solve mit entsprechendem Suchbereich geliefert (siehe weiter unten).
 
-<strong>solve(F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Bestimmt die algebraischen Lösungen der Gleichung F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) in x (in Abhängigkeit von Parametern a<sub>1</sub>, ..., a<sub>n</sub>), falls möglich.<br><br>
+<strong>solve(F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Bestimmt die algebraischen L&ouml;sungen der Gleichung F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) in x (in Abh&auml;ngigkeit von Parametern a<sub>1</sub>, ..., a<sub>n</sub>), falls m&ouml;glich.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>.<br><br>
 
