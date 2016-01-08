@@ -37,15 +37,19 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
     public void loadOptions() {
         this.simplifyTypes = MathToolGUI.getSimplifyTypes();
         // Checkboxen füllen.
-        for (JCheckBox checkBox : getOptionLabels()){
-            if (this.simplifyTypes.contains(null)){
-                // TO DO.
+        for (TypeSimplify type : this.simplifyTypes) {
+            for (JCheckBox checkBox : getOptionCheckBoxes()) {
+                if (convertSimplifyTypeToOptionName(type).equals(checkBox.getText())) {
+                    checkBox.setSelected(true);
+                }
             }
-        }
-        // Einträge in DropDowns auswählen.
-        for (JComboBox<String> comboBox : getOptionDropDowns()){
-            if (this.simplifyTypes.contains(null)){
-                // TO DO.
+            // Einträge in DropDowns auswählen.
+            for (JComboBox<String> comboBox : getOptionDropDowns()) {
+                for (int i = 0; i < comboBox.getModel().getSize(); i++) {
+                    if (comboBox.getModel().getElementAt(i).equals(convertSimplifyTypeToOptionName(type))) {
+                        comboBox.setSelectedIndex(i);
+                    }
+                }
             }
         }
     }
@@ -59,7 +63,8 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
     private void setSimplifyTypes() {
         simplifyTypes.clear();
         simplifyTypes.addAll(mandatorySimplifyTypes);
-        for (JCheckBox opt : getOptionLabels()) {
+        // Checkboxen
+        for (JCheckBox opt : getOptionCheckBoxes()) {
             if (opt.getText().equals(Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS"))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
@@ -71,6 +76,40 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
                 simplifyTypes.add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
             }
         }
+        // DropDowns
+        for (JComboBox<String> comboBox : getOptionDropDowns()) {
+            String option = comboBox.getItemAt(comboBox.getSelectedIndex());
+            for (TypeSimplify type : TypeSimplify.values()){
+                if (convertSimplifyTypeToOptionName(type).equals(option)){
+                    simplifyTypes.add(type);
+                }
+            }
+        }
+    }
+
+    private String convertSimplifyTypeToOptionName(TypeSimplify type) {
+        if (type.equals(TypeSimplify.simplify_algebraic_expressions)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
+        }
+        if (type.equals(TypeSimplify.simplify_functional_relations)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
+        }
+        if (type.equals(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
+        }
+        if (type.equals(TypeSimplify.simplify_factorize_in_sums) || type.equals(TypeSimplify.simplify_factorize_in_differences)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
+        }
+        if (type.equals(TypeSimplify.simplify_expand_powerful)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
+        }
+        if (type.equals(TypeSimplify.simplify_collect_logarithms)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS");
+        }
+        if (type.equals(TypeSimplify.simplify_expand_logarithms)) {
+            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS");
+        }
+        return "";
     }
 
 }

@@ -20,7 +20,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
     private final ImageIcon headerImage;
     private final int numberOfColums;
     private final JLabel optionGroupLabel;
-    private final ArrayList<JCheckBox> optionLabels;
+    private final ArrayList<JCheckBox> optionCheckBoxes;
     private final ArrayList<JComboBox<String>> optionDropDowns;
     private final JButton saveButton;
     private final JButton cancelButton;
@@ -39,7 +39,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
     public MathToolOptionComponentTemplate(int mathtoolformX, int mathtoolformY,
             int mathtoolformWidth, int mathtoolformHeight,
             String titleID, String headerImageFilePath,
-            int numberOfColumns, String optionGroupName, ArrayList<String> options,
+            int numberOfColumns, String optionGroupName, ArrayList<String> optionCheckBoxes,
             ArrayList<String[]> optionsDropDowns, String saveButtonLabel, String cancelButtonLabel) {
 
         setTitle(Translator.translateExceptionMessage(titleID));
@@ -71,9 +71,9 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
 
         int numberOfOptions = 0;
         int numberOfOptionLabels = 0;
-        if (options != null) {
-            numberOfOptions = options.size();
-            numberOfOptionLabels = options.size();
+        if (optionCheckBoxes != null) {
+            numberOfOptions = optionCheckBoxes.size();
+            numberOfOptionLabels = optionCheckBoxes.size();
         }
         if (optionsDropDowns != null) {
             numberOfOptions += optionsDropDowns.size();
@@ -104,15 +104,15 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         this.optionGroupLabel.setBounds(10, currentComponentLevel, width - 10, 30);
         currentComponentLevel += 30;
         // Checkboxen
-        this.optionLabels = new ArrayList<>();
-        if (options != null) {
+        this.optionCheckBoxes = new ArrayList<>();
+        if (optionCheckBoxes != null) {
             JCheckBox optionBox;
             for (int i = 0; i < numberOfOptionLabels; i++) {
-                optionBox = new JCheckBox(Translator.translateExceptionMessage(options.get(i)));
+                optionBox = new JCheckBox(Translator.translateExceptionMessage(optionCheckBoxes.get(i)));
                 optionBox.setOpaque(false);
-                this.optionLabels.add(optionBox);
-                this.add(this.optionLabels.get(i));
-                this.optionLabels.get(i).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 30);
+                this.optionCheckBoxes.add(optionBox);
+                this.add(this.optionCheckBoxes.get(i));
+                this.optionCheckBoxes.get(i).setBounds(10 + 300 * (i % numberOfColumns), currentComponentLevel, 300, 30);
                 if ((i + 1) % numberOfColumns == 0 && i + 1 < numberOfOptions) {
                     currentComponentLevel += 30;
                 }
@@ -173,8 +173,8 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         return this.cancelButton;
     }
     
-    public ArrayList<JCheckBox> getOptionLabels() {
-        return optionLabels;
+    public ArrayList<JCheckBox> getOptionCheckBoxes() {
+        return optionCheckBoxes;
     }
 
     public ArrayList<JComboBox<String>> getOptionDropDowns() {
