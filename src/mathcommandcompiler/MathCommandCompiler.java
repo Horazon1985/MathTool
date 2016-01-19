@@ -168,6 +168,81 @@ public abstract class MathCommandCompiler {
      *
      * @throws ExpressionException, EvaluationException
      */
+    public static Command getCommand2(String command, String[] params) throws ExpressionException {
+
+        switch (command) {
+            case "approx":
+                return getCommandApprox(params);
+            case "ccnf":
+                return getCommandCCNF(params);
+            case "cdnf":
+                return getCommandCDNF(params);
+            case "clear":
+                return getCommandClear(params);
+            case "def":
+                return getCommandDef(params);
+            case "deffuncs":
+                return getCommandDefFuncs(params);
+            case "defvars":
+                return getCommandDefVars(params);
+            case "eigenvalues":
+                return getCommandEigenvalues(params);
+            case "eigenvectors":
+                return getCommandEigenvectors(params);
+            case "euler":
+                return getCommandEuler(params);
+            case "expand":
+                return getCommandExpand(params);
+            case "ker":
+                return getCommandKer(params);
+            case "latex":
+                return getCommandLatex(params);
+            case "pi":
+                return getCommandPi(params);
+            case "plot2d":
+                return getCommandPlot2D(params);
+            case "plotimplicit":
+                return getCommandPlotImplicit(params);
+            case "plot3d":
+                return getCommandPlot3D(params);
+            case "plotcurve":
+                return getCommandPlotCurve(params);
+            case "plotpolar":
+                return getCommandPlotPolar(params);
+            case "regressionline":
+                return getCommandRegressionLine(params);
+            case "solve":
+                return getCommandSolve(params);
+            case "solvedeq":
+                return getCommandSolveDEQ(params);
+            case "solvesystem":
+                return getCommandSolveSystem(params);
+            case "table":
+                return getCommandTable(params);
+            case "tangent":
+                return getCommandTangent(params);
+            case "taylordeq":
+                return getCommandTaylorDEQ(params);
+            case "undef":
+                return getCommandUndef(params);
+            case "undefall":
+                return getCommandUndelAll(params);
+            // Sollte theoretisch nie vorkommen.
+            default:
+                return new Command();
+        }
+
+    }
+
+    /**
+     * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
+     * zu den Parametern params gehört. Ansonsten wird eine entsprechende
+     * ExpressionException geworfen. WICHTIG: Der String command und die
+     * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
+     * im Vorfeld beseitigt.
+     *
+     * @throws ExpressionException, EvaluationException
+     */
     public static Command getCommand(String command, String[] params) throws ExpressionException {
 
         switch (command) {
@@ -248,7 +323,12 @@ public abstract class MathCommandCompiler {
             commandParams[0] = Expression.build(params[0], null);
             return new Command(TypeCommand.approx, commandParams);
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
+            try {
+                commandParams[0] = MatrixExpression.build(params[0], null);
+                return new Command(TypeCommand.approx, commandParams);
+            } catch (ExpressionException ex) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
+            }
         }
 
     }
@@ -1591,7 +1671,7 @@ public abstract class MathCommandCompiler {
     public static void executeCommand(String input, GraphicArea graphicArea,
             JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D,
             GraphicPanelCurves2D graphicPanelCurves2D, GraphicPanelCurves3D graphicPanelCurves3D,
-            GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicPanelPolar2D graphicPanelPolar2D, 
+            GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicPanelPolar2D graphicPanelPolar2D,
             HashMap<String, Expression> definedVars, HashMap<String, Expression> definedFunctions) throws ExpressionException, EvaluationException {
 
         output.clear();
@@ -1683,32 +1763,59 @@ public abstract class MathCommandCompiler {
     private static void executeApprox(Command command, HashMap<String, Expression> definedVars, GraphicArea graphicArea)
             throws ExpressionException, EvaluationException {
 
-        Expression expr = (Expression) command.getParams()[0];
+        if (command.getParams()[0] instanceof Expression) {
+            
+            Expression expr = (Expression) command.getParams()[0];
 
-        /*
-         Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so
-         darstellen, dass es nur vordefinierte Funktionen beinhaltet.
-         */
-        expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
-        // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
-        for (String var : definedVars.keySet()) {
-            expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
+            /*
+             Falls expr selbstdefinierte Funktionen enthält, dann zunächst expr so
+             darstellen, dass es nur vordefinierte Funktionen beinhaltet.
+             */
+            expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
+            // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
+            for (String var : definedVars.keySet()) {
+                expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
+            }
+
+            // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
+            expr = expr.simplify();
+            expr = expr.turnToApproximate().simplify();
+            /*
+             Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
+             werden nur dann approximativ ausgegeben, wenn sie nicht präzise
+             (precise = false) sind.
+             */
+            Variable.setAllPrecise(true);
+
+            // Textliche Ausgabe
+            output.add(expr.writeExpression() + " \n \n");
+            // Graphische Ausgabe
+            graphicArea.addComponent(expr);
+            
+        } else if (command.getParams()[0] instanceof MatrixExpression){
+        
+            MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+
+            for (String var : definedVars.keySet()) {
+                matExpr = matExpr.replaceVariable(var, (Expression) definedVars.get(var));
+            }
+
+            // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
+            matExpr = matExpr.simplify();
+            matExpr = matExpr.turnToApproximate().simplify();
+            /*
+             Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
+             werden nur dann approximativ ausgegeben, wenn sie nicht präzise
+             (precise = false) sind.
+             */
+            Variable.setAllPrecise(true);
+
+            // Textliche Ausgabe
+            output.add(matExpr.writeMatrixExpression() + " \n \n");
+            // Graphische Ausgabe
+            graphicArea.addComponent(matExpr);
+        
         }
-
-        // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
-        expr = expr.simplify();
-        expr = expr.turnToApproximate().simplify();
-        /*
-         Dies dient dazu, dass alle Variablen wieder "präzise" sind. Sie
-         werden nur dann approximativ ausgegeben, wenn sie nicht präzise
-         (precise = false) sind.
-         */
-        Variable.setAllPrecise(true);
-
-        // Textliche Ausgabe
-        output.add(expr.writeExpression() + " \n \n");
-        // Graphische Ausgabe
-        graphicArea.addComponent(expr);
 
     }
 
@@ -2132,7 +2239,7 @@ public abstract class MathCommandCompiler {
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 2; i++) {
-            
+
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
 
@@ -2255,7 +2362,7 @@ public abstract class MathCommandCompiler {
 
         ArrayList<Expression> exprs = new ArrayList<>();
         for (int i = 0; i < command.getParams().length - 4; i++) {
-            
+
             exprs.add(((Expression) command.getParams()[i]).simplify(simplifyTypesPlot));
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprs.get(i).containsOperator()) {
@@ -2268,7 +2375,7 @@ public abstract class MathCommandCompiler {
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
             }
-            
+
         }
 
         Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
@@ -2505,7 +2612,7 @@ public abstract class MathCommandCompiler {
              falls keines der Stichproben Parameter enthält.
              */
             for (Matrix point : pts) {
-                if (!point.isConstant()){
+                if (!point.isConstant()) {
                     throw new EvaluationException(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
                 }
             }
