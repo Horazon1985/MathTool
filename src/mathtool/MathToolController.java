@@ -8,7 +8,7 @@ import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import expressionbuilder.Operator;
 import expressionbuilder.TypeOperator;
-import expressionbuilder.TypeSimplify;
+import enumerations.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;

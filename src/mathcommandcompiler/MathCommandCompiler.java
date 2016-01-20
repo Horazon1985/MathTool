@@ -15,7 +15,7 @@ import static expressionbuilder.Expression.ZERO;
 import expressionbuilder.SelfDefinedFunction;
 import expressionbuilder.TypeFunction;
 import expressionbuilder.TypeOperator;
-import expressionbuilder.TypeSimplify;
+import enumerations.TypeSimplify;
 import expressionbuilder.Variable;
 import expressionsimplifymethods.ExpressionCollection;
 import expressionsimplifymethods.SimplifyPolynomialMethods;

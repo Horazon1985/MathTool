@@ -1,7 +1,7 @@
 package mathtool;
 
 import components.MathToolOptionComponentTemplate;
-import expressionbuilder.TypeSimplify;
+import enumerations.TypeSimplify;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JCheckBox;

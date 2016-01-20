@@ -8,7 +8,7 @@ import enumerations.TypeLanguage;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
-import expressionbuilder.TypeSimplify;
+import enumerations.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
