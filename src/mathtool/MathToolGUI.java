@@ -5,10 +5,10 @@ import command.TypeCommand;
 import components.MathToolSaveGraphicDialog;
 import enumerations.TypeGraphic;
 import enumerations.TypeLanguage;
+import enumerations.TypeSimplify;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
-import enumerations.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -860,7 +860,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      */
                     try {
 
-                        MatrixExpression matExprSimplified = matExpr.simplify();
+                        MatrixExpression matExprSimplified = matExpr.evaluate(new HashSet(definedVars.keySet()));
+                        matExprSimplified = matExprSimplified.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
                             mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + ((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()).writeExpression() + "\n \n");

@@ -4,11 +4,11 @@ import command.Command;
 import command.TypeCommand;
 import enumerations.TypeGraphic;
 import enumerations.TypeLanguage;
+import enumerations.TypeSimplify;
 import exceptions.ExpressionException;
 import expressionbuilder.Expression;
 import expressionbuilder.Operator;
 import expressionbuilder.TypeOperator;
-import enumerations.TypeSimplify;
 import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;
@@ -58,6 +58,9 @@ public class MathToolController {
         simplifyTypes.add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
         simplifyTypes.add(TypeSimplify.simplify_functional_relations);
         simplifyTypes.add(TypeSimplify.simplify_collect_logarithms);
+        // Für Matrizen
+        simplifyTypes.add(TypeSimplify.simplify_matrix_entries);
+        simplifyTypes.add(TypeSimplify.simplify_compute_matrix_operations);
     }
     
     /**

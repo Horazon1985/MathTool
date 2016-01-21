@@ -31,6 +31,10 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
         mandatorySimplifyTypes.add(TypeSimplify.simplify_expand_rational_factors);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_reduce_leadings_coefficients);
+        // Für Matrizen
+        mandatorySimplifyTypes.add(TypeSimplify.simplify_matrix_entries);
+        mandatorySimplifyTypes.add(TypeSimplify.simplify_compute_matrix_operations);
+        
     }
 
     @Override
