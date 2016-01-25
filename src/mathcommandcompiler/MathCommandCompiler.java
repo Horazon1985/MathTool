@@ -5,7 +5,7 @@ import command.TypeCommand;
 import abstractexpressions.expression.computation.AnalysisMethods;
 import abstractexpressions.expression.computation.NumericalMethods;
 import abstractexpressions.expression.computation.StatisticMethods;
-import enumerations.TypeSimplify;
+import enums.TypeSimplify;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import abstractexpressions.expression.classes.Expression;

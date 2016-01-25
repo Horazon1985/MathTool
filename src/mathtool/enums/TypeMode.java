@@ -1,4 +1,4 @@
-package mathtool;
+package mathtool.enums;
 
 public enum TypeMode {
     

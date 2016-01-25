@@ -1,10 +1,11 @@
 package mathtool;
 
+import mathtool.enums.TypeMode;
 import command.Command;
 import command.TypeCommand;
-import enumerations.TypeGraphic;
-import enumerations.TypeLanguage;
-import enumerations.TypeSimplify;
+import enums.TypeGraphic;
+import enums.TypeLanguage;
+import enums.TypeSimplify;
 import exceptions.ExpressionException;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.expression.classes.Operator;
