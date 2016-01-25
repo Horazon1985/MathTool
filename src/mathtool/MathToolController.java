@@ -6,9 +6,9 @@ import enumerations.TypeGraphic;
 import enumerations.TypeLanguage;
 import enumerations.TypeSimplify;
 import exceptions.ExpressionException;
-import expressionbuilder.Expression;
-import expressionbuilder.Operator;
-import expressionbuilder.TypeOperator;
+import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Operator;
+import abstractexpressions.expression.classes.TypeOperator;
 import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;
@@ -28,13 +28,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import logicalexpressionbuilder.LogicalExpression;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import static mathtool.MathToolGUI.mathToolGraphicAreaHeight;
 import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
 import static mathtool.MathToolGUI.mathToolGraphicAreaX;
 import static mathtool.MathToolGUI.mathToolGraphicAreaY;
-import matrixexpressionbuilder.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import translator.Translator;
 
 public class MathToolController {

@@ -1,7 +1,7 @@
 package mathtool;
 
 import components.MathToolInfoComponentTemplate;
-import expressionbuilder.Expression;
+import abstractexpressions.expression.classes.Expression;
 import java.io.IOException;
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@ import enumerations.TypeLanguage;
 import enumerations.TypeSimplify;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
-import expressionbuilder.Expression;
+import abstractexpressions.expression.classes.Expression;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -40,9 +40,9 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import logicalexpressionbuilder.LogicalExpression;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
-import matrixexpressionbuilder.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {

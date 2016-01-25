@@ -1,6 +1,6 @@
 package mathtool;
 
-import expressionbuilder.Expression;
+import abstractexpressions.expression.classes.Expression;
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.ImageIcon;
