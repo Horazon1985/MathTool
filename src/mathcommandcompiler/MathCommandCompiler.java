@@ -47,7 +47,7 @@ import abstractexpressions.matrixexpression.classes.Matrix;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
 import operationparser.OperationParser;
-import solveequationmethods.SolveMethods;
+import abstractexpressions.expression.equation.SolveMethods;
 import translator.Translator;
 
 public abstract class MathCommandCompiler {
