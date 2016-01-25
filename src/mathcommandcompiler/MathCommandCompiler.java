@@ -46,6 +46,7 @@ import mathtool.MathToolGUI;
 import matrixexpressionbuilder.Matrix;
 import matrixexpressionbuilder.MatrixExpression;
 import matrixsimplifymethods.MatrixExpressionCollection;
+import operationparser.OperationParser;
 import solveequationmethods.SolveMethods;
 import translator.Translator;
 
@@ -172,33 +173,41 @@ public abstract class MathCommandCompiler {
 
         switch (command) {
             case "approx":
-                return getCommandApprox(params);
+                try {
+                    return OperationParser.parseDefaultCommand(command, params, "approx(expr)");
+                } catch (ExpressionException e) {
+                    try {
+                        return OperationParser.parseDefaultCommand(command, params, "approx(matexpr)");
+                    } catch (ExpressionException ex) {
+                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
+                    }
+                }
             case "ccnf":
-                return getCommandCCNF(params);
+                return OperationParser.parseDefaultCommand(command, params, "ccnf(logexpr)");
             case "cdnf":
-                return getCommandCDNF(params);
+                return OperationParser.parseDefaultCommand(command, params, "cdnf(logexpr)");
             case "clear":
-                return getCommandClear(params);
+                return OperationParser.parseDefaultCommand(command, params, "clear()");
             case "def":
                 return getCommandDef(params);
             case "deffuncs":
-                return getCommandDefFuncs(params);
+                return OperationParser.parseDefaultCommand(command, params, "deffuncs()");
             case "defvars":
-                return getCommandDefVars(params);
+                return OperationParser.parseDefaultCommand(command, params, "defvars()");
             case "eigenvalues":
-                return getCommandEigenvalues(params);
+                return OperationParser.parseDefaultCommand(command, params, "eigenvalues(matexpr)");
             case "eigenvectors":
-                return getCommandEigenvectors(params);
+                return OperationParser.parseDefaultCommand(command, params, "eigenvectors(matexpr)");
             case "euler":
-                return getCommandEuler(params);
+                return OperationParser.parseDefaultCommand(command, params, "euler(int)");
             case "expand":
-                return getCommandExpand(params);
+                return OperationParser.parseDefaultCommand(command, params, "expand(expr)");
             case "ker":
-                return getCommandKer(params);
+                return OperationParser.parseDefaultCommand(command, params, "ker(matexpr)");
             case "latex":
                 return getCommandLatex(params);
             case "pi":
-                return getCommandPi(params);
+                return OperationParser.parseDefaultCommand(command, params, "pi(int)");
             case "plot2d":
                 return getCommandPlot2D(params);
             case "plotimplicit":
@@ -210,23 +219,23 @@ public abstract class MathCommandCompiler {
             case "plotpolar":
                 return getCommandPlotPolar(params);
             case "regressionline":
-                return getCommandRegressionLine(params);
+                return OperationParser.parseDefaultCommand(command, params, "regressionline(matexpr,matexpr+)");
             case "solve":
                 return getCommandSolve(params);
             case "solvedeq":
                 return getCommandSolveDEQ(params);
             case "solvesystem":
-                return getCommandSolveSystem(params);
+                return OperationParser.parseDefaultCommand(command, params, "solvesystem(equation+)");
             case "table":
-                return getCommandTable(params);
+                return OperationParser.parseDefaultCommand(command, params, "table(logexpr)");
             case "tangent":
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
             case "undef":
-                return getCommandUndef(params);
+                return OperationParser.parseDefaultCommand(command, params, "undef(var+)");
             case "undefall":
-                return getCommandUndelAll(params);
+                return OperationParser.parseDefaultCommand(command, params, "undefall()");
             // Sollte theoretisch nie vorkommen.
             default:
                 return new Command();
@@ -1685,7 +1694,7 @@ public abstract class MathCommandCompiler {
          Zunächst muss der entsprechende Befehl ermittelt und in eine Instanz
          der Klasse Command umgewandelt werden.
          */
-        Command command = getCommand(commandName, params);
+        Command command = getCommand2(commandName, params);
 
         // Abhängig vom Typ von c wird der Befehl ausgeführt.
         if (command.getTypeCommand().equals(TypeCommand.approx)) {
@@ -1764,7 +1773,7 @@ public abstract class MathCommandCompiler {
             throws ExpressionException, EvaluationException {
 
         if (command.getParams()[0] instanceof Expression) {
-            
+
             Expression expr = (Expression) command.getParams()[0];
 
             /*
@@ -1791,9 +1800,9 @@ public abstract class MathCommandCompiler {
             output.add(expr.writeExpression() + " \n \n");
             // Graphische Ausgabe
             graphicArea.addComponent(expr);
-            
-        } else if (command.getParams()[0] instanceof MatrixExpression){
-        
+
+        } else if (command.getParams()[0] instanceof MatrixExpression) {
+
             MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
 
             for (String var : definedVars.keySet()) {
@@ -1814,7 +1823,7 @@ public abstract class MathCommandCompiler {
             output.add(matExpr.writeMatrixExpression() + " \n \n");
             // Graphische Ausgabe
             graphicArea.addComponent(matExpr);
-        
+
         }
 
     }
@@ -1992,10 +2001,11 @@ public abstract class MathCommandCompiler {
     private static void executeDefVars(HashMap<String, Expression> definedVars, GraphicArea graphicArea) {
 
         if (!definedVars.isEmpty()) {
+            output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES") + "\n \n");
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : definedVars.keySet()) {
                 // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES")
-                        + var + " = " + ((Expression) definedVars.get(var)).writeExpression() + "\n \n");
+                output.add(var + " = " + ((Expression) definedVars.get(var)).writeExpression() + "\n \n");
                 // Grafische Ausgabe
                 graphicArea.addComponent(var, " = ", (Expression) definedVars.get(var));
             }
