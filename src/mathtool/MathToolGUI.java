@@ -96,7 +96,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static TypeMode typeMode;
     private static int fontSize;
     private static Dimension minimumDimension;
-    private static boolean isRotating;
+    private static boolean isRotating = false;
     private static boolean computing = false;
 
     // Koordinaten und Maße für die graphische Ausgabeoberfläche.
@@ -116,13 +116,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         initComponents();
         initCaptions();
         this.setLayout(null);
-        isRotating = false;
 
         // Konfigurationen aus XML auslesen.
         MathToolController.setSettings();
 
         // Mindestfenstergröße festlegen
-        minimumDimension = new Dimension(1200, 670);
         setMinimumSize(minimumDimension);
 
         // Labels ausrichten
