@@ -88,6 +88,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     // Laufzeitvariablen.
     private static TypeGraphic typeGraphic;
     private static TypeMode typeMode;
+    private static int fontSize;
     private static boolean isRotating;
     private static boolean computing = false;
 
@@ -118,6 +119,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Es wird noch keine Grafik angezeigt
         typeGraphic = TypeGraphic.NONE;
+
+        // Standardschriftgröße
+        fontSize = 18;
 
         // Mindestfenstergröße festlegen
         setMinimumSize(new Dimension(1200, 670));
@@ -186,7 +190,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         mathToolGraphicAreaHeight = this.getHeight() - 170;
         mathToolGraphicArea = new GraphicArea(mathToolGraphicAreaX, mathToolGraphicAreaY,
                 mathToolGraphicAreaWidth, mathToolGraphicAreaHeight);
-        mathToolGraphicArea.setFontSize(18);
+        mathToolGraphicArea.setFontSize(fontSize);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
@@ -291,6 +295,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static TypeGraphic getTypeGraphic() {
         return typeGraphic;
+    }
+
+    /**
+     * Getter für fontSize.
+     */
+    public static int getFontSize() {
+        return fontSize;
     }
 
     /**

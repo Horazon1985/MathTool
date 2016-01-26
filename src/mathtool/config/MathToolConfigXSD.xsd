@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="mathToolConfig">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="generalSettings">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="fontSize" type="xs:string"/>
+            <xs:element name="language">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="DE"/>
+						<xs:enumeration value="EN"/>
+						<xs:enumeration value="RU"/>
+						<xs:enumeration value="UA"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+            <xs:element name="mode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="TEXT"/>
+						<xs:enumeration value="GRAPHIC"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="optionSettings">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="algebraicRelations" type="xs:boolean"/>
+            <xs:element name="functionalRelations" type="xs:boolean"/>
+            <xs:element name="expandAndCollectIfShorter" type="xs:boolean"/>
+            <xs:element name="factorizeDropDownOption">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="factorize"/>
+						<xs:enumeration value="expand"/>
+						<xs:enumeration value="no_options"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+            <xs:element name="logarithmsDropDownOption">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="collect"/>
+						<xs:enumeration value="expand"/>
+						<xs:enumeration value="no_options"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema> 
