@@ -7,7 +7,8 @@
                 <xs:element name="generalSettings">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="fontSize" type="xs:string"/>
+                            <xs:element name="fontSizeGraphic" type="xs:string"/>
+                            <xs:element name="fontSizeText" type="xs:string"/>
                             <xs:element name="language">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">

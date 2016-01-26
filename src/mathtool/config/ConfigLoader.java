@@ -15,9 +15,14 @@ public class ConfigLoader {
         MathToolConfig config = new MathToolConfig();
         
         GeneralSettings generalSettings = new GeneralSettings();
-        generalSettings.setFontSize(18);
+        generalSettings.setFontSizeGraphic(18);
+        generalSettings.setFontSizeGraphic(12);
         generalSettings.setLanguage(TypeLanguage.EN);
         generalSettings.setMode(TypeMode.TEXT);
+
+        ScreenSettings screenSettings = new ScreenSettings();
+        screenSettings.setMinWidth(1200);
+        screenSettings.setMinHeight(670);
         
         OptionSettings optionSettings = new OptionSettings();
         optionSettings.setAlgebraicRelations(true);
@@ -27,11 +32,12 @@ public class ConfigLoader {
         optionSettings.setLogarithmsDropDownOption(OptionSettings.LogarithmsDropDownOption.collect);
 
         config.setGeneralSettings(generalSettings);
+        config.setScreenSettings(screenSettings);
         config.setOptionSettings(optionSettings);
         
         try {
 
-            File file = new File("C:\\file.xml");
+            File file = new File("D:\\file.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(MathToolConfig.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

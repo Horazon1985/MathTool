@@ -106,7 +106,7 @@ public class MathToolController {
         try {
             MathToolConfig config = ConfigLoader.loadConfig();
             // Konfigurationen setzen.
-            MathToolGUI.setFontSize(config.getGeneralSettings().getFontSize());
+            MathToolGUI.setFontSize(config.getGeneralSettings().getFontSizeGraphic());
             Expression.setLanguage(config.getGeneralSettings().getLanguage());
             MathToolGUI.setMode(config.getGeneralSettings().getMode());
             MathToolGUI.setMinimumDimension(new Dimension(config.getScreenSettings().getMinWidth(), config.getScreenSettings().getMinHeight()));

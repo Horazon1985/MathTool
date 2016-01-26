@@ -8,25 +8,41 @@ import mathtool.enums.TypeMode;
 @XmlRootElement
 public class GeneralSettings {
 
-    private int fontSize;
+    private int fontSizeGraphic;
+    private int fontSizeText;
     private TypeLanguage language;
     private TypeMode mode;
 
     /**
-     * @return the fontSize
+     * @return the fontSizeGraphic
      */
-    public int getFontSize() {
-        return fontSize;
+    public int getFontSizeGraphic() {
+        return fontSizeGraphic;
     }
 
     /**
-     * @param fontSize the fontSize to set
+     * @param fontSize the fontSizeGraphic to set
      */
     @XmlElement
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
+    public void setFontSizeGraphic(int fontSize) {
+        this.fontSizeGraphic = fontSize;
     }
 
+    /**
+     * @return the fontSizeText
+     */
+    public int getFontSizeText() {
+        return fontSizeText;
+    }
+
+    /**
+     * @param fontSizeText the fontSizeText to set
+     */
+    @XmlElement
+    public void setFontSizeText(int fontSizeText) {
+        this.fontSizeText = fontSizeText;
+    }
+    
     /**
      * @return the typeLanguage
      */
