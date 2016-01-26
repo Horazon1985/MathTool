@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MathToolConfig {
 
     private GeneralSettings generalSettings;
+    private ScreenSettings screenSettings;
     private OptionSettings optionSettings;
     
     /**
@@ -24,6 +25,21 @@ public class MathToolConfig {
         this.generalSettings = generalSettings;
     }
 
+    /**
+     * @return the screenSettings
+     */
+    public ScreenSettings getScreenSettings() {
+        return screenSettings;
+    }
+
+    /**
+     * @param screenSettings the screenSettings to set
+     */
+    @XmlElement
+    public void setScreenSettings(ScreenSettings screenSettings) {
+        this.screenSettings = screenSettings;
+    }
+    
     /**
      * @return the optionSettings
      */

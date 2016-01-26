@@ -5,6 +5,10 @@
 	<language>DE</language>
 	<mode>GRAPHIC</mode>
     </generalSettings>
+    <screenSettings>
+	<minWidth>1200</minWidth>
+	<minHeight>670</minHeight>
+    </screenSettings>
     <optionSettings>
 	<algebraicRelations>true</algebraicRelations>
 	<functionalRelations>true</functionalRelations>

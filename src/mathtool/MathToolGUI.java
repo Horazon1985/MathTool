@@ -92,9 +92,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final ArrayList<String> listOfCommands = new ArrayList<>();
 
     // Laufzeitvariablen.
-    private static TypeGraphic typeGraphic;
+    private static TypeGraphic typeGraphic = TypeGraphic.NONE;
     private static TypeMode typeMode;
     private static int fontSize;
+    private static Dimension minimumDimension;
     private static boolean isRotating;
     private static boolean computing = false;
 
@@ -119,12 +120,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Konfigurationen aus XML auslesen.
         MathToolController.setSettings();
-        
-        // Es wird noch keine Grafik angezeigt
-        typeGraphic = TypeGraphic.NONE;
 
         // Mindestfenstergröße festlegen
-        setMinimumSize(new Dimension(1200, 670));
+        minimumDimension = new Dimension(1200, 670);
+        setMinimumSize(minimumDimension);
 
         // Labels ausrichten
         legendLabel = new JLabel("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
@@ -326,6 +325,20 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static void setFontSize(int size) {
         fontSize = size;
+    }
+
+    /**
+     * Getter für minimumDimension.
+     */
+    public static Dimension getMinimumDimension() {
+        return minimumDimension;
+    }
+
+    /**
+     * Setter für minimumDimension.
+     */
+    public static void setMinimumDimension(Dimension dim) {
+        minimumDimension = dim;
     }
     
     /**

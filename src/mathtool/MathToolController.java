@@ -36,6 +36,7 @@ import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
 import static mathtool.MathToolGUI.mathToolGraphicAreaX;
 import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -108,6 +109,7 @@ public class MathToolController {
             MathToolGUI.setFontSize(config.getGeneralSettings().getFontSize());
             Expression.setLanguage(config.getGeneralSettings().getLanguage());
             MathToolGUI.setMode(config.getGeneralSettings().getMode());
+            MathToolGUI.setMinimumDimension(new Dimension(config.getScreenSettings().getMinWidth(), config.getScreenSettings().getMinHeight()));
         } catch (JAXBException e) {
             // Defaultwerte eintragen!
             MathToolGUI.setFontSize(18);
