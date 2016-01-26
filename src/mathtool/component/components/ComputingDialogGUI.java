@@ -1,4 +1,4 @@
-package mathtool;
+package mathtool.component.components;
 
 import translator.Translator;
 import java.awt.Color;
@@ -29,7 +29,7 @@ public class ComputingDialogGUI extends JDialog {
 
         JPanel owlPanel = new JPanel();
         add(owlPanel);
-        owlLabel = new JLabel(new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png")));
+        owlLabel = new JLabel(new ImageIcon(getClass().getResource("../../icons/LogoOwlEyesOpen.png")));
         owlPanel.add(owlLabel);
         owlPanel.setBounds(10, -5, 50, 70);
         owlPanel.setVisible(true);

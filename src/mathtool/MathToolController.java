@@ -36,6 +36,13 @@ import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
 import static mathtool.MathToolGUI.mathToolGraphicAreaX;
 import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
+import mathtool.component.components.ComputingDialogGUI;
+import mathtool.component.components.MathToolTextField;
+import mathtool.config.ConfigLoader;
+import mathtool.config.MathToolConfig;
 import translator.Translator;
 
 public class MathToolController {
@@ -94,6 +101,22 @@ public class MathToolController {
         }
     }
 
+    public static void setSettings(){
+        try {
+            MathToolConfig config = ConfigLoader.loadConfig();
+            // Konfigurationen setzen.
+            MathToolGUI.setFontSize(config.getGeneralSettings().getFontSize());
+            Expression.setLanguage(config.getGeneralSettings().getLanguage());
+            MathToolGUI.setMode(config.getGeneralSettings().getMode());
+        } catch (JAXBException e) {
+            // Defaultwerte eintragen!
+            MathToolGUI.setFontSize(18);
+            Expression.setLanguage(TypeLanguage.DE);
+            MathToolGUI.setMode(TypeMode.GRAPHIC);
+        }
+    
+    }
+    
     /**
      * Gibt den i-ten geloggten Befehl zurück.
      */

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import mathtool.config.ConfigLoader;
 import mathtool.config.ConfigLoader;
+import mathtool.config.MathToolConfig;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -30,7 +31,7 @@ public class ConfigTests {
     @Test
     public void loadConfigTest(){
         try {
-            ConfigLoader.loadConfig();
+            MathToolConfig config = ConfigLoader.loadConfig();
         } catch (JAXBException e) {
             fail(e.getMessage());
         }

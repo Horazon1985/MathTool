@@ -47,14 +47,11 @@ public class ConfigLoader {
 
     }
 
-    public static void loadConfig() throws JAXBException {
-
+    public static MathToolConfig loadConfig() throws JAXBException {
         File file = new File("src/mathtool/config/MathToolConfig.xml");
         JAXBContext jaxbContext = JAXBContext.newInstance(MathToolConfig.class);
-
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        MathToolConfig config = (MathToolConfig) jaxbUnmarshaller.unmarshal(file);
-
+        return (MathToolConfig) jaxbUnmarshaller.unmarshal(file);
     }
 
 }

@@ -1,4 +1,4 @@
-package mathtool;
+package mathtool.component.components;
 
 import java.awt.Font;
 import javax.swing.JTextField;

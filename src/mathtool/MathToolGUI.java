@@ -44,6 +44,12 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import mathtool.component.components.ComputingDialogGUI;
+import mathtool.component.components.DevelopersDialogGUI;
+import mathtool.component.components.HelpDialogGUI;
+import mathtool.component.components.LegendGUI;
+import mathtool.component.components.MathToolTextField;
+import mathtool.component.components.OutputOptionsDialogGUI;
 import translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {
@@ -111,17 +117,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         this.setLayout(null);
         isRotating = false;
 
-        // Standardsprache = DE
-        Expression.setLanguage(TypeLanguage.DE);
-
-        // Formelmodus ist am Anfang aktiviert
-        typeMode = TypeMode.GRAPHIC;
-
+        // Konfigurationen aus XML auslesen.
+        MathToolController.setSettings();
+        
         // Es wird noch keine Grafik angezeigt
         typeGraphic = TypeGraphic.NONE;
-
-        // Standardschriftgröße
-        fontSize = 18;
 
         // Mindestfenstergröße festlegen
         setMinimumSize(new Dimension(1200, 670));
@@ -275,6 +275,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                 mathToolGraphicArea.updateSize();
 
+                // Abhängig von der Sprache alle Texte (neu) setzen.
+                updateAPI();
+                
                 validate();
                 repaint();
             }
@@ -291,10 +294,24 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
+     * Setter für typeMode.
+     */
+    public static void setMode(TypeMode mode) {
+        typeMode = mode;
+    }
+
+    /**
      * Getter für typeGraphic.
      */
     public static TypeGraphic getTypeGraphic() {
         return typeGraphic;
+    }
+
+    /**
+     * Setter für typeGraphic.
+     */
+    public static void setTypeGraphic(TypeGraphic graphic) {
+        typeGraphic = graphic;
     }
 
     /**
@@ -304,6 +321,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
         return fontSize;
     }
 
+    /**
+     * Setter für fontSize.
+     */
+    public static void setFontSize(int size) {
+        fontSize = size;
+    }
+    
     /**
      * Getter für listOfCommands.
      */

@@ -1,5 +1,6 @@
-package mathtool;
+package mathtool.component.components;
 
+import mathtool.MathToolGUI;
 import components.MathToolOptionComponentTemplate;
 import enums.TypeSimplify;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE",
-                "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+                "../../icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         loadOptions();
         initMandatorySimplifyTypes();
     }

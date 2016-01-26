@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mathToolConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MathToolConfigXSD.xsd">
-    <fontSize>18</fontSize>
-    <language>DE</language>
-    <mode>GRAPHIC</mode>
-    <algebraicRelations>true</algebraicRelations>
-    <functionalRelations>true</functionalRelations>
-    <expandAndCollectIfShorter>true</expandAndCollectIfShorter>
-    <factorizeDropDownOption>factorize</factorizeDropDownOption>
-    <logarithmsDropDownOption>collect</logarithmsDropDownOption>
+    <generalSettings>
+	<fontSize>18</fontSize>
+	<language>DE</language>
+	<mode>GRAPHIC</mode>
+    </generalSettings>
+    <optionSettings>
+	<algebraicRelations>true</algebraicRelations>
+	<functionalRelations>true</functionalRelations>
+	<expandAndCollectIfShorter>true</expandAndCollectIfShorter>
+	<factorizeDropDownOption>factorize</factorizeDropDownOption>
+	<logarithmsDropDownOption>collect</logarithmsDropDownOption>
+    </optionSettings>
 </mathToolConfig>
