@@ -13,11 +13,11 @@ public class OptionSettings {
     private LogarithmsDropDownOption logarithmsDropDownOption;
 
     public enum FactorizeDropDownOption {
-        factorize, expand;
+        factorize, expand, no_options;
     }
 
     public enum LogarithmsDropDownOption {
-        collect, expand;
+        collect, expand, no_options;
     }
     
     /**

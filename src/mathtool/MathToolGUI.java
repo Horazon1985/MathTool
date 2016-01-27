@@ -118,6 +118,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         initCaptions();
         setLayout(null);
 
+        // Optionen initialisieren.
+        MathToolController.initSimplifyTypes();
+        
         // Konfigurationen aus XML auslesen.
         MathToolController.setSettings();
 
@@ -227,9 +230,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathToolController.fillOperatorChoice(operatorChoice);
         // Befehlbox aktualisieren.
         MathToolController.fillCommandChoice(commandChoice);
-
-        // Optionen initialisieren.
-        MathToolController.initSimplifyTypes();
 
         validate();
         repaint();

@@ -42,6 +42,7 @@ import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolConfig;
+import mathtool.config.OptionSettings;
 import translator.Translator;
 
 public class MathToolController {
@@ -50,7 +51,7 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("icons/LogoOwlEyesClosed.png"));
 
-    public static void initSimplifyTypes(){ 
+    public static void initSimplifyTypes() {
         HashSet<TypeSimplify> simplifyTypes = MathToolGUI.getSimplifyTypes();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
@@ -69,7 +70,7 @@ public class MathToolController {
         simplifyTypes.add(TypeSimplify.simplify_matrix_entries);
         simplifyTypes.add(TypeSimplify.simplify_compute_matrix_operations);
     }
-    
+
     /**
      * Setzt die Einträge in den Operator-Dropdown.
      */
@@ -100,7 +101,7 @@ public class MathToolController {
         }
     }
 
-    public static void setSettings(){
+    public static void setSettings() {
         try {
             MathToolConfig config = ConfigLoader.loadConfig();
             // Konfigurationen setzen.
@@ -109,6 +110,60 @@ public class MathToolController {
             MathToolGUI.setLanguage(config.getGeneralSettings().getLanguage());
             MathToolGUI.setMode(config.getGeneralSettings().getMode());
             MathToolGUI.setMinimumDimension(new Dimension(config.getScreenSettings().getMinWidth(), config.getScreenSettings().getMinHeight()));
+
+            // Setzen von: Algebraische Relationen
+            if (config.getOptionSettings().isAlgebraicRelations()) {
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_algebraic_expressions);
+            } else {
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_algebraic_expressions);
+            }
+            // Setzen von: Funktionale Relationen
+            if (config.getOptionSettings().isFunctionalRelations()) {
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_functional_relations);
+            } else {
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_functional_relations);
+            }
+            // Setzen von: Länge verkürzen
+            if (config.getOptionSettings().isExpandAndCollectIfShorter()) {
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+            } else {
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+            }
+            // Setzen von: FaktorisierungsDropDown
+            switch (config.getOptionSettings().getFactorizeDropDownOption()) {
+                case factorize:
+                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                    break;
+                case expand:
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_powerful);
+                    break;
+                case no_options:
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                    break;
+                default:
+                    break;
+            }
+            // Setzen von: LogarithmenDropDown
+            switch (config.getOptionSettings().getLogarithmsDropDownOption()) {
+                case collect:
+                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                    break;
+                case expand:
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_logarithms);
+                    break;
+                case no_options:
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                    break;
+                default:
+                    break;
+            }
+
         } catch (JAXBException e) {
             // Defaultwerte eintragen!
             MathToolGUI.setFontSizeGraphic(18);
@@ -116,10 +171,19 @@ public class MathToolController {
             Expression.setLanguage(TypeLanguage.DE);
             MathToolGUI.setMode(TypeMode.GRAPHIC);
             MathToolGUI.setMinimumDimension(new Dimension(1200, 670));
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_algebraic_expressions);
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_functional_relations);
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+            // Setzen von: FaktorisierungsDropDown
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+            // Setzen von: LogarithmenDropDown
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
         }
-    
+
     }
-    
+
     /**
      * Gibt den i-ten geloggten Befehl zurück.
      */
