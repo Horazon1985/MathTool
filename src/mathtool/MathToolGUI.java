@@ -89,12 +89,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     static HashMap<String, Expression> definedVars = new HashMap<>();
     static HashMap<String, Expression> definedFunctions = new HashMap<>();
-    private static final ArrayList<String> listOfCommands = new ArrayList<>();
+    private static final ArrayList<String> commandList = new ArrayList<>();
 
     // Laufzeitvariablen.
     private static TypeGraphic typeGraphic = TypeGraphic.NONE;
     private static TypeMode typeMode;
-    private static int fontSize;
+    private static int fontSizeGraphic;
+    private static int fontSizeText;
     private static Dimension minimumDimension;
     private static boolean isRotating = false;
     private static boolean computing = false;
@@ -115,7 +116,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         initComponents();
         initCaptions();
-        this.setLayout(null);
+        setLayout(null);
 
         // Konfigurationen aus XML auslesen.
         MathToolController.setSettings();
@@ -141,7 +142,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
-        Font mathToolAreaFont = new Font("Arial", Font.BOLD, 14);
+        Font mathToolAreaFont = new Font("Arial", Font.BOLD, fontSizeText);
         mathToolTextArea.setFont(mathToolAreaFont);
         mathToolTextArea.setEditable(false);
         mathToolTextArea.setLineWrap(true);
@@ -187,7 +188,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         mathToolGraphicAreaHeight = this.getHeight() - 170;
         mathToolGraphicArea = new GraphicArea(mathToolGraphicAreaX, mathToolGraphicAreaY,
                 mathToolGraphicAreaWidth, mathToolGraphicAreaHeight);
-        mathToolGraphicArea.setFontSize(fontSize);
+        mathToolGraphicArea.setFontSize(fontSizeGraphic);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
@@ -274,7 +275,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                 // Abhängig von der Sprache alle Texte (neu) setzen.
                 updateAPI();
-                
+
                 validate();
                 repaint();
             }
@@ -312,17 +313,31 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
-     * Getter für fontSize.
+     * Getter für fontSizeGraphic.
      */
-    public static int getFontSize() {
-        return fontSize;
+    public static int getFontSizeGraphic() {
+        return fontSizeGraphic;
     }
 
     /**
-     * Setter für fontSize.
+     * Setter für fontSizeGraphic.
      */
-    public static void setFontSize(int size) {
-        fontSize = size;
+    public static void setFontSizeGraphic(int size) {
+        fontSizeGraphic = size;
+    }
+
+    /**
+     * Getter für fontSizeText.
+     */
+    public static int getFontSizeText() {
+        return fontSizeText;
+    }
+
+    /**
+     * Setter für fontSizeText.
+     */
+    public static void setFontSizeText(int size) {
+        fontSizeText = size;
     }
 
     /**
@@ -338,19 +353,19 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public static void setMinimumDimension(Dimension dim) {
         minimumDimension = dim;
     }
-    
-    /**
-     * Getter für listOfCommands.
-     */
-    public static ArrayList<String> getListOfCommands() {
-        return listOfCommands;
-    }
 
     /**
-     * Getter für isRotating
+     * Setter für language
      */
-    public static boolean isIsRotating() {
-        return isRotating;
+    public static void setLanguage(TypeLanguage language){
+        Expression.setLanguage(language);
+    }
+    
+    /**
+     * Getter für commandList.
+     */
+    public static ArrayList<String> getCommandList() {
+        return commandList;
     }
 
     /**
@@ -358,13 +373,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static HashSet<TypeSimplify> getSimplifyTypes() {
         return simplifyTypes;
-    }
-
-    /**
-     * Setter für isRotating
-     */
-    public static void setIsRotating(boolean aIsRotating) {
-        isRotating = aIsRotating;
     }
 
     /**
@@ -509,7 +517,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(inputButton);
-        inputButton.setBounds(560, 330, 100, 30);
+        inputButton.setBounds(560, 330, 130, 30);
 
         latexButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -539,7 +547,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(560, 300, 100, 30);
+        cancelButton.setBounds(560, 300, 130, 30);
 
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
@@ -707,7 +715,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Labels
         componentCaptions.put(legendLabel, "GUI_MathToolForm_LEGEND");
         componentCaptions.put(saveLabel, "GUI_MathToolForm_SAVE");
-        if (isIsRotating()) {
+        if (isRotating) {
             componentCaptions.put(rotateLabel, "GUI_MathToolForm_STOP_ROTATION");
         } else {
             componentCaptions.put(rotateLabel, "GUI_MathToolForm_ROTATE_GRAPH");
@@ -761,8 +769,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 String input = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
 
                 // Befehl loggen!
-                listOfCommands.add(input);
-                logPosition = listOfCommands.size();
+                commandList.add(input);
+                logPosition = commandList.size();
 
                 /*
                  1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
@@ -993,27 +1001,30 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
-        // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
-        stopPossibleRotation();
-        executeCommand();
+        if (!computing) {
+            // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
+            stopPossibleRotation();
+            executeCommand();
+        } else {
+            computingSwingWorker.cancel(true);
+        }
     }//GEN-LAST:event_inputButtonActionPerformed
 
     private void rotateLabelClick() {
-//        MathToolController.rotateGraph(rotateThread, graphicPanel3D, graphicPanelCurves3D, rotateLabel);
-        if (!isIsRotating()) {
+        if (!isRotating) {
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 rotateThread = new Thread(graphicPanel3D, "rotateGraph");
-                setIsRotating(true);
+                isRotating = true;
                 graphicPanel3D.setIsRotating(true);
             } else {
                 rotateThread = new Thread(graphicPanelCurves3D, "rotateGraph");
-                setIsRotating(true);
+                isRotating = true;
                 graphicPanelCurves3D.setIsRotating(true);
             }
             rotateThread.start();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
         } else {
-            setIsRotating(false);
+            isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicPanel3D.setIsRotating(false);
             } else {
@@ -1171,7 +1182,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // DropDowns.
         ArrayList<String[]> dropDownOptions = new ArrayList<>();
-        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION"), 
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION"),
             Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS"),
             Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS")});
         dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION"),
@@ -1198,7 +1209,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
             case KeyEvent.VK_DOWN:
-                if (logPosition < listOfCommands.size() - 1) {
+                if (logPosition < commandList.size() - 1) {
                     logPosition++;
                 }
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
@@ -1335,7 +1346,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
-            if (isIsRotating()) {
+            if (isRotating) {
                 rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
             } else {
                 rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
@@ -1356,7 +1367,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
-            if (isIsRotating()) {
+            if (isRotating) {
                 rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
             } else {
                 rotateLabel.setText("<html><b>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");

@@ -37,8 +37,6 @@ import static mathtool.MathToolGUI.mathToolGraphicAreaX;
 import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import java.awt.Dimension;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
@@ -106,15 +104,18 @@ public class MathToolController {
         try {
             MathToolConfig config = ConfigLoader.loadConfig();
             // Konfigurationen setzen.
-            MathToolGUI.setFontSize(config.getGeneralSettings().getFontSizeGraphic());
-            Expression.setLanguage(config.getGeneralSettings().getLanguage());
+            MathToolGUI.setFontSizeGraphic(config.getGeneralSettings().getFontSizeGraphic());
+            MathToolGUI.setFontSizeText(config.getGeneralSettings().getFontSizeText());
+            MathToolGUI.setLanguage(config.getGeneralSettings().getLanguage());
             MathToolGUI.setMode(config.getGeneralSettings().getMode());
             MathToolGUI.setMinimumDimension(new Dimension(config.getScreenSettings().getMinWidth(), config.getScreenSettings().getMinHeight()));
         } catch (JAXBException e) {
             // Defaultwerte eintragen!
-            MathToolGUI.setFontSize(18);
+            MathToolGUI.setFontSizeGraphic(18);
+            MathToolGUI.setFontSizeText(15);
             Expression.setLanguage(TypeLanguage.DE);
             MathToolGUI.setMode(TypeMode.GRAPHIC);
+            MathToolGUI.setMinimumDimension(new Dimension(1200, 670));
         }
     
     }
@@ -123,8 +124,8 @@ public class MathToolController {
      * Gibt den i-ten geloggten Befehl zurück.
      */
     public static void showLoggedCommand(MathToolTextField mathToolTextField, int i) {
-        if (!MathToolGUI.getListOfCommands().isEmpty() && MathToolGUI.getListOfCommands().get(i) != null) {
-            mathToolTextField.setText(MathToolGUI.getListOfCommands().get(i));
+        if (!MathToolGUI.getCommandList().isEmpty() && MathToolGUI.getCommandList().get(i) != null) {
+            mathToolTextField.setText(MathToolGUI.getCommandList().get(i));
         }
     }
 
