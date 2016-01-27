@@ -118,7 +118,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         initCaptions();
         setLayout(null);
 
-        // Optionen initialisieren.
+        // Vereinfachungsoptionen initialisieren.
         MathToolController.initSimplifyTypes();
         
         // Konfigurationen aus XML auslesen.
