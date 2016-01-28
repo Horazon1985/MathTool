@@ -348,59 +348,49 @@ public class MathToolController {
         int numberOfCommas = -1;
 
         // Operatoren
-        for (TypeOperator type : TypeOperator.values()) {
-            if (!type.name().equals(operatorName)) {
+        for (Field field : fields) {
+
+            if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
                 continue;
             }
-            for (Field field : fields) {
 
-                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-
-                field.setAccessible(true);
-                try {
-                    value = (String) field.get(null);
-                    if (value.contains(type.name())) {
-                        ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
-                        if (numberOfCommas < 0) {
-                            numberOfCommas = pattern.size() - 1;
-                        } else {
-                            numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
-                        }
+            field.setAccessible(true);
+            try {
+                value = (String) field.get(null);
+                if (value.contains(operatorName)) {
+                    ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
+                    if (numberOfCommas < 0) {
+                        numberOfCommas = pattern.size() - 1;
+                    } else {
+                        numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
                     }
-                } catch (Exception e) {
                 }
-
+            } catch (Exception e) {
             }
+
         }
 
         // Matrizenoperatoren
-        for (TypeMatrixOperator type : TypeMatrixOperator.values()) {
-            if (!type.name().equals(operatorName)) {
+        for (Field field : fields) {
+
+            if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
                 continue;
             }
-            for (Field field : fields) {
 
-                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-
-                field.setAccessible(true);
-                try {
-                    value = (String) field.get(null);
-                    if (value.contains(type.name())) {
-                        ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
-                        if (numberOfCommas < 0) {
-                            numberOfCommas = pattern.size() - 1;
-                        } else {
-                            numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
-                        }
+            field.setAccessible(true);
+            try {
+                value = (String) field.get(null);
+                if (value.contains(operatorName)) {
+                    ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
+                    if (numberOfCommas < 0) {
+                        numberOfCommas = pattern.size() - 1;
+                    } else {
+                        numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
                     }
-                } catch (Exception e) {
                 }
-
+            } catch (Exception e) {
             }
+
         }
 
         return Math.max(numberOfCommas, 0);
