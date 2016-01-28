@@ -1694,7 +1694,7 @@ public abstract class MathCommandCompiler {
          Zunächst muss der entsprechende Befehl ermittelt und in eine Instanz
          der Klasse Command umgewandelt werden.
          */
-        Command command = getCommand2(commandName, params);
+        Command command = getCommand(commandName, params);
 
         // Abhängig vom Typ von c wird der Befehl ausgeführt.
         if (command.getTypeCommand().equals(TypeCommand.approx)) {
