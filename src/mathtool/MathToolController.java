@@ -338,23 +338,23 @@ public class MathToolController {
     }
 
     /**
-     * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
-     * Kommata bei einer gültigen Eingabe.
+     * Berechnet für Operatoren die Mindestanzahl der benötigten Kommata bei
+     * einer gültigen Eingabe.
      */
-    public static int getNumberOfCommas2(String operatorName) {
+    public static int getNumberOfCommasForOperators(String operatorName) {
 
-        // Operatoren
         Field[] fields = Operator.class.getDeclaredFields();
         String value;
         int numberOfCommas = -1;
 
+        // Operatoren
         for (TypeOperator type : TypeOperator.values()) {
-            if (!type.name().equals(operatorName)){
+            if (!type.name().equals(operatorName)) {
                 continue;
             }
             for (Field field : fields) {
-                
-                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())){
+
+                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
                     continue;
                 }
 
@@ -363,7 +363,35 @@ public class MathToolController {
                     value = (String) field.get(null);
                     if (value.contains(type.name())) {
                         ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
-                        if (numberOfCommas < 0){
+                        if (numberOfCommas < 0) {
+                            numberOfCommas = pattern.size() - 1;
+                        } else {
+                            numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+        }
+
+        // Matrizenoperatoren
+        for (TypeMatrixOperator type : TypeMatrixOperator.values()) {
+            if (!type.name().equals(operatorName)) {
+                continue;
+            }
+            for (Field field : fields) {
+
+                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+
+                field.setAccessible(true);
+                try {
+                    value = (String) field.get(null);
+                    if (value.contains(type.name())) {
+                        ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
+                        if (numberOfCommas < 0) {
                             numberOfCommas = pattern.size() - 1;
                         } else {
                             numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);

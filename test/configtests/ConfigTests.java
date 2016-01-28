@@ -35,7 +35,7 @@ public class ConfigTests {
     
     @Test
     public void getNumberOfCommasTest(){
-        int n = mathtool.MathToolController.getNumberOfCommas2("diff");
+        int n = mathtool.MathToolController.getNumberOfCommasForOperators("diff");
         Assert.assertTrue(n == 1);
     }
     
