@@ -1,15 +1,11 @@
 package configtests;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-import mathtool.config.ConfigLoader;
+import junit.framework.Assert;
 import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolConfig;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,6 +33,11 @@ public class ConfigTests {
         }
     }
     
+    @Test
+    public void getNumberOfCommasTest(){
+        int n = mathtool.MathToolController.getNumberOfCommas2("diff");
+        Assert.assertTrue(n == 1);
+    }
     
     
 }

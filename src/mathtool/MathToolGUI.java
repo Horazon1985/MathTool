@@ -1087,7 +1087,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         if (operatorChoice.getSelectedIndex() > 0) {
 
             String insertedOperator = (String) operatorChoice.getSelectedItem() + "(";
-            int numberOfCommata = MathToolController.getNumberOfComma((String) operatorChoice.getSelectedItem());
+            int numberOfCommata = MathToolController.getNumberOfCommas((String) operatorChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedOperator = insertedOperator + ",";
             }
@@ -1106,7 +1106,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         if (commandChoice.getSelectedIndex() > 0) {
 
             String insertedCommand = (String) commandChoice.getSelectedItem() + "(";
-            int numberOfCommata = MathToolController.getNumberOfComma((String) commandChoice.getSelectedItem());
+            int numberOfCommata = MathToolController.getNumberOfCommas((String) commandChoice.getSelectedItem());
             for (int i = 0; i < numberOfCommata; i++) {
                 insertedCommand = insertedCommand + ",";
             }

@@ -36,13 +36,22 @@ import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
 import static mathtool.MathToolGUI.mathToolGraphicAreaX;
 import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixOperator;
+import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
 import java.awt.Dimension;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.print.Collation;
 import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolConfig;
 import mathtool.config.OptionSettings;
+import operationparser.ParseResultPattern;
 import translator.Translator;
 
 public class MathToolController {
@@ -75,13 +84,21 @@ public class MathToolController {
      * Setzt die Einträge in den Operator-Dropdown.
      */
     public static void fillOperatorChoice(JComboBox operatorChoice) {
-        ArrayList<String> newEntries = new ArrayList<>();
-        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
+        ArrayList<String> operators = new ArrayList<>();
+        operators.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
+        // Operatoren
         for (TypeOperator value : TypeOperator.values()) {
-            newEntries.add(Operator.getNameFromType(value));
+            operators.add(Operator.getNameFromType(value));
         }
+        // Matrizenoperatoren
+        for (TypeMatrixOperator value : TypeMatrixOperator.values()) {
+            if (!operators.contains(MatrixOperator.getNameFromType(value))) {
+                operators.add(MatrixOperator.getNameFromType(value));
+            }
+        }
+        Collections.sort(operators);
         operatorChoice.removeAllItems();
-        for (String op : newEntries) {
+        for (String op : operators) {
             operatorChoice.addItem(op);
         }
     }
@@ -90,13 +107,13 @@ public class MathToolController {
      * Setzt die Einträge in den Befehl-Dropdown.
      */
     public static void fillCommandChoice(JComboBox commandChoice) {
-        ArrayList<String> newEntries = new ArrayList<>();
-        newEntries.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
+        ArrayList<String> commands = new ArrayList<>();
+        commands.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
         for (TypeCommand value : TypeCommand.values()) {
-            newEntries.add(value.toString());
+            commands.add(value.toString());
         }
         commandChoice.removeAllItems();
-        for (String c : newEntries) {
+        for (String c : commands) {
             commandChoice.addItem(c);
         }
     }
@@ -257,8 +274,11 @@ public class MathToolController {
      * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
      * Kommata bei einer gültigen Eingabe.
      */
-    public static int getNumberOfComma(String operatorOrCommandName) {
+    public static int getNumberOfCommas(String operatorOrCommandName) {
 
+//        for (TypeOperator type : TypeOperator.values()){
+//        
+//        }
         if (operatorOrCommandName.equals("diff")) {
             return 1;
         }
@@ -314,6 +334,48 @@ public class MathToolController {
 
         // Default-Case! Alle Operatoren/Befehle, welche beliebig viele Argumente vertragen.
         return 0;
+
+    }
+
+    /**
+     * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
+     * Kommata bei einer gültigen Eingabe.
+     */
+    public static int getNumberOfCommas2(String operatorName) {
+
+        // Operatoren
+        Field[] fields = Operator.class.getDeclaredFields();
+        String value;
+        int numberOfCommas = -1;
+
+        for (TypeOperator type : TypeOperator.values()) {
+            if (!type.name().equals(operatorName)){
+                continue;
+            }
+            for (Field field : fields) {
+                
+                if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())){
+                    continue;
+                }
+
+                field.setAccessible(true);
+                try {
+                    value = (String) field.get(null);
+                    if (value.contains(type.name())) {
+                        ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
+                        if (numberOfCommas < 0){
+                            numberOfCommas = pattern.size() - 1;
+                        } else {
+                            numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+        }
+
+        return Math.max(numberOfCommas, 0);
 
     }
 
