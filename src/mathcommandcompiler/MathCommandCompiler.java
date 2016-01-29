@@ -412,7 +412,8 @@ public abstract class MathCommandCompiler {
             Expression preciseExpression;
             HashSet<String> vars = new HashSet<>();
             try {
-                preciseExpression = Expression.build(functionTerm, vars);
+                preciseExpression = Expression.build(functionTerm, null);
+                vars = preciseExpression.getContainedVars();
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
             }
