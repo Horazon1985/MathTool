@@ -10,6 +10,9 @@ import mathtool.enums.TypeMode;
 
 public class ConfigLoader {
 
+    /**
+     * WIRD NOCH NICHT VERWENDET!
+     */
     public static void configToXML() {
 
         MathToolConfig config = new MathToolConfig();
@@ -37,7 +40,7 @@ public class ConfigLoader {
         
         try {
 
-            File file = new File("D:\\file.xml");
+            File file = new File("C:\\file.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(MathToolConfig.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

@@ -34,10 +34,31 @@ public class ConfigTests {
     }
     
     @Test
-    public void getNumberOfCommasTest(){
-        int n = mathtool.MathToolController.getNumberOfCommasForOperators("diff");
+    public void getNumberOfCommasForOperatorTest(){
+        int n = mathtool.MathToolController.getNumberOfCommasForOperators("cov");
+        Assert.assertTrue(n == 0);
+        n = mathtool.MathToolController.getNumberOfCommasForOperators("diff");
         Assert.assertTrue(n == 1);
+        n = mathtool.MathToolController.getNumberOfCommasForOperators("int");
+        Assert.assertTrue(n == 1);
+        n = mathtool.MathToolController.getNumberOfCommasForOperators("mu");
+        Assert.assertTrue(n == 0);
+        n = mathtool.MathToolController.getNumberOfCommasForOperators("sum");
+        Assert.assertTrue(n == 3);
     }
     
+    @Test
+    public void getNumberOfCommasForCommandsTest(){
+        int n = mathtool.MathToolController.getNumberOfCommasForCommands("clear");
+        Assert.assertTrue(n == 0);
+        n = mathtool.MathToolController.getNumberOfCommasForCommands("eigenvalues");
+        Assert.assertTrue(n == 0);
+        n = mathtool.MathToolController.getNumberOfCommasForCommands("regressionline");
+        Assert.assertTrue(n == 1);
+        n = mathtool.MathToolController.getNumberOfCommasForCommands("solve");
+        Assert.assertTrue(n == 0);
+        n = mathtool.MathToolController.getNumberOfCommasForCommands("solvesystem");
+        Assert.assertTrue(n == 1);
+    }
     
 }

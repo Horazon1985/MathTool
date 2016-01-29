@@ -271,73 +271,6 @@ public class MathToolController {
     }
 
     /**
-     * Berechnet für Operatoren und Befehle die Mindestanzahl der benötigten
-     * Kommata bei einer gültigen Eingabe.
-     */
-    public static int getNumberOfCommas(String operatorOrCommandName) {
-
-//        for (TypeOperator type : TypeOperator.values()){
-//        
-//        }
-        if (operatorOrCommandName.equals("diff")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("gcd")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("int")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("lcm")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("mod")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("prod")) {
-            return 3;
-        }
-        if (operatorOrCommandName.equals("sum")) {
-            return 3;
-        }
-        if (operatorOrCommandName.equals("taylor")) {
-            return 3;
-        }
-
-        if (operatorOrCommandName.equals("plot2d")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("plot3d")) {
-            return 4;
-        }
-        if (operatorOrCommandName.equals("plotcurve")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("plotpolar")) {
-            return 2;
-        }
-        if (operatorOrCommandName.equals("regressionline")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("solvedeq")) {
-            return 5;
-        }
-        if (operatorOrCommandName.equals("solvesystem")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("tangent")) {
-            return 1;
-        }
-        if (operatorOrCommandName.equals("taylordeq")) {
-            return 5;
-        }
-
-        // Default-Case! Alle Operatoren/Befehle, welche beliebig viele Argumente vertragen.
-        return 0;
-
-    }
-
-    /**
      * Berechnet für Operatoren die Mindestanzahl der benötigten Kommata bei
      * einer gültigen Eingabe.
      */
@@ -371,6 +304,7 @@ public class MathToolController {
         }
 
         // Matrizenoperatoren
+        fields = MatrixOperator.class.getDeclaredFields();
         for (Field field : fields) {
 
             if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
@@ -427,7 +361,7 @@ public class MathToolController {
         }
         
         
-        Field[] fields = Operator.class.getDeclaredFields();
+        Field[] fields = Command.class.getDeclaredFields();
         String value;
         int numberOfCommas = -1;
 
