@@ -357,7 +357,7 @@ public class MathToolController {
             field.setAccessible(true);
             try {
                 value = (String) field.get(null);
-                if (value.contains(operatorName)) {
+                if (value.indexOf(operatorName) == 0) {
                     ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
                     if (numberOfCommas < 0) {
                         numberOfCommas = pattern.size() - 1;
@@ -380,7 +380,7 @@ public class MathToolController {
             field.setAccessible(true);
             try {
                 value = (String) field.get(null);
-                if (value.contains(operatorName)) {
+                if (value.indexOf(operatorName) == 0) {
                     ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
                     if (numberOfCommas < 0) {
                         numberOfCommas = pattern.size() - 1;
@@ -397,6 +397,67 @@ public class MathToolController {
 
     }
 
+    /**
+     * Berechnet für Befehle die Mindestanzahl der benötigten Kommata bei
+     * einer gültigen Eingabe.
+     */
+    public static int getNumberOfCommasForCommands(String commandName) {
+
+        // Sonderfälle
+        if (commandName.equals("plot2d")) {
+            return 2;
+        }
+        if (commandName.equals("plot3d")) {
+            return 4;
+        }
+        if (commandName.equals("plotcurve")) {
+            return 2;
+        }
+        if (commandName.equals("plotpolar")) {
+            return 2;
+        }
+        if (commandName.equals("solvedeq")) {
+            return 5;
+        }
+        if (commandName.equals("tangent")) {
+            return 1;
+        }
+        if (commandName.equals("taylordeq")) {
+            return 5;
+        }
+        
+        
+        Field[] fields = Operator.class.getDeclaredFields();
+        String value;
+        int numberOfCommas = -1;
+
+        // Operatoren
+        for (Field field : fields) {
+
+            if (!field.getType().equals(String.class) || !Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+
+            field.setAccessible(true);
+            try {
+                value = (String) field.get(null);
+                if (value.indexOf(commandName) == 0) {
+                    ParseResultPattern pattern = operationparser.OperationParser.getResultPattern(value);
+                    if (numberOfCommas < 0) {
+                        numberOfCommas = pattern.size() - 1;
+                    } else {
+                        numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
+                    }
+                }
+            } catch (Exception e) {
+            }
+
+        }
+
+        return Math.max(numberOfCommas, 0);
+
+    }
+    
     /**
      * Richtet alle Grafikpanels an der Stelle (x, y) aus und setzt ihre Breite
      * / Höhe gemäß width / height.
