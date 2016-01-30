@@ -773,6 +773,15 @@ public abstract class MathCommandCompiler {
 
     }
 
+    private static void removeVariablesWithPredefinedValues(HashSet<String> vars) {
+        HashSet<String> varsWithPredefinedValues = Variable.getVariablesWithPredefinedValues();
+        for (String var : vars) {
+            if (varsWithPredefinedValues.contains(var)) {
+                vars.remove(var);
+            }
+        }
+    }
+
     private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
         /*
@@ -797,6 +806,11 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
             }
         }
+
+        /*
+         Variablen, denen ein fester Wert zugeordnet wurde, werden nicht betrachtet.
+         */
+        removeVariablesWithPredefinedValues(vars);
 
         if (vars.size() > 1) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
@@ -865,6 +879,11 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
         }
 
+        /*
+         Variablen, denen ein fester Wert zugeordnet wurde, werden nicht betrachtet.
+         */
+        removeVariablesWithPredefinedValues(vars);
+        
         if (vars.size() > 2) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
                     + String.valueOf(vars.size())
@@ -919,6 +938,11 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        /*
+         Variablen, denen ein fester Wert zugeordnet wurde, werden nicht betrachtet.
+         */
+        removeVariablesWithPredefinedValues(vars);
+        
         if (vars.size() > 2) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_1")
                     + String.valueOf(vars.size())
@@ -993,6 +1017,11 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        /*
+         Variablen, denen ein fester Wert zugeordnet wurde, werden nicht betrachtet.
+         */
+        removeVariablesWithPredefinedValues(vars);
+        
         if (vars.size() > 1) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CURVE_COMPONENTS_IN_PLOTCURVE"));
         }
@@ -1048,6 +1077,11 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        /*
+         Variablen, denen ein fester Wert zugeordnet wurde, werden nicht betrachtet.
+         */
+        removeVariablesWithPredefinedValues(vars);
+        
         if (vars.size() > 1) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_1")
                     + vars.size()
@@ -1707,7 +1741,7 @@ public abstract class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
         } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
-            executeDefine(command, definedVars, definedFunctions, graphicArea);
+            executeDefine(command, definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.deffuncs)) {
             executeDefFuncs(definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.defvars)) {
@@ -1753,9 +1787,9 @@ public abstract class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undef)) {
-            executeUndefine(command, definedVars, graphicArea);
+            executeUndefine(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undefall)) {
-            executeUndefineAll(definedVars, graphicArea);
+            executeUndefineAll(graphicArea);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
@@ -1783,10 +1817,7 @@ public abstract class MathCommandCompiler {
              */
             expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
             // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
-            for (String var : definedVars.keySet()) {
-                expr = expr.replaceVariable(var, (Expression) definedVars.get(var));
-            }
-
+            expr = expr.evaluateByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
             expr = expr.simplify();
             expr = expr.turnToApproximate().simplify();
@@ -1806,10 +1837,8 @@ public abstract class MathCommandCompiler {
 
             MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
 
-            for (String var : definedVars.keySet()) {
-                matExpr = matExpr.replaceVariable(var, (Expression) definedVars.get(var));
-            }
-
+            // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
+            matExpr = matExpr.evaluateByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
             matExpr = matExpr.simplify();
             matExpr = matExpr.turnToApproximate().simplify();
@@ -1874,15 +1903,13 @@ public abstract class MathCommandCompiler {
         graphicArea.clearArea();
     }
 
-    private static void executeDefine(Command command, HashMap<String, Expression> definedVars,
-            HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeDefine(Command command, HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws EvaluationException {
 
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
             String var = (String) command.getParams()[0];
             Expression preciseExpression = ((Expression) command.getParams()[1]).simplify();
             Variable.setPreciseExpression(var, preciseExpression);
-            definedVars.put(var, preciseExpression);
             if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
                 // Textliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
@@ -3452,13 +3479,13 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefine(Command comand, HashMap definedVars, GraphicArea graphicArea)
+    private static void executeUndefine(Command comand, GraphicArea graphicArea)
             throws EvaluationException {
 
         Object[] vars = comand.getParams();
         for (Object var : vars) {
-            if (definedVars.containsKey((String) var)) {
-                definedVars.remove((String) var);
+            if (Variable.getVariablesWithPredefinedValues().contains((String) var)) {
+                Variable.setPreciseExpression((String) var, null);
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n");
                 // Graphische Ausgabe
@@ -3468,9 +3495,11 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefineAll(HashMap definedVars, GraphicArea graphicArea) {
+    private static void executeUndefineAll(GraphicArea graphicArea) {
 
-        definedVars.clear();
+        for (Iterator<String> iterator = Variable.getVariablesWithPredefinedValues().iterator(); iterator.hasNext();) {
+            Variable.setPreciseExpression(iterator.next(), null);
+        }
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n");
         // Graphische Ausgabe
