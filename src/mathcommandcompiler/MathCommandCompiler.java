@@ -434,7 +434,6 @@ public abstract class MathCommandCompiler {
 
         }
 
-        HashSet<String> vars = new HashSet<>();
         Expression expr;
         /*
          Nun wird geprüft, ob es sich um eine Funktionsdeklaration
@@ -442,24 +441,12 @@ public abstract class MathCommandCompiler {
          in einen Ausdruck umzuwandeln.
          */
         try {
-            expr = Expression.build(functionTerm, vars);
+            expr = Expression.build(functionTerm, null);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
         }
 
-        /*
-         Hier werden noch einmal alle in expr vorkommenden Variablen neu
-         ermittelt. GRUND: Falls exp ein Operator mit lokalen variablen
-         ist (etwa Summe, Produkt, Integral), dann werden die lokalen
-         Variablen in vars mitaufgenommen, und es kann später Exceptions
-         geben, weil im Operator Variablen vorkommen, die in den
-         Funktionsargumenten nicht vorkommen. beispiel: def(f(x) =
-         sum(x^k,k,1,10)). k ist hier keine echte Variable, sondern nur
-         eine Indexvariable, welche bei anwendung von getContainedVars()
-         übergangen wird.
-         */
-        vars.clear();
-        expr.addContainedVars(vars);
+        HashSet<String> vars = expr.getContainedIndeterminates();
 
         /*
          WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
@@ -490,11 +477,9 @@ public abstract class MathCommandCompiler {
         }
 
         // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
-        for (int i = 0; i < functionVars.length; i++) {
-            if (!Expression.isValidDerivateOfVariable(functionVars[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1")
-                        + functionVars[i]
-                        + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
+        for (String functionVar : functionVars) {
+            if (!Expression.isValidDerivateOfVariable(functionVar)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1") + functionVar + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
             }
         }
 
