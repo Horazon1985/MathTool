@@ -73,8 +73,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final GraphicPanelImplicit2D graphicPanelImplicit2D;
     private final GraphicPanelPolar2D graphicPanelPolar2D;
 
-    private JPanel[] graphicPanels;
-    private JComponent[] buttonsAndDropDowns;
+    private final JPanel[] graphicPanels;
+    private final JComponent[] buttonsAndDropDowns;
 
     private HashMap<JComponent, String> componentCaptions;
 
@@ -87,8 +87,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
      Diese Objekte werden im Laufe des Programms erweitert. Sie enthalten die
      im Laufe des Programms definierten Variablen und Funktionen.
      */
-    static HashMap<String, Expression> definedVars = new HashMap<>();
-    static HashMap<String, Expression> definedFunctions = new HashMap<>();
+    private static final HashMap<String, Expression> definedFunctions = new HashMap<>();
     private static final ArrayList<String> commandList = new ArrayList<>();
 
     // Laufzeitvariablen.
@@ -799,7 +798,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
                                 graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
                                 graphicPanelImplicit2D, graphicPanelPolar2D,
-                                definedVars, definedFunctions);
+                                definedFunctions);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         mathToolTextField.setText("");
@@ -1127,7 +1126,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         try {
             MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
                     graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
-                    graphicPanelImplicit2D, graphicPanelPolar2D, definedVars, definedFunctions);
+                    graphicPanelImplicit2D, graphicPanelPolar2D, definedFunctions);
         } catch (Exception e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());
