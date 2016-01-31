@@ -422,7 +422,7 @@ public abstract class MathCommandCompiler {
             HashSet<String> vars = new HashSet<>();
             try {
                 preciseExpression = Expression.build(functionTerm, null);
-                vars = preciseExpression.getContainedVars();
+                vars = preciseExpression.getContainedIndeterminates();
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
             }
@@ -1883,7 +1883,7 @@ public abstract class MathCommandCompiler {
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
             String var = (String) command.getParams()[0];
-            Expression preciseExpression = ((Expression) command.getParams()[1]).simplify();
+            Expression preciseExpression = ((Expression) command.getParams()[1]).evaluateByInsertingDefinedVars().simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
                 // Textliche Ausgabe
