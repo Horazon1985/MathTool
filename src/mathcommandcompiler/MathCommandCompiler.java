@@ -53,7 +53,7 @@ import translator.Translator;
 public abstract class MathCommandCompiler {
 
     private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
-    private static final HashSet simplifyTypesPlot = getSimplifyTypesPolt();
+    private static final HashSet simplifyTypesPlot = getSimplifyTypesPlot();
     private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
 
     /**
@@ -66,6 +66,7 @@ public abstract class MathCommandCompiler {
     private static HashSet<TypeSimplify> getSimplifyTypesExpand() {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
         simplifyTypes.add(TypeSimplify.simplify_collect_products);
@@ -79,11 +80,12 @@ public abstract class MathCommandCompiler {
         return simplifyTypes;
     }
 
-    private static HashSet<TypeSimplify> getSimplifyTypesPolt() {
+    private static HashSet<TypeSimplify> getSimplifyTypesPlot() {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
         simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
         simplifyTypes.add(TypeSimplify.simplify_collect_products);
         simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
@@ -95,8 +97,10 @@ public abstract class MathCommandCompiler {
 
     private static HashSet<TypeSimplify> getSimplifyTypesSolveSystem() {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.simplify_trivial);
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
         simplifyTypes.add(TypeSimplify.simplify_collect_products);
         simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
@@ -1777,7 +1781,7 @@ public abstract class MathCommandCompiler {
              */
             expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
             // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
-            expr = expr.evaluateByInsertingDefinedVars();
+//            expr = expr.simplifyByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
             expr = expr.simplify();
             expr = expr.turnToApproximate().simplify();
@@ -1798,7 +1802,7 @@ public abstract class MathCommandCompiler {
             MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
 
             // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
-            matExpr = matExpr.evaluateByInsertingDefinedVars();
+            matExpr = matExpr.simplifyByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
             matExpr = matExpr.simplify();
             matExpr = matExpr.turnToApproximate().simplify();
@@ -1868,7 +1872,8 @@ public abstract class MathCommandCompiler {
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
             String var = (String) command.getParams()[0];
-            Expression preciseExpression = ((Expression) command.getParams()[1]).evaluateByInsertingDefinedVars().simplify();
+//            Expression preciseExpression = ((Expression) command.getParams()[1]).simplifyByInsertingDefinedVars().simplify();
+            Expression preciseExpression = ((Expression) command.getParams()[1]).simplifyByInsertingDefinedVars().simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
                 // Textliche Ausgabe

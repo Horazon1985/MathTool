@@ -851,8 +851,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      */
                     try {
 
-                        Expression exprSimplified = expr.evaluateByInsertingDefinedVars();
-                        exprSimplified = exprSimplified.simplify(simplifyTypes);
+//                        Expression exprSimplified = expr.simplifyByInsertingDefinedVars();
+                        Expression exprSimplified = expr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
                         // Hinzufügen zum graphischen Ausgabefeld.
@@ -914,7 +914,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      */
                     try {
 
-                        MatrixExpression matExprSimplified = matExpr.evaluateByInsertingDefinedVars();
+                        MatrixExpression matExprSimplified = matExpr.simplifyByInsertingDefinedVars();
                         matExprSimplified = matExprSimplified.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {

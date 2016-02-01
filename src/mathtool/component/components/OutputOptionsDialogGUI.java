@@ -9,7 +9,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import translator.Translator;
 
-public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
+public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
 
     private final HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
     private HashSet<TypeSimplify> simplifyTypes;
@@ -27,6 +27,7 @@ public class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
         mandatorySimplifyTypes.add(TypeSimplify.order_difference_and_division);
         mandatorySimplifyTypes.add(TypeSimplify.order_sums_and_products);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_trivial);
+        mandatorySimplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_collect_products);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_expand_rational_factors);
