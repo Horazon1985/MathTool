@@ -2280,8 +2280,6 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
-        graphicPanel2D.setIsExplicit(true);
-        graphicPanel2D.setIsFixed(false);
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.setSpecialPoints(false);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
@@ -2649,8 +2647,6 @@ public abstract class MathCommandCompiler {
 
             ArrayList<Expression> exprs = new ArrayList<>();
             exprs.add(regressionLine);
-            graphicPanel2D.setIsExplicit(true);
-            graphicPanel2D.setIsFixed(false);
             graphicPanel2D.setVars("X", "Y");
             graphicPanel2D.setSpecialPoints(pts);
             graphicPanel2D.drawGraphs2D(x_0, x_1, y_0, y_1, exprs);
@@ -2670,8 +2666,8 @@ public abstract class MathCommandCompiler {
 
         if (command.getParams().length <= 3) {
 
-            f.addContainedVars(vars);
-            g.addContainedVars(vars);
+            f.addContainedIndeterminates(vars);
+            g.addContainedIndeterminates(vars);
 
             // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var;
@@ -2789,7 +2785,7 @@ public abstract class MathCommandCompiler {
         } else {
 
             Expression equation = f.sub(g).simplify();
-            equation.addContainedVars(vars);
+            equation.addContainedIndeterminates(vars);
             // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
             String var = "x";
             if (!vars.isEmpty()) {
@@ -2830,12 +2826,9 @@ public abstract class MathCommandCompiler {
                 }
 
                 // Graphen der linken und der rechten Seite zeichnen.
-//                graphicMethods2D.setIsInitialized(true);
                 ArrayList<Expression> exprs = new ArrayList<>();
                 exprs.add(f);
                 exprs.add(g);
-                graphicPanel2D.setIsExplicit(true);
-                graphicPanel2D.setIsFixed(false);
                 graphicPanel2D.setVarAbsc(var);
                 graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
                 return;
@@ -2891,8 +2884,6 @@ public abstract class MathCommandCompiler {
             ArrayList<Expression> exprs = new ArrayList<>();
             exprs.add(f);
             exprs.add(g);
-            graphicPanel2D.setIsExplicit(true);
-            graphicPanel2D.setIsFixed(false);
             graphicPanel2D.setVarAbsc(var);
             graphicPanel2D.setSpecialPoints(zerosAsArray);
             graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
@@ -3035,8 +3026,6 @@ public abstract class MathCommandCompiler {
         }
 
         // Lösungsgraphen zeichnen.
-        graphicPanel2D.setIsExplicit(true);
-        graphicPanel2D.setIsFixed(true);
         graphicPanel2D.setVars(varAbsc, varOrd);
         graphicPanel2D.drawGraphs2D(solutionOfDifferentialEquation);
 
@@ -3341,8 +3330,6 @@ public abstract class MathCommandCompiler {
                 ArrayList<Expression> exprs = new ArrayList<>();
                 exprs.add(expr);
                 exprs.add(tangent);
-                graphicPanel2D.setIsExplicit(true);
-                graphicPanel2D.setIsFixed(false);
                 graphicPanel2D.setVarAbsc(var);
                 graphicPanel2D.setSpecialPoints(tangentPoint);
                 graphicPanel2D.drawGraphs2D(Variable.create(var).sub(1), Variable.create(var).add(1), exprs);
