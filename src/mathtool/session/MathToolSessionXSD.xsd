@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="mathToolSession">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="definedVars">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="variable" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="varname" type="xs:string"/>
+										<xs:element name="value" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="definedFunctions">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="function" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="functionname" type="xs:string"/>
+										<xs:sequence>
+											<xs:element name="arguments">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="varname" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:element name="functionterm" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

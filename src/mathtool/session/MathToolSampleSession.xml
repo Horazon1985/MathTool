@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mathToolSession xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MathToolSessionXSD.xsd">
+	<definedVars>
+		<variable>
+			<varname>x</varname>
+			<value>5</value>
+		</variable>
+		<variable>
+			<varname>y</varname>
+			<value>3+sin(1)</value>
+		</variable>
+		<variable>
+			<varname>z</varname>
+			<value>5</value>
+		</variable>
+	</definedVars>
+	<definedFunctions>
+		<function>
+			<functionname>f</functionname>
+			<arguments>
+				<varname>x</varname>
+				<varname>y</varname>
+			</arguments>
+			<functionterm>x+y^2</functionterm>
+		</function>
+		<function>
+			<functionname>g</functionname>
+			<arguments>
+				<varname>u</varname>
+			</arguments>
+			<functionterm>3*sin(u)</functionterm>
+		</function>
+	</definedFunctions>
+</mathToolSession>
