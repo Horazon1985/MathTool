@@ -19,10 +19,10 @@ public class ConfigTests {
     public static void tearDownClass() throws Exception {
     }
 
-    @Test
-    public void exportConfigTest(){
-        ConfigLoader.configToXML();
-    }
+//    @Test
+//    public void exportConfigTest(){
+//        ConfigLoader.configToXML();
+//    }
 
     @Test
     public void loadConfigTest(){
