@@ -44,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import components.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
 import mathtool.component.components.HelpDialogGUI;
@@ -120,7 +121,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Vereinfachungsoptionen initialisieren.
         MathToolController.initSimplifyTypes();
-        
+
         // Konfigurationen aus XML auslesen.
         MathToolController.setSettings();
 
@@ -357,10 +358,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Setter für language
      */
-    public static void setLanguage(TypeLanguage language){
+    public static void setLanguage(TypeLanguage language) {
         Expression.setLanguage(language);
     }
-    
+
     /**
      * Getter für commandList.
      */
@@ -1207,7 +1208,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemOutputOptionsActionPerformed
 
     private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
-        SessionLoader.sessionToXML();
+        MathToolSaveSessionDialog saveDialog = new MathToolSaveSessionDialog();
+        saveDialog.showSaveDialog(this);
+        try {
+            String path = saveDialog.getSelectedFile().getPath();
+            saveDialog.save(path);
+        } catch (Exception e) {
+        }
+
     }//GEN-LAST:event_menuItemSaveActionPerformed
 
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {

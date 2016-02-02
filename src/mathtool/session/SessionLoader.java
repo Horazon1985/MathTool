@@ -18,7 +18,7 @@ import mathtool.session.classes.DefinedVars;
 
 public class SessionLoader {
     
-    public static void sessionToXML() {
+    public static void sessionToXML(String path) {
         
         MathToolSession session = new MathToolSession();
 
@@ -55,7 +55,7 @@ public class SessionLoader {
         
         try {
             
-            File file = new File("C:\\file.xml");
+            File file = new File(path);
             JAXBContext jaxbContext = JAXBContext.newInstance(MathToolSession.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

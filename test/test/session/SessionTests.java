@@ -37,7 +37,7 @@ public class SessionTests {
         SelfDefinedFunction.createSelfDefinedFunction(f);
         SelfDefinedFunction.createSelfDefinedFunction(g);
         
-        SessionLoader.sessionToXML();
+        SessionLoader.sessionToXML("C:\\file.xml");
         
     }
     
