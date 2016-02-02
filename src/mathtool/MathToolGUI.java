@@ -700,6 +700,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Menüeinträge
         componentCaptions.put(menuFile, "GUI_MathToolForm_MENU_FILE");
+        componentCaptions.put(menuItemSave, "GUI_MathToolForm_MENU_SAVE");
         componentCaptions.put(menuItemQuit, "GUI_MathToolForm_MENU_QUIT");
         componentCaptions.put(menuMathTool, "GUI_MathToolForm_MENU_MATHTOOL");
         componentCaptions.put(menuItemHelp, "GUI_MathToolForm_MENU_HELP");
