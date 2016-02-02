@@ -50,6 +50,7 @@ import mathtool.component.components.HelpDialogGUI;
 import mathtool.component.components.LegendGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.component.components.OutputOptionsDialogGUI;
+import mathtool.session.SessionLoader;
 import translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {
@@ -486,7 +487,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         clearButton = new javax.swing.JButton();
         mathToolMenuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
-        MenuItemQuit = new javax.swing.JMenuItem();
+        menuItemSave = new javax.swing.JMenuItem();
+        menuItemQuit = new javax.swing.JMenuItem();
         menuMathTool = new javax.swing.JMenu();
         menuItemHelp = new javax.swing.JMenuItem();
         menuItemLanguageMenu = new javax.swing.JMenu();
@@ -578,13 +580,22 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         menuFile.setText("Datei");
 
-        MenuItemQuit.setText("Verlassen");
-        MenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+        menuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemSave.setText("Speichern");
+        menuItemSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemQuitActionPerformed(evt);
+                menuItemSaveActionPerformed(evt);
             }
         });
-        menuFile.add(MenuItemQuit);
+        menuFile.add(menuItemSave);
+
+        menuItemQuit.setText("Verlassen");
+        menuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemQuitActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemQuit);
 
         mathToolMenuBar.add(menuFile);
 
@@ -689,7 +700,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Menüeinträge
         componentCaptions.put(menuFile, "GUI_MathToolForm_MENU_FILE");
-        componentCaptions.put(MenuItemQuit, "GUI_MathToolForm_MENU_QUIT");
+        componentCaptions.put(menuItemQuit, "GUI_MathToolForm_MENU_QUIT");
         componentCaptions.put(menuMathTool, "GUI_MathToolForm_MENU_MATHTOOL");
         componentCaptions.put(menuItemHelp, "GUI_MathToolForm_MENU_HELP");
         componentCaptions.put(menuItemLanguageMenu, "GUI_MathToolForm_MENU_LANGUAGES");
@@ -1074,9 +1085,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         executeCommand();
     }//GEN-LAST:event_latexButtonActionPerformed
 
-    private void MenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemQuitActionPerformed
+    private void menuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemQuitActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_MenuItemQuitActionPerformed
+    }//GEN-LAST:event_menuItemQuitActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         computingSwingWorker.cancel(true);
@@ -1193,6 +1204,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
         outputOptionsDialogGUI.setVisible(true);
 
     }//GEN-LAST:event_menuItemOutputOptionsActionPerformed
+
+    private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
+        SessionLoader.sessionToXML();
+    }//GEN-LAST:event_menuItemSaveActionPerformed
 
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
         switch (evt.getKeyCode()) {
@@ -1397,7 +1412,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem MenuItemQuit;
     private javax.swing.JButton approxButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearButton;
@@ -1415,9 +1429,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JMenuItem menuItemLanguageUkrainian;
     private javax.swing.JMenu menuItemOptionsMenu;
     private javax.swing.JMenuItem menuItemOutputOptions;
+    private javax.swing.JMenuItem menuItemQuit;
     private javax.swing.JMenuItem menuItemRepresentationFormula;
     private javax.swing.JMenu menuItemRepresentationMenu;
     private javax.swing.JMenuItem menuItemRepresentationText;
+    private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JMenu menuMathTool;
     private javax.swing.JComboBox operatorChoice;
     // End of variables declaration//GEN-END:variables

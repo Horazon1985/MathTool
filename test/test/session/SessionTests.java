@@ -29,10 +29,13 @@ public class SessionTests {
         HashMap<String, Expression> abstractExpressions = new HashMap<>();
         HashMap<String, String[]> arguments = new HashMap<>();
         arguments.put("f", new String[]{"x", "y"});
+        arguments.put("g", new String[]{"u"});
         abstractExpressions.put("f", Variable.create("x").add(Variable.create("y").pow(2)));
-//        SelfDefinedFunction f = new SelfDefinedFunction("f", arguments.get("f"), abstractExpressions.get("f"), null);
-        SelfDefinedFunction.setAbstractExpressionsForSelfDefinedFunctions(abstractExpressions);
-        SelfDefinedFunction.setVarsForSelfDefinedFunctions(arguments);
+        abstractExpressions.put("g", Variable.create("u").pow(5).sin());
+        SelfDefinedFunction f = new SelfDefinedFunction("f", arguments.get("f"), abstractExpressions.get("f"), null);
+        SelfDefinedFunction g = new SelfDefinedFunction("g", arguments.get("g"), abstractExpressions.get("g"), null);
+        SelfDefinedFunction.createSelfDefinedFunction(f);
+        SelfDefinedFunction.createSelfDefinedFunction(g);
         
         SessionLoader.sessionToXML();
         

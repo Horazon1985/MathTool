@@ -7,6 +7,7 @@ import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.Variable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -40,9 +41,7 @@ public class SessionLoader {
             arguments = new ArrayList<>();
             definedfunction = new DefinedFunction();
             definedfunction.setFunctionname(function);
-            for (String arg : SelfDefinedFunction.getVarsForSelfDefinedFunctions().get(function)){
-                arguments.add(arg);
-            }
+            arguments.addAll(Arrays.asList(SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().get(function)));
             argumentsToSet = new Arguments();
             argumentsToSet.setArguments(arguments);
             definedfunction.setArguments(argumentsToSet);

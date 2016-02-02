@@ -1914,7 +1914,7 @@ public abstract class MathCommandCompiler {
             }
             SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().put(functionName, (Expression) command.getParams()[command.getParams().length - 1]);
             SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().put(functionName, exprsForVars);
-            SelfDefinedFunction.getVarsForSelfDefinedFunctions().put(functionName, vars);
+            SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().put(functionName, vars);
             definedFunctions.put(functionName, new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars));
 
             // Ausgabe an den Benutzer.
