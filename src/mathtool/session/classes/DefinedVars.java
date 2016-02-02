@@ -1,28 +1,27 @@
-package mathtool.session;
+package mathtool.session.classes;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class MathToolSession {
+public class DefinedVars {
 
-    private DefinedVars definedVars;
+    private List<DefinedVar> definedVars;
 
     /**
      * @return the definedVars
      */
-    public DefinedVars getDefinedVars() {
+    public List<DefinedVar> getDefinedVarList() {
         return definedVars;
     }
 
     /**
      * @param definedVars the definedVars to set
      */
-    @XmlElement
-    public void setGeneralSettings(DefinedVars definedVars) {
+    @XmlElement(name="variable", type=DefinedVar.class)
+    public void setDefinedVarList(List<DefinedVar> definedVars) {
         this.definedVars = definedVars;
     }
-
-
     
 }

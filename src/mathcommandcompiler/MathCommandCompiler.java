@@ -805,7 +805,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         try {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
-            ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
+            ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                         + (params.length - 1)
@@ -819,7 +819,7 @@ public abstract class MathCommandCompiler {
 
         try {
             commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
-            ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
+            ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
                         + params.length
@@ -873,7 +873,7 @@ public abstract class MathCommandCompiler {
         for (int i = 1; i <= 4; i++) {
             try {
                 commandParams[i + 1] = Expression.build(params[i], null);
-                ((Expression) commandParams[i + 1]).addContainedVars(varsInLimits);
+                ((Expression) commandParams[i + 1]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
                             + (i + 1)
@@ -927,7 +927,7 @@ public abstract class MathCommandCompiler {
         for (int i = params.length - 4; i < params.length; i++) {
             try {
                 commandParams[i] = Expression.build(params[i], null);
-                ((Expression) commandParams[i]).addContainedVars(varsInLimits);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
                             + (i + 1)
@@ -999,7 +999,7 @@ public abstract class MathCommandCompiler {
         for (int i = 0; i <= 1; i++) {
             try {
                 commandParams[curveComponents.length + i] = Expression.build(params[i + 1], null);
-                ((Expression) commandParams[curveComponents.length + i]).addContainedVars(varsInLimits);
+                ((Expression) commandParams[curveComponents.length + i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
                             + (i + 2)
@@ -1055,7 +1055,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         try {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
-            ((Expression) commandParams[params.length - 2]).addContainedVars(varsInLimits);
+            ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + (params.length - 1)
@@ -1069,7 +1069,7 @@ public abstract class MathCommandCompiler {
 
         try {
             commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
-            ((Expression) commandParams[params.length - 1]).addContainedVars(varsInLimits);
+            ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
                         + params.length
@@ -1174,7 +1174,7 @@ public abstract class MathCommandCompiler {
             HashSet<String> varsInLimits = new HashSet<>();
             for (int i = 1; i <= 2; i++) {
                 try {
-                    Expression.build(params[i], new HashSet<String>()).addContainedVars(varsInLimits);
+                    Expression.build(params[i], null).addContainedIndeterminates(varsInLimits);
                     if (!varsInLimits.isEmpty()) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
                                 + (i + 1)
@@ -1872,7 +1872,6 @@ public abstract class MathCommandCompiler {
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
             String var = (String) command.getParams()[0];
-//            Expression preciseExpression = ((Expression) command.getParams()[1]).simplifyByInsertingDefinedVars().simplify();
             Expression preciseExpression = ((Expression) command.getParams()[1]).simplifyByInsertingDefinedVars().simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
@@ -1913,9 +1912,9 @@ public abstract class MathCommandCompiler {
                 vars[i] = (String) params[i + 1];
                 exprsForVars[i] = Variable.create((String) params[i + 1]);
             }
-            SelfDefinedFunction.abstractExpressionsForSelfDefinedFunctions.put(functionName, (Expression) command.getParams()[command.getParams().length - 1]);
-            SelfDefinedFunction.innerExpressionsForSelfDefinedFunctions.put(functionName, exprsForVars);
-            SelfDefinedFunction.varsForSelfDefinedFunctions.put(functionName, vars);
+            SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().put(functionName, (Expression) command.getParams()[command.getParams().length - 1]);
+            SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().put(functionName, exprsForVars);
+            SelfDefinedFunction.getVarsForSelfDefinedFunctions().put(functionName, vars);
             definedFunctions.put(functionName, new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars));
 
             // Ausgabe an den Benutzer.
@@ -2898,7 +2897,7 @@ public abstract class MathCommandCompiler {
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
         Expression expr = ((Expression) command.getParams()[0]).simplify();
-        expr.addContainedVars(vars);
+        expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
         Iterator iter = vars.iterator();
@@ -3173,7 +3172,7 @@ public abstract class MathCommandCompiler {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
-        logExpr.addContainedVars(vars);
+        logExpr.addContainedIndeterminates(vars);
         int numberOfVars = vars.size();
         if (numberOfVars > 20) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")
@@ -3385,7 +3384,7 @@ public abstract class MathCommandCompiler {
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
         Expression expr = ((Expression) command.getParams()[0]).simplify();
-        expr.addContainedVars(vars);
+        expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
         Iterator iter = vars.iterator();

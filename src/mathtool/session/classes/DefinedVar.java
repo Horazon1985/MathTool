@@ -1,10 +1,10 @@
-package mathtool.session;
+package mathtool.session.classes;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class DefinedVars {
+public class DefinedVar {
  
     private String varname;
     private String value;
