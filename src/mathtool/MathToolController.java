@@ -9,7 +9,9 @@ import enums.TypeSimplify;
 import exceptions.ExpressionException;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.expression.classes.Operator;
+import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.TypeOperator;
+import abstractexpressions.expression.classes.Variable;
 import graphic.GraphicArea;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves3D;
@@ -42,6 +44,7 @@ import java.awt.Dimension;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.print.Collation;
@@ -51,6 +54,12 @@ import mathtool.component.components.MathToolTextField;
 import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolConfig;
 import mathtool.config.OptionSettings;
+import mathtool.session.SessionLoader;
+import mathtool.session.classes.DefinedFunction;
+import mathtool.session.classes.DefinedFunctions;
+import mathtool.session.classes.DefinedVar;
+import mathtool.session.classes.DefinedVars;
+import mathtool.session.classes.MathToolSession;
 import operationparser.ParseResultPattern;
 import translator.Translator;
 
@@ -119,7 +128,7 @@ public class MathToolController {
         }
     }
 
-    public static void setSettings() {
+    public static void loadSettings() {
         try {
             MathToolConfig config = ConfigLoader.loadConfig();
             // Konfigurationen setzen.
@@ -202,6 +211,30 @@ public class MathToolController {
 
     }
 
+    public static void loadSession() {
+        try {
+            MathToolSession session = SessionLoader.loadSession();
+            DefinedVars definedVars = session.getDefinedVars();
+            DefinedFunctions definedFunctions = session.getDefinedFunctions();
+            for (DefinedVar var : definedVars.getDefinedVarList()){
+                Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+            }
+            SelfDefinedFunction f;
+            List<String> arguments;
+            for (DefinedFunction function : definedFunctions.getDefinedFunctionList()){
+                arguments = function.getArguments().getArguments();
+                f = new SelfDefinedFunction(function.getFunctionname(), 
+                        arguments.toArray(new String[arguments.size()]), 
+                        Expression.build(function.getFunctionterm(), null), 
+                        null);
+                SelfDefinedFunction.createSelfDefinedFunction(f);
+            }
+        } catch (Exception e) {
+            // Es wird nichts geladen.
+        }
+
+    }
+    
     /**
      * Gibt den i-ten geloggten Befehl zurück.
      */

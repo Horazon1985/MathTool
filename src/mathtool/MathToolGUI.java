@@ -123,7 +123,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathToolController.initSimplifyTypes();
 
         // Konfigurationen aus XML auslesen.
-        MathToolController.setSettings();
+        MathToolController.loadSettings();
 
         // Mindestfenstergröße festlegen
         setMinimumSize(minimumDimension);

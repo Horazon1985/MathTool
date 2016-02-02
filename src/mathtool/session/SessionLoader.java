@@ -12,6 +12,8 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import mathtool.config.MathToolConfig;
 import mathtool.session.classes.Arguments;
 import mathtool.session.classes.DefinedFunctions;
 import mathtool.session.classes.DefinedVars;
@@ -69,6 +71,13 @@ public class SessionLoader {
             e.printStackTrace();
         }
         
+    }
+    
+    public static MathToolSession loadSession() throws JAXBException {
+        File file = new File("src/mathtool/session/MathToolSampleSession.xml");
+        JAXBContext jaxbContext = JAXBContext.newInstance(MathToolConfig.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (MathToolSession) jaxbUnmarshaller.unmarshal(file);
     }
     
 }
