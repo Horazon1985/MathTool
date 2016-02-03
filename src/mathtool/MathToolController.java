@@ -216,25 +216,30 @@ public class MathToolController {
             MathToolSession session = SessionLoader.loadSession(path);
             DefinedVars definedVars = session.getDefinedVars();
             DefinedFunctions definedFunctions = session.getDefinedFunctions();
-            for (DefinedVar var : definedVars.getDefinedVarList()){
-                Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+
+            if (definedVars.getDefinedVarList() != null) {
+                for (DefinedVar var : definedVars.getDefinedVarList()) {
+                    Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+                }
             }
-            SelfDefinedFunction f;
-            List<String> arguments;
-            for (DefinedFunction function : definedFunctions.getDefinedFunctionList()){
-                arguments = function.getArguments().getArguments();
-                f = new SelfDefinedFunction(function.getFunctionname(), 
-                        arguments.toArray(new String[arguments.size()]), 
-                        Expression.build(function.getFunctionterm(), null), 
-                        null);
-                SelfDefinedFunction.createSelfDefinedFunction(f);
+            if (definedFunctions.getDefinedFunctionList() != null) {
+                SelfDefinedFunction f;
+                List<String> arguments;
+                for (DefinedFunction function : definedFunctions.getDefinedFunctionList()) {
+                    arguments = function.getArguments().getArguments();
+                    f = new SelfDefinedFunction(function.getFunctionname(),
+                            arguments.toArray(new String[arguments.size()]),
+                            Expression.build(function.getFunctionterm(), null),
+                            null);
+                    SelfDefinedFunction.createSelfDefinedFunction(f);
+                }
             }
         } catch (Exception e) {
             // Es wird nichts geladen.
         }
 
     }
-    
+
     /**
      * Gibt den i-ten geloggten Befehl zurück.
      */
@@ -366,8 +371,8 @@ public class MathToolController {
     }
 
     /**
-     * Berechnet für Befehle die Mindestanzahl der benötigten Kommata bei
-     * einer gültigen Eingabe.
+     * Berechnet für Befehle die Mindestanzahl der benötigten Kommata bei einer
+     * gültigen Eingabe.
      */
     public static int getNumberOfCommasForCommands(String commandName) {
 
@@ -393,8 +398,7 @@ public class MathToolController {
         if (commandName.equals("taylordeq")) {
             return 5;
         }
-        
-        
+
         Field[] fields = Command.class.getDeclaredFields();
         String value;
         int numberOfCommas = -1;
@@ -425,7 +429,7 @@ public class MathToolController {
         return Math.max(numberOfCommas, 0);
 
     }
-    
+
     /**
      * Richtet alle Grafikpanels an der Stelle (x, y) aus und setzt ihre Breite
      * / Höhe gemäß width / height.
