@@ -211,9 +211,9 @@ public class MathToolController {
 
     }
 
-    public static void loadSession() {
+    public static void loadSession(String path) {
         try {
-            MathToolSession session = SessionLoader.loadSession();
+            MathToolSession session = SessionLoader.loadSession(path);
             DefinedVars definedVars = session.getDefinedVars();
             DefinedFunctions definedFunctions = session.getDefinedFunctions();
             for (DefinedVar var : definedVars.getDefinedVarList()){

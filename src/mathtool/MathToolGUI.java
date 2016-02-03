@@ -488,6 +488,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         clearButton = new javax.swing.JButton();
         mathToolMenuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
+        menuItemOpen = new javax.swing.JMenuItem();
         menuItemSave = new javax.swing.JMenuItem();
         menuItemQuit = new javax.swing.JMenuItem();
         menuMathTool = new javax.swing.JMenu();
@@ -580,6 +581,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
         clearButton.setBounds(280, 370, 130, 30);
 
         menuFile.setText("Datei");
+
+        menuItemOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemOpen.setText("Öffnen");
+        menuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOpenActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemOpen);
 
         menuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         menuItemSave.setText("Speichern");
@@ -701,6 +711,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Menüeinträge
         componentCaptions.put(menuFile, "GUI_MathToolForm_MENU_FILE");
+        componentCaptions.put(menuItemOpen, "GUI_MathToolForm_MENU_OPEN");
         componentCaptions.put(menuItemSave, "GUI_MathToolForm_MENU_SAVE");
         componentCaptions.put(menuItemQuit, "GUI_MathToolForm_MENU_QUIT");
         componentCaptions.put(menuMathTool, "GUI_MathToolForm_MENU_MATHTOOL");
@@ -1218,6 +1229,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     }//GEN-LAST:event_menuItemSaveActionPerformed
 
+    private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
+        MathToolSaveSessionDialog openDialog = new MathToolSaveSessionDialog();
+        openDialog.showOpenDialog(this);
+        try {
+            String path = openDialog.getSelectedFile().getPath();
+            openDialog.open(path);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_menuItemOpenActionPerformed
+
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
@@ -1436,6 +1457,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JMenu menuItemLanguageMenu;
     private javax.swing.JMenuItem menuItemLanguageRussian;
     private javax.swing.JMenuItem menuItemLanguageUkrainian;
+    private javax.swing.JMenuItem menuItemOpen;
     private javax.swing.JMenu menuItemOptionsMenu;
     private javax.swing.JMenuItem menuItemOutputOptions;
     private javax.swing.JMenuItem menuItemQuit;

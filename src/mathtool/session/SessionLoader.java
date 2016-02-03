@@ -73,9 +73,9 @@ public class SessionLoader {
         
     }
     
-    public static MathToolSession loadSession() throws JAXBException {
-        File file = new File("src/mathtool/session/MathToolSampleSession.xml");
-        JAXBContext jaxbContext = JAXBContext.newInstance(MathToolConfig.class);
+    public static MathToolSession loadSession(String path) throws JAXBException {
+        File file = new File(path);
+        JAXBContext jaxbContext = JAXBContext.newInstance(MathToolSession.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         return (MathToolSession) jaxbUnmarshaller.unmarshal(file);
     }
