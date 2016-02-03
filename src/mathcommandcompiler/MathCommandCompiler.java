@@ -48,6 +48,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
+import notations.NotationLoader;
 import translator.Translator;
 
 public abstract class MathCommandCompiler {
@@ -482,31 +483,20 @@ public abstract class MathCommandCompiler {
 
         // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
         for (String functionVar : functionVars) {
-            if (!Expression.isValidDerivateOfVariable(functionVar)) {
+            if (!Expression.isValidDerivateOfVariable(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_1") + functionVar + Translator.translateExceptionMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
             }
         }
 
         // Wird geprüft, ob die Variablen in function_vars auch alle verschieden sind!
-        HashSet<String> functionVarsAsHashset = new HashSet<>();
+        List<String> functionVarsAsList = new ArrayList<>();
         for (String functionVar : functionVars) {
-            if (functionVarsAsHashset.contains(functionVar)) {
+            if (functionVarsAsList.contains(functionVar)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_1")
                         + functionName
                         + Translator.translateExceptionMessage("MCC_VARIABLES_OCCUR_TWICE_IN_DEF_2"));
             }
-            functionVarsAsHashset.add(functionVar);
-        }
-
-        /*
-         Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
-         dient der Kennzeichnung, dass diese Variablen Platzhalter für
-         weitere Ausdrücke und keine echten Variablen sind. Solche
-         Variablen können niemals in einem geparsten Ausdruck vorkommen,
-         da der Parser Expression.build solche Variablen nicht akzeptiert.
-         */
-        for (int i = 0; i < functionVars.length; i++) {
-            functionVars[i] = functionVars[i] + "_ABSTRACT";
+            functionVarsAsList.add(functionVar);
         }
 
         // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
@@ -524,19 +514,31 @@ public abstract class MathCommandCompiler {
         }
 
         /*
+         Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
+         dient der Kennzeichnung, dass diese Variablen Platzhalter für
+         weitere Ausdrücke und keine echten Variablen sind. Solche
+         Variablen können niemals in einem geparsten Ausdruck vorkommen,
+         da der Parser Expression.build solche Variablen nicht akzeptiert.
+         */
+        for (int i = 0; i < functionVars.length; i++) {
+//            functionVars[i] = functionVars[i] + "_ABSTRACT";
+            functionVars[i] = NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (i + 1);
+        }
+
+        /*
          Prüfen, ob alle Variablen, die in expr auftreten, auch als
          Funktionsparameter vorhanden sind. Sonst -> Fehler ausgeben.
          Zugleich: Im Ausdruck expr werden alle Variablen der Form var
          durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
          im HashSet vars ebenfalls.
          */
-        List<String> functionVarsAsList = Arrays.asList(functionVars);
         Iterator iter = vars.iterator();
         String var;
         for (int i = 0; i < vars.size(); i++) {
             var = (String) iter.next();
-            expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
-            var = var + "_ABSTRACT";
+//            expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
+            expr = expr.replaceVariable(var, Variable.create(NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (functionVarsAsList.indexOf(var) + 1)));
+//            var = var + "_ABSTRACT";
             if (!functionVarsAsList.contains(var)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR"));
             }
@@ -554,6 +556,7 @@ public abstract class MathCommandCompiler {
          result.type = TypeCommand.def result.params = {"f", "x_ABSTRACT",
          "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als Expression).
          */
+
         return new Command(TypeCommand.def, commandParams);
 
     }
@@ -1912,17 +1915,14 @@ public abstract class MathCommandCompiler {
                 vars[i] = (String) params[i + 1];
                 exprsForVars[i] = Variable.create((String) params[i + 1]);
             }
-            SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().put(functionName, (Expression) command.getParams()[command.getParams().length - 1]);
-            SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().put(functionName, exprsForVars);
-            SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().put(functionName, vars);
-            definedFunctions.put(functionName, new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars));
+            SelfDefinedFunction f = new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars);
+            SelfDefinedFunction.createSelfDefinedFunction(f);
+            definedFunctions.put(functionName, f);
 
             // Ausgabe an den Benutzer.
             String function;
-            SelfDefinedFunction f = (SelfDefinedFunction) definedFunctions.get(functionName);
             String[] fArguments = f.getArguments();
             Expression[] varsForOutput = new Expression[f.getArguments().length];
-            Expression fForOutput;
 
             function = f.getName() + "(";
             for (int i = 0; i < fArguments.length; i++) {
@@ -1932,18 +1932,17 @@ public abstract class MathCommandCompiler {
                  wiederzubekommen. Die Variablen mit den Originalnamen werden
                  im Array vars_for_output abgespechert.
                  */
-                varsForOutput[i] = Variable.create(fArguments[i].substring(0, fArguments[i].indexOf("_ABSTRACT")));
+                varsForOutput[i] = Variable.create(fArguments[i]);
                 function = function + ((Variable) varsForOutput[i]).getName() + ",";
             }
             function = function.substring(0, function.length() - 1) + ")";
-            fForOutput = f.replaceAllVariables(varsForOutput);
 
             // Textliche Ausgabe
-            output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + function + " = "
-                    + fForOutput.writeExpression() + "\n \n");
+            output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + f.writeExpression() + " = "
+                    + f.getAbstractExpression().writeExpression() + "\n \n");
             // Grafische Ausgabe
             graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED"),
-                    function, " = ", fForOutput);
+                    f, " = ", f.getAbstractExpression());
 
         }
 
