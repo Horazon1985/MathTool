@@ -473,6 +473,20 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_DEF"));
         }
 
+        // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
+        if (!isForbiddenName(functionName)) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
+                    + functionName
+                    + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
+        }
+
+        // Prüfen, ob keine Sonderzeichen vorkommen.
+        if (!checkForSpecialCharacters(functionName)) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
+                    + functionName
+                    + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
+        }
+        
         /*
          Falls functions_vars leer ist -> Fehler ausgeben (es muss
          mindestens eine Variable vorhanden sein).
@@ -499,20 +513,6 @@ public abstract class MathCommandCompiler {
             functionVarsAsList.add(functionVar);
         }
 
-        // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
-        if (!isForbiddenName(functionName)) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
-                    + functionName
-                    + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
-        }
-
-        // Prüfen, ob keine Sonderzeichen vorkommen.
-        if (!checkForSpecialCharacters(functionName)) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
-                    + functionName
-                    + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
-        }
-
         /*
          Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
          dient der Kennzeichnung, dass diese Variablen Platzhalter für
@@ -521,7 +521,6 @@ public abstract class MathCommandCompiler {
          da der Parser Expression.build solche Variablen nicht akzeptiert.
          */
         for (int i = 0; i < functionVars.length; i++) {
-//            functionVars[i] = functionVars[i] + "_ABSTRACT";
             functionVars[i] = NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (i + 1);
         }
 
@@ -532,13 +531,11 @@ public abstract class MathCommandCompiler {
          durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
          im HashSet vars ebenfalls.
          */
-        Iterator iter = vars.iterator();
+        Iterator<String> iter = vars.iterator();
         String var;
         for (int i = 0; i < vars.size(); i++) {
-            var = (String) iter.next();
-//            expr = expr.replaceVariable(var, Variable.create(var + "_ABSTRACT"));
+            var = iter.next();
             expr = expr.replaceVariable(var, Variable.create(NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (functionVarsAsList.indexOf(var) + 1)));
-//            var = var + "_ABSTRACT";
             if (!functionVarsAsList.contains(var)) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR"));
             }
@@ -1708,7 +1705,7 @@ public abstract class MathCommandCompiler {
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
         } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
-            executeDefine(command, definedFunctions, graphicArea);
+            executeDef(command, definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.deffuncs)) {
             executeDefFuncs(definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.defvars)) {
@@ -1870,7 +1867,7 @@ public abstract class MathCommandCompiler {
         graphicArea.clearArea();
     }
 
-    private static void executeDefine(Command command, HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeDef(Command command, HashMap<String, Expression> definedFunctions, GraphicArea graphicArea) throws EvaluationException {
 
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
@@ -1920,22 +1917,12 @@ public abstract class MathCommandCompiler {
             definedFunctions.put(functionName, f);
 
             // Ausgabe an den Benutzer.
-            String function;
             String[] fArguments = f.getArguments();
             Expression[] varsForOutput = new Expression[f.getArguments().length];
 
-            function = f.getName() + "(";
             for (int i = 0; i < fArguments.length; i++) {
-                /*
-                 Die Argumente in f haben alle "_ABSTRACT" als Anhängsel.
-                 Dieses wird nun beseitigt, um die Originalnamen
-                 wiederzubekommen. Die Variablen mit den Originalnamen werden
-                 im Array vars_for_output abgespechert.
-                 */
                 varsForOutput[i] = Variable.create(fArguments[i]);
-                function = function + ((Variable) varsForOutput[i]).getName() + ",";
             }
-            function = function.substring(0, function.length() - 1) + ")";
 
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + f.writeExpression() + " = "
