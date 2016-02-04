@@ -60,6 +60,7 @@ import mathtool.session.classes.DefinedFunctions;
 import mathtool.session.classes.DefinedVar;
 import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
+import notations.NotationLoader;
 import operationparser.ParseResultPattern;
 import translator.Translator;
 
@@ -219,19 +220,42 @@ public class MathToolController {
 
             if (definedVars.getDefinedVarList() != null) {
                 for (DefinedVar var : definedVars.getDefinedVarList()) {
-                    Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+                    try {
+                        Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+                    } catch (Exception e) {
+                        // Nichts tun, weitere Variablen einlesen.
+                    }
                 }
             }
             if (definedFunctions.getDefinedFunctionList() != null) {
                 SelfDefinedFunction f;
                 List<String> arguments;
+                Expression abstractExpression;
+                HashSet<String> vars;
                 for (DefinedFunction function : definedFunctions.getDefinedFunctionList()) {
-                    arguments = function.getArguments().getArguments();
-                    f = new SelfDefinedFunction(function.getFunctionname(),
-                            arguments.toArray(new String[arguments.size()]),
-                            Expression.build(function.getFunctionterm(), null),
-                            null);
-                    SelfDefinedFunction.createSelfDefinedFunction(f);
+                    try {
+                        arguments = function.getArguments().getArguments();
+                        abstractExpression = Expression.build(function.getFunctionterm(), null);
+                        vars = abstractExpression.getContainedIndeterminates();
+                        /*
+                         Wenn f als Argumente die Variablen U_1, U_2, ... enthält,
+                         dann enthält f.abstractExpression die entsprechenden Variablen
+                         u_1, u_2, ... . Für eine korrekte Zuordnung müssen diese 
+                         wieder zu Großbuchstaben gemacht werden.
+                         */
+                        for (String var : vars) {
+                            if (var.substring(0, 1).equals(NotationLoader.SELFDEFINEDFUNCTION_VAR.toLowerCase())) {
+                                abstractExpression = abstractExpression.replaceVariable(var, Variable.create(var.toUpperCase()));
+                            }
+                        }
+                        f = new SelfDefinedFunction(function.getFunctionname(),
+                                arguments.toArray(new String[arguments.size()]),
+                                abstractExpression,
+                                null);
+                        SelfDefinedFunction.createSelfDefinedFunction(f);
+                    } catch (Exception e) {
+                        // Nichts tun, weitere Funktionen einlesen.
+                    }
                 }
             }
         } catch (Exception e) {

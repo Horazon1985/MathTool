@@ -120,7 +120,7 @@ public abstract class MathCommandCompiler {
      * Operator oder Befehl ist. Ferner dürfen die Zeichen + - * / ^ nicht
      * enthalten sein.
      */
-    private static boolean isForbiddenName(String name) {
+    private static boolean isNotForbiddenName(String name) {
 
         // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
         for (TypeFunction protectedFunction : TypeFunction.values()) {
@@ -156,7 +156,7 @@ public abstract class MathCommandCompiler {
      * benötigt. Sie prüft nach, ob der Funktionsname Sonderzeichen enthält
      * (also Zeichen außer Buchstaben und Ziffern).
      */
-    private static boolean checkForSpecialCharacters(String name) {
+    private static boolean containsNoSpecialCharacters(String name) {
         for (int i = 0; i < name.length(); i++) {
             if (!((int) name.charAt(i) >= 48 && (int) name.charAt(i) < 57) && !((int) name.charAt(i) >= 97 && (int) name.charAt(i) < 122)) {
                 return false;
@@ -246,8 +246,10 @@ public abstract class MathCommandCompiler {
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
-            case "undef":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndef);
+            case "undeffunc":
+                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefFunc);
+            case "undefvar":
+                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVar);
             case "undefall":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAll);
             // Sollte theoretisch nie vorkommen.
@@ -321,10 +323,12 @@ public abstract class MathCommandCompiler {
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
-            case "undef":
-                return getCommandUndef(params);
+            case "undeffunc":
+                return getCommandUndefFunc(params);
+            case "undefvar":
+                return getCommandUndefVar(params);
             case "undefall":
-                return getCommandUndelAll(params);
+                return getCommandUndefAll(params);
             // Sollte theoretisch nie vorkommen.
             default:
                 return new Command();
@@ -474,14 +478,14 @@ public abstract class MathCommandCompiler {
         }
 
         // Prüfen, ob nicht geschützte Funktionen (wie z.B. sin, tan etc.) überschrieben werden.
-        if (!isForbiddenName(functionName)) {
+        if (!isNotForbiddenName(functionName)) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_1")
                     + functionName
                     + Translator.translateExceptionMessage("MCC_PROTECTED_FUNC_NAME_2"));
         }
 
         // Prüfen, ob keine Sonderzeichen vorkommen.
-        if (!checkForSpecialCharacters(functionName)) {
+        if (!containsNoSpecialCharacters(functionName)) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_1")
                     + functionName
                     + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
@@ -1648,20 +1652,33 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandUndef(String[] params) throws ExpressionException {
+    private static Command getCommandUndefFunc(String[] params) throws ExpressionException {
+        // Struktur: undef(f_1, ..., f_k) f_i: Funktionsname.
+        // Prüft, ob alle Funktionsnamen vorhanden sind.
+        for (int i = 0; i < params.length; i++) {
+            if (!isNotForbiddenName(params[i]) || !containsNoSpecialCharacters(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNC_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNC_2"));
+            }
+        }
+        return new Command(TypeCommand.undeffunc, params);
+    }
+
+    private static Command getCommandUndefVar(String[] params) throws ExpressionException {
         // Struktur: undef(var_1, ..., var_k) var_i: Variablenname.
         // Prüft, ob alle Parameter gültige Variablen sind.
         for (int i = 0; i < params.length; i++) {
             if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_1")
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFVAR_1")
                         + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEF_2"));
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFVAR_2"));
             }
         }
-        return new Command(TypeCommand.undef, params);
+        return new Command(TypeCommand.undefvar, params);
     }
 
-    private static Command getCommandUndelAll(String[] params) throws ExpressionException {
+    private static Command getCommandUndefAll(String[] params) throws ExpressionException {
         // Struktur: undefall().
         // Prüft, ob der Befehl keine Parameter besitzt.
         if (params.length > 0) {
@@ -1750,10 +1767,12 @@ public abstract class MathCommandCompiler {
             executeTangent(command, graphicPanel2D, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(command, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.undef)) {
-            executeUndefine(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.undeffunc)) {
+            executeUndefFunc(command, graphicArea);
+        } else if (command.getTypeCommand().equals(TypeCommand.undefvar)) {
+            executeUndefVar(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undefall)) {
-            executeUndefineAll(graphicArea);
+            executeUndefAll(graphicArea);
         } else {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
@@ -3438,7 +3457,25 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefine(Command comand, GraphicArea graphicArea)
+    private static void executeUndefFunc(Command comand, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        Object[] functions = comand.getParams();
+        for (Object function : functions) {
+            if (SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet().contains((String) function)) {
+                SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().remove((String) function);
+                SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().remove((String) function);
+                SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().remove((String) function);
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_2") + " \n \n");
+                // Graphische Ausgabe
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_2"));
+            }
+        }
+
+    }
+
+    private static void executeUndefVar(Command comand, GraphicArea graphicArea)
             throws EvaluationException {
 
         Object[] vars = comand.getParams();
@@ -3454,7 +3491,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefineAll(GraphicArea graphicArea) {
+    private static void executeUndefAll(GraphicArea graphicArea) {
 
         for (Iterator<String> iterator = Variable.getVariablesWithPredefinedValues().iterator(); iterator.hasNext();) {
             Variable.setPreciseExpression(iterator.next(), null);
