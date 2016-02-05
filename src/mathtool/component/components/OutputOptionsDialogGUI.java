@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import translator.Translator;
+import lang.translator.Translator;
 
 public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
 

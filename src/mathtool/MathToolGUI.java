@@ -52,7 +52,7 @@ import mathtool.component.components.LegendGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.component.components.OutputOptionsDialogGUI;
 import mathtool.session.SessionLoader;
-import translator.Translator;
+import lang.translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 

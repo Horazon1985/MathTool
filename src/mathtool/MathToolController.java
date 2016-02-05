@@ -62,7 +62,7 @@ import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
 import notations.NotationLoader;
 import operationparser.ParseResultPattern;
-import translator.Translator;
+import lang.translator.Translator;
 
 public class MathToolController {
 

@@ -9,7 +9,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import translator.Translator;
+import lang.translator.Translator;
 
 public class DevelopersDialogGUI extends JDialog {
 

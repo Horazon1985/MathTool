@@ -48,7 +48,7 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
 import notations.NotationLoader;
-import translator.Translator;
+import lang.translator.Translator;
 
 public abstract class MathCommandCompiler {
 
@@ -260,75 +260,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandApprox(String[] params) throws ExpressionException {
-
-        // Struktur: approx(expr)
-        Object[] commandParams = new Object[1];
-
-        // Prüft, ob der Befehl genau einen Parameter besitzt.
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_APPROX"));
-        }
-
-        try {
-            commandParams[0] = Expression.build(params[0], null);
-            return new Command(TypeCommand.approx, commandParams);
-        } catch (ExpressionException e) {
-            try {
-                commandParams[0] = MatrixExpression.build(params[0], null);
-                return new Command(TypeCommand.approx, commandParams);
-            } catch (ExpressionException ex) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID") + e.getMessage());
-            }
-        }
-
-    }
-
-    private static Command getCommandCCNF(String[] params) throws ExpressionException {
-
-        // Struktur: ccnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger logischer Ausdruck.
-        Object[] commandParams = new Object[1];
-
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CCNF"));
-        }
-
-        try {
-            commandParams[0] = LogicalExpression.build(params[0], null);
-            return new Command(TypeCommand.ccnf, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CCNF"));
-        }
-
-    }
-
-    private static Command getCommandCDNF(String[] params) throws ExpressionException {
-
-        // Struktur: cdnf(LOGICALEXPRESSION). LOGICALEXPRESSION: Gültiger logischer Ausdruck.
-        Object[] commandParams = new Object[1];
-
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CDNF"));
-        }
-
-        try {
-            commandParams[0] = LogicalExpression.build(params[0], null);
-            return new Command(TypeCommand.cdnf, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_CDNF"));
-        }
-
-    }
-
-    private static Command getCommandClear(String[] params) throws ExpressionException {
-        // Struktur: clear().
-        // Prüft, ob der Befehl keine Parameter besitzt.
-        if (params.length > 0) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CLEAR"));
-        }
-        return new Command(TypeCommand.clear, new Object[0]);
-    }
-
     private static Command getCommandDef(String[] params) throws ExpressionException {
 
         // Struktur: def(VAR = VALUE) oder def(FUNCTION(VAR_1, ..., VAR_n) = EXPRESSION(VAR_1, ..., VAR_n))
@@ -485,145 +416,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandDefFuncs(String[] params) throws ExpressionException {
-        // Struktur: deffuncs().
-        // Prüft, ob der Befehl keine Parameter besitzt.
-        if (params.length > 0) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFFUNCS"));
-        }
-        return new Command(TypeCommand.deffuncs, new Object[0]);
-    }
-
-    private static Command getCommandDefVars(String[] params) throws ExpressionException {
-        // Struktur: defvars().
-        // Prüft, ob der Befehl keine Parameter besitzt.
-        if (params.length > 0) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEFVARS"));
-        }
-        return new Command(TypeCommand.defvars, new Object[0]);
-    }
-
-    private static Command getCommandEigenvalues(String[] params) throws ExpressionException {
-
-        /* 
-         Struktur: eigenvalues(MATRIXEXPRESSION), MATRIXEXPRESSION: gültiger
-         Matrizenausdruck, der eine quadratische Matrix darstellt.
-         */
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVALUES"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], null);
-            // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
-            Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
-            if (dim.height != dim.width) {
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
-            }
-            return new Command(TypeCommand.eigenvalues, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES"));
-        } catch (EvaluationException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES_NOT_QUADRATIC"));
-        }
-
-    }
-
-    private static Command getCommandEigenvectors(String[] params) throws ExpressionException {
-
-        /* 
-         Struktur: eigenvectors(MATRIXEXPRESSION), MATRIXEXPRESSION: gültiger
-         Matrizenausdruck, der eine quadratische Matrix darstellt.
-         */
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EIGENVECTORS"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], null);
-            // Testen, ob dieser Matrizenausdruck wohldefiniert und quadratisch ist.
-            Dimension dim = ((MatrixExpression) commandParams[0]).getDimension();
-            if (dim.height != dim.width) {
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
-            }
-            return new Command(TypeCommand.eigenvectors, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS"));
-        } catch (EvaluationException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS_NOT_QUADRATIC"));
-        }
-
-    }
-
-    private static Command getCommandEuler(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: euler(int). int: nichtnegative ganze Zahl; bestimmt die
-         Anzahl der Stellen, die von e ausgegeben werden sollen.
-         */
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EULER"));
-        }
-
-        // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
-        try {
-            BigInteger numberOfDigits = new BigInteger(params[0]);
-            if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-            }
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = Integer.parseInt(params[0]);
-            if ((int) commandParams[0] < 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EULER"));
-            }
-            return new Command(TypeCommand.euler, commandParams);
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_EULER"));
-        }
-
-    }
-
-    private static Command getCommandExpand(String[] params) throws ExpressionException {
-
-        // Struktur: expand(EXPRESSION). EXPRESSION: Gültiger Ausdruck.
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_EXPAND"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = Expression.build(params[0], null);
-            return new Command(TypeCommand.expand, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EXPAND"));
-        }
-
-    }
-
-    private static Command getCommandKer(String[] params) throws ExpressionException {
-
-        // Struktur: ker(MATRIXEXPRESSION). MATRIXEXPRESSION: Gültiger Matrizenausdruck.
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_KER"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = MatrixExpression.build(params[0], null);
-            return new Command(TypeCommand.ker, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_KER"));
-        }
-
-    }
-
     private static Command getCommandLatex(String[] params) throws ExpressionException {
 
         /*
@@ -661,39 +453,6 @@ public abstract class MathCommandCompiler {
             return new Command(TypeCommand.latex, exprs);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
-        }
-
-    }
-
-    private static Command getCommandPi(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: pi(int). int: nichtnegative ganze Zahl; bestimmt die Anzahl
-         der Stellen, die von pi ausgegeben werden sollen.
-         */
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PI"));
-        }
-
-        // Zunächst prüfen, ob es sich um eine (evtl. viel zu große) ganze Zahl handelt.
-        try {
-            BigInteger numberOfDigits = new BigInteger(params[0]);
-            if (numberOfDigits.compareTo(BigInteger.ZERO) < 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-            }
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = Integer.parseInt(params[0]);
-            if ((int) commandParams[0] < 0) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_PI"));
-            }
-            return new Command(TypeCommand.pi, commandParams);
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_ENTER_SMALLER_NUMBER_IN_PI"));
         }
 
     }
@@ -1012,31 +771,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandRegressionLine(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: regressionline([x_1, y_1], ..., [x_n, y_n]), n >= 2.
-         */
-        if (params.length < 2) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_REGRESSIONLINE"));
-        }
-
-        Object[] commandParams = new Object[params.length];
-        for (int i = 0; i < params.length; i++) {
-            try {
-                commandParams[i] = MatrixExpression.build(params[i], null);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_REGRESSIONLINE_WITH_REPORTED_ERROR_1")
-                        + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_REGRESSIONLINE_WITH_REPORTED_ERROR_2")
-                        + e.getMessage());
-            }
-        }
-
-        return new Command(TypeCommand.regressionline, commandParams);
-
-    }
-
     private static Command getCommandSolve(String[] params) throws ExpressionException {
 
         /*
@@ -1320,23 +1054,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandTable(String[] params) throws ExpressionException {
-
-        // Struktur: table(LOGICALEXPRESSION) LOGICALEXPRESSION: Logischer Ausdruck.
-        if (params.length != 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_TABLE"));
-        }
-
-        try {
-            Object[] commandParams = new Object[1];
-            commandParams[0] = LogicalExpression.build(params[0], null);
-            return new Command(TypeCommand.table, commandParams);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_TABLE") + e.getMessage());
-        }
-
-    }
-
     private static Command getCommandTangent(String[] params) throws ExpressionException {
 
         /*
@@ -1575,41 +1292,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandUndefFunc(String[] params) throws ExpressionException {
-        // Struktur: undef(f_1, ..., f_k) f_i: Funktionsname.
-        // Prüft, ob alle Funktionsnamen vorhanden sind.
-        for (int i = 0; i < params.length; i++) {
-            if (!isNotForbiddenName(params[i]) || !containsNoSpecialCharacters(params[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNC_1")
-                        + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNC_2"));
-            }
-        }
-        return new Command(TypeCommand.undeffuncs, params);
-    }
-
-    private static Command getCommandUndefVar(String[] params) throws ExpressionException {
-        // Struktur: undef(var_1, ..., var_k) var_i: Variablenname.
-        // Prüft, ob alle Parameter gültige Variablen sind.
-        for (int i = 0; i < params.length; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i]) && !Expression.isPI(params[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFVAR_1")
-                        + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFVAR_2"));
-            }
-        }
-        return new Command(TypeCommand.undefvars, params);
-    }
-
-    private static Command getCommandUndefAll(String[] params) throws ExpressionException {
-        // Struktur: undefall().
-        // Prüft, ob der Befehl keine Parameter besitzt.
-        if (params.length > 0) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_UNDEFALL"));
-        }
-        return new Command(TypeCommand.undefall, new Object[0]);
-    }
-
     /**
      * Hauptmethode zum Ausführen des Befehls.
      *
@@ -1705,7 +1387,7 @@ public abstract class MathCommandCompiler {
         }
 
     }
-    
+
     /**
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
@@ -1937,6 +1619,11 @@ public abstract class MathCommandCompiler {
 
     private static void executeEigenvalues(Command command, GraphicArea graphicArea) throws EvaluationException {
 
+        Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
+        if (dim.height != dim.width) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES_NOT_QUADRATIC"));
+        }
+
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
         if (eigenvalues.isEmpty()) {
@@ -1982,6 +1669,11 @@ public abstract class MathCommandCompiler {
     }
 
     private static void executeEigenvectors(Command command, GraphicArea graphicArea) throws EvaluationException {
+
+        Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
+        if (dim.height != dim.width) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS_NOT_QUADRATIC"));
+        }
 
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
@@ -2849,7 +2541,7 @@ public abstract class MathCommandCompiler {
     private static void executeSolve2(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
             throws EvaluationException {
 
-        if (command.getParams().length <= 2){
+        if (command.getParams().length <= 2) {
             executeSolveAlgebraic(command, graphicArea);
         } else {
             executeSolveNumeric(command, graphicPanel2D, graphicArea);
