@@ -32,7 +32,6 @@ import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -174,7 +173,7 @@ public abstract class MathCommandCompiler {
      *
      * @throws ExpressionException, EvaluationException
      */
-    public static Command getCommand2(String command, String[] params) throws ExpressionException {
+    public static Command getCommand(String command, String[] params) throws ExpressionException {
 
         switch (command) {
             case "approx":
@@ -219,8 +218,10 @@ public abstract class MathCommandCompiler {
                 return OperationParser.parseDefaultCommand(command, params, Command.patternPlotImplicit);
             case "plot3d":
                 return getCommandPlot3D(params);
-            case "plotcurve":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve);
+            case "plotcurve2d":
+                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve2D);
+            case "plotcurve3d":
+                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve3D);
             case "plotpolar":
                 return getCommandPlotPolar(params);
             case "regressionline":
@@ -252,83 +253,6 @@ public abstract class MathCommandCompiler {
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVar);
             case "undefall":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAll);
-            // Sollte theoretisch nie vorkommen.
-            default:
-                return new Command();
-        }
-
-    }
-
-    /**
-     * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
-     * zu den Parametern params gehört. Ansonsten wird eine entsprechende
-     * ExpressionException geworfen. WICHTIG: Der String command und die
-     * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
-     * im Vorfeld beseitigt.
-     *
-     * @throws ExpressionException, EvaluationException
-     */
-    public static Command getCommand(String command, String[] params) throws ExpressionException {
-
-        switch (command) {
-            case "approx":
-                return getCommandApprox(params);
-            case "ccnf":
-                return getCommandCCNF(params);
-            case "cdnf":
-                return getCommandCDNF(params);
-            case "clear":
-                return getCommandClear(params);
-            case "def":
-                return getCommandDef(params);
-            case "deffuncs":
-                return getCommandDefFuncs(params);
-            case "defvars":
-                return getCommandDefVars(params);
-            case "eigenvalues":
-                return getCommandEigenvalues(params);
-            case "eigenvectors":
-                return getCommandEigenvectors(params);
-            case "euler":
-                return getCommandEuler(params);
-            case "expand":
-                return getCommandExpand(params);
-            case "ker":
-                return getCommandKer(params);
-            case "latex":
-                return getCommandLatex(params);
-            case "pi":
-                return getCommandPi(params);
-            case "plot2d":
-                return getCommandPlot2D(params);
-            case "plotimplicit":
-                return getCommandPlotImplicit(params);
-            case "plot3d":
-                return getCommandPlot3D(params);
-            case "plotcurve":
-                return getCommandPlotCurve(params);
-            case "plotpolar":
-                return getCommandPlotPolar(params);
-            case "regressionline":
-                return getCommandRegressionLine(params);
-            case "solve":
-                return getCommandSolve(params);
-            case "solvedeq":
-                return getCommandSolveDEQ(params);
-            case "solvesystem":
-                return getCommandSolveSystem(params);
-            case "table":
-                return getCommandTable(params);
-            case "tangent":
-                return getCommandTangent(params);
-            case "taylordeq":
-                return getCommandTaylorDEQ(params);
-            case "undeffunc":
-                return getCommandUndefFunc(params);
-            case "undefvar":
-                return getCommandUndefVar(params);
-            case "undefall":
-                return getCommandUndefAll(params);
             // Sollte theoretisch nie vorkommen.
             default:
                 return new Command();
@@ -490,7 +414,7 @@ public abstract class MathCommandCompiler {
                     + functionName
                     + Translator.translateExceptionMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS_2"));
         }
-        
+
         /*
          Falls functions_vars leer ist -> Fehler ausgeben (es muss
          mindestens eine Variable vorhanden sein).
@@ -557,7 +481,6 @@ public abstract class MathCommandCompiler {
          result.type = TypeCommand.def result.params = {"f", "x_ABSTRACT",
          "y_ABSTRACT"} result.left = x_ABSTRACT^2+y_ABSTRACT (als Expression).
          */
-
         return new Command(TypeCommand.def, commandParams);
 
     }
@@ -1016,7 +939,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        return new Command(TypeCommand.plotcurve, commandParams);
+        return new Command(TypeCommand.plotcurve2d, commandParams);
 
     }
 
@@ -1721,7 +1644,7 @@ public abstract class MathCommandCompiler {
             executeCDNF(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.clear)) {
             executeClear(textArea, graphicArea);
-        } else if ((command.getTypeCommand().equals(TypeCommand.def)) && command.getParams().length >= 1) {
+        } else if (command.getTypeCommand().equals(TypeCommand.def) && command.getParams().length >= 1) {
             executeDef(command, definedFunctions, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.deffuncs)) {
             executeDefFuncs(definedFunctions, graphicArea);
@@ -1747,16 +1670,16 @@ public abstract class MathCommandCompiler {
             executePlotImplicit(command, graphicPanelImplicit2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plot3d)) {
             executePlot3D(command, graphicPanel3D, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 4) {
+        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve2d)) {
             executePlotCurve2D(command, graphicPanelCurves2D, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve) && command.getParams().length == 5) {
+        } else if (command.getTypeCommand().equals(TypeCommand.plotcurve3d)) {
             executePlotCurve3D(command, graphicPanelCurves3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.plotpolar)) {
             executePlotPolar2D(command, graphicPanelPolar2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.regressionline)) {
             executeRegressionLine(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solve)) {
-            executeSolve(command, graphicPanel2D, graphicArea);
+            executeSolve2(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solvedeq)) {
             executeSolveDEQ(command, graphicPanel2D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.solvesystem)) {
@@ -1782,7 +1705,7 @@ public abstract class MathCommandCompiler {
         }
 
     }
-
+    
     /**
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
@@ -2455,22 +2378,36 @@ public abstract class MathCommandCompiler {
         }
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] components = new Expression[2];
 
-        Expression expr, exprSimplified;
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        try {
+            matExpr = matExpr.simplify(simplifyTypesPlot);
+            Dimension dim = matExpr.getDimension();
+            if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 2) {
+                throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+        }
+
+        Expression[] components = new Expression[2];
+        for (int i = 0; i < 2; i++) {
+            components[i] = ((Matrix) matExpr).getEntry(i, 0);
+        }
+
+        Expression exprSimplified;
         for (int i = 0; i < 2; i++) {
 
-            expr = (Expression) command.getParams()[i];
-            exprSimplified = expr.simplify(simplifyTypesPlot);
+            exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
 
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
-                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                        + components[i].writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                        components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
 
@@ -2479,8 +2416,8 @@ public abstract class MathCommandCompiler {
             exprSimplified.addContainedIndeterminates(vars);
 
         }
-        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2496,30 +2433,43 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D, GraphicArea graphicArea) throws ExpressionException,
-            EvaluationException {
+    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D, GraphicArea graphicArea) throws EvaluationException {
 
         if (graphicPanelCurves3D == null || graphicArea == null) {
             return;
         }
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] components = new Expression[3];
 
-        Expression expr, exprSimplified;
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        try {
+            matExpr = matExpr.simplify(simplifyTypesPlot);
+            Dimension dim = matExpr.getDimension();
+            if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 3) {
+                throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+        }
+
+        Expression[] components = new Expression[3];
+        for (int i = 0; i < 3; i++) {
+            components[i] = ((Matrix) matExpr).getEntry(i, 0);
+        }
+
+        Expression exprSimplified;
         for (int i = 0; i < 3; i++) {
 
-            expr = (Expression) command.getParams()[i];
-            exprSimplified = expr.simplify(simplifyTypesPlot);
+            exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
-            if (expr.containsOperator()) {
+            if (exprSimplified.containsOperator()) {
 
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
-                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                        + components[i].writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
                 graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                        components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
 
@@ -2528,8 +2478,8 @@ public abstract class MathCommandCompiler {
             exprSimplified.addContainedIndeterminates(vars);
 
         }
-        Expression t_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2545,132 +2495,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve2D2(Command command, GraphicPanelCurves2D graphicPanelCurves2D, GraphicArea graphicArea) throws EvaluationException {
-
-        if (graphicPanelCurves2D == null || graphicArea == null) {
-            return;
-        }
-
-        HashSet<String> vars = new HashSet<>();
-        
-        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
-        try{
-            matExpr = matExpr.simplify(simplifyTypesPlot);
-            Dimension dim = matExpr.getDimension();
-            if (!(matExpr instanceof Matrix) ||  dim.width != 1 || dim.height != 2){
-                throw new EvaluationException(Translator.translateExceptionMessage(""));
-            }
-        } catch (EvaluationException e){
-            throw new EvaluationException(Translator.translateExceptionMessage(""));
-        }
-        
-        Expression[] components = new Expression[2];
-        for (int i = 0; i < 2; i++){
-            components[i] = ((Matrix) matExpr).getEntry(i, 0);
-        }
-
-        Expression expr, exprSimplified;
-        for (int i = 0; i < 2; i++) {
-
-            expr = (Expression) command.getParams()[i];
-            exprSimplified = expr.simplify(simplifyTypesPlot);
-            // Falls eines der Graphen nicht gezeichnet werden kann.
-            if (exprSimplified.containsOperator()) {
-
-                // Texttliche Ausgabe
-                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
-                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
-                // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
-                // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
-
-            }
-            components[i] = exprSimplified;
-            exprSimplified.addContainedIndeterminates(vars);
-
-        }
-        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-
-        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
-        if (vars.isEmpty()) {
-            vars.add("t");
-        }
-
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
-
-        // Kurve zeichnen.
-        graphicPanelCurves2D.setVar(var);
-        graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
-
-    }
-    
-    private static void executePlotCurve3D2(Command command, GraphicPanelCurves3D graphicPanelCurves3D, GraphicArea graphicArea) throws EvaluationException {
-
-        if (graphicPanelCurves3D == null || graphicArea == null) {
-            return;
-        }
-
-        HashSet<String> vars = new HashSet<>();
-        
-        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
-        try{
-            matExpr = matExpr.simplify(simplifyTypesPlot);
-            Dimension dim = matExpr.getDimension();
-            if (!(matExpr instanceof Matrix) ||  dim.width != 1 || dim.height != 3){
-                throw new EvaluationException(Translator.translateExceptionMessage(""));
-            }
-        } catch (EvaluationException e){
-            throw new EvaluationException(Translator.translateExceptionMessage(""));
-        }
-        
-        Expression[] components = new Expression[2];
-        for (int i = 0; i < 2; i++){
-            components[i] = ((Matrix) matExpr).getEntry(i, 0);
-        }
-
-        Expression expr, exprSimplified;
-        for (int i = 0; i < 2; i++) {
-
-            expr = (Expression) command.getParams()[i];
-            exprSimplified = expr.simplify(simplifyTypesPlot);
-            // Falls eines der Graphen nicht gezeichnet werden kann.
-            if (exprSimplified.containsOperator()) {
-
-                // Texttliche Ausgabe
-                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
-                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
-                // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
-                // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
-
-            }
-            components[i] = exprSimplified;
-            exprSimplified.addContainedIndeterminates(vars);
-
-        }
-        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-
-        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
-        if (vars.isEmpty()) {
-            vars.add("t");
-        }
-
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
-
-        // Kurve zeichnen.
-        graphicPanelCurves3D.setParameters(var, 150, 200, 30, 30);
-        graphicPanelCurves3D.drawCurve3D(t_0, t_1, components);
-
-    }
-    
     private static void executePlotPolar2D(Command command, GraphicPanelPolar2D graphicPanelPolar2D, GraphicArea graphicArea) throws EvaluationException {
 
         if (graphicPanelPolar2D == null || graphicArea == null) {
@@ -3019,6 +2843,256 @@ public abstract class MathCommandCompiler {
             graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
 
         }
+
+    }
+
+    private static void executeSolve2(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        if (command.getParams().length <= 2){
+            executeSolveAlgebraic(command, graphicArea);
+        } else {
+            executeSolveNumeric(command, graphicPanel2D, graphicArea);
+        }
+
+    }
+
+    private static void executeSolveAlgebraic(Command command, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        HashSet<String> vars = new HashSet<>();
+        Expression f = ((Expression[]) command.getParams())[0];
+        Expression g = ((Expression[]) command.getParams())[1];
+
+        f.addContainedIndeterminates(vars);
+        g.addContainedIndeterminates(vars);
+
+        // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+        String var;
+        if (command.getParams().length == 2) {
+            var = (String) command.getParams()[1];
+        } else {
+            var = "x";
+            if (!vars.isEmpty()) {
+                Iterator iter = vars.iterator();
+                var = (String) iter.next();
+            }
+        }
+
+        ExpressionCollection zeros = SolveMethods.solveEquation(f, g, var);
+
+        // Falls keine Lösungen ermittelt werden konnten, User informieren.
+        if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
+            // Graphische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
+            return;
+        }
+
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                + ((Expression[]) command.getParams())[0].writeExpression()
+                + " = "
+                + ((Expression[]) command.getParams())[1].writeExpression() + ": \n \n");
+        if (zeros == SolveMethods.ALL_REALS) {
+            output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+        } else {
+            for (int i = 0; i < zeros.getBound(); i++) {
+                /*
+                     Falls var etwa x_1 ist, so sollen die Lösungen
+                     (x_1)_i, i = 1, 2, 3, ... heißen.
+                 */
+                if (var.contains("_")) {
+                    output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                } else {
+                    output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                }
+            }
+        }
+
+        // Grafische Ausgabe
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams())[0],
+                " = ", ((Expression[]) command.getParams())[1], " :");
+        if (zeros == SolveMethods.ALL_REALS) {
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+        } else {
+            MultiIndexVariable multiVar;
+            ArrayList<BigInteger> multiIndex;
+            for (int i = 0; i < zeros.getBound(); i++) {
+                multiVar = new MultiIndexVariable(Variable.create(var));
+                multiIndex = multiVar.getIndices();
+                multiIndex.add(BigInteger.valueOf(i + 1));
+                graphicArea.addComponent(multiVar, " = ", zeros.get(i));
+            }
+        }
+
+        /*
+             Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+             ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+         */
+        boolean solutionContainsFreeParameter = false;
+        String freeParameters = "";
+        String infoAboutFreeParameters = "";
+
+        for (int i = 0; i < zeros.getBound(); i++) {
+            solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
+        }
+
+        if (solutionContainsFreeParameter) {
+            boolean solutionContainsFreeParameterOfGivenIndex = true;
+            int maxIndex = 1;
+            while (solutionContainsFreeParameterOfGivenIndex) {
+                maxIndex++;
+                solutionContainsFreeParameterOfGivenIndex = false;
+                for (int i = 0; i < zeros.getBound(); i++) {
+                    solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
+                            || zeros.get(i).contains("K_" + maxIndex);
+                }
+            }
+            maxIndex--;
+
+            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            for (int i = 1; i <= maxIndex; i++) {
+                freeParameters = freeParameters + "K_" + i + ", ";
+                freeParameterVars.add(new MultiIndexVariable("K_" + i));
+            }
+            freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
+            if (maxIndex == 1) {
+                infoAboutFreeParameters = infoAboutFreeParameters
+                        + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+            } else {
+                infoAboutFreeParameters = infoAboutFreeParameters
+                        + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+            }
+
+            // Textliche Ausgabe
+            output.add(freeParameters + infoAboutFreeParameters);
+            // Grafische Ausgabe
+            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+            for (int i = 0; i < freeParameterVars.size(); i++) {
+                infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                if (i < freeParameterVars.size() - 1) {
+                    infoAboutFreeParametersForGraphicArea.add(", ");
+                }
+            }
+            infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+            graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+
+        }
+
+    }
+
+    private static void executeSolveNumeric(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+            throws EvaluationException {
+
+        HashSet<String> vars = new HashSet<>();
+        Expression f = ((Expression[]) command.getParams())[0];
+        Expression g = ((Expression[]) command.getParams())[1];
+
+        Expression equation = f.sub(g).simplify();
+        equation.addContainedIndeterminates(vars);
+        // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
+        String var = "x";
+        if (!vars.isEmpty()) {
+            Iterator iter = vars.iterator();
+            var = (String) iter.next();
+        }
+
+        Expression x_0 = (Expression) command.getParams()[1];
+        Expression x_1 = (Expression) command.getParams()[2];
+        /*
+         Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
+         das Intervall in 10000 Teile unterteilt werden.
+         */
+        int n = 10000;
+
+        if (command.getParams().length == 4) {
+            n = (int) command.getParams()[3];
+        }
+
+        if (equation.isConstant()) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                    + ((Expression[]) command.getParams())[0].writeExpression()
+                    + " = "
+                    + ((Expression[]) command.getParams())[1].writeExpression() + ": \n \n");
+            if (equation.equals(Expression.ZERO)) {
+                output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+            } else {
+                output.add(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
+            }
+            // Grafische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams())[0],
+                    " = ", ((Expression[]) command.getParams())[1], " :");
+            if (equation.equals(Expression.ZERO)) {
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
+            } else {
+                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
+            }
+
+            // Graphen der linken und der rechten Seite zeichnen.
+            ArrayList<Expression> exprs = new ArrayList<>();
+            exprs.add(f);
+            exprs.add(g);
+            graphicPanel2D.setVarAbsc(var);
+            graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
+            return;
+
+        }
+
+        ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
+
+        if (var.contains("_")) {
+            // Falls var etwa x_1 ist, so sollen die Lösungen (x_1)_i, i = 1, 2, 3, ... heißen.
+            var = "(" + var + ")";
+        }
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
+                + ((Expression) command.getParams()[0]).writeExpression()
+                + " = "
+                + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
+        // Grafische Ausgabe
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
+                " = ", (Expression) command.getParams()[1], " :");
+
+        MultiIndexVariable multiVar;
+        ArrayList<BigInteger> multiIndex;
+        for (int i = 0; i < zeros.size(); i++) {
+            // Textliche Ausgabe
+            output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
+            // Grafische Ausgabe
+            multiVar = new MultiIndexVariable(Variable.create(var));
+            multiIndex = multiVar.getIndices();
+            multiIndex.add(BigInteger.valueOf(i + 1));
+            graphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
+        }
+
+        if (zeros.isEmpty()) {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
+            // Grafische Ausgabe
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
+        }
+
+        // Nullstellen als Array (zum Markieren).
+        double[][] zerosAsArray = new double[zeros.size()][2];
+        for (int i = 0; i < zerosAsArray.length; i++) {
+            zerosAsArray[i][0] = zeros.get(i);
+            Variable.setValue(var, zerosAsArray[i][0]);
+            zerosAsArray[i][1] = f.evaluate();
+        }
+
+        /*
+             Graphen der linken und der rechten Seite zeichnen, inkl. der
+             Lösungen (als rot markierte Punkte).
+         */
+        ArrayList<Expression> exprs = new ArrayList<>();
+        exprs.add(f);
+        exprs.add(g);
+        graphicPanel2D.setVarAbsc(var);
+        graphicPanel2D.setSpecialPoints(zerosAsArray);
+        graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
 
     }
 
@@ -3630,7 +3704,7 @@ public abstract class MathCommandCompiler {
             innerExpressions.remove(var);
             arguments.remove(var);
         }
-        
+
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n");
         output.add(Translator.translateExceptionMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED") + " \n \n");

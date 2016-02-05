@@ -441,11 +441,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 4) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve2d)) {
             graphicPanelCurves2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve) && c.getParams().length == 5) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcurve3d)) {
             graphicPanelCurves3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
@@ -875,7 +875,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      */
                     try {
 
-//                        Expression exprSimplified = expr.simplifyByInsertingDefinedVars();
                         Expression exprSimplified = expr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
@@ -938,8 +937,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      */
                     try {
 
-                        MatrixExpression matExprSimplified = matExpr.simplifyByInsertingDefinedVars();
-                        matExprSimplified = matExprSimplified.simplify(simplifyTypes);
+                        MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
                             mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + ((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()).writeExpression() + "\n \n");
