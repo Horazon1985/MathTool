@@ -248,9 +248,9 @@ public abstract class MathCommandCompiler {
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
             case "undeffunc":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefFunc);
+                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefFuncs);
             case "undefvar":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVar);
+                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVars);
             case "undefall":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAll);
             // Sollte theoretisch nie vorkommen.
@@ -1585,7 +1585,7 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNC_2"));
             }
         }
-        return new Command(TypeCommand.undeffunc, params);
+        return new Command(TypeCommand.undeffuncs, params);
     }
 
     private static Command getCommandUndefVar(String[] params) throws ExpressionException {
@@ -1598,7 +1598,7 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFVAR_2"));
             }
         }
-        return new Command(TypeCommand.undefvar, params);
+        return new Command(TypeCommand.undefvars, params);
     }
 
     private static Command getCommandUndefAll(String[] params) throws ExpressionException {
@@ -1690,9 +1690,9 @@ public abstract class MathCommandCompiler {
             executeTangent(command, graphicPanel2D, graphicPanel3D, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.taylordeq)) {
             executeTaylorDEQ(command, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.undeffunc)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.undeffuncs)) {
             executeUndefFunc(command, graphicArea);
-        } else if (command.getTypeCommand().equals(TypeCommand.undefvar)) {
+        } else if (command.getTypeCommand().equals(TypeCommand.undefvars)) {
             executeUndefVar(command, graphicArea);
         } else if (command.getTypeCommand().equals(TypeCommand.undefall)) {
             executeUndefAll(graphicArea);

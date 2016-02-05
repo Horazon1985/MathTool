@@ -58,9 +58,9 @@ Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
 <strong>plot3d(F(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet den Graphen der Funktion F(x, y) im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>.<br>
 <em> Wichtig:</em> Die Grenzen x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> sollen so angegeben werden, dass x, y die <em>alphabetische</em> Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
-<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t) und y = F<sub>2</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Manchmal kann es vorkommen (etwa beim Zeichnen von Kurven, welche sehr "ungl&uuml;cklich" parametrisiert wurden), dass nicht die ganze Kurve, sondern nur ein Teil von ihr gezeichnet werden (etwa f&uuml;r t<sub>1</sub> &lt;= t &lt;= t' f&uuml;r ein t' &lt;= t<sub>2</sub>).<br><br>
+<strong>plotcurve2d((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t) und y = F<sub>2</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Manchmal kann es vorkommen (etwa beim Zeichnen von Kurven, welche sehr "ungl&uuml;cklich" parametrisiert wurden), dass nicht die ganze Kurve, sondern nur ein Teil von ihr gezeichnet werden (etwa f&uuml;r t<sub>1</sub> &lt;= t &lt;= t' f&uuml;r ein t' &lt;= t<sub>2</sub>).<br><br>
 
-<strong>plotcurve((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die r&auml;umliche Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) und z = F<sub>3</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Auch hier gilt dasselbe wie im Falle von plotcurve im Zweidimensionalen, dass manche "schlecht" parametrisierten Kurven nicht komplett gezeichnet werden k&ouml;nnen.<br><br>
+<strong>plotcurve3d((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die r&auml;umliche Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) und z = F<sub>3</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Auch hier gilt dasselbe wie im Falle von plotcurve im Zweidimensionalen, dass manche "schlecht" parametrisierten Kurven nicht komplett gezeichnet werden k&ouml;nnen.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
 
@@ -100,9 +100,9 @@ Dementsprechend lautet die Ausgabe dann<br>
 
 <p style="text-align: center;">1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).</p><br>
 
-<strong>undeffunc(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Entfernt die Funktionen f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
+<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Entfernt die Funktionen f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
 
-<strong>undefvar(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Gibt die Variablen x<sub>1</sub>, ..., x<sub>n</sub> wieder frei.<br><br>
+<strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Gibt die Variablen x<sub>1</sub>, ..., x<sub>n</sub> wieder frei.<br><br>
 
 <strong>undefall():</strong> Gibt alle Variablen wieder frei, denen im Laufe dieser Sitzung ein Wert zugewiesen wurde.<br><br>
 
