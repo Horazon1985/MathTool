@@ -714,7 +714,7 @@ public class MathToolController {
         }
     }
 
-    public static void activateGraphicPanelds(Command c) {
+    public static void activateGraphicPanels(Command c) {
 
     }
 

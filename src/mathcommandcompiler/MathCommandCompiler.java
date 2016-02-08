@@ -1386,7 +1386,7 @@ public abstract class MathCommandCompiler {
                 executeRegressionLine(command, graphicPanel2D, graphicArea);
                 break;
             case solve:
-                executeSolve2(command, graphicPanel2D, graphicArea);
+                executeSolve(command, graphicPanel2D, graphicArea);
                 break;
             case solvedeq:
                 executeSolveDEQ(command, graphicPanel2D, graphicArea);
@@ -2332,241 +2332,6 @@ public abstract class MathCommandCompiler {
     private static void executeSolve(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
             throws EvaluationException {
 
-        HashSet<String> vars = new HashSet<>();
-        Expression f = (Expression) command.getParams()[0];
-        Expression g = (Expression) command.getParams()[1];
-
-        if (command.getParams().length <= 3) {
-
-            f.addContainedIndeterminates(vars);
-            g.addContainedIndeterminates(vars);
-
-            // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
-            String var;
-            if (command.getParams().length == 3) {
-                var = (String) command.getParams()[2];
-            } else {
-                var = "x";
-                if (!vars.isEmpty()) {
-                    Iterator iter = vars.iterator();
-                    var = (String) iter.next();
-                }
-            }
-
-            ExpressionCollection zeros = SolveMethods.solveEquation(f, g, var);
-
-            // Falls keine Lösungen ermittelt werden konnten, User informieren.
-            if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
-                // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
-                return;
-            }
-
-            // Textliche Ausgabe
-            output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) command.getParams()[0]).writeExpression()
-                    + " = "
-                    + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
-            if (zeros == SolveMethods.ALL_REALS) {
-                output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
-            } else {
-                for (int i = 0; i < zeros.getBound(); i++) {
-                    /*
-                     Falls var etwa x_1 ist, so sollen die Lösungen
-                     (x_1)_i, i = 1, 2, 3, ... heißen.
-                     */
-                    if (var.contains("_")) {
-                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                    } else {
-                        output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                    }
-                }
-            }
-            // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
-                    " = ", (Expression) command.getParams()[1], " :");
-            if (zeros == SolveMethods.ALL_REALS) {
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
-            } else {
-                MultiIndexVariable multiVar;
-                ArrayList<BigInteger> multiIndex;
-                for (int i = 0; i < zeros.getBound(); i++) {
-                    multiVar = new MultiIndexVariable(Variable.create(var));
-                    multiIndex = multiVar.getIndices();
-                    multiIndex.add(BigInteger.valueOf(i + 1));
-                    graphicArea.addComponent(multiVar, " = ", zeros.get(i));
-                }
-            }
-
-            /*
-             Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
-             ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
-             */
-            boolean solutionContainsFreeParameter = false;
-            String freeParameters = "";
-            String infoAboutFreeParameters = "";
-
-            for (int i = 0; i < zeros.getBound(); i++) {
-                solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
-            }
-
-            if (solutionContainsFreeParameter) {
-                boolean solutionContainsFreeParameterOfGivenIndex = true;
-                int maxIndex = 1;
-                while (solutionContainsFreeParameterOfGivenIndex) {
-                    maxIndex++;
-                    solutionContainsFreeParameterOfGivenIndex = false;
-                    for (int i = 0; i < zeros.getBound(); i++) {
-                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
-                                || zeros.get(i).contains("K_" + maxIndex);
-                    }
-                }
-                maxIndex--;
-
-                ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
-                for (int i = 1; i <= maxIndex; i++) {
-                    freeParameters = freeParameters + "K_" + i + ", ";
-                    freeParameterVars.add(new MultiIndexVariable("K_" + i));
-                }
-                freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
-                if (maxIndex == 1) {
-                    infoAboutFreeParameters = infoAboutFreeParameters
-                            + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
-                } else {
-                    infoAboutFreeParameters = infoAboutFreeParameters
-                            + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
-                }
-
-                // Textliche Ausgabe
-                output.add(freeParameters + infoAboutFreeParameters);
-                // Grafische Ausgabe
-                ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
-                for (int i = 0; i < freeParameterVars.size(); i++) {
-                    infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
-                    if (i < freeParameterVars.size() - 1) {
-                        infoAboutFreeParametersForGraphicArea.add(", ");
-                    }
-                }
-                infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-                graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
-
-            }
-
-        } else {
-
-            Expression equation = f.sub(g).simplify();
-            equation.addContainedIndeterminates(vars);
-            // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
-            String var = "x";
-            if (!vars.isEmpty()) {
-                Iterator iter = vars.iterator();
-                var = (String) iter.next();
-            }
-
-            Expression x_0 = (Expression) command.getParams()[2];
-            Expression x_1 = (Expression) command.getParams()[3];
-            /*
-             Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
-             das Intervall in 10000 Teile unterteilt werden.
-             */
-            int n = 10000;
-
-            if (command.getParams().length == 5) {
-                n = (int) command.getParams()[4];
-            }
-
-            if (equation.isConstant()) {
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                        + ((Expression) command.getParams()[0]).writeExpression()
-                        + " = "
-                        + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
-                if (equation.equals(Expression.ZERO)) {
-                    output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
-                } else {
-                    output.add(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
-                }
-                // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
-                        " = ", (Expression) command.getParams()[1], " :");
-                if (equation.equals(Expression.ZERO)) {
-                    graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
-                } else {
-                    graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
-                }
-
-                // Graphen der linken und der rechten Seite zeichnen.
-                ArrayList<Expression> exprs = new ArrayList<>();
-                exprs.add(f);
-                exprs.add(g);
-                graphicPanel2D.setVarAbsc(var);
-                graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
-                return;
-
-            }
-
-            ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
-
-            if (var.contains("_")) {
-                // Falls var etwa x_1 ist, so sollen die Lösungen (x_1)_i, i = 1, 2, 3, ... heißen.
-                var = "(" + var + ")";
-            }
-            // Textliche Ausgabe
-            output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression) command.getParams()[0]).writeExpression()
-                    + " = "
-                    + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
-            // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
-                    " = ", (Expression) command.getParams()[1], " :");
-
-            MultiIndexVariable multiVar;
-            ArrayList<BigInteger> multiIndex;
-            for (int i = 0; i < zeros.size(); i++) {
-                // Textliche Ausgabe
-                output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
-                // Grafische Ausgabe
-                multiVar = new MultiIndexVariable(Variable.create(var));
-                multiIndex = multiVar.getIndices();
-                multiIndex.add(BigInteger.valueOf(i + 1));
-                graphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
-            }
-
-            if (zeros.isEmpty()) {
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
-                // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
-            }
-
-            // Nullstellen als Array (zum Markieren).
-            double[][] zerosAsArray = new double[zeros.size()][2];
-            for (int i = 0; i < zerosAsArray.length; i++) {
-                zerosAsArray[i][0] = zeros.get(i);
-                Variable.setValue(var, zerosAsArray[i][0]);
-                zerosAsArray[i][1] = f.evaluate();
-            }
-
-            /*
-             Graphen der linken und der rechten Seite zeichnen, inkl. der
-             Lösungen (als rot markierte Punkte).
-             */
-            ArrayList<Expression> exprs = new ArrayList<>();
-            exprs.add(f);
-            exprs.add(g);
-            graphicPanel2D.setVarAbsc(var);
-            graphicPanel2D.setSpecialPoints(zerosAsArray);
-            graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
-
-        }
-
-    }
-
-    private static void executeSolve2(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
-            throws EvaluationException {
-
         if (command.getParams().length <= 2) {
             executeSolveAlgebraic(command, graphicArea);
         } else {
@@ -2705,8 +2470,8 @@ public abstract class MathCommandCompiler {
             throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
-        Expression f = ((Expression[]) command.getParams())[0];
-        Expression g = ((Expression[]) command.getParams())[1];
+        Expression f = ((Expression[]) command.getParams()[0])[0];
+        Expression g = ((Expression[]) command.getParams()[0])[1];
 
         Expression equation = f.sub(g).simplify();
         equation.addContainedIndeterminates(vars);
@@ -2732,17 +2497,17 @@ public abstract class MathCommandCompiler {
         if (equation.isConstant()) {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression[]) command.getParams())[0].writeExpression()
+                    + ((Expression[]) command.getParams()[0])[0].writeExpression()
                     + " = "
-                    + ((Expression[]) command.getParams())[1].writeExpression() + ": \n \n");
+                    + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
             if (equation.equals(Expression.ZERO)) {
                 output.add(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
             } else {
                 output.add(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
             }
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams())[0],
-                    " = ", ((Expression[]) command.getParams())[1], " :");
+            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+                    " = ", ((Expression[]) command.getParams()[0])[1], " :");
             if (equation.equals(Expression.ZERO)) {
                 graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
             } else {
@@ -2767,12 +2532,12 @@ public abstract class MathCommandCompiler {
         }
         // Textliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
-                + ((Expression) command.getParams()[0]).writeExpression()
+                + ((Expression[]) command.getParams()[0])[0].writeExpression()
                 + " = "
-                + ((Expression) command.getParams()[1]).writeExpression() + ": \n \n");
+                + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), (Expression) command.getParams()[0],
-                " = ", (Expression) command.getParams()[1], " :");
+        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+                " = ", ((Expression[]) command.getParams()[0])[1], " :");
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
