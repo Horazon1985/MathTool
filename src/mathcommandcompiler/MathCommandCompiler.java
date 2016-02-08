@@ -1344,10 +1344,7 @@ public abstract class MathCommandCompiler {
      * @throws ExpressionException
      * @throws EvaluationException
      */
-    public static void executeCommand(String input, GraphicArea graphicArea,
-            JTextArea textArea, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D,
-            GraphicPanelCurves2D graphicPanelCurves2D, GraphicPanelCurves3D graphicPanelCurves3D,
-            GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicPanelPolar2D graphicPanelPolar2D) throws ExpressionException, EvaluationException {
+    public static void executeCommand(String input) throws ExpressionException, EvaluationException {
 
         output.clear();
         input = input.replaceAll(" ", "").toLowerCase();
@@ -1374,7 +1371,7 @@ public abstract class MathCommandCompiler {
                 executeCDNF(command);
                 break;
             case clear:
-                executeClear(textArea);
+                executeClear();
                 break;
             case def:
                 executeDef(command);
@@ -1465,7 +1462,7 @@ public abstract class MathCommandCompiler {
         }
 
         for (String out : output) {
-            textArea.append(out);
+            mathToolTextArea.append(out);
         }
 
     }
@@ -1564,8 +1561,8 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeClear(JTextArea area) {
-        area.setText("");
+    private static void executeClear() {
+        mathToolTextArea.setText("");
         mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
                 MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
         mathToolGraphicArea.clearArea();

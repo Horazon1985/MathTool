@@ -824,9 +824,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
-                        MathCommandCompiler.executeCommand(input, mathToolGraphicArea, mathToolTextArea,
-                                graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
-                                graphicPanelImplicit2D, graphicPanelPolar2D);
+                        MathCommandCompiler.executeCommand(input);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         mathToolTextField.setText("");
@@ -1150,10 +1148,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         try {
-            MathCommandCompiler.executeCommand("clear()", mathToolGraphicArea, mathToolTextArea,
-                    graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D,
-                    graphicPanelImplicit2D, graphicPanelPolar2D);
-        } catch (Exception e) {
+            MathCommandCompiler.executeCommand("clear()");
+        } catch (ExpressionException | EvaluationException e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());
         }
