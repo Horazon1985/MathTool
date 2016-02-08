@@ -2775,7 +2775,7 @@ public abstract class MathCommandCompiler {
         // Die Anzahl der Parameter, welche Instanzen von Expression sind, ist gerade und beträgt mindestens 2.
         int numberOfEquations = 0;
         for (Object param : params) {
-            if (param instanceof Expression) {
+            if (param instanceof Expression[]) {
                 numberOfEquations++;
             } else {
                 break;
@@ -2792,7 +2792,7 @@ public abstract class MathCommandCompiler {
         // Lineares Gleichungssystem bilden.
         Expression[] equations = new Expression[numberOfEquations];
         for (int i = 0; i < numberOfEquations; i++) {
-            equations[i] = ((Expression) params[2 * i]).sub(((Expression) params[2 * i + 1])).simplify(simplifyTypesSolveSystem);
+            equations[i] = ((Expression[]) params[i])[0].sub(((Expression[]) params[i])[1]).simplify(simplifyTypesSolveSystem);
         }
 
         // Prüfung, ob alle Gleichungen linear in den angegebenen Variablen sind.
