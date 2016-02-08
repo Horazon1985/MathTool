@@ -1365,19 +1365,19 @@ public abstract class MathCommandCompiler {
         // Abhängig vom Typ von c wird der Befehl ausgeführt.
         switch (command.getTypeCommand()) {
             case approx:
-                executeApprox(command, graphicArea);
+                executeApprox(command);
                 break;
             case ccnf:
-                executeCCNF(command, graphicArea);
+                executeCCNF(command);
                 break;
             case cdnf:
-                executeCDNF(command, graphicArea);
+                executeCDNF(command);
                 break;
             case clear:
-                executeClear(textArea, graphicArea);
+                executeClear(textArea);
                 break;
             case def:
-                executeDef(command, graphicArea);
+                executeDef(command);
                 break;
             case deffuncs:
                 executeDefFuncs();
@@ -1386,79 +1386,79 @@ public abstract class MathCommandCompiler {
                 executeDefVars();
                 break;
             case eigenvalues:
-                executeEigenvalues(command, graphicArea);
+                executeEigenvalues(command);
                 break;
             case eigenvectors:
-                executeEigenvectors(command, graphicArea);
+                executeEigenvectors(command);
                 break;
             case euler:
-                executeEuler(command, graphicArea);
+                executeEuler(command);
                 break;
             case expand:
-                executeExpand(command, graphicArea);
+                executeExpand(command);
                 break;
             case ker:
-                executeKer(command, graphicArea);
+                executeKer(command);
                 break;
             case latex:
-                executeLatex(command, graphicArea);
+                executeLatex(command);
                 break;
             case pi:
-                executePi(command, graphicArea);
+                executePi(command);
                 break;
             case plot2d:
-                executePlot2D(command, graphicPanel2D, graphicArea);
+                executePlot2D(command);
                 break;
             case plotimplicit:
-                executePlotImplicit(command, graphicPanelImplicit2D, graphicArea);
+                executePlotImplicit(command);
                 break;
             case plot3d:
-                executePlot3D(command, graphicPanel3D, graphicArea);
+                executePlot3D(command);
                 break;
             case plotcurve2d:
-                executePlotCurve2D(command, graphicPanelCurves2D, graphicArea);
+                executePlotCurve2D(command);
                 break;
             case plotcurve3d:
-                executePlotCurve3D(command, graphicPanelCurves3D, graphicArea);
+                executePlotCurve3D(command);
                 break;
             case plotpolar:
-                executePlotPolar2D(command, graphicPanelPolar2D, graphicArea);
+                executePlotPolar2D(command);
                 break;
             case regressionline:
-                executeRegressionLine(command, graphicPanel2D, graphicArea);
+                executeRegressionLine(command);
                 break;
             case solve:
-                executeSolve(command, graphicPanel2D, graphicArea);
+                executeSolve(command);
                 break;
             case solvedeq:
-                executeSolveDEQ(command, graphicPanel2D, graphicArea);
+                executeSolveDEQ(command);
                 break;
             case solvesystem:
-                executeSolveSystem(command, graphicArea);
+                executeSolveSystem(command);
                 break;
             case table:
-                executeTable(command, graphicArea);
+                executeTable(command);
                 break;
             case tangent:
-                executeTangent(command, graphicPanel2D, graphicPanel3D, graphicArea);
+                executeTangent(command);
                 break;
             case taylordeq:
-                executeTaylorDEQ(command, graphicArea);
+                executeTaylorDEQ(command);
                 break;
             case undeffuncs:
-                executeUndefFunc(command, graphicArea);
+                executeUndefFuncs(command);
                 break;
             case undefvars:
-                executeUndefVar(command, graphicArea);
+                executeUndefVars(command);
                 break;
             case undefallfuncs:
-                executeUndefAllFuncs(graphicArea);
+                executeUndefAllFuncs();
                 break;
             case undefallvars:
-                executeUndefAllVars(graphicArea);
+                executeUndefAllVars();
                 break;
             case undefall:
-                executeUndefAll(graphicArea);
+                executeUndefAll();
                 break;
             default:
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
@@ -1474,7 +1474,7 @@ public abstract class MathCommandCompiler {
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
-    private static void executeApprox(Command command, GraphicArea graphicArea)
+    private static void executeApprox(Command command)
             throws ExpressionException, EvaluationException {
 
         if (command.getParams()[0] instanceof Expression) {
@@ -1486,8 +1486,6 @@ public abstract class MathCommandCompiler {
              darstellen, dass es nur vordefinierte Funktionen beinhaltet.
              */
             expr = expr.replaceSelfDefinedFunctionsByPredefinedFunctions();
-            // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
-//            expr = expr.simplifyByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
             expr = expr.simplify();
             expr = expr.turnToApproximate().simplify();
@@ -1501,7 +1499,7 @@ public abstract class MathCommandCompiler {
             // Textliche Ausgabe
             output.add(expr.writeExpression() + " \n \n");
             // Graphische Ausgabe
-            graphicArea.addComponent(expr);
+            mathToolGraphicArea.addComponent(expr);
 
         } else if (command.getParams()[0] instanceof MatrixExpression) {
 
@@ -1522,13 +1520,13 @@ public abstract class MathCommandCompiler {
             // Textliche Ausgabe
             output.add(matExpr.writeMatrixExpression() + " \n \n");
             // Graphische Ausgabe
-            graphicArea.addComponent(matExpr);
+            mathToolGraphicArea.addComponent(matExpr);
 
         }
 
     }
 
-    private static void executeCCNF(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeCCNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
@@ -1543,11 +1541,11 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe
         output.add(logExprInCCNF.writeLogicalExpression() + " \n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(logExprInCCNF);
+        mathToolGraphicArea.addComponent(logExprInCCNF);
 
     }
 
-    private static void executeCDNF(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeCDNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
@@ -1562,18 +1560,18 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe
         output.add(logExprInCDNF.writeLogicalExpression() + " \n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(logExprInCDNF);
+        mathToolGraphicArea.addComponent(logExprInCDNF);
 
     }
 
-    private static void executeClear(JTextArea area, GraphicArea graphicArea) {
+    private static void executeClear(JTextArea area) {
         area.setText("");
-        graphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
+        mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
                 MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
-        graphicArea.clearArea();
+        mathToolGraphicArea.clearArea();
     }
 
-    private static void executeDef(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeDef(Command command) throws EvaluationException {
 
         // Falls ein Variablenwert definiert wird.
         if (command.getParams().length == 2) {
@@ -1589,7 +1587,7 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
                         preciseExpression, Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
@@ -1602,7 +1600,7 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
                         + " \n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
                         + var
                         + Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
                         (Expression) command.getParams()[1], " = ", preciseExpression,
@@ -1626,7 +1624,7 @@ public abstract class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + f.writeExpression() + " = "
                     + f.getAbstractExpression().writeExpression() + "\n \n");
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED"),
                     f, " = ", f.getAbstractExpression());
 
         }
@@ -1697,7 +1695,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeEigenvalues(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeEigenvalues(Command command) throws EvaluationException {
 
         Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
         if (dim.height != dim.width) {
@@ -1712,7 +1710,7 @@ public abstract class MathCommandCompiler {
                     + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
                     + Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_2") + "\n \n");
             // Graphische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_1"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_1"),
                     (MatrixExpression) command.getParams()[0],
                     Translator.translateExceptionMessage("MCC_NO_EIGENVALUES_2"));
             return;
@@ -1723,7 +1721,7 @@ public abstract class MathCommandCompiler {
                 + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
                 + Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_2") + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_1"),
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_1"),
                 (MatrixExpression) command.getParams()[0],
                 Translator.translateExceptionMessage("MCC_EIGENVALUES_OF_MATRIX_2"));
 
@@ -1744,11 +1742,11 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe
         output.add(eigenvaluesAsString);
         // Graphische Ausgabe
-        graphicArea.addComponent(eigenvaluesAsObjectArray);
+        mathToolGraphicArea.addComponent(eigenvaluesAsObjectArray);
 
     }
 
-    private static void executeEigenvectors(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeEigenvectors(Command command) throws EvaluationException {
 
         Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
         if (dim.height != dim.width) {
@@ -1802,19 +1800,19 @@ public abstract class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2")
                     + eigenvectorsAsString + "\n \n");
             // Graphische Ausgabe
-            graphicArea.addComponent(eigenvectorsAsObjectArray);
+            mathToolGraphicArea.addComponent(eigenvectorsAsObjectArray);
         }
 
         if (eigenvalues.isEmpty()) {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
             // Graphische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
         }
 
     }
 
-    private static void executeEuler(Command command, GraphicArea graphicArea) throws ExpressionException {
+    private static void executeEuler(Command command) throws ExpressionException {
 
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
         // Textliche Ausgabe
@@ -1823,30 +1821,30 @@ public abstract class MathCommandCompiler {
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString() + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_E_1")
                 + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_E_2")
                 + e.toString());
 
     }
 
-    private static void executeExpand(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeExpand(Command command) throws EvaluationException {
         Expression expr = (Expression) command.getParams()[0];
         expr = expr.simplify(simplifyTypesExpand);
         // Textliche Ausgabe
         output.add(expr.writeExpression() + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(expr);
+        mathToolGraphicArea.addComponent(expr);
     }
 
-    private static void executeKer(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeKer(Command command) throws EvaluationException {
 
         MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
         if (!(matExpr instanceof Matrix)) {
             output.add(Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1")
                     + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
                     + Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_2"));
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1"),
                     ((MatrixExpression) command.getParams()[0]),
                     Translator.translateExceptionMessage("MCC_KER_COULD_NOT_BE_COMPUTED_2"));
             return;
@@ -1861,7 +1859,7 @@ public abstract class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2")
                     + MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1).writeMatrixExpression());
             // Graphische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_TRIVIAL_KER_1"),
                     ((MatrixExpression) command.getParams()[0]),
                     Translator.translateExceptionMessage("MCC_TRIVIAL_KER_2"),
                     MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1));
@@ -1873,7 +1871,7 @@ public abstract class MathCommandCompiler {
                 + matExpr.writeMatrixExpression()
                 + Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1"),
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_BASIS_OF_KER_1"),
                 matExpr, Translator.translateExceptionMessage("MCC_BASIS_OF_KER_2"));
 
         String basisAsString = "";
@@ -1892,11 +1890,11 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe
         output.add(basisAsString + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(basisAsObjectArray);
+        mathToolGraphicArea.addComponent(basisAsObjectArray);
 
     }
 
-    private static void executeLatex(Command command, GraphicArea graphicArea) throws ExpressionException {
+    private static void executeLatex(Command command) throws ExpressionException {
 
         String latexCode = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < command.getParams().length - 1; i++) {
@@ -1915,11 +1913,11 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(latexCode);
         // Graphische Ausgabe
-        graphicArea.addComponent(latexCode);
+        mathToolGraphicArea.addComponent(latexCode);
 
     }
 
-    private static void executePi(Command command, GraphicArea graphicArea) throws ExpressionException {
+    private static void executePi(Command command) throws ExpressionException {
 
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
         // Texttliche Ausgabe
@@ -1928,17 +1926,17 @@ public abstract class MathCommandCompiler {
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
                 + pi.toString() + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_1")
                 + (int) command.getParams()[0]
                 + Translator.translateExceptionMessage("MCC_DIGITS_OF_PI_2")
                 + pi.toString());
 
     }
 
-    private static void executePlot2D(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea) throws ExpressionException,
+    private static void executePlot2D(Command command) throws ExpressionException,
             EvaluationException {
 
-        if (graphicPanel2D == null || graphicArea == null) {
+        if (graphicPanel2D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -1957,7 +1955,7 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             }
             exprs.add(exprSimplified);
@@ -1985,9 +1983,9 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotImplicit(Command command, GraphicPanelImplicit2D graphicPanelImplicit2D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotImplicit(Command command) throws EvaluationException {
 
-        if (graphicPanelImplicit2D == null || graphicArea == null) {
+        if (graphicPanelImplicit2D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2001,7 +1999,7 @@ public abstract class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                     + difference.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Graphische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                     difference, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_IMPLICIT_GRAPH_CANNOT_BE_PLOTTED_PLOT2D"));
@@ -2063,9 +2061,9 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlot3D(Command command, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlot3D(Command command) throws EvaluationException {
 
-        if (graphicPanel3D == null || graphicArea == null) {
+        if (graphicPanel3D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2083,7 +2081,7 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + exprs.get(i).writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         exprs.get(i), Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
@@ -2143,9 +2141,9 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve2D(Command command, GraphicPanelCurves2D graphicPanelCurves2D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotCurve2D(Command command) throws EvaluationException {
 
-        if (graphicPanelCurves2D == null || graphicArea == null) {
+        if (graphicPanelCurves2D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2178,7 +2176,7 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + components[i].writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
@@ -2205,9 +2203,9 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotCurve3D(Command command, GraphicPanelCurves3D graphicPanelCurves3D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotCurve3D(Command command) throws EvaluationException {
 
-        if (graphicPanelCurves3D == null || graphicArea == null) {
+        if (graphicPanelCurves3D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2240,7 +2238,7 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + components[i].writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
@@ -2267,9 +2265,9 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executePlotPolar2D(Command command, GraphicPanelPolar2D graphicPanelPolar2D, GraphicArea graphicArea) throws EvaluationException {
+    private static void executePlotPolar2D(Command command) throws EvaluationException {
 
-        if (graphicPanelPolar2D == null || graphicArea == null) {
+        if (graphicPanelPolar2D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2287,7 +2285,7 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
                         + expr + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             }
             exprs[i] = exprSimplified;
@@ -2318,10 +2316,10 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeRegressionLine(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+    private static void executeRegressionLine(Command command)
             throws EvaluationException {
 
-        if (graphicPanel2D == null || graphicArea == null) {
+        if (graphicPanel2D == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2353,7 +2351,7 @@ public abstract class MathCommandCompiler {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE") + "Y = " + regressionLine.writeExpression());
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_REGRESSIONLINE_MESSAGE"),
                     "Y = ", regressionLine);
 
             /* 
@@ -2383,18 +2381,18 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeSolve(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+    private static void executeSolve(Command command)
             throws EvaluationException {
 
         if (command.getParams().length <= 2) {
-            executeSolveAlgebraic(command, graphicArea);
+            executeSolveAlgebraic(command);
         } else {
-            executeSolveNumeric(command, graphicPanel2D, graphicArea);
+            executeSolveNumeric(command);
         }
 
     }
 
-    private static void executeSolveAlgebraic(Command command, GraphicArea graphicArea)
+    private static void executeSolveAlgebraic(Command command)
             throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
@@ -2423,7 +2421,7 @@ public abstract class MathCommandCompiler {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
             // Graphische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
             return;
         }
 
@@ -2449,10 +2447,10 @@ public abstract class MathCommandCompiler {
         }
 
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], " :");
         if (zeros == SolveMethods.ALL_REALS) {
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS") + " \n \n");
         } else {
             MultiIndexVariable multiVar;
             ArrayList<BigInteger> multiIndex;
@@ -2460,7 +2458,7 @@ public abstract class MathCommandCompiler {
                 multiVar = new MultiIndexVariable(Variable.create(var));
                 multiIndex = multiVar.getIndices();
                 multiIndex.add(BigInteger.valueOf(i + 1));
-                graphicArea.addComponent(multiVar, " = ", zeros.get(i));
+                mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
             }
         }
 
@@ -2514,13 +2512,13 @@ public abstract class MathCommandCompiler {
                 }
             }
             infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-            graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+            mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
 
         }
 
     }
 
-    private static void executeSolveNumeric(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+    private static void executeSolveNumeric(Command command)
             throws EvaluationException {
 
         HashSet<String> vars = new HashSet<>();
@@ -2560,12 +2558,12 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
             }
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                     " = ", ((Expression[]) command.getParams()[0])[1], " :");
             if (equation.equals(Expression.ZERO)) {
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_REALS"));
             } else {
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
             }
 
             // Graphen der linken und der rechten Seite zeichnen.
@@ -2590,7 +2588,7 @@ public abstract class MathCommandCompiler {
                 + " = "
                 + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], " :");
 
         MultiIndexVariable multiVar;
@@ -2602,14 +2600,14 @@ public abstract class MathCommandCompiler {
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
-            graphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
+            mathToolGraphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
         }
 
         if (zeros.isEmpty()) {
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
         }
 
         // Nullstellen als Array (zum Markieren).
@@ -2633,7 +2631,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeSolveDEQ(Command command, GraphicPanel2D graphicPanel2D, GraphicArea graphicArea)
+    private static void executeSolveDEQ(Command command)
             throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
@@ -2747,21 +2745,21 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(formulationOfAWPForTextArea);
         // Grafische Ausgabe
-        graphicArea.addComponent(formulationOfAWPForGraphicArea);
+        mathToolGraphicArea.addComponent(formulationOfAWPForGraphicArea);
 
         // Lösungen ausgeben.
         for (double[] solution : solutionOfDifferentialEquation) {
             // Texttliche Ausgabe
             output.add(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1] + "\n \n");
             // Grafische Ausgabe
-            graphicArea.addComponent(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
+            mathToolGraphicArea.addComponent(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
         }
         if (solutionOfDifferentialEquation.length < 1001) {
             // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
             output.add(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
                     + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ". \n \n");
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
                     + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ".");
         }
@@ -2772,7 +2770,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeSolveSystem(Command command, GraphicArea graphicArea)
+    private static void executeSolveSystem(Command command)
             throws EvaluationException {
 
         Object[] params = command.getParams();
@@ -2845,7 +2843,7 @@ public abstract class MathCommandCompiler {
             }
             // Grafische Ausgabe
             for (int i = 0; i < solutions.length; i++) {
-                graphicArea.addComponent(solutionVars.get(i), " = ", solutions[i]);
+                mathToolGraphicArea.addComponent(solutionVars.get(i), " = ", solutions[i]);
             }
 
             /*
@@ -2897,7 +2895,7 @@ public abstract class MathCommandCompiler {
                     }
                 }
                 infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-                graphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+                mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
 
             }
 
@@ -2905,12 +2903,12 @@ public abstract class MathCommandCompiler {
             // Texttliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));
             // Grafische Ausgabe
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_SYSTEM_NOT_SOLVABLE"));
         }
 
     }
 
-    private static void executeTable(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeTable(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
         HashSet<String> vars = new HashSet<>();
@@ -2925,7 +2923,7 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr, ":");
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr, ":");
 
         // Falls es sich um einen konstanten Ausdruck handelt.
         if (numberOfVars == 0) {
@@ -2936,7 +2934,7 @@ public abstract class MathCommandCompiler {
                         + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
@@ -2945,7 +2943,7 @@ public abstract class MathCommandCompiler {
                         + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + logExpr.writeLogicalExpression()
                         + Translator.translateExceptionMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
@@ -2974,7 +2972,7 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(varsInOrder);
         // Grafische Ausgabe
-        graphicArea.addComponent(varsInOrder);
+        mathToolGraphicArea.addComponent(varsInOrder);
 
         /*
          Erstellung eines Binärcounters zum Durchlaufen aller möglichen
@@ -3007,7 +3005,7 @@ public abstract class MathCommandCompiler {
             // Texttliche Ausgabe
             output.add(binaryCounter);
             // Grafische Ausgabe
-            graphicArea.addComponent(binaryCounter);
+            mathToolGraphicArea.addComponent(binaryCounter);
 
             varsValues = LogicalExpression.binaryCounter(varsValues);
 
@@ -3020,7 +3018,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeTangent(Command command, GraphicPanel2D graphicPanel2D, GraphicPanel3D graphicPanel3D, GraphicArea graphicArea)
+    private static void executeTangent(Command command)
             throws EvaluationException {
 
         Expression expr = (Expression) command.getParams()[0];
@@ -3051,8 +3049,8 @@ public abstract class MathCommandCompiler {
         output.add(tangentInfoForTextArea);
         output.add("Y = " + tangent.writeExpression() + "\n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(tangentInfoForGraphicArea);
-        graphicArea.addComponent("Y = ", tangent);
+        mathToolGraphicArea.addComponent(tangentInfoForGraphicArea);
+        mathToolGraphicArea.addComponent("Y = ", tangent);
 
         if (vars.size() == 1) {
 
@@ -3121,7 +3119,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeTaylorDEQ(Command command, GraphicArea graphicArea) throws EvaluationException {
+    private static void executeTaylorDEQ(Command command) throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
@@ -3190,14 +3188,14 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(varOrd + "(" + varAbsc + ") = " + result.writeExpression() + "\n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(varOrd + "(" + varAbsc + ") = ", result);
+        mathToolGraphicArea.addComponent(varOrd + "(" + varAbsc + ") = ", result);
 
     }
 
-    private static void executeUndefFunc(Command comand, GraphicArea graphicArea)
+    private static void executeUndefFuncs(Command command)
             throws EvaluationException {
 
-        Object[] functions = comand.getParams();
+        Object[] functions = command.getParams();
         for (Object function : functions) {
             if (SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet().contains((String) function)) {
                 SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().remove((String) function);
@@ -3206,13 +3204,13 @@ public abstract class MathCommandCompiler {
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_2") + " \n \n");
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_2"));
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateExceptionMessage("MCC_FUNCTION_IS_REMOVED_2"));
             }
         }
 
     }
 
-    private static void executeUndefVar(Command comand, GraphicArea graphicArea)
+    private static void executeUndefVars(Command comand)
             throws EvaluationException {
 
         Object[] vars = comand.getParams();
@@ -3222,13 +3220,13 @@ public abstract class MathCommandCompiler {
                 // Texttliche Ausgabe
                 output.add(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n");
                 // Graphische Ausgabe
-                graphicArea.addComponent(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateExceptionMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
             }
         }
 
     }
 
-    private static void executeUndefAllFuncs(GraphicArea graphicArea) {
+    private static void executeUndefAllFuncs() {
 
         HashMap<String, Expression> abstractExpressions = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions();
         HashMap<String, Expression[]> innerExpressions = SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions();
@@ -3241,11 +3239,11 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED") + " \n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED"));
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED"));
 
     }
 
-    private static void executeUndefAllVars(GraphicArea graphicArea) {
+    private static void executeUndefAllVars() {
 
         for (String var : Variable.getVariablesWithPredefinedValues()) {
             Variable.setPreciseExpression(var, null);
@@ -3253,13 +3251,13 @@ public abstract class MathCommandCompiler {
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n");
         // Graphische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN"));
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN"));
 
     }
 
-    private static void executeUndefAll(GraphicArea graphicArea) {
-        executeUndefAllFuncs(graphicArea);
-        executeUndefAllVars(graphicArea);
+    private static void executeUndefAll() {
+        executeUndefAllFuncs();
+        executeUndefAllVars();
     }
 
 }
