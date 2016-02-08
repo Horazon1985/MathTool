@@ -227,6 +227,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Befehlbox aktualisieren.
         MathToolController.fillCommandChoice(commandChoice);
 
+        // An MathCommandCompiler alle Anzeigeobjekte übergeben.
+        MathCommandCompiler.setGraphicPanel2D(graphicPanel2D);
+        MathCommandCompiler.setGraphicPanel3D(graphicPanel3D);
+        MathCommandCompiler.setGraphicPanelCurves2D(graphicPanelCurves2D);
+        MathCommandCompiler.setGraphicPanelCurves3D(graphicPanelCurves3D);
+        MathCommandCompiler.setGraphicPanelImplicit2D(graphicPanelImplicit2D);
+        MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar2D);
+        MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
+        MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
+        
         validate();
         repaint();
 

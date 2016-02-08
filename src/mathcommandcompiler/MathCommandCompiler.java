@@ -52,6 +52,16 @@ import lang.translator.Translator;
 
 public abstract class MathCommandCompiler {
 
+    private static GraphicPanel2D graphicPanel2D;
+    private static GraphicPanel3D graphicPanel3D;
+    private static GraphicPanelImplicit2D graphicPanelImplicit2D;
+    private static GraphicPanelCurves2D graphicPanelCurves2D;
+    private static GraphicPanelCurves3D graphicPanelCurves3D;
+    private static GraphicPanelPolar2D graphicPanelPolar2D;
+
+    private static GraphicArea mathToolGraphicArea;
+    private static JTextArea mathToolTextArea;
+
     private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
     private static final HashSet simplifyTypesPlot = getSimplifyTypesPlot();
     private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
@@ -113,6 +123,38 @@ public abstract class MathCommandCompiler {
         return simplifyTypes;
     }
 
+    public static void setGraphicPanel2D(GraphicPanel2D gP2D) {
+        graphicPanel2D = gP2D;
+    }
+
+    public static void setGraphicPanel3D(GraphicPanel3D gP3D) {
+        graphicPanel3D = gP3D;
+    }
+
+    public static void setGraphicPanelImplicit2D(GraphicPanelImplicit2D gPImplicit2D) {
+        graphicPanelImplicit2D = gPImplicit2D;
+    }
+
+    public static void setGraphicPanelCurves2D(GraphicPanelCurves2D gPCurves2D) {
+        graphicPanelCurves2D = gPCurves2D;
+    }
+
+    public static void setGraphicPanelCurves3D(GraphicPanelCurves3D gPCurves3D) {
+        graphicPanelCurves3D = gPCurves3D;
+    }
+
+    public static void setGraphicPanelPolar2D(GraphicPanelPolar2D gPPolar2D) {
+        graphicPanelPolar2D = gPPolar2D;
+    }
+
+    public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
+        mathToolGraphicArea = mTGraphicArea;
+    }
+
+    public static void setMathToolTextArea(JTextArea mTTextArea) {
+        mathToolTextArea = mTTextArea;
+    }
+    
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
      * benötigt. Sie prüft nach, ob name keine bereits definierte Funktion,
@@ -247,9 +289,9 @@ public abstract class MathCommandCompiler {
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
-            case "undeffunc":
+            case "undeffuncs":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefFuncs);
-            case "undefvar":
+            case "undefvars":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVars);
             case "undefallfuncs":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAllFuncs);
@@ -1338,10 +1380,10 @@ public abstract class MathCommandCompiler {
                 executeDef(command, graphicArea);
                 break;
             case deffuncs:
-                executeDefFuncs(graphicArea);
+                executeDefFuncs();
                 break;
             case defvars:
-                executeDefVars(graphicArea);
+                executeDefVars();
                 break;
             case eigenvalues:
                 executeEigenvalues(command, graphicArea);
@@ -1567,6 +1609,7 @@ public abstract class MathCommandCompiler {
                         Translator.translateExceptionMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             }
         } else {
+
             // Falls eine Funktion definiert wird.
             Object[] params = command.getParams();
             String functionName = (String) params[0];
@@ -1579,9 +1622,6 @@ public abstract class MathCommandCompiler {
             SelfDefinedFunction f = new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars);
             SelfDefinedFunction.createSelfDefinedFunction(f);
 
-            // Ausgabe an den Benutzer.
-            String[] fArguments = f.getArguments();
-
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_FUNCTION_WAS_DEFINED") + f.writeExpression() + " = "
                     + f.getAbstractExpression().writeExpression() + "\n \n");
@@ -1593,7 +1633,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeDefFuncs(GraphicArea graphicArea)
+    public static void executeDefFuncs()
             throws EvaluationException {
 
         String function;
@@ -1602,7 +1642,7 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
         // Grafische Ausgabe
-        graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
 
         // Alle selbstdefinierten Funktionen nacheinander ausgeben.
         if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().isEmpty()) {
@@ -1619,26 +1659,40 @@ public abstract class MathCommandCompiler {
                 // Textliche Ausgabe
                 output.add(function + " = " + SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName).writeExpression() + "\n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(function, " = ", SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName));
+                mathToolGraphicArea.addComponent(function, " = ", SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName));
 
             }
+        } else {
+
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_DEFINED_FUNCTIONS") + "\n \n");
+            // Grafische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_DEFINED_FUNCTIONS"));
+
         }
 
     }
 
-    private static void executeDefVars(GraphicArea graphicArea) {
+    public static void executeDefVars() {
 
         HashSet<String> vars = Variable.getVariablesWithPredefinedValues();
 
         if (!vars.isEmpty()) {
             output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES") + "\n \n");
-            graphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES"));
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : vars) {
                 // Textliche Ausgabe
                 output.add(var + " = " + Variable.create(var).getPreciseExpression().writeExpression() + "\n \n");
                 // Grafische Ausgabe
-                graphicArea.addComponent(var, " = ", Variable.create(var).getPreciseExpression());
+                mathToolGraphicArea.addComponent(var, " = ", Variable.create(var).getPreciseExpression());
             }
+        } else {
+
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_DEFINED_VARS") + "\n \n");
+            // Grafische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_DEFINED_VARS"));
+            
         }
 
     }

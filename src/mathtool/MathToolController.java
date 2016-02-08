@@ -219,6 +219,11 @@ public class MathToolController {
             DefinedFunctions definedFunctions = session.getDefinedFunctions();
 
             if (definedVars.getDefinedVarList() != null) {
+                // Alte Variablen löschen.
+                for (String var : Variable.getVariablesWithPredefinedValues()){
+                    Variable.setPreciseExpression(var, null);
+                }
+                // Variablen laden
                 for (DefinedVar var : definedVars.getDefinedVarList()) {
                     try {
                         Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
@@ -228,6 +233,11 @@ public class MathToolController {
                 }
             }
             if (definedFunctions.getDefinedFunctionList() != null) {
+                // Alte Funktionen löschen.
+                for (String f : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()){
+                    SelfDefinedFunction.removeSelfDefinedFunction(f);
+                }
+                // Variablen laden
                 SelfDefinedFunction f;
                 List<String> arguments;
                 Expression abstractExpression;
@@ -258,6 +268,9 @@ public class MathToolController {
                     }
                 }
             }
+            // Schließlich: geladene Inhalte (Variablen, Funktionen) ausgeben.
+            MathCommandCompiler.executeDefFuncs();
+            MathCommandCompiler.executeDefVars();
         } catch (Exception e) {
             // Es wird nichts geladen.
         }
