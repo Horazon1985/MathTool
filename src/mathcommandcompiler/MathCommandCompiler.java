@@ -1675,7 +1675,7 @@ public abstract class MathCommandCompiler {
         }
 
     }
-    
+
     private static void executeExtremaAlgebraic(Command command) throws EvaluationException {
 
         Expression expr = (Expression) command.getParams()[0];
@@ -1709,8 +1709,90 @@ public abstract class MathCommandCompiler {
                 output.add(Translator.translateExceptionMessage("") + "\n \n");
                 // Graphische Ausgabe
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
-                
-                
+
+                // Textliche Ausgabe
+                output.add(Translator.translateExceptionMessage("MCC_EXTREMA")
+                        + ((Expression) command.getParams()[0]).writeExpression()
+                        + ": \n \n");
+
+                for (int i = 0; i < zeros.getBound(); i++) {
+                    /*
+                     Falls var etwa x_1 ist, so sollen die Lösungen
+                     (x_1)_i, i = 1, 2, 3, ... heißen.
+                     */
+                    if (var.contains("_")) {
+                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                    } else {
+                        output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                    }
+                }
+
+                // Grafische Ausgabe
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], " :");
+
+                MultiIndexVariable multiVar;
+                ArrayList<BigInteger> multiIndex;
+                for (int i = 0; i < zeros.getBound(); i++) {
+                    multiVar = new MultiIndexVariable(Variable.create(var));
+                    multiIndex = multiVar.getIndices();
+                    multiIndex.add(BigInteger.valueOf(i + 1));
+                    mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
+                }
+
+                /*
+                 Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+                 ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+                 */
+                boolean solutionContainsFreeParameter = false;
+                String freeParameters = "";
+                String infoAboutFreeParameters = "";
+
+                for (int i = 0; i < zeros.getBound(); i++) {
+                    solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
+                }
+
+                if (solutionContainsFreeParameter) {
+                    boolean solutionContainsFreeParameterOfGivenIndex = true;
+                    int maxIndex = 1;
+                    while (solutionContainsFreeParameterOfGivenIndex) {
+                        maxIndex++;
+                        solutionContainsFreeParameterOfGivenIndex = false;
+                        for (int i = 0; i < zeros.getBound(); i++) {
+                            solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
+                                    || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
+                        }
+                    }
+                    maxIndex--;
+
+                    ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+                    for (int i = 1; i <= maxIndex; i++) {
+                        freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
+                        freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
+                    }
+                    freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
+                    if (maxIndex == 1) {
+                        infoAboutFreeParameters = infoAboutFreeParameters
+                                + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+                    } else {
+                        infoAboutFreeParameters = infoAboutFreeParameters
+                                + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+                    }
+
+                    // Textliche Ausgabe
+                    output.add(freeParameters + infoAboutFreeParameters);
+                    // Grafische Ausgabe
+                    ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+                    for (int i = 0; i < freeParameterVars.size(); i++) {
+                        infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                        if (i < freeParameterVars.size() - 1) {
+                            infoAboutFreeParametersForGraphicArea.add(", ");
+                        }
+                    }
+                    infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+                    mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+
+                }
+
             } else {
                 // Textliche Ausgabe
                 output.add(Translator.translateExceptionMessage("") + "\n \n");
@@ -2361,7 +2443,7 @@ public abstract class MathCommandCompiler {
         String infoAboutFreeParameters = "";
 
         for (int i = 0; i < zeros.getBound(); i++) {
-            solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains("K_1");
+            solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
         }
 
         if (solutionContainsFreeParameter) {
@@ -2372,15 +2454,15 @@ public abstract class MathCommandCompiler {
                 solutionContainsFreeParameterOfGivenIndex = false;
                 for (int i = 0; i < zeros.getBound(); i++) {
                     solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
-                            || zeros.get(i).contains("K_" + maxIndex);
+                            || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
                 }
             }
             maxIndex--;
 
             ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
             for (int i = 1; i <= maxIndex; i++) {
-                freeParameters = freeParameters + "K_" + i + ", ";
-                freeParameterVars.add(new MultiIndexVariable("K_" + i));
+                freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
+                freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
             }
             freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
             if (maxIndex == 1) {
