@@ -102,6 +102,10 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Переменные x<sub>1</sub>, ..., x<sub>n</sub> снова являются свободными переменными, то есть им не присвоено никакое значение.<br><br>
 
-<strong>undefall():</strong> Все переменные, которым было присвоено значение на протяжении этой сессии, янова становятся свободными переменными.<br><br>
+<strong>undefallfuncs():</strong> Removes all functions, which were defined during this session.<br><br>
+
+<strong>undefallvars():</strong> Все переменные, которым было присвоено значение на протяжении этой сессии, янова становятся свободными переменными.<br><br>
+
+<strong>undefall():</strong> Removes all functions and all variables, which were defined during this session.<br><br>
 
 Все консольные команды, которые были выполнены на протяжении сессии, хранятся и могут быть повторены при помощи стрелок (вверх = последняя команда, вниз = следующая команда). 
