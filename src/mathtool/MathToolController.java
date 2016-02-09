@@ -96,7 +96,6 @@ public class MathToolController {
      */
     public static void fillOperatorChoice(JComboBox operatorChoice) {
         ArrayList<String> operators = new ArrayList<>();
-        operators.add(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
         // Operatoren
         for (TypeOperator value : TypeOperator.values()) {
             operators.add(Operator.getNameFromType(value));
@@ -109,6 +108,7 @@ public class MathToolController {
         }
         Collections.sort(operators);
         operatorChoice.removeAllItems();
+        operatorChoice.addItem(Translator.translateExceptionMessage("GUI_MathToolForm_OPERATOR"));
         for (String op : operators) {
             operatorChoice.addItem(op);
         }
@@ -119,11 +119,11 @@ public class MathToolController {
      */
     public static void fillCommandChoice(JComboBox commandChoice) {
         ArrayList<String> commands = new ArrayList<>();
-        commands.add(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
         for (TypeCommand value : TypeCommand.values()) {
             commands.add(value.toString());
         }
         commandChoice.removeAllItems();
+        commandChoice.addItem(Translator.translateExceptionMessage("GUI_MathToolForm_COMMAND"));
         for (String c : commands) {
             commandChoice.addItem(c);
         }

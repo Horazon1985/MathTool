@@ -18,29 +18,29 @@ MathTool знает такие команды:<br><br>
 
 <p style="text-align: center;">u^6+sin(u^4*v^4).</p><br>
 
-<strong>defvars():</strong> Returns the list of all variables with predefined values using command def().<br><br>
+<strong>defvars():</strong> Возвращает список переменных с предопределёнными значениями командой def().<br><br>
 
-<strong>eigenvalues(A):</strong> Returns the eigenvalues of the quadratic matrix A, if they are computable.<br><br>
+<strong>eigenvalues(A):</strong> Возвращает собственные значения квадратной матрицы A, если их возможно определить.<br><br>
 
-<strong>eigenvectors(A):</strong> Returns the eigenvectors of the quadratic matrix A, grouped by the corresponding eigenvalues of A, if they are computable.<br><br>
+<strong>eigenvectors(A):</strong> Возвращает собственные  векторы квадратной матрицы A, погруппированные по соответствующим собственным векторам, если их возможно определить. <br><br>
 
-<strong>euler(n):</strong> Returns the first n digits of Eulers constant e. The result is <em>not</em> roundet.<br><br>
+<strong>euler(n):</strong> Возвращает первые n разрядов константы Эйлера e. Результат <em>не</em> округляется.<br><br>
 
 <em>Пример:</em> euler(20) возвращает<br>
 
 <p style="text-align: center;">2.71828182845904523536</p><br>
 
-For memory reasons the number n is not allowed to exceed 100000.<br><br>
+Из соображений сохранения памяти, число n не должно превышать 100000.<br><br>
 
-<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Expands the expression F.<br><br>
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Раскрывает все скобки в выражении F.<br><br>
 
-<em>Пример:</em> expand(x+(a+b)*(c+d+e)) returns
+<em>Пример:</em> expand(x+(a+b)*(c+d+e)) возвращает
 
 <p style="text-align: center;">x+a*c+a*d+a*e+b*c+b*d+b*e</p><br>
 
-<strong>latex(F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generates the Latex code for the mathematical expression F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+<strong>latex(F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Генерирует код Latex для математического выражения F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
-<strong>pi(n):</strong> Returns the first n digits of the constant &#960;. The result is <em>not</em> roundet.<br><br>
+<strong>pi(n):</strong> Возвращает первые n разрядов константы &#960;. Результат <em>не</em> округляется.<br><br>
 
 <em>Пример:</em> pi(20) возвращает<br>
 
@@ -102,10 +102,10 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Переменные x<sub>1</sub>, ..., x<sub>n</sub> снова являются свободными переменными, то есть им не присвоено никакое значение.<br><br>
 
-<strong>undefallfuncs():</strong> Removes all functions, which were defined during this session.<br><br>
+<strong>undefallfuncs():</strong> Удаляет все функции определённые на протяжении сессии.<br><br>
 
-<strong>undefallvars():</strong> Все переменные, которым было присвоено значение на протяжении этой сессии, янова становятся свободными переменными.<br><br>
+<strong>undefallvars():</strong> Все переменные, которым было присвоено значение на протяжении этой сессии, снова становятся свободными переменными.<br><br>
 
-<strong>undefall():</strong> Removes all functions and all variables, which were defined during this session.<br><br>
+<strong>undefall():</strong> Удаляет все функции и переменные определённые на протяжении сессии.<br><br>
 
 Все консольные команды, которые были выполнены на протяжении сессии, хранятся и могут быть повторены при помощи стрелок (вверх = последняя команда, вниз = следующая команда). 

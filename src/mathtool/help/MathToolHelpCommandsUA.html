@@ -20,9 +20,9 @@ MathTool знає такі консольні команди:<br><br>
 
 <strong>defvars():</strong> Повертає список усіх змінних та їх значень, що були визначені командою def().<br><br>
 
-<strong>eigenvalues(A):</strong> Returns the eigenvalues of the quadratic matrix A, if they are computable.<br><br>
+strong>eigenvalues(A):</strong> Повертає власні числа квадратної матриці A, якщо їх можливо обчислити.<br><br>
 
-<strong>eigenvectors(A):</strong> Returns the eigenvectors of the quadratic matrix A, grouped by the corresponding eigenvalues of A, if they are computable.<br><br>
+<strong>eigenvectors(A):</strong> Повертає власні вектори квадратної матриці A, погруповані по відповідним власним числам, якщо їх можливо обчислити.<br><br>
 
 <strong>euler(n):</strong> Повертає перші n розрядів константи e. Результат <em>не</em> округляється.<br><br>
 
@@ -32,7 +32,7 @@ MathTool знає такі консольні команди:<br><br>
 
 З міркувань оптимального використання пам'ті n не повинно перевищувати 100000.<br><br>
 
-<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Розкриває дужки у виразі F.<br><br>
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Розкриває всі дужки у виразі F.<br><br>
 
 <em>Приклад:</em> expand(x+(a+b)*(c+d+e)) повертає
 
@@ -98,14 +98,14 @@ MathTool знає такі консольні команди:<br><br>
 
 <p style="text-align: center;">1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).</p><br>
 
-<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Removes the functions f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
+<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Видаляє функції f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
 
 <strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Змінні x<sub>1</sub>, ..., x<sub>n</sub> знову вільні змінні, тобто без присвоєних значень.<br><br>
 
-<strong>undefallfuncs():</strong> Removes all functions, which were defined during this session.<br><br>
+<strong>undefallfuncs():</strong> Видаляє усі функції, що були присвоєні протягом сесії.<br><br>
 
 <strong>undefallvars():</strong> Усі змінні, яким призначено значення протягом даної сесії, знову вільні змінні.<br><br>
 
-<strong>undefall():</strong> Removes all functions and all variables, which were defined during this session.<br><br>
+<strong>undefall():</strong> Видаляє усі функції та змінні, що були присвоєні протягом сесії.<br><br>
 
 Усі консольні команди, що були запущені під час сесії зберігаються та можуть бути запущениі повторно використовуючи стілки (вверх = остання команда, вниз = наступна команда).

@@ -47,6 +47,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
+import computationbounds.ComputationBounds;
 import notations.NotationLoader;
 import lang.translator.Translator;
 
@@ -248,6 +249,17 @@ public abstract class MathCommandCompiler {
                 return OperationParser.parseDefaultCommand(command, params, Command.patternEuler);
             case "expand":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternExpand);
+            case "extrema":
+                if (params.length <= 1) {
+                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaOneVar);
+                }
+                if (params.length == 2) {
+                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaWithParameter);
+                }
+                if (params.length == 3) {
+                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaApprox);
+                }
+                return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaApproxWithNumberOfIntervals);
             case "ker":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternKer);
             case "latex":
@@ -301,7 +313,7 @@ public abstract class MathCommandCompiler {
                 return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAll);
             // Sollte theoretisch nie vorkommen.
             default:
-                return new Command();
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
         }
 
     }
@@ -1225,6 +1237,9 @@ public abstract class MathCommandCompiler {
             case expand:
                 executeExpand(command);
                 break;
+            case extrema:
+                executeExtrema(command);
+                break;
             case ker:
                 executeKer(command);
                 break;
@@ -1671,7 +1686,7 @@ public abstract class MathCommandCompiler {
         if (command.getParams().length <= 2) {
             executeExtremaAlgebraic(command);
         } else {
-//            executeExtremaNumeric(command);
+            executeExtremaNumeric(command);
         }
 
     }
@@ -1689,6 +1704,15 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        // Fall: expr ist bzgl. var konstant.
+        if (!expr.contains(var)) {
+            // Keinen Kandidaten für Extrema gefunden.
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
+            // Graphische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+        }
+
         Expression derivative = expr.diff(var);
         Expression secondDerivateive = derivative.diff(var);
         Expression secondDerAtZero;
@@ -1696,117 +1720,200 @@ public abstract class MathCommandCompiler {
         ExpressionCollection zeros = SolveMethods.solveEquation(derivative, ZERO, var);
         ExpressionCollection extrema = new ExpressionCollection();
 
-        if (!zeros.isEmpty()) {
-
-            for (Expression zero : zeros) {
+        for (Expression zero : zeros) {
+            try {
                 secondDerAtZero = secondDerivateive.replaceVariable(var, zero).simplify();
                 if (secondDerAtZero.isAlwaysPositive() || secondDerAtZero.isAlwaysNegative()) {
                     extrema.add(zero);
                 }
+            } catch (EvaluationException e) {
+                // Einfach weiter probieren.
             }
-            if (!extrema.isEmpty()) {
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("") + "\n \n");
-                // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
-
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("MCC_EXTREMA")
-                        + ((Expression) command.getParams()[0]).writeExpression()
-                        + ": \n \n");
-
-                for (int i = 0; i < zeros.getBound(); i++) {
-                    /*
-                     Falls var etwa x_1 ist, so sollen die Lösungen
-                     (x_1)_i, i = 1, 2, 3, ... heißen.
-                     */
-                    if (var.contains("_")) {
-                        output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                    } else {
-                        output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                    }
-                }
-
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], " :");
-
-                MultiIndexVariable multiVar;
-                ArrayList<BigInteger> multiIndex;
-                for (int i = 0; i < zeros.getBound(); i++) {
-                    multiVar = new MultiIndexVariable(Variable.create(var));
-                    multiIndex = multiVar.getIndices();
-                    multiIndex.add(BigInteger.valueOf(i + 1));
-                    mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
-                }
-
-                /*
-                 Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
-                 ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
-                 */
-                boolean solutionContainsFreeParameter = false;
-                String freeParameters = "";
-                String infoAboutFreeParameters = "";
-
-                for (int i = 0; i < zeros.getBound(); i++) {
-                    solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
-                }
-
-                if (solutionContainsFreeParameter) {
-                    boolean solutionContainsFreeParameterOfGivenIndex = true;
-                    int maxIndex = 1;
-                    while (solutionContainsFreeParameterOfGivenIndex) {
-                        maxIndex++;
-                        solutionContainsFreeParameterOfGivenIndex = false;
-                        for (int i = 0; i < zeros.getBound(); i++) {
-                            solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
-                                    || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
-                        }
-                    }
-                    maxIndex--;
-
-                    ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
-                    for (int i = 1; i <= maxIndex; i++) {
-                        freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
-                        freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
-                    }
-                    freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
-                    if (maxIndex == 1) {
-                        infoAboutFreeParameters = infoAboutFreeParameters
-                                + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
-                    } else {
-                        infoAboutFreeParameters = infoAboutFreeParameters
-                                + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
-                    }
-
-                    // Textliche Ausgabe
-                    output.add(freeParameters + infoAboutFreeParameters);
-                    // Grafische Ausgabe
-                    ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
-                    for (int i = 0; i < freeParameterVars.size(); i++) {
-                        infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
-                        if (i < freeParameterVars.size() - 1) {
-                            infoAboutFreeParametersForGraphicArea.add(", ");
-                        }
-                    }
-                    infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-                    mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
-
-                }
-
-            } else {
-                // Textliche Ausgabe
-                output.add(Translator.translateExceptionMessage("") + "\n \n");
-                // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
-            }
-
-        } else {
-            // Textliche Ausgabe
-            output.add(Translator.translateExceptionMessage("") + "\n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
         }
 
+        if (extrema.isEmpty()) {
+            // Keinen Kandidaten für Extrema gefunden.
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
+            // Graphische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+        }
+
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_EXTREMA")
+                + ((Expression) command.getParams()[0]).writeExpression()
+                + ": \n \n");
+
+        for (int i = 0; i < zeros.getBound(); i++) {
+            /*
+             Falls var etwa x_1 ist, so sollen die Lösungen
+             (x_1)_i, i = 1, 2, 3, ... heißen.
+             */
+            if (var.contains("_")) {
+                output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+            } else {
+                output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+            }
+        }
+
+        // Grafische Ausgabe
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], " :");
+
+        MultiIndexVariable multiVar;
+        ArrayList<BigInteger> multiIndex;
+        for (int i = 0; i < zeros.getBound(); i++) {
+            multiVar = new MultiIndexVariable(Variable.create(var));
+            multiIndex = multiVar.getIndices();
+            multiIndex.add(BigInteger.valueOf(i + 1));
+            mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
+        }
+
+        /*
+         Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+         ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
+         */
+        boolean solutionContainsFreeParameter = false;
+        String freeParameters = "";
+        String infoAboutFreeParameters = "";
+
+        for (int i = 0; i < zeros.getBound(); i++) {
+            solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
+        }
+
+        if (solutionContainsFreeParameter) {
+            boolean solutionContainsFreeParameterOfGivenIndex = true;
+            int maxIndex = 1;
+            while (solutionContainsFreeParameterOfGivenIndex) {
+                maxIndex++;
+                solutionContainsFreeParameterOfGivenIndex = false;
+                for (int i = 0; i < zeros.getBound(); i++) {
+                    solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
+                            || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
+                }
+            }
+            maxIndex--;
+
+            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            for (int i = 1; i <= maxIndex; i++) {
+                freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
+                freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
+            }
+            freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
+            if (maxIndex == 1) {
+                infoAboutFreeParameters = infoAboutFreeParameters
+                        + Translator.translateExceptionMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+            } else {
+                infoAboutFreeParameters = infoAboutFreeParameters
+                        + Translator.translateExceptionMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+            }
+
+            // Textliche Ausgabe
+            output.add(freeParameters + infoAboutFreeParameters);
+            // Grafische Ausgabe
+            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+            for (int i = 0; i < freeParameterVars.size(); i++) {
+                infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                if (i < freeParameterVars.size() - 1) {
+                    infoAboutFreeParametersForGraphicArea.add(", ");
+                }
+            }
+            infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+            mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+
+        }
+
+    }
+
+    private static void executeExtremaNumeric(Command command) throws EvaluationException {
+
+        Expression expr = (Expression) command.getParams()[0];
+        String var = "x";
+
+        // expr kann in diesem Fall höchstens eine Veränderliche enthalten.
+        for (String v : expr.getContainedIndeterminates()) {
+            var = v;
+        }
+
+        // Fall: expr ist bzgl. var konstant.
+        if (!expr.contains(var)) {
+            // Keinen Kandidaten für Extrema gefunden.
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
+            // Graphische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+        }
+
+        Expression x_0 = (Expression) command.getParams()[1];
+        Expression x_1 = (Expression) command.getParams()[2];
+        /*
+         Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
+         das Intervall in 10000 Teile unterteilt werden.
+         */
+        int n = ComputationBounds.BOUND_NUMERIC_DEFAULT_NUMBER_OF_INTERVALS;
+
+        if (command.getParams().length == 4) {
+            n = (int) command.getParams()[3];
+        }
+
+        Expression derivative = expr.diff(var);
+        Expression secondDerivateive = derivative.diff(var);
+        double secondDerAtZero;
+
+        ArrayList<Double> zeros = NumericalMethods.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
+        ArrayList<Double> extrema = new ArrayList<>();
+
+        for (Double zero : zeros) {
+            try {
+                Variable.setValue(var, zero);
+                secondDerAtZero = secondDerivateive.evaluate();
+                if (secondDerAtZero != 0) {
+                    extrema.add(zero);
+                }
+            } catch (EvaluationException e) {
+                // Einfach weiter probieren.
+            }
+        }
+
+        if (extrema.isEmpty()) {
+            // Keinen Kandidaten für Extrema gefunden.
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
+            // Graphische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+        }
+
+        // Textliche Ausgabe
+        output.add(Translator.translateExceptionMessage("MCC_EXTREMA")
+                + ((Expression) command.getParams()[0]).writeExpression()
+                + ": \n \n");
+        // Grafische Ausgabe
+        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], " :");
+
+        MultiIndexVariable multiVar;
+        ArrayList<BigInteger> multiIndex;
+        for (int i = 0; i < zeros.size(); i++) {
+            // Textliche Ausgabe
+            output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
+            // Grafische Ausgabe
+            multiVar = new MultiIndexVariable(Variable.create(var));
+            multiIndex = multiVar.getIndices();
+            multiIndex.add(BigInteger.valueOf(i + 1));
+            mathToolGraphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
+        }
+
+        // Nullstellen als Array (zum Markieren).
+        double[][] zerosAsArray = new double[zeros.size()][2];
+        for (int i = 0; i < zerosAsArray.length; i++) {
+            zerosAsArray[i][0] = zeros.get(i);
+            Variable.setValue(var, zerosAsArray[i][0]);
+            zerosAsArray[i][1] = expr.evaluate();
+        }
+
+        /*
+         Graphen der linken und der rechten Seite zeichnen, inkl. der
+         Lösungen (als rot markierte Punkte).
+         */
+        // TO DO.
     }
 
     private static void executeKer(Command command) throws EvaluationException {
@@ -2501,9 +2608,8 @@ public abstract class MathCommandCompiler {
         equation.addContainedIndeterminates(vars);
         // Variablenname in der Gleichung wird ermittelt (die Gleichung enthält höchstens Veränderliche)
         String var = "x";
-        if (!vars.isEmpty()) {
-            Iterator iter = vars.iterator();
-            var = (String) iter.next();
+        for (String v : vars) {
+            var = v;
         }
 
         Expression x_0 = (Expression) command.getParams()[1];
@@ -2512,7 +2618,7 @@ public abstract class MathCommandCompiler {
          Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
          das Intervall in 10000 Teile unterteilt werden.
          */
-        int n = 10000;
+        int n = ComputationBounds.BOUND_NUMERIC_DEFAULT_NUMBER_OF_INTERVALS;
 
         if (command.getParams().length == 4) {
             n = (int) command.getParams()[3];
