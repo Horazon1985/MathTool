@@ -817,119 +817,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandSolve(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: solve(expr_1 = expr_2, x_1, x_2) ODER solve(expr_1 =
-         expr_2, x_1, x_2, n) var = Variable in der GLeichung, x_1 und x_2
-         legen den Lösungsbereich fest; n = Anzahl der Unterteilungen des
-         Intervalls [x_1, x_2]
-         */
-        if (params.length < 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVE"));
-        }
-        if (params.length > 4) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVE"));
-        }
-        if (!params[0].contains("=")) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE"));
-        }
-
-        Object[] commandParams;
-        HashSet<String> vars = new HashSet<>();
-        try {
-            Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-            Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVE_WITH_REPORTED_ERROR") + e.getMessage());
-        }
-
-        Expression f = Expression.build(params[0].substring(0, params[0].indexOf("=")), vars);
-        Expression g = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), vars);
-
-        if (params.length == 1 || params.length == 2) {
-
-            if (vars.size() > 1 && params.length == 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_MORE_THAN_ONE_VARIABLE_IN_SOLVE"));
-            }
-
-            if (params.length == 2) {
-                if (!Expression.isValidDerivateOfVariable(params[1])) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVE"));
-                }
-            }
-
-            if (params.length == 1) {
-                commandParams = new Object[2];
-                commandParams[0] = f;
-                commandParams[1] = g;
-            } else {
-                commandParams = new Object[3];
-                commandParams[0] = f;
-                commandParams[1] = g;
-                commandParams[2] = params[1];
-            }
-
-            return new Command(TypeCommand.solve, commandParams);
-
-        } else {
-
-            if (vars.size() > 1) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_SOLVE"));
-            }
-
-            HashSet<String> varsInLimits = new HashSet<>();
-            for (int i = 1; i <= 2; i++) {
-                try {
-                    Expression.build(params[i], null).addContainedIndeterminates(varsInLimits);
-                    if (!varsInLimits.isEmpty()) {
-                        throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
-                                + (i + 1)
-                                + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
-                    }
-                } catch (ExpressionException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVE_2"));
-                }
-            }
-
-            if (params.length == 4) {
-                try {
-                    Integer.parseInt(params[3]);
-                } catch (NumberFormatException e) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
-                }
-            }
-
-            Expression lowerLimit = Expression.build(params[1], vars);
-            Expression upperLimit = Expression.build(params[2], vars);
-
-            if (params.length == 3) {
-                commandParams = new Object[4];
-                commandParams[0] = f;
-                commandParams[1] = g;
-                commandParams[2] = lowerLimit;
-                commandParams[3] = upperLimit;
-            } else {
-                int n = Integer.parseInt(params[3]);
-                if (n < 1) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVE"));
-                }
-                commandParams = new Object[5];
-                commandParams[0] = f;
-                commandParams[1] = g;
-                commandParams[2] = lowerLimit;
-                commandParams[3] = upperLimit;
-                commandParams[4] = n;
-            }
-
-            return new Command(TypeCommand.solve, commandParams);
-
-        }
-
-    }
-
     private static Command getCommandSolveDEQ(String[] params) throws ExpressionException {
 
         /*
@@ -1041,62 +928,6 @@ public abstract class MathCommandCompiler {
         }
 
         return new Command(TypeCommand.solvedeq, commandParams);
-
-    }
-
-    private static Command getCommandSolveSystem(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: solvesystem(f_1(x_1, ..., x_n), ..., f_m(x_1, ..., x_n), 
-         x_1, ..., x_n). f_i = Ausdrücke, x_i = Variablen.
-         */
-        if (params.length < 2) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVESYSTEM"));
-        }
-
-        // Anzahl der Gleichungen ermitteln.
-        int numberOfEquations = 0;
-        for (String param : params) {
-            if (param.contains("=")) {
-                numberOfEquations++;
-            } else {
-                break;
-            }
-        }
-
-        if (numberOfEquations == 0) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_EQUATIONS_IN_SOLVESYSTEM"));
-        }
-
-        if (numberOfEquations == params.length) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NO_VARIABLES_IN_SOLVESYSTEM"));
-        }
-
-        Object[] commandParams = new Object[params.length + numberOfEquations];
-        for (int i = 0; i < numberOfEquations; i++) {
-            try {
-                commandParams[2 * i] = Expression.build(params[i].substring(0, params[i].indexOf("=")), null);
-                commandParams[2 * i + 1] = Expression.build(params[i].substring(params[i].indexOf("=") + 1), null);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_EQUATION_PARAMETER_IN_SOLVESYSTEM_1")
-                        + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_EQUATION_PARAMETER_IN_SOLVESYSTEM_2"));
-            }
-        }
-        HashSet<String> vars = new HashSet<>();
-        for (int i = numberOfEquations; i < params.length; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_1")
-                        + (i + 1) + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_VARIABLE_PARAMETER_IN_SOLVESYSTEM_2"));
-            }
-            // Prüfung, ob Variablen mehrfach vorkommen.
-            if (vars.contains(params[i])) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_EQUAL_VARIABLES_IN_SOLVESYSTEM"));
-            }
-            vars.add(params[i]);
-            commandParams[i + numberOfEquations] = params[i];
-        }
-
-        return new Command(TypeCommand.solvesystem, commandParams);
 
     }
 
@@ -2781,11 +2612,10 @@ public abstract class MathCommandCompiler {
                 break;
             }
         }
-        numberOfEquations = numberOfEquations / 2;
 
         // Die Anzahl der Parameter, welche Instanzen von String sind, beträgt mindestens 1.
         ArrayList<String> solutionVars = new ArrayList<>();
-        for (int i = 2 * numberOfEquations; i < params.length; i++) {
+        for (int i = numberOfEquations; i < params.length; i++) {
             solutionVars.add((String) params[i]);
         }
 
