@@ -154,7 +154,7 @@ public abstract class MathCommandCompiler {
     public static void setMathToolTextArea(JTextArea mTTextArea) {
         mathToolTextArea = mTTextArea;
     }
-    
+
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
      * benötigt. Sie prüft nach, ob name keine bereits definierte Funktion,
@@ -1518,7 +1518,7 @@ public abstract class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("MCC_NO_DEFINED_VARS") + "\n \n");
             // Grafische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_DEFINED_VARS"));
-            
+
         }
 
     }
@@ -1663,6 +1663,68 @@ public abstract class MathCommandCompiler {
         output.add(expr.writeExpression() + "\n \n");
         // Graphische Ausgabe
         mathToolGraphicArea.addComponent(expr);
+    }
+
+    private static void executeExtrema(Command command)
+            throws EvaluationException {
+
+        if (command.getParams().length <= 2) {
+            executeExtremaAlgebraic(command);
+        } else {
+//            executeExtremaNumeric(command);
+        }
+
+    }
+    
+    private static void executeExtremaAlgebraic(Command command) throws EvaluationException {
+
+        Expression expr = (Expression) command.getParams()[0];
+        String var = "x";
+
+        if (command.getParams().length == 2) {
+            var = (String) command.getParams()[1];
+        } else {
+            for (String v : expr.getContainedIndeterminates()) {
+                var = v;
+            }
+        }
+
+        Expression derivative = expr.diff(var);
+        Expression secondDerivateive = derivative.diff(var);
+        Expression secondDerAtZero;
+
+        ExpressionCollection zeros = SolveMethods.solveEquation(derivative, ZERO, var);
+        ExpressionCollection extrema = new ExpressionCollection();
+
+        if (!zeros.isEmpty()) {
+
+            for (Expression zero : zeros) {
+                secondDerAtZero = secondDerivateive.replaceVariable(var, zero).simplify();
+                if (secondDerAtZero.isAlwaysPositive() || secondDerAtZero.isAlwaysNegative()) {
+                    extrema.add(zero);
+                }
+            }
+            if (!extrema.isEmpty()) {
+                // Textliche Ausgabe
+                output.add(Translator.translateExceptionMessage("") + "\n \n");
+                // Graphische Ausgabe
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
+                
+                
+            } else {
+                // Textliche Ausgabe
+                output.add(Translator.translateExceptionMessage("") + "\n \n");
+                // Graphische Ausgabe
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
+            }
+
+        } else {
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("") + "\n \n");
+            // Graphische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage(""));
+        }
+
     }
 
     private static void executeKer(Command command) throws EvaluationException {
@@ -2406,10 +2468,6 @@ public abstract class MathCommandCompiler {
 
         ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
-        if (var.contains("_")) {
-            // Falls var etwa x_1 ist, so sollen die Lösungen (x_1)_i, i = 1, 2, 3, ... heißen.
-            var = "(" + var + ")";
-        }
         // Textliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_SOLUTIONS_OF_EQUATION")
                 + ((Expression[]) command.getParams()[0])[0].writeExpression()
