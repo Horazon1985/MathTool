@@ -236,7 +236,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar2D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
-        
+
         validate();
         repaint();
 
@@ -433,7 +433,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Grafiktyp neu ermitteln.
         typeGraphic = MathToolController.getTypeGraphicFromCommand(c);
 
-        if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
+        if (c.getTypeCommand().equals(TypeCommand.extrema) && c.getParams().length >= 3) {
+            graphicPanel2D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);

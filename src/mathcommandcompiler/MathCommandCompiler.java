@@ -1987,18 +1987,22 @@ public abstract class MathCommandCompiler {
         }
 
         // Nullstellen als Array (zum Markieren).
-        double[][] zerosAsArray = new double[extremaPoints.size()][2];
-        for (int i = 0; i < zerosAsArray.length; i++) {
-            zerosAsArray[i][0] = extremaPoints.get(i);
-            Variable.setValue(var, zerosAsArray[i][0]);
-            zerosAsArray[i][1] = expr.evaluate();
+        double[][] extremaAsArray = new double[extremaPoints.size()][2];
+        for (int i = 0; i < extremaAsArray.length; i++) {
+            extremaAsArray[i][0] = extremaPoints.get(i);
+            Variable.setValue(var, extremaAsArray[i][0]);
+            extremaAsArray[i][1] = expr.evaluate();
         }
 
         /*
-         Graphen der linken und der rechten Seite zeichnen, inkl. der
-         Lösungen (als rot markierte Punkte).
+         Graphen der Funktion zeichnen, inkl. der Extrema (als rot markierte Punkte).
          */
-        // TO DO.
+        ArrayList<Expression> exprs = new ArrayList<>();
+        exprs.add(expr);
+        graphicPanel2D.setVarAbsc(var);
+        graphicPanel2D.setSpecialPoints(extremaAsArray);
+        graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
+        
     }
 
     private static void executeKer(Command command) throws EvaluationException {
@@ -2752,9 +2756,13 @@ public abstract class MathCommandCompiler {
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
+        String varForTextOutput = var;
+        if (var.contains("_")){
+            varForTextOutput = "(" + var + ")";
+        }
         for (int i = 0; i < zeros.size(); i++) {
             // Textliche Ausgabe
-            output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
+            output.add(varForTextOutput + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
             // Grafische Ausgabe
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
