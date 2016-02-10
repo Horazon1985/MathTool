@@ -45,8 +45,6 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import components.MathToolSaveSessionDialog;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
 import mathtool.component.components.HelpDialogGUI;
