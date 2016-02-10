@@ -29,7 +29,18 @@ public class ComputingDialogGUI extends JDialog {
 
         JPanel owlPanel = new JPanel();
         add(owlPanel);
-        owlLabel = new JLabel(new ImageIcon(getClass().getResource("../../icons/LogoOwlEyesOpen.png")));
+        ImageIcon icon;
+        try {
+            icon = new ImageIcon(getClass().getResource("../../icons/LogoOwlEyesOpen.png"));
+        } catch (Exception e) {
+            icon = null;
+        }
+        
+        if (icon != null){
+            owlLabel = new JLabel(icon);
+        } else {
+            owlLabel = new JLabel();
+        }
         owlPanel.add(owlLabel);
         owlPanel.setBounds(10, -5, 50, 70);
         owlPanel.setVisible(true);
@@ -42,7 +53,7 @@ public class ComputingDialogGUI extends JDialog {
         });
 
         this.swingWorker = swingWorker;
-        
+
         validate();
         repaint();
     }

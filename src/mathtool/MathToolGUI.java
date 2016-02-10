@@ -45,6 +45,8 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import components.MathToolSaveSessionDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
 import mathtool.component.components.HelpDialogGUI;
@@ -792,7 +794,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
-                computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
+                try{
+                    computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
+                } catch (Exception e){
+                    mathToolGraphicArea.addComponent("ERROR!!!!!");
+                }
                 MathToolController.initializeTimer(computingTimer, computingDialog);
 
                 boolean validCommand = false;
