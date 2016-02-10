@@ -1705,12 +1705,13 @@ public abstract class MathCommandCompiler {
         }
 
         // Fall: expr ist bzgl. var konstant.
-        if (!expr.contains(var)) {
+        if (expr.getContainedIndeterminates().isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
             // Graphische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+            return;
         }
 
         Expression derivative = expr.diff(var);
@@ -1741,6 +1742,7 @@ public abstract class MathCommandCompiler {
             output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
             // Graphische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+            return;
         }
 
         // Textliche Ausgabe
@@ -1817,6 +1819,7 @@ public abstract class MathCommandCompiler {
         }
 
         if (solutionContainsFreeParameter) {
+
             boolean solutionContainsFreeParameterOfGivenIndex = true;
             int maxIndex = 1;
             while (solutionContainsFreeParameterOfGivenIndex) {
@@ -1871,12 +1874,13 @@ public abstract class MathCommandCompiler {
         }
 
         // Fall: expr ist bzgl. var konstant.
-        if (!expr.contains(var)) {
+        if (expr.getContainedIndeterminates().isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
             // Graphische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+            return;
         }
 
         Expression x_0 = (Expression) command.getParams()[1];
@@ -1896,26 +1900,32 @@ public abstract class MathCommandCompiler {
         double secondDerAtZero;
 
         ArrayList<Double> zeros = NumericalMethods.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
-        ArrayList<Double> extrema = new ArrayList<>();
+        ArrayList<Double> extremaPoints = new ArrayList<>();
+        ArrayList<Double> valuesOfSecondDerivative = new ArrayList<>();
+        ArrayList<Double> extremaValues = new ArrayList<>();
 
         for (Double zero : zeros) {
             try {
                 Variable.setValue(var, zero);
                 secondDerAtZero = secondDerivateive.evaluate();
                 if (secondDerAtZero != 0) {
-                    extrema.add(zero);
+                    extremaPoints.add(zero);
+                    valuesOfSecondDerivative.add(secondDerAtZero);
+                    Variable.setValue(var, zero);
+                    extremaValues.add(expr.evaluate());
                 }
             } catch (EvaluationException e) {
                 // Einfach weiter probieren.
             }
         }
 
-        if (extrema.isEmpty()) {
+        if (extremaPoints.isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
             // Graphische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND"));
+            return;
         }
 
         // Textliche Ausgabe
@@ -1927,20 +1937,59 @@ public abstract class MathCommandCompiler {
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
-        for (int i = 0; i < zeros.size(); i++) {
+        for (int i = 0; i < extremaPoints.size(); i++) {
+
             // Textliche Ausgabe
-            output.add(var + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
+            if (var.contains("_")) {
+                if (valuesOfSecondDerivative.get(i) > 0) {
+                    output.add(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN")
+                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i)
+                            + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                            + extremaValues.get(i)
+                            + "\n \n");
+                } else {
+                    output.add(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN")
+                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i)
+                            + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                            + extremaValues.get(i)
+                            + "\n \n");
+                }
+            } else if (valuesOfSecondDerivative.get(i) > 0) {
+                output.add(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN")
+                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i)
+                        + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                        + extremaValues.get(i)
+                        + "\n \n");
+            } else {
+                output.add(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN")
+                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i)
+                        + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                        + extremaValues.get(i)
+                        + "\n \n");
+            }
+
             // Grafische Ausgabe
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
-            mathToolGraphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
+            if (valuesOfSecondDerivative.get(i) > 0) {
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN"),
+                        multiVar, " = ", extremaPoints.get(i).toString(),
+                        Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
+                        extremaValues.get(i).toString());
+            } else {
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN"),
+                        multiVar, " = ", extremaPoints.get(i).toString(),
+                        Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
+                        extremaValues.get(i).toString());
+            }
+            
         }
 
         // Nullstellen als Array (zum Markieren).
-        double[][] zerosAsArray = new double[zeros.size()][2];
+        double[][] zerosAsArray = new double[extremaPoints.size()][2];
         for (int i = 0; i < zerosAsArray.length; i++) {
-            zerosAsArray[i][0] = zeros.get(i);
+            zerosAsArray[i][0] = extremaPoints.get(i);
             Variable.setValue(var, zerosAsArray[i][0]);
             zerosAsArray[i][1] = expr.evaluate();
         }
