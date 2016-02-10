@@ -1718,20 +1718,24 @@ public abstract class MathCommandCompiler {
         Expression secondDerAtZero;
 
         ExpressionCollection zeros = SolveMethods.solveEquation(derivative, ZERO, var);
-        ExpressionCollection extrema = new ExpressionCollection();
+        ExpressionCollection extremaPoints = new ExpressionCollection();
+        ExpressionCollection extremaValues = new ExpressionCollection();
+        ExpressionCollection valuesOfSecondDerivative = new ExpressionCollection();
 
         for (Expression zero : zeros) {
             try {
                 secondDerAtZero = secondDerivateive.replaceVariable(var, zero).simplify();
                 if (secondDerAtZero.isAlwaysPositive() || secondDerAtZero.isAlwaysNegative()) {
-                    extrema.add(zero);
+                    extremaPoints.add(zero);
+                    extremaValues.add(expr.replaceVariable(var, zero).simplify());
+                    valuesOfSecondDerivative.add(secondDerAtZero);
                 }
             } catch (EvaluationException e) {
                 // Einfach weiter probieren.
             }
         }
 
-        if (extrema.isEmpty()) {
+        if (extremaPoints.isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
@@ -1744,15 +1748,37 @@ public abstract class MathCommandCompiler {
                 + ((Expression) command.getParams()[0]).writeExpression()
                 + ": \n \n");
 
-        for (int i = 0; i < zeros.getBound(); i++) {
+        for (int i = 0; i < extremaPoints.getBound(); i++) {
             /*
-             Falls var etwa x_1 ist, so sollen die Lösungen
+             Falls var etwa x_1 ist, so sollen die Extremstellen
              (x_1)_i, i = 1, 2, 3, ... heißen.
              */
             if (var.contains("_")) {
-                output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
+                    output.add(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN")
+                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
+                            + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                            + extremaValues.get(i).writeExpression()
+                            + "\n \n");
+                } else {
+                    output.add(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN")
+                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
+                            + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                            + extremaValues.get(i).writeExpression()
+                            + "\n \n");
+                }
+            } else if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
+                output.add(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN")
+                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
+                        + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                        + extremaValues.get(i).writeExpression()
+                        + "\n \n");
             } else {
-                output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
+                output.add(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN")
+                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
+                        + Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
+                        + extremaValues.get(i).writeExpression()
+                        + "\n \n");
             }
         }
 
@@ -1761,11 +1787,21 @@ public abstract class MathCommandCompiler {
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
-        for (int i = 0; i < zeros.getBound(); i++) {
+        for (int i = 0; i < extremaPoints.getBound(); i++) {
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
-            mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
+            if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOCAL_MINIMUM_IN"),
+                        multiVar, " = ", extremaPoints.get(i),
+                        Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
+                        extremaValues.get(i));
+            } else {
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LOCAL_MAXIMUM_IN"),
+                        multiVar, " = ", extremaPoints.get(i),
+                        Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
+                        extremaValues.get(i));
+            }
         }
 
         /*
@@ -1776,8 +1812,8 @@ public abstract class MathCommandCompiler {
         String freeParameters = "";
         String infoAboutFreeParameters = "";
 
-        for (int i = 0; i < zeros.getBound(); i++) {
-            solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
+        for (int i = 0; i < extremaPoints.getBound(); i++) {
+            solutionContainsFreeParameter = solutionContainsFreeParameter || extremaPoints.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
         }
 
         if (solutionContainsFreeParameter) {
@@ -1786,9 +1822,9 @@ public abstract class MathCommandCompiler {
             while (solutionContainsFreeParameterOfGivenIndex) {
                 maxIndex++;
                 solutionContainsFreeParameterOfGivenIndex = false;
-                for (int i = 0; i < zeros.getBound(); i++) {
+                for (int i = 0; i < extremaPoints.getBound(); i++) {
                     solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex
-                            || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
+                            || extremaPoints.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
                 }
             }
             maxIndex--;
