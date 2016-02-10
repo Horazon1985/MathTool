@@ -2157,7 +2157,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        Expression expr = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression expr = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]).simplify(simplifyTypesPlot);
 
         // Falls eines der Graphen nicht gezeichnet werden kann.
         if (expr.containsOperator()) {
@@ -2174,10 +2174,10 @@ public abstract class MathCommandCompiler {
 
         }
 
-        Expression x_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression x_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-        Expression y_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
-        Expression y_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
         HashSet<String> vars = expr.getContainedIndeterminates();
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2221,7 +2221,7 @@ public abstract class MathCommandCompiler {
         }
 
         // Graphen zeichnen.
-        graphicPanelImplicit2D.setExpressions((Expression) command.getParams()[0], (Expression) command.getParams()[1]);
+        graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
