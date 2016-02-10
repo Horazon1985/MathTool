@@ -29,7 +29,7 @@ public class DevelopersDialogGUI extends JDialog {
         // Logo laden
         JPanel panel = new JPanel();
         add(panel);
-        panel.add(new JLabel(new ImageIcon(getClass().getResource("../../icons/MathToolLogo.png"))));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource("MathToolLogo.png"))));
         panel.setBounds(0, -5, 500, 150);
         panel.setVisible(true);
 
@@ -44,7 +44,7 @@ public class DevelopersDialogGUI extends JDialog {
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("../../help/MathToolDevelopers" + Expression.getLanguage().toString() + ".html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("html/MathToolDevelopers" + Expression.getLanguage().toString() + ".html");
                 
         if (helpURL != null) {
             try {

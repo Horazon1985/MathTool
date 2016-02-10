@@ -1,0 +1,113 @@
+<font size="6"><strong>Konsolenbefehle:</strong></font><br><br>
+
+MathTool kennt die folgenden Befehle:<br><br>
+
+<strong>approx(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Approximiert den Ausdruck F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+
+<em>Beispiel:</em> approx(3^0.5) liefert die Ausgabe<br>
+
+<p style="text-align: center;">1.7320508075688772</p><br>
+
+<strong>cdnf(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Liefert die kanonische disjunktive Normalform des logischen Ausdrucks F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+
+<strong>clear():</strong> Leert die gesamte Konsole. Bereits definierte Variablen und Funktionen bleiben jedoch erhalten.<br><br>
+
+<strong>def(x = x<sub>0</sub>):</strong> Weist einer g&uuml;ltigen Variable x den konstanten Wert x<sub>0</sub> zu.<br><br>
+
+<strong>def(F(x<sub>1</sub>, ..., x<sub>n</sub>) = G(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Definiert eine Funktion F in den Variablen x<sub>1</sub>, ..., x<sub>n</sub> durch den Ausdruck G(x<sub>1</sub>, ..., x<sub>n</sub>). Selbstverst&auml;ndlich werden vordefinierte Funktionen wie sin(), tan(), exp(), etc. nicht &uuml;berschrieben.<br><br>
+
+<em>Beispiel:</em> Nach der Eingabe def(f(x, y) = x^2 + sin(x*y)) kennt MathTool die so definierte Funktion f. Die nachfolgende Eingabe f(u^3, u*v^4) liefert dann etwa die Ausgabe<br>
+
+<p style="text-align: center;">u^6+sin(u^4*v^4).</p><br>
+
+<strong>defvars():</strong> Gibt die Liste aller Variablen aus, denen ein fester Wert mittels Befehl def() zugewiesen wurde.<br><br>
+
+<strong>eigenvalues(A):</strong> Gibt die Eigenwerte der quadratischen Matrix A aus, sofern diese berechenbar sind.<br><br>
+
+<strong>eigenvectors(A):</strong> Gibt Eigenvektoren der quadratischen Matrix A aus, gruppiert nach den entsprechenden Eigenwerten von A, sofern diese berechenbar sind.<br><br>
+
+<strong>euler(n):</strong> Gibt die ersten n Stellen der Eulerschen Zahl e aus. Das Ergebnis wird <em>nicht</em> gerundet.<br><br>
+
+<em>Beispiel:</em> euler(20) liefert die Ausgabe<br>
+
+<p style="text-align: center;">2.71828182845904523536</p><br>
+
+Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
+
+<strong>expand(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> L&ouml;st alle enthaltenen Klammern bei Multiplikationen auf (multipliziert alle Terme aus).<br><br>
+
+<em>Beispiel:</em> expand(x+(a+b)*(c+d+e)) liefert die Ausgabe
+
+<p style="text-align: center;">x+a*c+a*d+a*e+b*c+b*d+b*e</p><br>
+
+<strong>latex(F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Generiert den Latex-Code f&uuml;r den mathematischen Ausdruck F<sub>1</sub>(x<sub>1</sub>, ..., x<sub>n</sub>) = ... = F<sub>m</sub>(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+
+<strong>pi(n):</strong> Gibt die ersten n Stellen der Kreiszahl &#960; aus. Das Ergebnis wird <em>nicht</em> gerundet.<br><br>
+
+<em>Beispiel:</em> pi(20) liefert die Ausgabe<br>
+
+<p style="text-align: center;">3.14159265358979323846</p><br>
+
+Die Zahl n darf hier aus Speichergr&uuml;nden maximal 100000 betragen.<br><br>
+
+<strong>plot2d(F<sub>1</sub>(x), ..., F<sub>n</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Zeichnet den Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> im Intervall x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Der Zoomfaktor kann hier (fast) beliebig groß und beliebig klein werden.<br><br>
+
+<strong>plotimplicit(F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet die L&ouml;sungsmenge der Gleichung F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y) in zwei Variablen im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Hier kann in den Graphen weder hinein- noch herausgezoomt werden, ebenso kann das Koordinatensystem nicht verschoben werden.<br>
+<em>Wichtig:</em> Die Grenzen x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> sollen so angegeben werden, dass x, y die <em>alphabetische</em> Reihenfolge der Variablen ist.<br><br>
+
+<strong>plot3d(F(x, y), x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Zeichnet den Graphen der Funktion F(x, y) im Rechteck x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>.<br>
+<em> Wichtig:</em> Die Grenzen x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub> sollen so angegeben werden, dass x, y die <em>alphabetische</em> Reihenfolge der Variablen ist. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+
+<strong>plotcurve2d((F<sub>1</sub>(t), F<sub>2</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die ebene Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t) und y = F<sub>2</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Manchmal kann es vorkommen (etwa beim Zeichnen von Kurven, welche sehr "ungl&uuml;cklich" parametrisiert wurden), dass nicht die ganze Kurve, sondern nur ein Teil von ihr gezeichnet werden (etwa f&uuml;r t<sub>1</sub> &lt;= t &lt;= t' f&uuml;r ein t' &lt;= t<sub>2</sub>).<br><br>
+
+<strong>plotcurve3d((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die r&auml;umliche Kurve, welche durch die Komponentenfunktionen x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) und z = F<sub>3</sub>(t) parametrisiert wird, f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Der Zoomfaktor liegt hier zwischen 0.1 und 10. Auch hier gilt dasselbe wie im Falle von plotcurve im Zweidimensionalen, dass manche "schlecht" parametrisierten Kurven nicht komplett gezeichnet werden k&ouml;nnen.<br><br>
+
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Zeichnet die Graphen der Funktionen F<sub>1</sub>, ..., F<sub>n</sub> f&uuml;r t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, wobei t den Winkel und F<sub>i</sub>(t) den Radius in Polarkoordinaten angeben. Der Zoomfaktor liegt hier zwischen 0.1 und 10.<br><br>
+
+<strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Berechnet die Gleichung der Regressionsgeraden f&uuml;r die Punkte P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, und zeichnet diese, falls m&ouml;glich. Die Punkte P<sub>i</sub> m&uuml;ssen, nach Vereinfachung, von der Form [a;b], d.h. also (2x1)-Matrizen sein.<br><br>
+
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Bestimmt die algebraischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, falls m&ouml;glich. Beachten Sie, dass sich nicht jede Gleichung algebraisch l&ouml;sen l&auml;sst. Gleichungen der Form exp(x) - x = 3 besitzen beispielsweise keine L&ouml;sung, die sich mittels algebraischer Ausdr&uuml;cke oder elementarer Funktionen in geschlossener Form hinschreiben l&auml;sst. Bei solchen Eingaben w&uuml;rde MathTool keine (exakte) L&ouml;sung liefern.<br><br>
+
+<em>Beispiel:</em> Die Gleichung x^18 - 3*x^6 - 11 = 0 soll gel&ouml;st werden. Der Befehl solve(x^18 - 3*x^6 - 11 = 0) liefert die L&ouml;sungen
+<p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
+<p style="text-align: center;">x_2 = -((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6).</p>
+Approximiert lauten diese x<sub>1, 2</sub> ≈ ±1.1777403511345441. Letzteres wird durch den Befehl solve mit entsprechendem Suchbereich geliefert (siehe weiter unten).
+
+<strong>solve(F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Bestimmt die algebraischen L&ouml;sungen der Gleichung F<sub>1</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) = F<sub>2</sub>(x, a<sub>1</sub>, ..., a<sub>n</sub>) in x (in Abh&auml;ngigkeit von Parametern a<sub>1</sub>, ..., a<sub>n</sub>), falls m&ouml;glich.<br><br>
+
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>.<br><br>
+
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Hierbei wird das Intervall [x<sub>1</sub>, x<sub>2</sub>] in n gleiche Teile unterteilt und in jedem Teilintervall wird h&ouml;chstens eine L&ouml;sung ermittelt. H&ouml;heres n kann zwar potentiell mehr L&ouml;sungen liefern, verl&auml;ngert daf&uuml;r aber die Berechnungszeit. Diese Funktion kann dann n&uuml;tzlich sein, wenn der Benutzer &uuml;ber bestimmte Kenntnisse bez&uuml;glich der L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) verf&uuml;gt.<br><br>
+
+<strong>solvedeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Liefert eine numerische L&ouml;sung der Diferentialgleichung y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> im Bereich x_0 &lt;= x &lt;= x<sub>1</sub>. F&uuml;r die numerische Berechnung wird das Intervall [x<sub>0</sub>, x<sub>1</sub>] in 1000 gleiche Teile unterteilt und in der Konsole werden alle 1001 Funktionswerte an den betreffenden Stellen ausgegeben.<br><br>
+
+<em>Beispiel:</em> solvedeq(-y,t,2,0,10,1,0) liefert die numerische L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0 im Bereich 0 &lt;= t &lt;= 10. Hierbei werden 1000 Funktionswerte von y(t) ausgegeben; die Schrittweite betr&auml;gt daher 0.01.<br><br>
+
+<strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Liefert die Gleichung der Tangentialebene an den Graphen von F im Punkte (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
+<em>Beispiel:</em> tangent(x^3+x/2+3,x=2) liefert die folgende Gleichung:<br>
+
+<p style="text-align: center;">Y=12+(25*(x-2))/2.</p><br>
+
+Zus&auml;tzlich werden beide Graphen (der von x^3+x/2+3 und von 12+25*(x-2)/2) gezeichnet.<br><br>
+
+<strong>taylordeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Liefert das Taylorpolynom m-ten Grades von der L&ouml;sung der Differentialgleichung y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+
+<em>Beispiel:</em> taylordeq(-y,t,2,0,1,0,10) liefert das Taylorpolynom 10. Grades von der L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0. Die exakte L&ouml;sung ist gegeben durch y(t) = cos(t), als Potenzreiche ausgedr&uuml;ckt also<br>
+
+<p style="text-align: center;">y(t) = cos(t) = 1 - t^2/2! + t^4/4! - t^6/6! + ...</p><br>
+
+Dementsprechend lautet die Ausgabe dann<br>
+
+<p style="text-align: center;">1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).</p><br>
+
+<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Entfernt die Funktionen f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
+
+<strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Gibt die Variablen x<sub>1</sub>, ..., x<sub>n</sub> wieder frei.<br><br>
+
+<strong>undefallfuncs():</strong> Entfernt alle Funktionen, die im Laufe dieser Sitzung definiert wurden.<br><br>
+
+<strong>undefallvars():</strong> Gibt alle Variablen wieder frei, denen im Laufe dieser Sitzung ein Wert zugewiesen wurde.<br><br>
+
+<strong>undefall():</strong> Entfernt alle Funktionen und gibt alle Variablen wieder frei, denen im Laufe dieser Sitzung ein Wert zugewiesen wurde.<br><br>
+
+Alle Konsolenbefehle, die w&auml;hrend einer Sitzung eingegeben wurden, werden gespeichert und k&ouml;nnen mit Pfeiltasten abgerufen werden (Pfeiltaste UP = vorheriger Befehl, Pfeiltaste DOWN = n&auml;chster Befehl).

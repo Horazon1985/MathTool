@@ -11,7 +11,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
-                "GUI_HelpDialogGUI_HELP", "../../icons/HelpLogo.png",
+                "GUI_HelpDialogGUI_HELP", "HelpLogo.png",
                 null, null, null, menuCaptions, fileNames);
 
     }
@@ -25,7 +25,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
          Der Parameter helpType gibt den (relevanten) Teil des Dateinamens an,
          aus welcher die Hilfe ausgelesen wird.
          */
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("../../help/MathToolHelp" + fileName + Expression.getLanguage().toString() + ".html");
+        java.net.URL helpURL = HelpDialogGUI.class.getResource("html/MathToolHelp" + fileName + Expression.getLanguage().toString() + ".html");
 
         if (helpURL != null) {
             try {

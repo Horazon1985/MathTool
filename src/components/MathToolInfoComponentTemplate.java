@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import lang.translator.Translator;
@@ -57,18 +56,14 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
             if (headerImageFilePath != null) {
                 this.headerPanel = new JPanel();
                 add(this.headerPanel);
-                JOptionPane.showMessageDialog(this, "Vor dem Laden.");
                 this.headerImage = new ImageIcon(getClass().getResource(headerImageFilePath));
-                JOptionPane.showMessageDialog(this, "Nach dem Laden.");
                 if (this.headerImage != null) {
                     this.headerLabel = new JLabel(this.headerImage);
                     this.headerPanel.add(this.headerLabel);
                     this.headerPanel.setBounds(0, -5, this.headerImage.getIconWidth(), this.headerImage.getIconHeight());
-                    JOptionPane.showMessageDialog(this, "Image geladen.");
                     this.headerPanel.setVisible(true);
                     currentComponentLevel = this.stub + this.headerImage.getIconHeight() - 5;
                 } else {
-                    JOptionPane.showMessageDialog(this, "Image nicht geladen.");
                     this.headerLabel = new JLabel();
                     currentComponentLevel = this.stub;
                 }
@@ -237,10 +232,8 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
-            return;
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Hilfe kann nicht geladen werden.");
         }
 
     }
