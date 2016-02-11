@@ -792,9 +792,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
-                try{
+                try {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
-                } catch (Exception e){
+                } catch (Exception e) {
                     mathToolGraphicArea.addComponent("ERROR!!!!!");
                 }
                 MathToolController.initializeTimer(computingTimer, computingDialog);
@@ -1285,58 +1285,70 @@ public class MathToolGUI extends JFrame implements MouseListener {
         instructions.add("<html><b><u>" + Translator.translateExceptionMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
 
         if (e.getSource() == legendLabel) {
-            if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
-                instructions.addAll(graphicPanel2D.getInstructions());
-                for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
-                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
+            switch (typeGraphic) {
+                case GRAPH2D:
+                    instructions.addAll(graphicPanel2D.getInstructions());
+                    for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
+                    }
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanel2D.getColors(), exprs);
+                    break;
+                case GRAPHIMPLICIT: {
+                    instructions.addAll(graphicPanelImplicit2D.getInstructions());
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
+                            + graphicPanelImplicit2D.getExpressions().get(0).writeExpression()
+                            + " = "
+                            + graphicPanelImplicit2D.getExpressions().get(1).writeExpression());
+                    ArrayList<Color> colors = new ArrayList<>();
+                    colors.add(graphicPanelImplicit2D.getColor());
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
                 }
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, graphicPanel2D.getColors(), exprs);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT)) {
-                instructions.addAll(graphicPanelImplicit2D.getInstructions());
-                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
-                        + graphicPanelImplicit2D.getExpressions().get(0).writeExpression()
-                        + " = "
-                        + graphicPanelImplicit2D.getExpressions().get(1).writeExpression());
-                ArrayList<Color> colors = new ArrayList<>();
-                colors.add(graphicPanelImplicit2D.getColor());
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, colors, exprs);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                instructions.addAll(GraphicPanel3D.getInstructions());
-                for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
-                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).writeExpression());
+                case GRAPH3D:
+                    instructions.addAll(GraphicPanel3D.getInstructions());
+                    for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).writeExpression());
+                    }
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanel3D.getColors(), exprs);
+                    break;
+                case CURVE2D: {
+                    instructions.addAll(GraphicPanelCurves2D.getInstructions());
+                    ArrayList<Color> colors = new ArrayList<>();
+                    colors.add(Color.blue);
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                            + "(" + graphicPanelCurves2D.getExpressions()[0]
+                            + ", " + graphicPanelCurves2D.getExpressions()[1] + ")"
+                    );
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
                 }
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, graphicPanel3D.getColors(), exprs);
-            } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
-                instructions.addAll(GraphicPanelCurves2D.getInstructions());
-                ArrayList<Color> colors = new ArrayList<>();
-                colors.add(Color.blue);
-                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
-                        + "(" + graphicPanelCurves2D.getExpressions()[0]
-                        + ", " + graphicPanelCurves2D.getExpressions()[1] + ")"
-                );
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, colors, exprs);
-            } else if (typeGraphic.equals(TypeGraphic.CURVE3D)) {
-                instructions.addAll(GraphicPanelCurves3D.getInstructions());
-                ArrayList<Color> colors = new ArrayList<>();
-                colors.add(Color.blue);
-                exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
-                        + "(" + graphicPanelCurves3D.getExpressions()[0]
-                        + ", " + graphicPanelCurves3D.getExpressions()[1]
-                        + ", " + graphicPanelCurves3D.getExpressions()[2] + ")"
-                );
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, colors, exprs);
-            } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
-                instructions.addAll(GraphicPanelPolar2D.getInstructions());
-                for (int i = 0; i < graphicPanelPolar2D.getExpressions().size(); i++) {
-                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar2D.getExpressions().get(i).writeExpression());
+                case CURVE3D: {
+                    instructions.addAll(GraphicPanelCurves3D.getInstructions());
+                    ArrayList<Color> colors = new ArrayList<>();
+                    colors.add(Color.blue);
+                    exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                            + "(" + graphicPanelCurves3D.getExpressions()[0]
+                            + ", " + graphicPanelCurves3D.getExpressions()[1]
+                            + ", " + graphicPanelCurves3D.getExpressions()[2] + ")"
+                    );
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
                 }
-                legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                        instructions, graphicPanelPolar2D.getColors(), exprs);
+                case POLARGRAPH2D:
+                    instructions.addAll(GraphicPanelPolar2D.getInstructions());
+                    for (int i = 0; i < graphicPanelPolar2D.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar2D.getExpressions().get(i).writeExpression());
+                    }
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanelPolar2D.getColors(), exprs);
+                    break;
+                default:
+                    break;
             }
         } else if (e.getSource() == saveLabel) {
 

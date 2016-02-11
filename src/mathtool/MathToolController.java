@@ -477,31 +477,31 @@ public class MathToolController {
      * Ermittelt den Typ des GraphicPanels, welcher zum Befehl c gehört.
      */
     public static TypeGraphic getTypeGraphicFromCommand(Command c) {
-        if (c.getName().equals("plot2d")) {
+        if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getName().equals("plotimplicit")) {
+        if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
             return TypeGraphic.GRAPHIMPLICIT;
         }
-        if (c.getName().equals("plot3d") || c.getName().equals("tangent") && ((HashMap) c.getParams()[1]).size() == 2) {
+        if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
             return TypeGraphic.GRAPH3D;
         }
-        if (c.getName().equals("plotcurve") && c.getParams().length == 4) {
+        if (c.getTypeCommand().equals(TypeCommand.plotcurve2d)) {
             return TypeGraphic.CURVE2D;
         }
-        if (c.getName().equals("plotcurve") && c.getParams().length == 5) {
+        if (c.getTypeCommand().equals(TypeCommand.plotcurve3d)) {
             return TypeGraphic.CURVE3D;
         }
-        if (c.getName().equals("plotpolar")) {
+        if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             return TypeGraphic.POLARGRAPH2D;
         }
-        if (c.getName().equals("regressionline") && c.getParams().length >= 2) {
+        if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getName().equals("solve") && c.getParams().length >= 4 || c.getName().equals("tangent") && ((HashMap) c.getParams()[1]).size() == 1) {
+        if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 3 || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 1) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getName().equals("solvedeq")) {
+        if (c.getTypeCommand().equals(TypeCommand.solvedeq)) {
             return TypeGraphic.GRAPH2D;
         }
         return TypeGraphic.NONE;

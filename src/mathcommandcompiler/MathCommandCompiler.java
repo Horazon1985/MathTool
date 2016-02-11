@@ -579,61 +579,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandPlotImplicit(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: plotimplicit(F(x, y) = G(x, y), x_1, x_2, y_1, y_2)
-         (Plot der Lösungsmenge {F = G}) F, G: Ausdrücke in höchstens zwei Variablen. x_1 <
-         x_2, y_1 < y_2: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
-         */
-        if (params.length < 3) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
-        }
-
-        Object[] commandParams = new Object[6];
-        HashSet<String> vars = new HashSet<>();
-
-        if (params.length != 5) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_IMPLICIT_PLOT2D"));
-        }
-
-        try {
-            commandParams[0] = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
-            commandParams[1] = Expression.build(params[0].substring(params[0].indexOf("=") + 1, params[0].length()), null);
-            ((Expression) commandParams[0]).addContainedIndeterminates(vars);
-            ((Expression) commandParams[1]).addContainedIndeterminates(vars);
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_IMPLICIT_PLOT2D") + e.getMessage());
-        }
-
-        if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_1")
-                    + String.valueOf(vars.size())
-                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_IMPLICIT_PLOT2D_2"));
-        }
-
-        HashSet<String> varsInLimits = new HashSet<>();
-        for (int i = 1; i <= 4; i++) {
-            try {
-                commandParams[i + 1] = Expression.build(params[i], null);
-                ((Expression) commandParams[i + 1]).addContainedIndeterminates(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
-                            + (i + 1)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_1")
-                        + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_IMPLICIT_PLOT2D_2"));
-            }
-        }
-
-        return new Command(TypeCommand.plotimplicit, commandParams);
-
-    }
-
     private static Command getCommandPlot3D(String[] params) throws ExpressionException {
 
         /*
@@ -685,78 +630,6 @@ public abstract class MathCommandCompiler {
         }
 
         return new Command(TypeCommand.plot3d, commandParams);
-
-    }
-
-    private static Command getCommandPlotCurve(String[] params) throws ExpressionException {
-
-        /*
-         Struktur: plotcurve([FUNCTION_1(var), FUNCTION_2(var)], value_1,
-         value_2). FUNCTION_i(var) = Funktion in einer Variablen. value_1 <
-         value_2: Parametergrenzen. ODER: plotcurve([FUNCTION_1(var),
-         FUNCTION_2(var), FUNCTION_3(var)], value_1, value_2). FUNCTION_i(var)
-         = Funktion in einer Variablen. value_1 < value_2: Parametergrenzen.
-         */
-        if (params.length != 3) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE"));
-        }
-
-        HashSet<String> vars = new HashSet<>();
-
-        /*
-         Es wird nun geprüft, ob der erste Parameter die Form "(expr_1,
-         expr_2)" oder "(expr_1, expr_2, expr_3)" besitzt.
-         */
-        if (!params[0].substring(0, 1).equals("(") || !params[0].substring(params[0].length() - 1, params[0].length()).equals(")")) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTCURVE"));
-        }
-
-        String[] curveComponents = Expression.getArguments(params[0].substring(1, params[0].length() - 1));
-        if (curveComponents.length != 2 && curveComponents.length != 3) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_CURVE_COMPONENTS_IN_PLOTCURVE"));
-        }
-
-        Object[] commandParams;
-        if (curveComponents.length == 2) {
-            commandParams = new Object[4];
-        } else {
-            commandParams = new Object[5];
-        }
-
-        for (int i = 0; i < curveComponents.length; i++) {
-            try {
-                commandParams[i] = Expression.build(curveComponents[i], null);
-                ((Expression) commandParams[i]).addContainedIndeterminates(vars);
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_1")
-                        + (i + 1)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_CURVE_COMPONENTS_IN_PLOTCURVE_2")
-                        + e.getMessage());
-            }
-        }
-
-        if (vars.size() > 1) {
-            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_CURVE_COMPONENTS_IN_PLOTCURVE"));
-        }
-
-        HashSet<String> varsInLimits = new HashSet<>();
-        for (int i = 0; i <= 1; i++) {
-            try {
-                commandParams[curveComponents.length + i] = Expression.build(params[i + 1], null);
-                ((Expression) commandParams[curveComponents.length + i]).addContainedIndeterminates(varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                            + (i + 2)
-                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
-                }
-            } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_1")
-                        + (i + 2)
-                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCURVE_2"));
-            }
-        }
-
-        return new Command(TypeCommand.plotcurve2d, commandParams);
 
     }
 
@@ -2170,7 +2043,7 @@ public abstract class MathCommandCompiler {
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                     difference, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_IMPLICIT_GRAPH_CANNOT_BE_PLOTTED_PLOT2D"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_IMPLICIT_GRAPH_CANNOT_BE_PLOTTED"));
 
         }
 
@@ -2322,10 +2195,10 @@ public abstract class MathCommandCompiler {
             matExpr = matExpr.simplify(simplifyTypesPlot);
             Dimension dim = matExpr.getDimension();
             if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 2) {
-                throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
             }
         } catch (EvaluationException e) {
-            throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
         }
 
         Expression[] components = new Expression[2];
@@ -2384,10 +2257,10 @@ public abstract class MathCommandCompiler {
             matExpr = matExpr.simplify(simplifyTypesPlot);
             Dimension dim = matExpr.getDimension();
             if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 3) {
-                throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_3_DIM_VECTOR"));
             }
         } catch (EvaluationException e) {
-            throw new EvaluationException(Translator.translateExceptionMessage("TO DO"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_3_DIM_VECTOR"));
         }
 
         Expression[] components = new Expression[3];
