@@ -1350,8 +1350,8 @@ public abstract class MathCommandCompiler {
     public static void executeDefFuncs()
             throws EvaluationException {
 
-        String function;
         String[] arguments;
+        Expression abstractExpression;
 
         // Textliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
@@ -1363,17 +1363,18 @@ public abstract class MathCommandCompiler {
             for (String functionName : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()) {
 
                 arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().get(functionName);
+                abstractExpression = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName);
 
-                function = functionName + "(";
-                for (int i = 0; i < arguments.length; i++) {
-                    function = function + NotationLoader.SELFDEFINEDFUNCTION_VAR + (i + 1) + ",";
+                Expression[] exprsForVars = new Expression[arguments.length];
+                for (int i = 0; i < exprsForVars.length; i++) {
+                    exprsForVars[i] = Variable.create(NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (i + 1));
                 }
-                function = function.substring(0, function.length() - 1) + ")";
+                SelfDefinedFunction f = new SelfDefinedFunction(functionName, arguments, abstractExpression, exprsForVars);
 
                 // Textliche Ausgabe
-                output.add(function + " = " + SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName).writeExpression() + "\n \n");
+                output.add(f.writeExpression() + " = " + f.getAbstractExpression().writeExpression() + "\n \n");
                 // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(function, " = ", SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(functionName));
+                mathToolGraphicArea.addComponent(f, " = ", f.getAbstractExpression());
 
             }
         } else {
@@ -1856,7 +1857,7 @@ public abstract class MathCommandCompiler {
                         Translator.translateExceptionMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
                         extremaValues.get(i).toString());
             }
-            
+
         }
 
         // Nullstellen als Array (zum Markieren).
@@ -1875,7 +1876,7 @@ public abstract class MathCommandCompiler {
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.setSpecialPoints(extremaAsArray);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
-        
+
     }
 
     private static void executeKer(Command command) throws EvaluationException {
@@ -2630,7 +2631,7 @@ public abstract class MathCommandCompiler {
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
         String varForTextOutput = var;
-        if (var.contains("_")){
+        if (var.contains("_")) {
             varForTextOutput = "(" + var + ")";
         }
         for (int i = 0; i < zeros.size(); i++) {
