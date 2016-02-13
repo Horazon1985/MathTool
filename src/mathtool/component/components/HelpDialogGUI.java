@@ -1,6 +1,6 @@
 package mathtool.component.components;
 
-import components.MathToolInfoComponentTemplate;
+import mathtool.component.templates.MathToolInfoComponentTemplate;
 import abstractexpressions.expression.classes.Expression;
 import java.io.IOException;
 import java.util.ArrayList;

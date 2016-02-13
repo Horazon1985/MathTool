@@ -1,7 +1,7 @@
 package mathtool.component.components;
 
 import mathtool.MathToolGUI;
-import components.MathToolOptionComponentTemplate;
+import mathtool.component.templates.MathToolOptionComponentTemplate;
 import enums.TypeSimplify;
 import java.util.ArrayList;
 import java.util.HashSet;

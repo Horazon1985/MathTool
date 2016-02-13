@@ -1,4 +1,4 @@
-package components;
+package mathtool.component.dialogs;
 
 import javax.swing.JFileChooser;
 import mathtool.MathToolController;

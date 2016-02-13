@@ -48,8 +48,12 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
 import computationbounds.ComputationBounds;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Set;
 import notations.NotationLoader;
 import lang.translator.Translator;
+import mathtool.annotations.Execute;
 
 public abstract class MathCommandCompiler {
 
@@ -1087,16 +1091,16 @@ public abstract class MathCommandCompiler {
                 executeCDNF(command);
                 break;
             case clear:
-                executeClear();
+                executeClear(command);
                 break;
             case def:
                 executeDef(command);
                 break;
             case deffuncs:
-                executeDefFuncs();
+                executeDefFuncs(command);
                 break;
             case defvars:
-                executeDefVars();
+                executeDefVars(command);
                 break;
             case eigenvalues:
                 executeEigenvalues(command);
@@ -1168,13 +1172,13 @@ public abstract class MathCommandCompiler {
                 executeUndefVars(command);
                 break;
             case undefallfuncs:
-                executeUndefAllFuncs();
+                executeUndefAllFuncs(command);
                 break;
             case undefallvars:
-                executeUndefAllVars();
+                executeUndefAllVars(command);
                 break;
             case undefall:
-                executeUndefAll();
+                executeUndefAll(command);
                 break;
             default:
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
@@ -1187,9 +1191,49 @@ public abstract class MathCommandCompiler {
     }
 
     /**
+     * Hauptmethode zum Ausführen des Befehls.
+     *
+     * @throws ExpressionException
+     * @throws EvaluationException
+     */
+    public static void executeCommand2(String input) throws ExpressionException, EvaluationException {
+
+        output.clear();
+        input = input.replaceAll(" ", "").toLowerCase();
+
+        String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
+        String commandName = commandNameAndParams[0];
+        String[] params = Expression.getArguments(commandNameAndParams[1]);
+
+        //Befehl ermitteln
+        Command command = getCommand(commandName, params);
+
+        // Mittels Reflection die passende Ausführmethode ermittln (durch Vergleich der Annotation).
+        Method[] methods = MathCommandCompiler.class.getDeclaredMethods();
+        Execute annotation;
+        for (Method method : methods) {
+            annotation = method.getAnnotation(Execute.class);
+            if (annotation != null && annotation.type().equals(command.getTypeCommand())) {
+                try {
+                    method.invoke(null, command);
+                    break;
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
+                }
+            }
+        }
+
+        for (String out : output) {
+            mathToolTextArea.append(out);
+        }
+
+    }
+
+    /**
      * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
      * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
      */
+    @Execute(type = TypeCommand.approx)
     private static void executeApprox(Command command)
             throws ExpressionException, EvaluationException {
 
@@ -1242,6 +1286,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.ccnf)
     private static void executeCCNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
@@ -1261,6 +1306,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.cdnf)
     private static void executeCDNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
@@ -1280,13 +1326,15 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeClear() {
+    @Execute(type = TypeCommand.clear)
+    private static void executeClear(Command command) {
         mathToolTextArea.setText("");
         mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
                 MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
         mathToolGraphicArea.clearArea();
     }
 
+    @Execute(type = TypeCommand.def)
     private static void executeDef(Command command) throws EvaluationException {
 
         // Falls ein Variablenwert definiert wird.
@@ -1347,19 +1395,20 @@ public abstract class MathCommandCompiler {
 
     }
 
-    public static void executeDefFuncs()
+    @Execute(type = TypeCommand.deffuncs)
+    public static void executeDefFuncs(Command command)
             throws EvaluationException {
 
         String[] arguments;
         Expression abstractExpression;
 
-        // Textliche Ausgabe
-        output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
-
         // Alle selbstdefinierten Funktionen nacheinander ausgeben.
         if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().isEmpty()) {
+            
+            // Textliche Ausgabe
+            output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
+            // Grafische Ausgabe
+            mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
             for (String functionName : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()) {
 
                 arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().get(functionName);
@@ -1377,6 +1426,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(f, " = ", f.getAbstractExpression());
 
             }
+            
         } else {
 
             // Textliche Ausgabe
@@ -1388,12 +1438,15 @@ public abstract class MathCommandCompiler {
 
     }
 
-    public static void executeDefVars() {
+    @Execute(type = TypeCommand.defvars)
+    public static void executeDefVars(Command command) {
 
         HashSet<String> vars = Variable.getVariablesWithPredefinedValues();
 
         if (!vars.isEmpty()) {
+            // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES") + "\n \n");
+            // Grafische Ausgabe
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : vars) {
                 // Textliche Ausgabe
@@ -1412,6 +1465,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.eigenvalues)
     private static void executeEigenvalues(Command command) throws EvaluationException {
 
         Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
@@ -1463,6 +1517,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.eigenvectors)
     private static void executeEigenvectors(Command command) throws EvaluationException {
 
         Dimension dim = ((MatrixExpression) command.getParams()[0]).getDimension();
@@ -1529,6 +1584,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.euler)
     private static void executeEuler(Command command) throws ExpressionException {
 
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
@@ -1545,6 +1601,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.expand)
     private static void executeExpand(Command command) throws EvaluationException {
         Expression expr = (Expression) command.getParams()[0];
         expr = expr.simplify(simplifyTypesExpand);
@@ -1554,6 +1611,7 @@ public abstract class MathCommandCompiler {
         mathToolGraphicArea.addComponent(expr);
     }
 
+    @Execute(type = TypeCommand.extrema)
     private static void executeExtrema(Command command)
             throws EvaluationException {
 
@@ -1879,6 +1937,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.ker)
     private static void executeKer(Command command) throws EvaluationException {
 
         MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
@@ -1936,6 +1995,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.latex)
     private static void executeLatex(Command command) throws ExpressionException {
 
         String latexCode = Translator.translateExceptionMessage("MCC_LATEX_CODE");
@@ -1959,6 +2019,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.pi)
     private static void executePi(Command command) throws ExpressionException {
 
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
@@ -1975,6 +2036,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plot2d)
     private static void executePlot2D(Command command) throws ExpressionException,
             EvaluationException {
 
@@ -2025,6 +2087,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotimplicit)
     private static void executePlotImplicit(Command command) throws EvaluationException {
 
         if (graphicPanelImplicit2D == null || mathToolGraphicArea == null) {
@@ -2103,6 +2166,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plot3d)
     private static void executePlot3D(Command command) throws EvaluationException {
 
         if (graphicPanel3D == null || mathToolGraphicArea == null) {
@@ -2183,6 +2247,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotcurve2d)
     private static void executePlotCurve2D(Command command) throws EvaluationException {
 
         if (graphicPanelCurves2D == null || mathToolGraphicArea == null) {
@@ -2245,6 +2310,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotcurve3d)
     private static void executePlotCurve3D(Command command) throws EvaluationException {
 
         if (graphicPanelCurves3D == null || mathToolGraphicArea == null) {
@@ -2307,6 +2373,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotpolar)
     private static void executePlotPolar2D(Command command) throws EvaluationException {
 
         if (graphicPanelPolar2D == null || mathToolGraphicArea == null) {
@@ -2358,6 +2425,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.regressionline)
     private static void executeRegressionLine(Command command)
             throws EvaluationException {
 
@@ -2423,6 +2491,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.solve)
     private static void executeSolve(Command command)
             throws EvaluationException {
 
@@ -2672,6 +2741,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.solvedeq)
     private static void executeSolveDEQ(Command command)
             throws EvaluationException {
 
@@ -2811,6 +2881,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.solvesystem)
     private static void executeSolveSystem(Command command)
             throws EvaluationException {
 
@@ -2894,8 +2965,8 @@ public abstract class MathCommandCompiler {
             String freeParameters = "";
             String infoAboutFreeParameters = "";
 
-            for (int i = 0; i < solutions.length; i++) {
-                solutionContainsFreeParameter = solutionContainsFreeParameter || solutions[i].contains("T_0");
+            for (Expression solution : solutions) {
+                solutionContainsFreeParameter = solutionContainsFreeParameter || solution.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_0");
             }
 
             if (solutionContainsFreeParameter) {
@@ -2905,7 +2976,7 @@ public abstract class MathCommandCompiler {
                     maxIndex++;
                     solutionContainsFreeParameterOfGivenIndex = false;
                     for (Expression solution : solutions) {
-                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solution.contains("T_" + maxIndex);
+                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solution.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_" + maxIndex);
                     }
                 }
                 maxIndex--;
@@ -2948,6 +3019,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.table)
     private static void executeTable(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
@@ -3058,6 +3130,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.tangent)
     private static void executeTangent(Command command)
             throws EvaluationException {
 
@@ -3159,6 +3232,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.taylordeq)
     private static void executeTaylorDEQ(Command command) throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
@@ -3232,6 +3306,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.undeffuncs)
     private static void executeUndefFuncs(Command command)
             throws EvaluationException {
 
@@ -3250,10 +3325,11 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefVars(Command comand)
+    @Execute(type = TypeCommand.undefvars)
+    private static void executeUndefVars(Command command)
             throws EvaluationException {
 
-        Object[] vars = comand.getParams();
+        Object[] vars = command.getParams();
         for (Object var : vars) {
             if (Variable.getVariablesWithPredefinedValues().contains((String) var)) {
                 Variable.setPreciseExpression((String) var, null);
@@ -3266,15 +3342,24 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefAllFuncs() {
+    @Execute(type = TypeCommand.undefallfuncs)
+    private static void executeUndefAllFuncs(Command command) {
 
         HashMap<String, Expression> abstractExpressions = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions();
         HashMap<String, Expression[]> innerExpressions = SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions();
         HashMap<String, String[]> arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions();
-        for (String var : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()) {
-            abstractExpressions.remove(var);
-            innerExpressions.remove(var);
-            arguments.remove(var);
+        
+        /*
+         Einfach nur keySet() zu benutzen würde beim Iterieren zu NullPointerExceptions 
+         führen. Daher besser ein neues HashSet mit den Funktionsnamen definieren und
+         erst DANN zu iterieren.
+        */
+        HashSet<String> functionNames = new HashSet<>(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet());
+        
+        for (String f : functionNames) {
+            abstractExpressions.remove(f);
+            innerExpressions.remove(f);
+            arguments.remove(f);
         }
         // Texttliche Ausgabe
         output.add(Translator.translateExceptionMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED") + " \n \n");
@@ -3283,7 +3368,8 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefAllVars() {
+    @Execute(type = TypeCommand.undefallvars)
+    private static void executeUndefAllVars(Command command) {
 
         for (String var : Variable.getVariablesWithPredefinedValues()) {
             Variable.setPreciseExpression(var, null);
@@ -3295,9 +3381,10 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static void executeUndefAll() {
-        executeUndefAllFuncs();
-        executeUndefAllVars();
+    @Execute(type = TypeCommand.undefall)
+    private static void executeUndefAll(Command command) {
+        executeUndefAllFuncs(command);
+        executeUndefAllVars(command);
     }
 
 }

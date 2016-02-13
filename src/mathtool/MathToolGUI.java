@@ -3,7 +3,7 @@ package mathtool;
 import mathtool.enums.TypeMode;
 import command.Command;
 import command.TypeCommand;
-import components.MathToolSaveGraphicDialog;
+import mathtool.component.dialogs.MathToolSaveGraphicDialog;
 import enums.TypeGraphic;
 import enums.TypeLanguage;
 import enums.TypeSimplify;
@@ -44,7 +44,7 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import components.MathToolSaveSessionDialog;
+import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
 import mathtool.component.components.HelpDialogGUI;
@@ -832,7 +832,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
-                        MathCommandCompiler.executeCommand(input);
+                        MathCommandCompiler.executeCommand2(input);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         mathToolTextField.setText("");
@@ -1156,7 +1156,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         try {
-            MathCommandCompiler.executeCommand("clear()");
+            MathCommandCompiler.executeCommand2("clear()");
         } catch (ExpressionException | EvaluationException e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());

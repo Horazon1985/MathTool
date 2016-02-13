@@ -1,6 +1,6 @@
 package mathtool.component.components;
 
-import components.MathToolInfoComponentTemplate;
+import mathtool.component.templates.MathToolInfoComponentTemplate;
 import java.awt.Color;
 import java.util.ArrayList;
 

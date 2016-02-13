@@ -1,4 +1,4 @@
-package components;
+package mathtool.component.dialogs;
 
 import graphic.Exportable;
 import java.io.IOException;

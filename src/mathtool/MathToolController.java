@@ -265,8 +265,8 @@ public class MathToolController {
                 }
             }
             // Schließlich: geladene Inhalte (Variablen, Funktionen) ausgeben.
-            MathCommandCompiler.executeDefFuncs();
-            MathCommandCompiler.executeDefVars();
+            MathCommandCompiler.executeDefFuncs(new Command(TypeCommand.deffuncs, new Object[]{}));
+            MathCommandCompiler.executeDefVars(new Command(TypeCommand.deffuncs, new Object[]{}));
         } catch (Exception e) {
             // Es wird nichts geladen.
         }

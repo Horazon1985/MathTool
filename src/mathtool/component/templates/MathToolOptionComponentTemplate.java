@@ -1,4 +1,4 @@
-package components;
+package mathtool.component.templates;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
