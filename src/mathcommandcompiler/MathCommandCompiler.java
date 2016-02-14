@@ -1218,6 +1218,10 @@ public abstract class MathCommandCompiler {
                     method.invoke(null, command);
                     break;
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    if (e.getCause() instanceof EvaluationException){
+                        // Methoden können nur EvaluationExceptions werfen.
+                        throw (EvaluationException) e.getCause();
+                    } 
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
                 }
             }
@@ -1235,7 +1239,7 @@ public abstract class MathCommandCompiler {
      */
     @Execute(type = TypeCommand.approx)
     private static void executeApprox(Command command)
-            throws ExpressionException, EvaluationException {
+            throws EvaluationException {
 
         if (command.getParams()[0] instanceof Expression) {
 
@@ -1585,7 +1589,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.euler)
-    private static void executeEuler(Command command) throws ExpressionException {
+    private static void executeEuler(Command command) throws EvaluationException {
 
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
         // Textliche Ausgabe
@@ -1996,7 +2000,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.latex)
-    private static void executeLatex(Command command) throws ExpressionException {
+    private static void executeLatex(Command command) {
 
         String latexCode = Translator.translateExceptionMessage("MCC_LATEX_CODE");
         for (int i = 0; i < command.getParams().length - 1; i++) {
@@ -2020,7 +2024,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.pi)
-    private static void executePi(Command command) throws ExpressionException {
+    private static void executePi(Command command) throws EvaluationException {
 
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
         // Texttliche Ausgabe
@@ -2037,8 +2041,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.plot2d)
-    private static void executePlot2D(Command command) throws ExpressionException,
-            EvaluationException {
+    private static void executePlot2D(Command command) throws EvaluationException {
 
         if (graphicPanel2D == null || mathToolGraphicArea == null) {
             return;
