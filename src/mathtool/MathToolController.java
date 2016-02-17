@@ -370,7 +370,7 @@ public class MathToolController {
                         numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
                     }
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException | IllegalAccessException | ExpressionException e) {
             }
 
         }
@@ -454,7 +454,7 @@ public class MathToolController {
                         numberOfCommas = Math.min(numberOfCommas, pattern.size() - 1);
                     }
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException | IllegalAccessException | ExpressionException e) {
             }
 
         }

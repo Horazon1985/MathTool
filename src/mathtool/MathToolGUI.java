@@ -69,7 +69,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final MathToolTextField mathToolTextField;
 
     private final GraphicPanel2D graphicPanel2D;
-    private final GraphicPanel3D graphicPanel3D;
+    private static GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCurves2D graphicPanelCurves2D;
     private final GraphicPanelCurves3D graphicPanelCurves3D;
     private final GraphicPanelImplicit2D graphicPanelImplicit2D;
@@ -389,6 +389,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathToolGUI.simplifyTypes = simplifyTypes;
     }
 
+    /**
+     * Getter für graphicPanel3D
+     */
+    public static GraphicPanel3D getGraphicPanel3D(){
+        return graphicPanel3D;
+    }
+    
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
@@ -1270,7 +1277,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK")});
         dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION"),
             Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
-            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_NET_ONLY")});
+            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY")});
 
         GraphicOptionsDialogGUI graphicOptionsDialogGUI = new GraphicOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
