@@ -52,6 +52,7 @@ import mathtool.component.components.LegendGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.component.components.OutputOptionsDialogGUI;
 import lang.translator.Translator;
+import mathtool.component.components.GraphicOptionsDialogGUI;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
@@ -512,6 +513,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         menuItemRepresentationText = new javax.swing.JMenuItem();
         menuItemOptionsMenu = new javax.swing.JMenu();
         menuItemOutputOptions = new javax.swing.JMenuItem();
+        menuItemGraphicOptions = new javax.swing.JMenuItem();
         menuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -697,6 +699,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         });
         menuItemOptionsMenu.add(menuItemOutputOptions);
 
+        menuItemGraphicOptions.setText("Grafikoptionen");
+        menuItemGraphicOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemGraphicOptionsActionPerformed(evt);
+            }
+        });
+        menuItemOptionsMenu.add(menuItemGraphicOptions);
+
         menuMathTool.add(menuItemOptionsMenu);
 
         menuItemAbout.setText("Über MathTool");
@@ -736,6 +746,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions.put(menuItemAbout, "GUI_MathToolForm_MENU_ABOUT");
         componentCaptions.put(menuItemOptionsMenu, "GUI_MathToolForm_MENU_OPTIONS");
         componentCaptions.put(menuItemOutputOptions, "GUI_MathToolForm_MENU_OUTPUT_OPTIONS");
+        componentCaptions.put(menuItemGraphicOptions, "GUI_MathToolForm_MENU_GRAPHIC_OPTIONS");
 
         // Buttons
         componentCaptions.put(approxButton, "GUI_MathToolForm_APPROX");
@@ -1245,6 +1256,28 @@ public class MathToolGUI extends JFrame implements MouseListener {
         }
     }//GEN-LAST:event_menuItemOpenActionPerformed
 
+    private void menuItemGraphicOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGraphicOptionsActionPerformed
+
+        String simplifyOptionsTitle = Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME");
+
+        String saveButtonLabel = Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_SAVE_BUTTON");
+        String cancelButtonLabel = Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON");
+
+        // DropDowns.
+        ArrayList<String[]> dropDownOptions = new ArrayList<>();
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION"),
+            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT"),
+            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK")});
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION"),
+            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
+            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_NET_ONLY")});
+
+        GraphicOptionsDialogGUI graphicOptionsDialogGUI = new GraphicOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+        graphicOptionsDialogGUI.setVisible(true);
+
+    }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
+
     private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
@@ -1469,6 +1502,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JMenuBar mathToolMenuBar;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAbout;
+    private javax.swing.JMenuItem menuItemGraphicOptions;
     private javax.swing.JMenuItem menuItemHelp;
     private javax.swing.JMenuItem menuItemLanguageEnglish;
     private javax.swing.JMenuItem menuItemLanguageGerman;
