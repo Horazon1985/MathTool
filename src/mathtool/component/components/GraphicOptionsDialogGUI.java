@@ -15,7 +15,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE",
-                "OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+                "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         this.graphicPanel3D = MathToolGUI.getGraphicPanel3D();
         loadOptions();
     }

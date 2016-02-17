@@ -29,7 +29,7 @@ public class DevelopersDialogGUI extends JDialog {
         // Logo laden
         JPanel panel = new JPanel();
         add(panel);
-        panel.add(new JLabel(new ImageIcon(getClass().getResource("MathToolLogo.png"))));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/MathToolLogo.png"))));
         panel.setBounds(0, -5, 500, 150);
         panel.setVisible(true);
 

@@ -11,7 +11,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
-                "GUI_HelpDialogGUI_HELP", "HelpLogo.png",
+                "GUI_HelpDialogGUI_HELP", "icons/HelpLogo.png",
                 null, null, null, menuCaptions, fileNames);
 
     }

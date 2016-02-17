@@ -11,7 +11,7 @@ public class LegendGUI extends MathToolInfoComponentTemplate {
         
         super(mathtoolformX, mathtoolformY,
                 mathtoolformWidth, mathtoolformHeight,
-                "GUI_LegendGUI_LEGEND", "LegendLogo.png",
+                "GUI_LegendGUI_LEGEND", "icons/LegendLogo.png",
                 instructions, exprs, colors, null, null);        
                         
     }
