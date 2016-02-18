@@ -422,6 +422,9 @@ public class MathToolController {
         if (commandName.equals("plotpolar")) {
             return 2;
         }
+        if (commandName.equals("plotcylindrical")) {
+            return 6;
+        }
         if (commandName.equals("solvedeq")) {
             return 5;
         }
@@ -481,7 +484,7 @@ public class MathToolController {
             return TypeGraphic.GRAPH2D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
-            return TypeGraphic.GRAPHIMPLICIT;
+            return TypeGraphic.GRAPHIMPLICIT2D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
             return TypeGraphic.GRAPH3D;

@@ -48,6 +48,7 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
 import computationbounds.ComputationBounds;
+import graphic.GraphicPanelCylindrical3D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import notations.NotationLoader;
@@ -62,6 +63,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelCurves2D graphicPanelCurves2D;
     private static GraphicPanelCurves3D graphicPanelCurves3D;
     private static GraphicPanelPolar2D graphicPanelPolar2D;
+    private static GraphicPanelCylindrical3D graphicPanelCylindrical3D;
 
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
@@ -149,6 +151,10 @@ public abstract class MathCommandCompiler {
 
     public static void setGraphicPanelPolar2D(GraphicPanelPolar2D gPPolar2D) {
         graphicPanelPolar2D = gPPolar2D;
+    }
+
+    public static void setGraphicPanelCylindrical3D(GraphicPanelCylindrical3D gPCylindrical2D) {
+        graphicPanelCylindrical3D = gPCylindrical2D;
     }
 
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
@@ -281,6 +287,8 @@ public abstract class MathCommandCompiler {
                 return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve3D);
             case "plotpolar":
                 return getCommandPlotPolar(params);
+            case "plotcylindrical":
+                return getCommandPlotCylindrical(params);
             case "regressionline":
                 return OperationParser.parseDefaultCommand(command, params, Command.patternRegressionLine);
             case "solve":
@@ -700,8 +708,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        return new Command(TypeCommand.plot3d, commandParams);
-//        return new Command(TypeCommand.plotcylindrical, commandParams);
+        return new Command(TypeCommand.plotcylindrical, commandParams);
 
     }
 
@@ -2430,6 +2437,46 @@ public abstract class MathCommandCompiler {
         graphicPanelPolar2D.computeScreenSizes(phi_0, phi_1);
         graphicPanelPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
         graphicPanelPolar2D.drawPolarGraph2D();
+
+    }
+
+    @Execute(type = TypeCommand.plotcylindrical)
+    private static void executePlotCylindrical(Command command) throws EvaluationException {
+
+        if (graphicPanel3D == null || mathToolGraphicArea == null) {
+            return;
+        }
+
+        ArrayList<Expression> exprs = new ArrayList<>();
+
+        Expression expr, exprSimplified;
+        for (int i = 0; i < command.getParams().length - 6; i++) {
+
+            expr = (Expression) command.getParams()[i];
+            exprSimplified = expr.simplify(simplifyTypesPlot);
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprSimplified.containsOperator()) {
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + exprs.get(i).writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        exprs.get(i), Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+            }
+            exprs.add(exprSimplified);
+
+        }
+
+        Expression r_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
+        Expression r_1 = ((Expression) command.getParams()[command.getParams().length - 3]).simplify(simplifyTypesPlot);
+        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
+
+        // Graphen zeichnen.
+        graphicPanelCylindrical3D.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
+        graphicPanelCylindrical3D.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
 
     }
 

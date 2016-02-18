@@ -44,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import graphic.GraphicPanelCylindrical3D;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
@@ -74,6 +75,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelCurves3D graphicPanelCurves3D;
     private static GraphicPanelImplicit2D graphicPanelImplicit2D;
     private static GraphicPanelPolar2D graphicPanelPolar2D;
+    private static GraphicPanelCylindrical3D graphicPanelCylindrical3D;
 
     private final JPanel[] graphicPanels;
     private final JComponent[] buttonsAndDropDowns;
@@ -216,8 +218,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelCurves3D = new GraphicPanelCurves3D();
         add(graphicPanelCurves3D);
 
+        graphicPanelCylindrical3D = new GraphicPanelCylindrical3D();
+        add(graphicPanelCylindrical3D);
+
         // Alle Grafikpanels unsichtbar machen.
-        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D, graphicPanelPolar2D};
+        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D, 
+            graphicPanelPolar2D, graphicPanelCylindrical3D};
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
         // Alle Buttons und Dropdowns ausrichten.
@@ -235,6 +241,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelCurves3D(graphicPanelCurves3D);
         MathCommandCompiler.setGraphicPanelImplicit2D(graphicPanelImplicit2D);
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar2D);
+        MathCommandCompiler.setGraphicPanelCylindrical3D(graphicPanelCylindrical3D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -469,6 +476,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             graphicPanelPolar2D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)) {
+            graphicPanelCylindrical3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
@@ -1332,7 +1343,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel2D.getColors(), exprs);
                     break;
-                case GRAPHIMPLICIT: {
+                case GRAPHIMPLICIT2D: {
                     instructions.addAll(graphicPanelImplicit2D.getInstructions());
                     exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
                             + graphicPanelImplicit2D.getExpressions().get(0).writeExpression()
@@ -1385,6 +1396,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelPolar2D.getColors(), exprs);
                     break;
+                case GRAPHCYLINDRCAL3D:
+                    instructions.addAll(GraphicPanelCylindrical3D.getInstructions());
+                    for (int i = 0; i < graphicPanelCylindrical3D.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelCylindrical3D.getExpressions().get(i).writeExpression());
+                    }
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanelCylindrical3D.getColors(), exprs);
+                    break;
                 default:
                     break;
             }
@@ -1394,7 +1413,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
             } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanel3D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT)) {
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT2D)) {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
             } else if (typeGraphic.equals(TypeGraphic.CURVE2D)) {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
@@ -1402,6 +1421,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves3D);
             } else if (typeGraphic.equals(TypeGraphic.POLARGRAPH2D)) {
                 saveDialog = new MathToolSaveGraphicDialog(graphicPanelPolar2D);
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHCYLINDRCAL3D)) {
+                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCylindrical3D);
             }
 
         } else if (e.getSource() == rotateLabel) {
