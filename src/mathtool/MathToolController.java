@@ -490,13 +490,13 @@ public class MathToolController {
             return TypeGraphic.GRAPH3D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plotcurve2d)) {
-            return TypeGraphic.CURVE2D;
+            return TypeGraphic.GRAPHCURVE2D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plotcurve3d)) {
-            return TypeGraphic.CURVE3D;
+            return TypeGraphic.GRAPHCURVE3D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
-            return TypeGraphic.POLARGRAPH2D;
+            return TypeGraphic.GRAPHPOLAR;
         }
         if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
@@ -657,7 +657,7 @@ public class MathToolController {
 
         if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.GRAPH3D)) {
             graphicPanel3D.setIsRotating(false);
-        } else if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.CURVE3D)) {
+        } else if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.GRAPHCURVE3D)) {
             graphicPanelCurves3D.setIsRotating(false);
         }
         rotateThread.interrupt();

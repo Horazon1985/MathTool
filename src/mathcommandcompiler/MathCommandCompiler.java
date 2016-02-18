@@ -25,7 +25,7 @@ import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelImplicit2D;
-import graphic.GraphicPanelPolar2D;
+import graphic.GraphicPanelPolar;
 import graphic.MultiIndexVariable;
 import graphic.TypeBracket;
 import java.awt.Dimension;
@@ -48,7 +48,7 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
 import computationbounds.ComputationBounds;
-import graphic.GraphicPanelCylindrical3D;
+import graphic.GraphicPanelCylindrical;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import notations.NotationLoader;
@@ -62,8 +62,8 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelImplicit2D graphicPanelImplicit2D;
     private static GraphicPanelCurves2D graphicPanelCurves2D;
     private static GraphicPanelCurves3D graphicPanelCurves3D;
-    private static GraphicPanelPolar2D graphicPanelPolar2D;
-    private static GraphicPanelCylindrical3D graphicPanelCylindrical3D;
+    private static GraphicPanelPolar graphicPanelPolar2D;
+    private static GraphicPanelCylindrical graphicPanelCylindrical3D;
 
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
@@ -149,11 +149,11 @@ public abstract class MathCommandCompiler {
         graphicPanelCurves3D = gPCurves3D;
     }
 
-    public static void setGraphicPanelPolar2D(GraphicPanelPolar2D gPPolar2D) {
+    public static void setGraphicPanelPolar2D(GraphicPanelPolar gPPolar2D) {
         graphicPanelPolar2D = gPPolar2D;
     }
 
-    public static void setGraphicPanelCylindrical3D(GraphicPanelCylindrical3D gPCylindrical2D) {
+    public static void setGraphicPanelCylindrical3D(GraphicPanelCylindrical gPCylindrical2D) {
         graphicPanelCylindrical3D = gPCylindrical2D;
     }
 
