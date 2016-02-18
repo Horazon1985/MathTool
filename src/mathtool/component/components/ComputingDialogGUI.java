@@ -31,7 +31,7 @@ public class ComputingDialogGUI extends JDialog {
         add(owlPanel);
         ImageIcon icon;
         try {
-            icon = new ImageIcon(getClass().getResource("LogoOwlEyesOpen.png"));
+            icon = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
         } catch (Exception e) {
             icon = null;
         }

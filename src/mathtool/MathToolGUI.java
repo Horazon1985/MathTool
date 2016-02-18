@@ -56,7 +56,7 @@ import mathtool.component.components.GraphicOptionsDialogGUI;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
-    public static final Color backgroundColor = new Color(255, 150, 0);
+    public static final Color BACKGROUND_COLOR = new Color(255, 150, 0);
 
     private final JLabel legendLabel;
     private final JLabel saveLabel;
@@ -68,12 +68,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private ComputingDialogGUI computingDialog;
     private final MathToolTextField mathToolTextField;
 
-    private final GraphicPanel2D graphicPanel2D;
+    private static GraphicPanel2D graphicPanel2D;
     private static GraphicPanel3D graphicPanel3D;
-    private final GraphicPanelCurves2D graphicPanelCurves2D;
-    private final GraphicPanelCurves3D graphicPanelCurves3D;
-    private final GraphicPanelImplicit2D graphicPanelImplicit2D;
-    private final GraphicPanelPolar2D graphicPanelPolar2D;
+    private static GraphicPanelCurves2D graphicPanelCurves2D;
+    private static GraphicPanelCurves3D graphicPanelCurves3D;
+    private static GraphicPanelImplicit2D graphicPanelImplicit2D;
+    private static GraphicPanelPolar2D graphicPanelPolar2D;
 
     private final JPanel[] graphicPanels;
     private final JComponent[] buttonsAndDropDowns;
@@ -850,7 +850,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         // Hinzufügen zum graphischen Ausgabefeld.
                         mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
-                        MathCommandCompiler.executeCommand2(input);
+                        MathCommandCompiler.executeCommand(input);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         mathToolTextField.setText("");
@@ -1174,7 +1174,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         try {
-            MathCommandCompiler.executeCommand2("clear()");
+            MathCommandCompiler.executeCommand("clear()");
         } catch (ExpressionException | EvaluationException e) {
             mathToolTextArea.append(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("MTF_UNEXPECTED_EXCEPTION") + e.getMessage());
@@ -1272,11 +1272,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // DropDowns.
         ArrayList<String[]> dropDownOptions = new ArrayList<>();
-        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION"),
-            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT"),
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT"),
             Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK")});
-        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION"),
-            Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
+        dropDownOptions.add(new String[]{Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
             Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY")});
 
         GraphicOptionsDialogGUI graphicOptionsDialogGUI = new GraphicOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
@@ -1494,7 +1492,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 mathToolForm.setVisible(true);
                 mathToolForm.setBounds(50, 50, 1300, 670);
                 mathToolForm.setExtendedState(MAXIMIZED_BOTH);
-                mathToolForm.getContentPane().setBackground(backgroundColor);
+                mathToolForm.getContentPane().setBackground(BACKGROUND_COLOR);
             }
         });
     }

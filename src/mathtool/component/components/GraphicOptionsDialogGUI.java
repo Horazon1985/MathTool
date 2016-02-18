@@ -9,7 +9,7 @@ import mathtool.component.templates.MathToolOptionComponentTemplate;
 
 public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTemplate {
     
-    private final GraphicPanel3D graphicPanel3D;
+    private GraphicPanel3D graphicPanel3D;
     
     public GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
@@ -90,5 +90,5 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
         }
         return "";
     }
-    
+
 }
