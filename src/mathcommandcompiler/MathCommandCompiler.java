@@ -636,6 +636,144 @@ public abstract class MathCommandCompiler {
 
     }
 
+    private static Command getCommandPlotCylindrical(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotcylindrical(F_1(var_1, var_2), ..., F_n(var_1, var_2), var_1, var_2, value_1, value_2, value_3,
+         value_4) F_i: Ausdruck in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length < 7) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTCYLINDRICAL"));
+        }
+
+        Object[] commandParams = new Object[params.length];
+        HashSet<String> vars = new HashSet<>();
+
+        for (int i = 0; i < params.length - 6; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL_2")
+                        + e.getMessage());
+            }
+        }
+
+        if (vars.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL_1")
+                    + String.valueOf(vars.size())
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL_2"));
+        }
+
+        HashSet<String> varsInParams = new HashSet<>();
+        for (int i = params.length - 6; i < params.length - 4; i++) {
+            if (!Expression.isValidDerivateOfVariable(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+            }
+            if (varsInParams.contains(params[i])){
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTCYLINDRICAL"));
+            }
+            varsInParams.add(params[i]);
+            commandParams[i] = params[i];
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = params.length - 4; i < params.length; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+            }
+        }
+
+        return new Command(TypeCommand.plot3d, commandParams);
+//        return new Command(TypeCommand.plotcylindrical, commandParams);
+
+    }
+
+    private static Command getCommandPlotSpherical(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotspherical(F_1(var_1, var_2), ..., F_n(var_1, var_2), var_1, var_2, value_1, value_2, value_3,
+         value_4) F_i: Ausdruck in höchstens zwei Variablen. value_1 <
+         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
+         Variablen werden dabei alphabetisch geordnet.
+         */
+        if (params.length < 7) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTSPHERICAL"));
+        }
+
+        Object[] commandParams = new Object[params.length];
+        HashSet<String> vars = new HashSet<>();
+
+        for (int i = 0; i < params.length - 6; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(vars);
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL_2")
+                        + e.getMessage());
+            }
+        }
+
+        if (vars.size() > 2) {
+            throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL_1")
+                    + String.valueOf(vars.size())
+                    + Translator.translateExceptionMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL_2"));
+        }
+
+        HashSet<String> varsInParams = new HashSet<>();
+        for (int i = params.length - 6; i < params.length - 4; i++) {
+            if (!Expression.isValidDerivateOfVariable(params[i])) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_2"));
+            }
+            if (varsInParams.contains(params[i])){
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTSPHERICAL"));
+            }
+            varsInParams.add(params[i]);
+            commandParams[i] = params[i];
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = params.length - 4; i < params.length; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_1")
+                            + (i + 1)
+                            + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_2"));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_1")
+                        + (i + 1)
+                        + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_2"));
+            }
+        }
+
+        return new Command(TypeCommand.plot3d, commandParams);
+//        return new Command(TypeCommand.plotspherical, commandParams);
+
+    }
+
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
         /*
@@ -1085,10 +1223,10 @@ public abstract class MathCommandCompiler {
                     method.invoke(null, command);
                     break;
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    if (e.getCause() instanceof EvaluationException){
+                    if (e.getCause() instanceof EvaluationException) {
                         // Methoden können nur EvaluationExceptions werfen.
                         throw (EvaluationException) e.getCause();
-                    } 
+                    }
                     throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
                 }
             }
@@ -1275,7 +1413,7 @@ public abstract class MathCommandCompiler {
 
         // Alle selbstdefinierten Funktionen nacheinander ausgeben.
         if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().isEmpty()) {
-            
+
             // Textliche Ausgabe
             output.add(Translator.translateExceptionMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
             // Grafische Ausgabe
@@ -1297,7 +1435,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(f, " = ", f.getAbstractExpression());
 
             }
-            
+
         } else {
 
             // Textliche Ausgabe
@@ -3218,14 +3356,14 @@ public abstract class MathCommandCompiler {
         HashMap<String, Expression> abstractExpressions = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions();
         HashMap<String, Expression[]> innerExpressions = SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions();
         HashMap<String, String[]> arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions();
-        
+
         /*
          Einfach nur keySet() zu benutzen würde beim Iterieren zu NullPointerExceptions 
          führen. Daher besser ein neues HashSet mit den Funktionsnamen definieren und
          erst DANN zu iterieren.
-        */
+         */
         HashSet<String> functionNames = new HashSet<>(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet());
-        
+
         for (String f : functionNames) {
             abstractExpressions.remove(f);
             innerExpressions.remove(f);
