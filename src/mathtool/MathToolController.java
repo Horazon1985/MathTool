@@ -498,6 +498,9 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             return TypeGraphic.GRAPHPOLAR;
         }
+        if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)){
+            return TypeGraphic.GRAPHCYLINDRCAL;
+        }
         if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
         }

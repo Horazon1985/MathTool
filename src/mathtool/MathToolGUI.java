@@ -482,6 +482,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanelCylindrical.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
+            rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
@@ -1076,10 +1077,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 rotateThread = new Thread(graphicPanel3D, "rotateGraph");
                 isRotating = true;
                 graphicPanel3D.setIsRotating(true);
-            } else {
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE3D)) {
                 rotateThread = new Thread(graphicPanelCurves3D, "rotateGraph");
                 isRotating = true;
                 graphicPanelCurves3D.setIsRotating(true);
+            } else {
+                rotateThread = new Thread(graphicPanelCylindrical, "rotateGraph");
+                isRotating = true;
+                graphicPanelCylindrical.setIsRotating(true);
             }
             rotateThread.start();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
@@ -1087,8 +1092,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             isRotating = false;
             if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
                 graphicPanel3D.setIsRotating(false);
-            } else {
+            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE3D)) {
                 graphicPanelCurves3D.setIsRotating(false);
+            } else {
+                graphicPanelCylindrical.setIsRotating(false);
             }
             rotateThread.interrupt();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
@@ -1409,20 +1416,30 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
         } else if (e.getSource() == saveLabel) {
 
-            if (typeGraphic.equals(TypeGraphic.GRAPH2D)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanel3D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHIMPLICIT2D)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE2D)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE3D)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves3D);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHPOLAR)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanelPolar);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHCYLINDRCAL)) {
-                saveDialog = new MathToolSaveGraphicDialog(graphicPanelCylindrical);
+            switch (typeGraphic) {
+                case GRAPH2D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
+                    break;
+                case GRAPH3D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanel3D);
+                    break;
+                case GRAPHIMPLICIT2D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
+                    break;
+                case GRAPHCURVE2D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
+                    break;
+                case GRAPHCURVE3D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves3D);
+                    break;
+                case GRAPHPOLAR:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelPolar);
+                    break;
+                case GRAPHCYLINDRCAL:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelCylindrical);
+                    break;
+                default:
+                    break;
             }
 
         } else if (e.getSource() == rotateLabel) {
