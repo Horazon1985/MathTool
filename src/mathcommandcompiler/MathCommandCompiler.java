@@ -684,13 +684,22 @@ public abstract class MathCommandCompiler {
                         + (i + 1)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_2"));
             }
-            if (varsInParams.contains(params[i])){
+            if (varsInParams.contains(params[i])) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTCYLINDRICAL"));
             }
             varsInParams.add(params[i]);
             commandParams[i] = params[i];
         }
 
+        // Prüfen, ob Veränderliche, die in vars auftreten, auch in varsInParams auftreten.
+        for (String var : vars) {
+            if (!varsInParams.contains(var)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL_2"));
+            }
+        }
+        
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
@@ -752,11 +761,20 @@ public abstract class MathCommandCompiler {
                         + (i + 1)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_2"));
             }
-            if (varsInParams.contains(params[i])){
+            if (varsInParams.contains(params[i])) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTSPHERICAL"));
             }
             varsInParams.add(params[i]);
             commandParams[i] = params[i];
+        }
+
+        // Prüfen, ob Veränderliche, die in vars auftreten, auch in varsInParams auftreten.
+        for (String var : vars) {
+            if (!varsInParams.contains(var)) {
+                throw new ExpressionException(Translator.translateExceptionMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTCYLINDRICAL_1")
+                        + var
+                        + Translator.translateExceptionMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTCYLINDRICAL_2"));
+            }
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
