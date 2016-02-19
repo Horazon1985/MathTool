@@ -679,7 +679,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i])) {
+            if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_1")
                         + (i + 1)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_2"));
@@ -756,7 +756,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i])) {
+            if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_1")
                         + (i + 1)
                         + Translator.translateExceptionMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_2"));
