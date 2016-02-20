@@ -404,6 +404,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
     
     /**
+     * Getter für graphicPanelCylindrical
+     */
+    public static GraphicPanelCylindrical getGraphicPanelCylindrical(){
+        return graphicPanelCylindrical;
+    }
+    
+    /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
     private void updateAPI() {
