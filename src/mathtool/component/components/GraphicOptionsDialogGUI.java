@@ -2,6 +2,7 @@ package mathtool.component.components;
 
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelSpherical;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import lang.translator.Translator;
@@ -10,8 +11,9 @@ import mathtool.component.templates.MathToolOptionComponentTemplate;
 
 public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTemplate {
     
-    private GraphicPanel3D graphicPanel3D;
-    private GraphicPanelCylindrical graphicPanelCylindrical;
+    private final GraphicPanel3D graphicPanel3D;
+    private final GraphicPanelCylindrical graphicPanelCylindrical;
+    private final GraphicPanelSpherical graphicPanelSpherical;
     
     public GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
@@ -20,6 +22,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
                 "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         this.graphicPanel3D = MathToolGUI.getGraphicPanel3D();
         this.graphicPanelCylindrical = MathToolGUI.getGraphicPanelCylindrical();
+        this.graphicPanelSpherical = MathToolGUI.getGraphicPanelSpherical();
         loadOptions();
     }
     
@@ -62,18 +65,22 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
         if (comboBoxBackgroundColor.getItemAt(comboBoxBackgroundColor.getSelectedIndex()).equals(Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT"))) {
             this.graphicPanel3D.setBackgroundColorMode(GraphicPanel3D.BackgroundColorMode.BRIGHT);
             this.graphicPanelCylindrical.setBackgroundColorMode(GraphicPanelCylindrical.BackgroundColorMode.BRIGHT);
+            this.graphicPanelSpherical.setBackgroundColorMode(GraphicPanelSpherical.BackgroundColorMode.BRIGHT);
         } else if (comboBoxBackgroundColor.getItemAt(comboBoxBackgroundColor.getSelectedIndex()).equals(Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK"))) {
             this.graphicPanel3D.setBackgroundColorMode(GraphicPanel3D.BackgroundColorMode.DARK);
             this.graphicPanelCylindrical.setBackgroundColorMode(GraphicPanelCylindrical.BackgroundColorMode.DARK);
+            this.graphicPanelSpherical.setBackgroundColorMode(GraphicPanelSpherical.BackgroundColorMode.DARK);
         }
 
         // Rastermodus wählen.
         if (comboBoxPresentationMode.getItemAt(comboBoxPresentationMode.getSelectedIndex()).equals(Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"))) {
             this.graphicPanel3D.setPresentationMode(GraphicPanel3D.PresentationMode.WHOLE_GRAPH);
             this.graphicPanelCylindrical.setPresentationMode(GraphicPanelCylindrical.PresentationMode.WHOLE_GRAPH);
+            this.graphicPanelSpherical.setPresentationMode(GraphicPanelSpherical.PresentationMode.WHOLE_GRAPH);
         } else if (comboBoxPresentationMode.getItemAt(comboBoxPresentationMode.getSelectedIndex()).equals(Translator.translateExceptionMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY"))) {
             this.graphicPanel3D.setPresentationMode(GraphicPanel3D.PresentationMode.GRID_ONLY);
             this.graphicPanelCylindrical.setPresentationMode(GraphicPanelCylindrical.PresentationMode.GRID_ONLY);
+            this.graphicPanelSpherical.setPresentationMode(GraphicPanelSpherical.PresentationMode.GRID_ONLY);
         }
         
     }

@@ -45,6 +45,7 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelSpherical;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
@@ -76,6 +77,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelImplicit2D graphicPanelImplicit2D;
     private static GraphicPanelPolar graphicPanelPolar;
     private static GraphicPanelCylindrical graphicPanelCylindrical;
+    private static GraphicPanelSpherical graphicPanelSpherical;
 
     private final JPanel[] graphicPanels;
     private final JComponent[] buttonsAndDropDowns;
@@ -221,9 +223,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelCylindrical = new GraphicPanelCylindrical();
         add(graphicPanelCylindrical);
 
+        graphicPanelSpherical = new GraphicPanelSpherical();
+        add(graphicPanelSpherical);
+
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D, 
-            graphicPanelPolar, graphicPanelCylindrical};
+            graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical};
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
         // Alle Buttons und Dropdowns ausrichten.
@@ -241,7 +246,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelCurves3D(graphicPanelCurves3D);
         MathCommandCompiler.setGraphicPanelImplicit2D(graphicPanelImplicit2D);
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar);
-        MathCommandCompiler.setGraphicPanelCylindrical3D(graphicPanelCylindrical);
+        MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
+        MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -411,6 +417,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
     
     /**
+     * Getter für graphicPanelSpherical
+     */
+    public static GraphicPanelSpherical getGraphicPanelSpherical(){
+        return graphicPanelSpherical;
+    }
+    
+    /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
     private void updateAPI() {
@@ -487,6 +500,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)) {
             graphicPanelCylindrical.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+            rotateLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotspherical)) {
+            graphicPanelSpherical.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
@@ -1091,10 +1109,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     isRotating = true;
                     graphicPanelCurves3D.setIsRotating(true);
                     break;
-                default:
+                case GRAPHCYLINDRCAL:
                     rotateThread = new Thread(graphicPanelCylindrical, "rotateGraphCylindrical");
                     isRotating = true;
                     graphicPanelCylindrical.setIsRotating(true);
+                    break;
+                default:
+                    rotateThread = new Thread(graphicPanelSpherical, "rotateGraphSpherical");
+                    isRotating = true;
+                    graphicPanelSpherical.setIsRotating(true);
                     break;
             }
             rotateThread.start();
@@ -1108,8 +1131,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHCURVE3D:
                     graphicPanelCurves3D.setIsRotating(false);
                     break;
-                default:
+                case GRAPHCYLINDRCAL:
                     graphicPanelCylindrical.setIsRotating(false);
+                    break;
+                default:
+                    graphicPanelSpherical.setIsRotating(false);
                     break;
             }
             rotateThread.interrupt();
@@ -1426,6 +1452,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelCylindrical.getColors(), exprs);
                     break;
+                case GRAPHSPHERICAL:
+                    instructions.addAll(GraphicPanelSpherical.getInstructions());
+                    for (int i = 0; i < graphicPanelSpherical.getExpressions().size(); i++) {
+                        exprs.add(Translator.translateExceptionMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).writeExpression());
+                    }
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanelSpherical.getColors(), exprs);
+                    break;
                 default:
                     break;
             }
@@ -1452,6 +1486,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case GRAPHCYLINDRCAL:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelCylindrical);
+                    break;
+                case GRAPHSPHERICAL:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelSpherical);
                     break;
                 default:
                     break;

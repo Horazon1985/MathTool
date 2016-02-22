@@ -410,28 +410,28 @@ public class MathToolController {
     public static int getNumberOfCommasForCommands(String commandName) {
 
         // Sonderfälle
-        if (commandName.equals("plot2d")) {
+        if (commandName.equals(TypeCommand.plot2d.name())) {
             return 2;
         }
-        if (commandName.equals("plot3d")) {
+        if (commandName.equals(TypeCommand.plot3d.name())) {
             return 4;
         }
-        if (commandName.equals("plotcurve")) {
+        if (commandName.equals(TypeCommand.plotcurve2d.name()) || commandName.equals(TypeCommand.plotcurve3d.name())) {
             return 2;
         }
-        if (commandName.equals("plotpolar")) {
+        if (commandName.equals(TypeCommand.plotpolar.name())) {
             return 2;
         }
-        if (commandName.equals("plotcylindrical")) {
+        if (commandName.equals(TypeCommand.plotcylindrical.name()) || commandName.equals(TypeCommand.plotspherical.name())) {
             return 6;
         }
-        if (commandName.equals("solvedeq")) {
+        if (commandName.equals(TypeCommand.solvedeq.name())) {
             return 5;
         }
-        if (commandName.equals("tangent")) {
+        if (commandName.equals(TypeCommand.tangent.name())) {
             return 1;
         }
-        if (commandName.equals("taylordeq")) {
+        if (commandName.equals(TypeCommand.taylordeq.name())) {
             return 5;
         }
 

@@ -49,6 +49,7 @@ import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveMethods;
 import computationbounds.ComputationBounds;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelSpherical;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import notations.NotationLoader;
@@ -63,7 +64,8 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelCurves2D graphicPanelCurves2D;
     private static GraphicPanelCurves3D graphicPanelCurves3D;
     private static GraphicPanelPolar graphicPanelPolar2D;
-    private static GraphicPanelCylindrical graphicPanelCylindrical3D;
+    private static GraphicPanelCylindrical graphicPanelCylindrical;
+    private static GraphicPanelSpherical graphicPanelSpherical;
 
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
@@ -153,8 +155,12 @@ public abstract class MathCommandCompiler {
         graphicPanelPolar2D = gPPolar2D;
     }
 
-    public static void setGraphicPanelCylindrical3D(GraphicPanelCylindrical gPCylindrical2D) {
-        graphicPanelCylindrical3D = gPCylindrical2D;
+    public static void setGraphicPanelCylindrical(GraphicPanelCylindrical gPCylindrical) {
+        graphicPanelCylindrical = gPCylindrical;
+    }
+
+    public static void setGraphicPanelSpherical(GraphicPanelSpherical gPSpherical) {
+        graphicPanelSpherical = gPSpherical;
     }
 
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
@@ -225,103 +231,105 @@ public abstract class MathCommandCompiler {
      *
      * @throws ExpressionException, EvaluationException
      */
-    public static Command getCommand(String command, String[] params) throws ExpressionException {
+    public static Command getCommand(String commandName, String[] params) throws ExpressionException {
 
-        switch (command) {
+        switch (commandName) {
             case "approx":
                 try {
-                    return OperationParser.parseDefaultCommand(command, params, "approx(expr)");
+                    return OperationParser.parseDefaultCommand(commandName, params, "approx(expr)");
                 } catch (ExpressionException e) {
                     try {
-                        return OperationParser.parseDefaultCommand(command, params, "approx(matexpr)");
+                        return OperationParser.parseDefaultCommand(commandName, params, "approx(matexpr)");
                     } catch (ExpressionException ex) {
                         throw new ExpressionException(Translator.translateExceptionMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
                     }
                 }
             case "ccnf":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternCCNF);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternCCNF);
             case "cdnf":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternCDNF);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternCDNF);
             case "clear":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternClear);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternClear);
             case "def":
                 return getCommandDef(params);
             case "deffuncs":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternDefFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternDefFuncs);
             case "defvars":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternDefVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternDefVars);
             case "eigenvalues":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternEigenvalues);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEigenvalues);
             case "eigenvectors":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternEigenvectors);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEigenvectors);
             case "euler":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternEuler);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEuler);
             case "expand":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternExpand);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternExpand);
             case "extrema":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaOneVar);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaOneVar);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaWithParameter);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaWithParameter);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaApprox);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaApprox);
                 }
-                return OperationParser.parseDefaultCommand(command, params, Command.patternExtremaApproxWithNumberOfIntervals);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaApproxWithNumberOfIntervals);
             case "ker":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternKer);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternKer);
             case "latex":
                 return getCommandLatex(params);
             case "pi":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternPi);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPi);
             case "plot2d":
                 return getCommandPlot2D(params);
             case "plotimplicit":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotImplicit);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotImplicit);
             case "plot3d":
                 return getCommandPlot3D(params);
             case "plotcurve2d":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve2D);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotCurve2D);
             case "plotcurve3d":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternPlotCurve3D);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotCurve3D);
             case "plotpolar":
                 return getCommandPlotPolar(params);
             case "plotcylindrical":
                 return getCommandPlotCylindrical(params);
+            case "plotspherical":
+                return getCommandPlotSpherical(params);
             case "regressionline":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternRegressionLine);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternRegressionLine);
             case "solve":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternSolveOneVar);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveOneVar);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternSolveWithParameter);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveWithParameter);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(command, params, Command.patternSolveApprox);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveApprox);
                 }
-                return OperationParser.parseDefaultCommand(command, params, Command.patternSolveApproxWithNumberOfIntervals);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveApproxWithNumberOfIntervals);
             case "solvedeq":
                 return getCommandSolveDEQ(params);
             case "solvesystem":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternSolveSystem);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveSystem);
             case "table":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternTable);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternTable);
             case "tangent":
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
             case "undeffuncs":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefFuncs);
             case "undefvars":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefVars);
             case "undefallfuncs":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAllFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAllFuncs);
             case "undefallvars":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAllVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAllVars);
             case "undefall":
-                return OperationParser.parseDefaultCommand(command, params, Command.patternUndefAll);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAll);
             // Sollte theoretisch nie vorkommen.
             default:
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
@@ -794,8 +802,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        return new Command(TypeCommand.plot3d, commandParams);
-//        return new Command(TypeCommand.plotspherical, commandParams);
+        return new Command(TypeCommand.plotspherical, commandParams);
 
     }
 
@@ -2584,7 +2591,7 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.plotcylindrical)
     private static void executePlotCylindrical(Command command) throws EvaluationException {
 
-        if (graphicPanel3D == null || mathToolGraphicArea == null) {
+        if (graphicPanelCylindrical == null || mathToolGraphicArea == null) {
             return;
         }
 
@@ -2659,8 +2666,91 @@ public abstract class MathCommandCompiler {
         }
 
         // Graphen zeichnen.
-        graphicPanelCylindrical3D.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
-        graphicPanelCylindrical3D.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
+        graphicPanelCylindrical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
+        graphicPanelCylindrical.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
+
+    }
+
+    @Execute(type = TypeCommand.plotspherical)
+    private static void executePlotSpherical(Command command) throws EvaluationException {
+
+        if (graphicPanelSpherical == null || mathToolGraphicArea == null) {
+            return;
+        }
+
+        ArrayList<Expression> exprs = new ArrayList<>();
+
+        Expression expr, exprSimplified;
+        for (int i = 0; i < command.getParams().length - 6; i++) {
+
+            expr = (Expression) command.getParams()[i];
+            exprSimplified = expr.simplify(simplifyTypesPlot);
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprSimplified.containsOperator()) {
+                // Texttliche Ausgabe
+                output.add(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1")
+                        + expr.writeExpression() + Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Graphische Ausgabe
+                mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+            } else {
+                exprs.add(exprSimplified);
+            }
+
+        }
+        if (exprs.isEmpty()) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+
+        Expression r_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
+        Expression r_1 = ((Expression) command.getParams()[command.getParams().length - 3]).simplify(simplifyTypesPlot);
+        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        double minR, maxR, minPhi, maxPhi;
+
+        try {
+            minR = r_0.evaluate();
+            maxR = r_1.evaluate();
+            minPhi = phi_0.evaluate();
+            maxPhi = phi_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+
+        if (minR < 0) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_1")
+                    + (exprs.size() + 3)
+                    + Translator.translateExceptionMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_2"));
+        }
+        if (minR >= maxR) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
+                    + (exprs.size() + 3)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 4)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+        }
+        if (minPhi >= maxPhi) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
+                    + (exprs.size() + 5)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 6)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+        }
+        if (maxPhi - minPhi > 20 * Math.PI) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
+                    + (exprs.size() + 5)
+                    + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 6)
+                    + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
+        }
+
+        // Graphen zeichnen.
+        graphicPanelSpherical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
+        graphicPanelSpherical.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
 
     }
 
