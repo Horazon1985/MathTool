@@ -46,7 +46,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
         setTitle(Translator.translateExceptionMessage(titleID));
         setLayout(null);
         setResizable(false);
-        setModal(true);
+        setAlwaysOnTop(true);
         this.getContentPane().setBackground(Color.white);
 
         int currentComponentLevel;

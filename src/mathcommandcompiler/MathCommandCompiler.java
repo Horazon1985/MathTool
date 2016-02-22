@@ -699,7 +699,7 @@ public abstract class MathCommandCompiler {
                         + Translator.translateExceptionMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL_2"));
             }
         }
-        
+
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
@@ -1851,6 +1851,19 @@ public abstract class MathCommandCompiler {
 
         Expression x_0 = (Expression) command.getParams()[1];
         Expression x_1 = (Expression) command.getParams()[2];
+
+        // Validierung der Zeichenbereichsgrenzen
+        double xStart = x_0.evaluate();
+        double xEnd = x_1.evaluate();
+
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_EXTREMA_1")
+                    + 2
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_EXTREMA_2")
+                    + 3
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_EXTREMA_3"));
+        }
+
         /*
          Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
          das Intervall in 10000 Teile unterteilt werden.
@@ -2114,6 +2127,19 @@ public abstract class MathCommandCompiler {
         Iterator iter = vars.iterator();
         String var = (String) iter.next();
 
+        // Validierung der Zeichenbereichsgrenzen.
+        double xStart = x_0.evaluate();
+        double xEnd = x_1.evaluate();
+
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+                    + (exprs.size() + 1)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                    + (exprs.size() + 2)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+        }
+
+        // Graphen zeichnen.
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.setSpecialPoints(false);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
@@ -2235,6 +2261,27 @@ public abstract class MathCommandCompiler {
         Expression y_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
         Expression y_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
+        // Validierung der Zeichenbereichsgrenzen
+        double xStart = x_0.evaluate();
+        double xEnd = x_1.evaluate();
+        double yStart = y_0.evaluate();
+        double yEnd = y_1.evaluate();
+
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+                    + (exprs.size() + 1)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                    + (exprs.size() + 2)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+        }
+        if (yStart >= yEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+                    + (exprs.size() + 3)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                    + (exprs.size() + 4)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+        }
+        
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
@@ -2505,17 +2552,17 @@ public abstract class MathCommandCompiler {
         }
         if (minR >= maxR) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-            + (exprs.size() + 3)
-            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-            + (exprs.size() + 4)
-            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+                    + (exprs.size() + 3)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 4)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
         }
         if (minPhi >= maxPhi) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-            + (exprs.size() + 5)
-            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-            + (exprs.size() + 6)
-            + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+                    + (exprs.size() + 5)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 6)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
         }
         if (maxPhi - minPhi > 20 * Math.PI) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
@@ -2524,7 +2571,7 @@ public abstract class MathCommandCompiler {
                     + (exprs.size() + 6)
                     + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
         }
-        
+
         // Graphen zeichnen.
         graphicPanelCylindrical3D.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
         graphicPanelCylindrical3D.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
@@ -2584,6 +2631,19 @@ public abstract class MathCommandCompiler {
             Expression x_1 = StatisticMethods.getMaximum(pts, 0);
             Expression y_0 = StatisticMethods.getMinimum(pts, 1);
             Expression y_1 = StatisticMethods.getMaximum(pts, 1);
+
+            // Validierung der Zeichenbereichsgrenzen.
+            double varAbscStart = x_0.evaluate();
+            double varAbscEnd = x_1.evaluate();
+            double varOrdStart = y_0.evaluate();
+            double varOrdEnd = y_1.evaluate();
+            
+            if (varAbscStart >= varAbscEnd) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_REGRESSIONLINE"));
+            }
+            if (varOrdStart >= varOrdEnd) {
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_REGRESSIONLINE"));
+            }
 
             ArrayList<Expression> exprs = new ArrayList<>();
             exprs.add(regressionLine);
@@ -2752,6 +2812,19 @@ public abstract class MathCommandCompiler {
 
         Expression x_0 = (Expression) command.getParams()[1];
         Expression x_1 = (Expression) command.getParams()[2];
+
+        // Validierung der Zeichenbereichsgrenzen.
+        double xStart = x_0.evaluate();
+        double xEnd = x_1.evaluate();
+
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_1")
+                    + 2
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_2")
+                    + 3
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_3"));
+        }
+
         /*
          Falls die Anzahl der Unterteilungen nicht angegeben wird, so soll
          das Intervall in 10000 Teile unterteilt werden.
