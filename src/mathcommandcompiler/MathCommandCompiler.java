@@ -2188,7 +2188,7 @@ public abstract class MathCommandCompiler {
         Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
         Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
         Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
-        
+
         // Validierung der Zeichenbereichsgrenzen
         double xStart, xEnd, yStart, yEnd;
 
@@ -2200,7 +2200,7 @@ public abstract class MathCommandCompiler {
         } catch (EvaluationException e) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
-        
+
         if (xStart >= xEnd) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_1")
                     + 2
@@ -2215,7 +2215,7 @@ public abstract class MathCommandCompiler {
                     + 5
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_3"));
         }
-        
+
         HashSet<String> vars = expr.getContainedIndeterminates();
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2558,8 +2558,14 @@ public abstract class MathCommandCompiler {
         Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen
-        double phiStart = phi_0.evaluate();
-        double phiEnd = phi_1.evaluate();
+        double phiStart, phiEnd;
+
+        try {
+            phiStart = phi_0.evaluate();
+            phiEnd = phi_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         if (phiStart >= phiEnd) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
@@ -2578,13 +2584,8 @@ public abstract class MathCommandCompiler {
         String var = (String) iter.next();
 
         // Graphen zeichnen.
-        graphicPanelPolar2D.setIsInitialized(true);
-        graphicPanelPolar2D.clearExpressionAndGraph();
-        graphicPanelPolar2D.setExpressions(exprs);
         graphicPanelPolar2D.setVar(var);
-        graphicPanelPolar2D.computeScreenSizes(phi_0, phi_1);
-        graphicPanelPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
-        graphicPanelPolar2D.drawPolarGraph2D();
+        graphicPanelPolar2D.drawGraphPolar(phi_0, phi_1, exprs);
 
     }
 
