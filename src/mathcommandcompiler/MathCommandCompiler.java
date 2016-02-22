@@ -2454,7 +2454,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.plotpolar)
-    private static void executePlotPolar2D(Command command) throws EvaluationException {
+    private static void executePlotPolar(Command command) throws EvaluationException {
 
         if (graphicPanelPolar2D == null || mathToolGraphicArea == null) {
             return;
@@ -2484,6 +2484,18 @@ public abstract class MathCommandCompiler {
         Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
         Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
+        // Validierung der Zeichenbereichsgrenzen
+        double phiStart = phi_0.evaluate();
+        double phiEnd = phi_1.evaluate();
+
+        if (phiStart >= phiEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
+                    + (exprs.length + 2)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
+                    + (exprs.length + 1)
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
+        }
+        
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
