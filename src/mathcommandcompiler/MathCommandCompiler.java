@@ -2107,13 +2107,14 @@ public abstract class MathCommandCompiler {
                 // Graphische Ausgabe
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            } else {
+                exprs.add(exprSimplified);
+                expr.addContainedIndeterminates(vars);
             }
-            exprs.add(exprSimplified);
-            expr.addContainedIndeterminates(vars);
 
         }
         if (exprs.isEmpty()) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED_PLOT2D"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
@@ -2250,10 +2251,14 @@ public abstract class MathCommandCompiler {
                         exprs.get(i), Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+            } else {
+                exprs.add(exprSimplified);
+                expr.addContainedIndeterminates(vars);
             }
-            exprs.add(exprSimplified);
-            expr.addContainedIndeterminates(vars);
 
+        }
+        if (exprs.isEmpty()) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
         Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
@@ -2281,7 +2286,7 @@ public abstract class MathCommandCompiler {
                     + (exprs.size() + 4)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
         }
-        
+
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
@@ -2461,7 +2466,7 @@ public abstract class MathCommandCompiler {
         }
 
         HashSet<String> vars = new HashSet<>();
-        Expression[] exprs = new Expression[command.getParams().length - 2];
+        ArrayList<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 2; i++) {
@@ -2476,11 +2481,16 @@ public abstract class MathCommandCompiler {
                 // Graphische Ausgabe
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            } else {
+                exprs.add(exprSimplified);
+                exprSimplified.addContainedIndeterminates(vars);
             }
-            exprs[i] = exprSimplified;
-            exprs[i].addContainedIndeterminates(vars);
 
         }
+        if (exprs.isEmpty()) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+
         Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
         Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
@@ -2490,12 +2500,12 @@ public abstract class MathCommandCompiler {
 
         if (phiStart >= phiEnd) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
-                    + (exprs.length + 2)
+                    + (exprs.size() + 2)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
-                    + (exprs.length + 1)
+                    + (exprs.size() + 1)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
         }
-        
+
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
             vars.add("x");
@@ -2507,9 +2517,7 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelPolar2D.setIsInitialized(true);
         graphicPanelPolar2D.clearExpressionAndGraph();
-        for (int i = 0; i < command.getParams().length - 2; i++) {
-            graphicPanelPolar2D.addExpression(exprs[i]);
-        }
+        graphicPanelPolar2D.setExpressions(exprs);
         graphicPanelPolar2D.setVar(var);
         graphicPanelPolar2D.computeScreenSizes(phi_0, phi_1);
         graphicPanelPolar2D.expressionToGraph(var, phi_0.evaluate(), phi_1.evaluate());
@@ -2541,9 +2549,13 @@ public abstract class MathCommandCompiler {
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+            } else {
+                exprs.add(exprSimplified);
             }
-            exprs.add(exprSimplified);
 
+        }
+        if (exprs.isEmpty()) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
         Expression r_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
@@ -2649,7 +2661,7 @@ public abstract class MathCommandCompiler {
             double varAbscEnd = x_1.evaluate();
             double varOrdStart = y_0.evaluate();
             double varOrdEnd = y_1.evaluate();
-            
+
             if (varAbscStart >= varAbscEnd) {
                 throw new EvaluationException(Translator.translateExceptionMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_REGRESSIONLINE"));
             }

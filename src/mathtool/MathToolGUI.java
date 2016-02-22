@@ -1080,29 +1080,37 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void rotateLabelClick() {
         if (!isRotating) {
-            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                rotateThread = new Thread(graphicPanel3D, "rotateGraph");
-                isRotating = true;
-                graphicPanel3D.setIsRotating(true);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE3D)) {
-                rotateThread = new Thread(graphicPanelCurves3D, "rotateGraph");
-                isRotating = true;
-                graphicPanelCurves3D.setIsRotating(true);
-            } else {
-                rotateThread = new Thread(graphicPanelCylindrical, "rotateGraph");
-                isRotating = true;
-                graphicPanelCylindrical.setIsRotating(true);
+            switch (typeGraphic) {
+                case GRAPH3D:
+                    rotateThread = new Thread(graphicPanel3D, "rotateGraph3D");
+                    isRotating = true;
+                    graphicPanel3D.setIsRotating(true);
+                    break;
+                case GRAPHCURVE3D:
+                    rotateThread = new Thread(graphicPanelCurves3D, "rotateGraphCurve3D");
+                    isRotating = true;
+                    graphicPanelCurves3D.setIsRotating(true);
+                    break;
+                default:
+                    rotateThread = new Thread(graphicPanelCylindrical, "rotateGraphCylindrical");
+                    isRotating = true;
+                    graphicPanelCylindrical.setIsRotating(true);
+                    break;
             }
             rotateThread.start();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
         } else {
             isRotating = false;
-            if (typeGraphic.equals(TypeGraphic.GRAPH3D)) {
-                graphicPanel3D.setIsRotating(false);
-            } else if (typeGraphic.equals(TypeGraphic.GRAPHCURVE3D)) {
-                graphicPanelCurves3D.setIsRotating(false);
-            } else {
-                graphicPanelCylindrical.setIsRotating(false);
+            switch (typeGraphic) {
+                case GRAPH3D:
+                    graphicPanel3D.setIsRotating(false);
+                    break;
+                case GRAPHCURVE3D:
+                    graphicPanelCurves3D.setIsRotating(false);
+                    break;
+                default:
+                    graphicPanelCylindrical.setIsRotating(false);
+                    break;
             }
             rotateThread.interrupt();
             rotateLabel.setText("<html><b><u>" + Translator.translateExceptionMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
