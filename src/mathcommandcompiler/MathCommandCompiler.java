@@ -2129,8 +2129,14 @@ public abstract class MathCommandCompiler {
         String var = (String) iter.next();
 
         // Validierung der Zeichenbereichsgrenzen.
-        double xStart = x_0.evaluate();
-        double xEnd = x_1.evaluate();
+        double xStart, xEnd;
+
+        try {
+            xStart = x_0.evaluate();
+            xEnd = x_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         if (xStart >= xEnd) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
@@ -2148,7 +2154,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.plotimplicit)
-    private static void executePlotImplicit(Command command) throws EvaluationException {
+    private static void executePlotImplicit2D(Command command) throws EvaluationException {
 
         if (graphicPanelImplicit2D == null || mathToolGraphicArea == null) {
             return;
@@ -2167,7 +2173,7 @@ public abstract class MathCommandCompiler {
             mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                     difference, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_IMPLICIT_GRAPH_CANNOT_BE_PLOTTED"));
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
         }
 
@@ -2175,6 +2181,34 @@ public abstract class MathCommandCompiler {
         Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
         Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
         Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        
+        // Validierung der Zeichenbereichsgrenzen
+        double xStart, xEnd, yStart, yEnd;
+
+        try {
+            xStart = x_0.evaluate();
+            xEnd = x_1.evaluate();
+            yStart = y_0.evaluate();
+            yEnd = y_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+        
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_1")
+                    + 2
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_2")
+                    + 3
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_3"));
+        }
+        if (yStart >= yEnd) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_1")
+                    + 4
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_2")
+                    + 5
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_3"));
+        }
+        
         HashSet<String> vars = expr.getContainedIndeterminates();
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2250,7 +2284,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         exprs.get(i), Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
             } else {
                 exprs.add(exprSimplified);
                 expr.addContainedIndeterminates(vars);
@@ -2267,24 +2301,30 @@ public abstract class MathCommandCompiler {
         Expression y_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen
-        double xStart = x_0.evaluate();
-        double xEnd = x_1.evaluate();
-        double yStart = y_0.evaluate();
-        double yEnd = y_1.evaluate();
+        double xStart, xEnd, yStart, yEnd;
+
+        try {
+            xStart = x_0.evaluate();
+            xEnd = x_1.evaluate();
+            yStart = y_0.evaluate();
+            yEnd = y_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_1")
                     + (exprs.size() + 1)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_2")
                     + (exprs.size() + 2)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_3"));
         }
         if (yStart >= yEnd) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_1")
                     + (exprs.size() + 3)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_2")
                     + (exprs.size() + 4)
-                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+                    + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_3"));
         }
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2371,7 +2411,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
             }
             components[i] = exprSimplified;
@@ -2380,6 +2420,14 @@ public abstract class MathCommandCompiler {
         }
         Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
         Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        try {
+            t_0.evaluate();
+            t_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2434,7 +2482,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         components[i], Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_CURVE_CANNOT_BE_PLOTTED_PLOTCURVE"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
             }
             components[i] = exprSimplified;
@@ -2443,6 +2491,14 @@ public abstract class MathCommandCompiler {
         }
         Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
         Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        try {
+            t_0.evaluate();
+            t_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
@@ -2548,7 +2604,7 @@ public abstract class MathCommandCompiler {
                 mathToolGraphicArea.addComponent(Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                         expr, Translator.translateExceptionMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
-                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPH_CANNOT_BE_PLOTTED_PLOT3D"));
+                throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
             } else {
                 exprs.add(exprSimplified);
             }
@@ -2564,10 +2620,16 @@ public abstract class MathCommandCompiler {
         Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen.
-        double minR = r_0.evaluate();
-        double maxR = r_1.evaluate();
-        double minPhi = phi_0.evaluate();
-        double maxPhi = phi_1.evaluate();
+        double minR, maxR, minPhi, maxPhi;
+
+        try {
+            minR = r_0.evaluate();
+            maxR = r_1.evaluate();
+            minPhi = phi_0.evaluate();
+            maxPhi = phi_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
 
         if (minR < 0) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_1")
