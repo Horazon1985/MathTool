@@ -2705,36 +2705,31 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
-        Expression r_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
-        Expression r_1 = ((Expression) command.getParams()[command.getParams().length - 3]).simplify(simplifyTypesPlot);
-        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
-        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
+        Expression phi_0 = ((Expression) command.getParams()[command.getParams().length - 4]).simplify(simplifyTypesPlot);
+        Expression phi_1 = ((Expression) command.getParams()[command.getParams().length - 3]).simplify(simplifyTypesPlot);
+        Expression tau_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
+        Expression tau_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen.
-        double minR, maxR, minPhi, maxPhi;
+        double minPhi, maxPhi, minTau, maxTau;
 
         try {
-            minR = r_0.evaluate();
-            maxR = r_1.evaluate();
             minPhi = phi_0.evaluate();
             maxPhi = phi_1.evaluate();
+            minTau = tau_0.evaluate();
+            maxTau = tau_1.evaluate();
         } catch (EvaluationException e) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
-        if (minR < 0) {
-            throw new EvaluationException(Translator.translateExceptionMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateExceptionMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_2"));
-        }
-        if (minR >= maxR) {
+        if (minPhi >= maxPhi) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
                     + (exprs.size() + 3)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
                     + (exprs.size() + 4)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
         }
-        if (minPhi >= maxPhi) {
+        if (minTau >= maxTau) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
                     + (exprs.size() + 5)
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
@@ -2742,6 +2737,13 @@ public abstract class MathCommandCompiler {
                     + Translator.translateExceptionMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
         }
         if (maxPhi - minPhi > 20 * Math.PI) {
+            throw new EvaluationException(Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
+                    + (exprs.size() + 3)
+                    + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
+                    + (exprs.size() + 4)
+                    + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
+        }
+        if (maxTau - minTau > 20 * Math.PI) {
             throw new EvaluationException(Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
                     + (exprs.size() + 5)
                     + Translator.translateExceptionMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
@@ -2751,7 +2753,7 @@ public abstract class MathCommandCompiler {
 
         // Graphen zeichnen.
         graphicPanelSpherical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
-        graphicPanelSpherical.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
+        graphicPanelSpherical.drawCylindricalGraphs3D(phi_0, phi_1, tau_0, tau_1, exprs);
 
     }
 
