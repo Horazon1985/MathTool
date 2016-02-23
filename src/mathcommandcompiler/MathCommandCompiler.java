@@ -245,52 +245,52 @@ public abstract class MathCommandCompiler {
                     }
                 }
             case "ccnf":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternCCNF);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CCNF);
             case "cdnf":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternCDNF);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CDNF);
             case "clear":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternClear);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CLEAR);
             case "def":
                 return getCommandDef(params);
             case "deffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternDefFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_DEFFUNCS);
             case "defvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternDefVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_DEFVARS);
             case "eigenvalues":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEigenvalues);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EIGENVALUES);
             case "eigenvectors":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEigenvectors);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EIGENVECTORS);
             case "euler":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternEuler);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EULER);
             case "expand":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternExpand);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXPAND);
             case "extrema":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaOneVar);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_ONE_VAR);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaWithParameter);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_WITH_PARAMETER);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaApprox);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_APPROX);
                 }
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternExtremaApproxWithNumberOfIntervals);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS);
             case "ker":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternKer);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_KER);
             case "latex":
                 return getCommandLatex(params);
             case "pi":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPi);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PI);
             case "plot2d":
                 return getCommandPlot2D(params);
             case "plotimplicit":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotImplicit);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTIMPLICIT);
             case "plot3d":
                 return getCommandPlot3D(params);
             case "plotcurve2d":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotCurve2D);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTCURVE2D);
             case "plotcurve3d":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternPlotCurve3D);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTCURVE3D);
             case "plotpolar":
                 return getCommandPlotPolar(params);
             case "plotcylindrical":
@@ -298,38 +298,38 @@ public abstract class MathCommandCompiler {
             case "plotspherical":
                 return getCommandPlotSpherical(params);
             case "regressionline":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternRegressionLine);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_REGRESSIONLINE);
             case "solve":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveOneVar);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_ONE_VAR);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveWithParameter);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_WITH_PARAMETER);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveApprox);
+                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX);
                 }
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveApproxWithNumberOfIntervals);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
             case "solvedeq":
                 return getCommandSolveDEQ(params);
             case "solvesystem":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternSolveSystem);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVESYSTEM);
             case "table":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternTable);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_TABLE);
             case "tangent":
                 return getCommandTangent(params);
             case "taylordeq":
                 return getCommandTaylorDEQ(params);
             case "undeffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFFUNCS);
             case "undefvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFVARS);
             case "undefallfuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAllFuncs);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALLFUNCS);
             case "undefallvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAllVars);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALLVARS);
             case "undefall":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.patternUndefAll);
+                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALL);
             // Sollte theoretisch nie vorkommen.
             default:
                 throw new ExpressionException(Translator.translateExceptionMessage("MCC_INVALID_COMMAND"));
