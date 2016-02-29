@@ -1473,7 +1473,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanel3D);
                     break;
                 case GRAPHIMPLICIT2D:
-                    saveDialog = new MathToolSaveGraphicDialog(graphicPanel2D);
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelImplicit2D);
                     break;
                 case GRAPHCURVE2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
