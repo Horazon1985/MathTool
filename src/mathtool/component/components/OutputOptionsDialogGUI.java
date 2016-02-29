@@ -71,13 +71,13 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
         simplifyTypes.addAll(mandatorySimplifyTypes);
         // Checkboxen
         for (JCheckBox opt : getOptionCheckBoxes()) {
-            if (opt.getText().equals(Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS"))
+            if (opt.getText().equals(Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS"))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-            } else if (opt.getText().equals(Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS"))
+            } else if (opt.getText().equals(Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS"))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-            } else if (opt.getText().equals(Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER"))
+            } else if (opt.getText().equals(Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER"))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
             }
@@ -95,25 +95,25 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
 
     private String convertSimplifyTypeToOptionName(TypeSimplify type) {
         if (type.equals(TypeSimplify.simplify_algebraic_expressions)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
         }
         if (type.equals(TypeSimplify.simplify_functional_relations)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
         }
         if (type.equals(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
         }
         if (type.equals(TypeSimplify.simplify_factorize)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
         }
         if (type.equals(TypeSimplify.simplify_expand_powerful)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
         }
         if (type.equals(TypeSimplify.simplify_collect_logarithms)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS");
         }
         if (type.equals(TypeSimplify.simplify_expand_logarithms)) {
-            return Translator.translateExceptionMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS");
+            return Translator.translateMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS");
         }
         return "";
     }

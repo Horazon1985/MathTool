@@ -18,7 +18,7 @@ public class DevelopersDialogGUI extends JDialog {
 
     public DevelopersDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
 
-        setTitle(Translator.translateExceptionMessage("GUI_DevelopersDialogGUI_ABOUT"));
+        setTitle(Translator.translateMessage("GUI_DevelopersDialogGUI_ABOUT"));
         setLayout(null);
         setResizable(false);
         setModal(true);

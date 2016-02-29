@@ -42,7 +42,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
             int numberOfColumns, String optionGroupName, ArrayList<String> optionCheckBoxes,
             ArrayList<String[]> optionsDropDowns, String saveButtonLabel, String cancelButtonLabel) {
 
-        setTitle(Translator.translateExceptionMessage(titleID));
+        setTitle(Translator.translateMessage(titleID));
         setLayout(null);
         setResizable(false);
         setModal(true);
@@ -108,7 +108,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         if (optionCheckBoxes != null) {
             JCheckBox optionBox;
             for (int i = 0; i < numberOfOptionLabels; i++) {
-                optionBox = new JCheckBox(Translator.translateExceptionMessage(optionCheckBoxes.get(i)));
+                optionBox = new JCheckBox(Translator.translateMessage(optionCheckBoxes.get(i)));
                 optionBox.setOpaque(false);
                 this.optionCheckBoxes.add(optionBox);
                 this.add(this.optionCheckBoxes.get(i));

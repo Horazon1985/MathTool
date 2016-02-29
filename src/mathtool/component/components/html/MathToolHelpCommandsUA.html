@@ -20,7 +20,7 @@ MathTool знає такі консольні команди:<br><br>
 
 <strong>defvars():</strong> Повертає список усіх змінних та їх значень, що були визначені командою def().<br><br>
 
-strong>eigenvalues(A):</strong> Повертає власні числа квадратної матриці A, якщо їх можливо обчислити.<br><br>
+<strong>eigenvalues(A):</strong> Повертає власні числа квадратної матриці A, якщо їх можливо обчислити.<br><br>
 
 <strong>eigenvectors(A):</strong> Повертає власні вектори квадратної матриці A, погруповані по відповідним власним числам, якщо їх можливо обчислити.<br><br>
 
@@ -61,6 +61,10 @@ strong>eigenvalues(A):</strong> Повертає власні числа ква�
 <strong>plotcurve3d((F<sub>1</sub>(t), F<sub>2</sub>(t), F<sub>3</sub>(t)), t<sub>1</sub>, t<sub>2</sub>):</strong> Будує криву, що задана функціями x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) та z = F<sub>3</sub>(t) від t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коефіцієнт масштабуванняcan може приймати всі значення між 0.1 та 10. Може так статися (якщо вибрати "погану" криву), так само як у випадку плоскої кривої, що буде зображено лише частину кривої.<br><br>
 
 <strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t<sub>1</sub>, t<sub>2</sub>):</strong> Будує графіки функцій F<sub>1</sub>, ..., F<sub>n</sub> від t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, де t - це кут та F<sub>i</sub>(t) - це радіус у полярних координатах. Коефіцієнт масштабуванняcan може приймати всі значення між 0.1 та 10.<br><br>
+
+<strong>plotcylindrical(F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t), r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t) for r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub> in cylindrical coordinates, where r is the radius und t is the angle. The radius must be non-negative the difference t<sub>2</sub> - t<sub>1</sub> of the angles must be at most 20&#960; because of technical reasons. The zoom factor can attain all values between 0.1 and 10.<br><br>
+
+<strong>plotspherical(F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v), u, v, u<sub>1</sub>, u<sub>2</sub>, v<sub>1</sub>, v<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v) for u<sub>1</sub> &lt;= u &lt;= u<sub>2</sub> and v<sub>1</sub> &lt;= v &lt;= v<sub>2</sub> in spherical coordinates, where u is the angle in the x, y-plane and v is the angle to the z-axis. The differences u<sub>2</sub> - u<sub>1</sub> and v<sub>2</sub> - v<sub>1</sub> of the angles must be at most 20&#960; because of technical reasons. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
 <strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Обчислює рівняння регресійної прямої для точок P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, а також будує графік, якщо це можливо. Точки P<sub>i</sub> мають бути (післіа спрощення) у формі  [a;b], тобто мають бути (2x1)-матрицями.<br><br>
 
