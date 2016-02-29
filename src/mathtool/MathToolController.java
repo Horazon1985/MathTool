@@ -104,7 +104,7 @@ public class MathToolController {
         }
         Collections.sort(operators);
         operatorChoice.removeAllItems();
-        operatorChoice.addItem(Translator.translateMessage("GUI_MathToolForm_OPERATOR"));
+        operatorChoice.addItem(Translator.translateOutputMessage("GUI_MathToolForm_OPERATOR"));
         for (String op : operators) {
             operatorChoice.addItem(op);
         }
@@ -119,7 +119,7 @@ public class MathToolController {
             commands.add(value.toString());
         }
         commandChoice.removeAllItems();
-        commandChoice.addItem(Translator.translateMessage("GUI_MathToolForm_COMMAND"));
+        commandChoice.addItem(Translator.translateOutputMessage("GUI_MathToolForm_COMMAND"));
         for (String c : commands) {
             commandChoice.addItem(c);
         }
@@ -664,7 +664,7 @@ public class MathToolController {
             graphicPanelCurves3D.setIsRotating(false);
         }
         rotateThread.interrupt();
-        rotateLabel.setText("<html><b>" + Translator.translateMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
 
     }
 
@@ -720,11 +720,11 @@ public class MathToolController {
     public static void updateAllCaptions(HashMap<JComponent, String> componentCaptions) {
         for (JComponent component : componentCaptions.keySet()) {
             if (component instanceof JLabel) {
-                ((JLabel) component).setText("<html><b>" + Translator.translateMessage(componentCaptions.get(component)) + "</b></html>");
+                ((JLabel) component).setText("<html><b>" + Translator.translateOutputMessage(componentCaptions.get(component)) + "</b></html>");
             } else if (component instanceof JButton) {
-                ((JButton) component).setText(Translator.translateMessage(componentCaptions.get(component)));
+                ((JButton) component).setText(Translator.translateOutputMessage(componentCaptions.get(component)));
             } else if (component instanceof JMenuItem) {
-                ((JMenuItem) component).setText(Translator.translateMessage(componentCaptions.get(component)));
+                ((JMenuItem) component).setText(Translator.translateOutputMessage(componentCaptions.get(component)));
             }
         }
     }
