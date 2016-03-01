@@ -361,7 +361,7 @@ public abstract class MathCommandCompiler {
         if (Expression.isValidDerivateOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
 
             Expression preciseExpression;
-            HashSet<String> vars = new HashSet<>();
+            HashSet<String> vars;
             try {
                 preciseExpression = Expression.build(functionTerm, null);
                 vars = preciseExpression.getContainedIndeterminates();
@@ -710,25 +710,18 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL_2")
-                        + e.getMessage());
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL", i + 1, e.getMessage()));
             }
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL_1")
-                    + String.valueOf(vars.size())
-                    + Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL", String.valueOf(vars.size())));
         }
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
             if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTSPHERICAL"));
@@ -740,9 +733,7 @@ public abstract class MathCommandCompiler {
         // Prüfen, ob Veränderliche, die in vars auftreten, auch in varsInParams auftreten.
         for (String var : vars) {
             if (!varsInParams.contains(var)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTCYLINDRICAL_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTCYLINDRICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL", var));
             }
         }
 
@@ -752,14 +743,10 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_1")
-                            + (i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL", i + 1));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL", i + 1));
             }
         }
 
@@ -791,16 +778,12 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR", i + 1));
             }
         }
 
         if (vars.size() > 1) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_1")
-                    + vars.size()
-                    + Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR", vars.size()));
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
@@ -808,28 +791,20 @@ public abstract class MathCommandCompiler {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                        + (params.length - 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length - 1));
             }
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                    + (params.length - 1)
-                    + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length - 1));
         }
 
         try {
             commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
             ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                        + params.length
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length));
             }
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_1")
-                    + params.length
-                    + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length));
         }
 
         return new Command(TypeCommand.plotpolar, commandParams);
@@ -865,13 +840,14 @@ public abstract class MathCommandCompiler {
          Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
          y'''' etc. auf der rechten Seite auftreten.
          */
-        HashSet<String> vars = new HashSet<>();
+        HashSet<String> vars;
+        Expression diffEquation;
         try {
-            Expression.build(params[0], vars);
+            diffEquation = Expression.build(params[0], null);
+            vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ") + e.getMessage());
         }
-        Expression expr = Expression.build(params[0], vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
         Iterator iter = vars.iterator();
@@ -880,11 +856,7 @@ public abstract class MathCommandCompiler {
             varWithoutPrimes = (String) iter.next();
             if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_1")
-                            + ord
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_2")
-                            + (ord - 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ_3"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -898,9 +870,7 @@ public abstract class MathCommandCompiler {
         if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
             if (varsWithoutPrimes.size() == 2) {
                 if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_1")
-                            + params[1]
-                            + Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ", params[1]));
                 }
             }
         } else {
@@ -915,14 +885,11 @@ public abstract class MathCommandCompiler {
         }
 
         // Prüft, ob die AWP-Daten korrekt sind.
-        HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 3; i < ord + 5; i++) {
             try {
-                Expression limit = Expression.build(params[i], varsInLimits);
-                if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
-                            + String.valueOf(i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
+                Expression limit = Expression.build(params[i], null);
+                if (!limit.isConstant()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ", i + 1));
                 }
                 /*
                  Prüfen, ob die Grenzen ausgewerten werden können.
@@ -932,14 +899,12 @@ public abstract class MathCommandCompiler {
                  */
                 limit.evaluate();
             } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_1")
-                        + String.valueOf(i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ", i + 1));
             }
         }
 
         Object[] commandParams = new Object[ord + 5];
-        commandParams[0] = expr;
+        commandParams[0] = diffEquation;
         commandParams[1] = params[1];
         commandParams[2] = ord;
         for (int i = 3; i < ord + 5; i++) {
@@ -962,10 +927,11 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
         }
 
-        HashSet<String> vars = new HashSet<>();
+        HashSet<String> vars;
         Expression expr;
         try {
-            expr = Expression.build(params[0], vars);
+            expr = Expression.build(params[0], null);
+            vars = expr.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
         }
@@ -976,25 +942,18 @@ public abstract class MathCommandCompiler {
          */
         for (int i = 1; i < params.length; i++) {
             if (!params[i].contains("=")) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT", i + 1));
             }
             if (!Expression.isValidDerivateOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
-                throw new ExpressionException(params[i].substring(0, params[i].indexOf("="))
-                        + Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT", params[i].substring(0, params[i].indexOf("="))));
             }
             try {
                 Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>());
                 if (!point.isConstant()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                            + (i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_POINT_PARAMETER_IN_TANGENT", i + 1));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_POINT_PARAMETER_IN_TANGENT", i + 1));
             }
         }
 
@@ -1002,9 +961,7 @@ public abstract class MathCommandCompiler {
         for (int i = 1; i < params.length; i++) {
             for (int j = i + 1; j < params.length; j++) {
                 if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_1")
-                            + params[i].substring(0, params[i].indexOf("="))
-                            + Translator.translateOutputMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLES_OCCUR_TWICE_IN_TANGENT", params[i].substring(0, params[i].indexOf("="))));
                 }
             }
         }
@@ -1024,14 +981,9 @@ public abstract class MathCommandCompiler {
          Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
          wurde.
          */
-        Iterator iter = vars.iterator();
-        String var;
-        for (int i = 0; i < vars.size(); i++) {
-            var = (String) iter.next();
+        for (String var : vars) {
             if (!varsContainedInParams.containsKey(var)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT", var));
             }
         }
 
@@ -1068,26 +1020,22 @@ public abstract class MathCommandCompiler {
          darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
          rechten Seite auftreten.
          */
-        HashSet<String> vars = new HashSet<>();
+        HashSet<String> vars;
+        Expression diffEquation;
         try {
-            Expression.build(params[0], vars);
+            diffEquation = Expression.build(params[0], null);
+            vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ") + e.getMessage());
         }
-        Expression expr = Expression.build(params[0], vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
-        Iterator iter = vars.iterator();
         String varWithoutPrimes;
-        for (int i = 0; i < vars.size(); i++) {
-            varWithoutPrimes = (String) iter.next();
+        for (String var : vars) {
+            varWithoutPrimes = var;
             if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_1")
-                            + ord
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_2")
-                            + (ord - 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ_3"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -1101,9 +1049,7 @@ public abstract class MathCommandCompiler {
         if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
             if (varsWithoutPrimes.size() == 2) {
                 if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_1")
-                            + params[1]
-                            + Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ", params[1]));
                 }
             }
         } else {
@@ -1146,26 +1092,25 @@ public abstract class MathCommandCompiler {
         }
 
         // Prüft, ob die AWP-Daten korrekt sind.
-        HashSet<String> varsInLimits = new HashSet<>();
+        HashSet<String> varsInLimits;
+        Expression limit;
         for (int i = 3; i < ord + 4; i++) {
             try {
-                Expression.build(params[i], varsInLimits).simplify();
-                iter = varsWithoutPrimes.iterator();
+                limit = Expression.build(params[i], null).simplify();
+                varsInLimits = limit.getContainedIndeterminates();
                 /*
                  Im Folgenden wird geprüft, ob in den Anfangsbedingungen
                  die Variablen aus der eigentlichen DGL nicht auftreten
                  (diese beiden Variablen sind im HashSet varsWithoutPrimes
                  gespeichert).
                  */
-                if (varsInLimits.contains((String) iter.next())) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
-                            + String.valueOf(i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
+                for (String var : varsWithoutPrimes) {
+                    if (varsInLimits.contains(var)) {
+                        throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ", i + 1));
+                    }
                 }
             } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_1")
-                        + String.valueOf(i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ", i + 1));
             }
         }
 
@@ -1176,7 +1121,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[ord + 5];
-        commandParams[0] = expr;
+        commandParams[0] = diffEquation;
         commandParams[1] = params[1];
         commandParams[2] = ord;
         for (int i = 3; i < ord + 4; i++) {
