@@ -1240,9 +1240,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_1")
-                    + logExpr.writeLogicalExpression()
-                    + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF_2"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF", logExpr));
         }
 
         LogicalExpression logExprInCCNF = logExpr.toCCNF();
@@ -1260,9 +1258,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_1")
-                    + logExpr.writeLogicalExpression()
-                    + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF_2"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF", logExpr));
         }
 
         LogicalExpression logExprInCDNF = logExpr.toCDNF();
@@ -1533,19 +1529,11 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.euler)
     private static void executeEuler(Command command) throws EvaluationException {
-
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
         // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_DIGITS_OF_E_1")
-                + (int) command.getParams()[0]
-                + Translator.translateOutputMessage("MCC_DIGITS_OF_E_2")
-                + e.toString() + "\n \n");
+        output.add(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]) + e.toString() + "\n \n");
         // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_DIGITS_OF_E_1")
-                + (int) command.getParams()[0]
-                + Translator.translateOutputMessage("MCC_DIGITS_OF_E_2")
-                + e.toString());
-
+        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]) + e.toString());
     }
 
     @Execute(type = TypeCommand.expand)
@@ -1984,15 +1972,9 @@ public abstract class MathCommandCompiler {
 
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
         // Texttliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_DIGITS_OF_PI_1")
-                + (int) command.getParams()[0]
-                + Translator.translateOutputMessage("MCC_DIGITS_OF_PI_2")
-                + pi.toString() + "\n \n");
+        output.add(Translator.translateOutputMessage("MCC_DIGITS_OF_PI", (int) command.getParams()[0]) + pi.toString() + "\n \n");
         // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_DIGITS_OF_PI_1")
-                + (int) command.getParams()[0]
-                + Translator.translateOutputMessage("MCC_DIGITS_OF_PI_2")
-                + pi.toString());
+        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_DIGITS_OF_PI", (int) command.getParams()[0]) + pi.toString());
 
     }
 
@@ -2052,11 +2034,7 @@ public abstract class MathCommandCompiler {
         }
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_1")
-                    + (exprs.size() + 1)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_2")
-                    + (exprs.size() + 2)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT2D", exprs.size() + 1, exprs.size() + 2));
         }
 
         // Graphen zeichnen.
@@ -2108,18 +2086,10 @@ public abstract class MathCommandCompiler {
         }
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_1")
-                    + 2
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_2")
-                    + 3
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 2, 3));
         }
         if (yStart >= yEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_1")
-                    + 4
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_2")
-                    + 5
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 4, 5));
         }
 
         HashSet<String> vars = expr.getContainedIndeterminates();
