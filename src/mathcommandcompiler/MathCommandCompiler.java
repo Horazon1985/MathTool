@@ -548,16 +548,12 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D", i + 1));
             }
         }
 
         if (vars.size() > 1) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_1")
-                    + vars.size()
-                    + Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D", vars.size()));
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
@@ -565,28 +561,20 @@ public abstract class MathCommandCompiler {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                        + (params.length - 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length - 1));
             }
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                    + (params.length - 1)
-                    + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length - 1));
         }
 
         try {
             commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
             ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                        + params.length
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length));
             }
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_1")
-                    + params.length
-                    + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length));
         }
 
         return new Command(TypeCommand.plot2d, commandParams);
@@ -613,17 +601,12 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT3D_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT3D_2")
-                        + e.getMessage());
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT3D", i + 1, e.getMessage()));
             }
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_1")
-                    + String.valueOf(vars.size())
-                    + Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D", String.valueOf(vars.size())));
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
@@ -632,14 +615,10 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
-                            + (i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D", i + 1));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D", i + 1));
             }
         }
 
@@ -667,25 +646,18 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL_2")
-                        + e.getMessage());
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL", i + 1, e.getMessage()));
             }
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL_1")
-                    + String.valueOf(vars.size())
-                    + Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL_2"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL", String.valueOf(vars.size())));
         }
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
             if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTCYLINDRICAL"));
@@ -697,9 +669,7 @@ public abstract class MathCommandCompiler {
         // Prüfen, ob Veränderliche, die in vars auftreten, auch in varsInParams auftreten.
         for (String var : vars) {
             if (!varsInParams.contains(var)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTSPHERICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_NOT_ALLOWED_TO_OCCUR_IN_FUNCTION_IN_PLOTCYLINDRICAL", var));
             }
         }
 
@@ -709,14 +679,10 @@ public abstract class MathCommandCompiler {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_1")
-                            + (i + 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
                 }
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_1")
-                        + (i + 1)
-                        + Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
             }
         }
 
