@@ -425,13 +425,13 @@ public class MathToolController {
         if (commandName.equals(TypeCommand.plotcylindrical.name()) || commandName.equals(TypeCommand.plotspherical.name())) {
             return 6;
         }
-        if (commandName.equals(TypeCommand.solvedeq.name())) {
+        if (commandName.equals(TypeCommand.solvediffeq.name())) {
             return 5;
         }
         if (commandName.equals(TypeCommand.tangent.name())) {
             return 1;
         }
-        if (commandName.equals(TypeCommand.taylordeq.name())) {
+        if (commandName.equals(TypeCommand.taylordiffeq.name())) {
             return 5;
         }
 
@@ -507,7 +507,7 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 3 || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 1) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getTypeCommand().equals(TypeCommand.solvedeq)) {
+        if (c.getTypeCommand().equals(TypeCommand.solvediffeq)) {
             return TypeGraphic.GRAPH2D;
         }
         return TypeGraphic.NONE;

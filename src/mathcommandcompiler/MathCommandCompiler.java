@@ -311,16 +311,16 @@ public abstract class MathCommandCompiler {
                     return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX);
                 }
                 return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
-            case "solvedeq":
-                return getCommandSolveDEQ(params);
+            case "solvediffeq":
+                return getCommandSolveDiffEq(params);
             case "solvesystem":
                 return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVESYSTEM);
             case "table":
                 return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_TABLE);
             case "tangent":
                 return getCommandTangent(params);
-            case "taylordeq":
-                return getCommandTaylorDEQ(params);
+            case "taylordiffeq":
+                return getCommandTaylorDiffEq(params);
             case "undeffuncs":
                 return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFFUNCS);
             case "undefvars":
@@ -811,7 +811,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandSolveDEQ(String[] params) throws ExpressionException {
+    private static Command getCommandSolveDiffEq(String[] params) throws ExpressionException {
 
         /*
          Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
@@ -821,7 +821,7 @@ public abstract class MathCommandCompiler {
          fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
         if (params.length < 6) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
 
         // Ordnung der DGL ermitteln.
@@ -829,10 +829,10 @@ public abstract class MathCommandCompiler {
         try {
             ord = Integer.parseInt(params[2]);
             if (ord < 1) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
             }
         } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
         }
 
         /*
@@ -846,7 +846,7 @@ public abstract class MathCommandCompiler {
             diffEquation = Expression.build(params[0], null);
             vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDEQ") + e.getMessage());
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDIFFEQ") + e.getMessage());
         }
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
@@ -856,7 +856,7 @@ public abstract class MathCommandCompiler {
             varWithoutPrimes = (String) iter.next();
             if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDEQ", ord, ord - 1));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDIFFEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -864,24 +864,24 @@ public abstract class MathCommandCompiler {
         }
 
         if (varsWithoutPrimes.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDIFFEQ"));
         }
 
         if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
             if (varsWithoutPrimes.size() == 2) {
                 if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDEQ", params[1]));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDIFFEQ", params[1]));
                 }
             }
         } else {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDIFFEQ"));
         }
 
         if (params.length < ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
         if (params.length > ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
 
         // Prüft, ob die AWP-Daten korrekt sind.
@@ -889,7 +889,7 @@ public abstract class MathCommandCompiler {
             try {
                 Expression limit = Expression.build(params[i], null);
                 if (!limit.isConstant()) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ", i + 1));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDIFFEQ", i + 1));
                 }
                 /*
                  Prüfen, ob die Grenzen ausgewerten werden können.
@@ -899,7 +899,7 @@ public abstract class MathCommandCompiler {
                  */
                 limit.evaluate();
             } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDEQ", i + 1));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDIFFEQ", i + 1));
             }
         }
 
@@ -911,7 +911,7 @@ public abstract class MathCommandCompiler {
             commandParams[i] = Expression.build(params[i], vars);
         }
 
-        return new Command(TypeCommand.solvedeq, commandParams);
+        return new Command(TypeCommand.solvediffeq, commandParams);
 
     }
 
@@ -991,7 +991,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    private static Command getCommandTaylorDEQ(String[] params) throws ExpressionException {
+    private static Command getCommandTaylorDiffEq(String[] params) throws ExpressionException {
 
         /*
          Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
@@ -1001,7 +1001,7 @@ public abstract class MathCommandCompiler {
          fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
          */
         if (params.length < 6) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDIFFEQ"));
         }
 
         // Ordnung der DGL ermitteln.
@@ -1009,10 +1009,10 @@ public abstract class MathCommandCompiler {
         try {
             ord = Integer.parseInt(params[2]);
             if (ord < 1) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDIFFEQ"));
             }
         } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDIFFEQ"));
         }
 
         /*
@@ -1026,7 +1026,7 @@ public abstract class MathCommandCompiler {
             diffEquation = Expression.build(params[0], null);
             vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDEQ") + e.getMessage());
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDIFFEQ") + e.getMessage());
         }
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
@@ -1035,7 +1035,7 @@ public abstract class MathCommandCompiler {
             varWithoutPrimes = var;
             if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDEQ", ord, ord - 1));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDIFFEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -1043,25 +1043,25 @@ public abstract class MathCommandCompiler {
         }
 
         if (varsWithoutPrimes.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDIFFEQ"));
         }
 
         if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
             if (varsWithoutPrimes.size() == 2) {
                 if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDEQ", params[1]));
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDIFFEQ", params[1]));
                 }
             }
         } else {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDIFFEQ"));
         }
 
         if (params.length < ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDIFFEQ"));
         }
 
         if (params.length > ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDIFFEQ"));
         }
 
         /*
@@ -1106,18 +1106,18 @@ public abstract class MathCommandCompiler {
                  */
                 for (String var : varsWithoutPrimes) {
                     if (varsInLimits.contains(var)) {
-                        throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ", i + 1));
+                        throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDIFFEQ", i + 1));
                     }
                 }
             } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDEQ", i + 1));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDIFFEQ", i + 1));
             }
         }
 
         try {
             Integer.parseInt(params[ord + 4]);
         } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDIFFEQ"));
         }
 
         Object[] commandParams = new Object[ord + 5];
@@ -1129,7 +1129,7 @@ public abstract class MathCommandCompiler {
         }
         commandParams[ord + 4] = Integer.parseInt(params[ord + 4]);
 
-        return new Command(TypeCommand.taylordeq, commandParams);
+        return new Command(TypeCommand.taylordiffeq, commandParams);
 
     }
 
@@ -2196,18 +2196,10 @@ public abstract class MathCommandCompiler {
         }
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_1")
-                    + (exprs.size() + 1)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_2")
-                    + (exprs.size() + 2)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D", exprs.size() + 1, exprs.size() + 2));
         }
         if (yStart >= yEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_2")
-                    + (exprs.size() + 4)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D", exprs.size() + 3, exprs.size() + 4));
         }
 
         // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
@@ -2314,7 +2306,7 @@ public abstract class MathCommandCompiler {
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
-            vars.add("t");
+            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
         }
 
         Iterator iter = vars.iterator();
@@ -2385,7 +2377,7 @@ public abstract class MathCommandCompiler {
 
         // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
         if (vars.isEmpty()) {
-            vars.add("t");
+            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
         }
 
         Iterator iter = vars.iterator();
@@ -2444,16 +2436,12 @@ public abstract class MathCommandCompiler {
         }
 
         if (phiStart >= phiEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_1")
-                    + (exprs.size() + 2)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_2")
-                    + (exprs.size() + 1)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR", exprs.size() + 1, exprs.size() + 2));
         }
 
         // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
         if (vars.isEmpty()) {
-            vars.add("x");
+            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
         }
 
         Iterator iter = vars.iterator();
@@ -2516,30 +2504,16 @@ public abstract class MathCommandCompiler {
         }
 
         if (minR < 0) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateOutputMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL_2"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL", exprs.size() + 3));
         }
         if (minR >= maxR) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 4)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL", exprs.size() + 3, exprs.size() + 4));
         }
         if (minPhi >= maxPhi) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 5)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 6)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL", exprs.size() + 5, exprs.size() + 6));
         }
         if (maxPhi - minPhi > 20 * Math.PI) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 5)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 6)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL", exprs.size() + 5, exprs.size() + 6));
         }
 
         // Graphen zeichnen.
@@ -2599,32 +2573,16 @@ public abstract class MathCommandCompiler {
         }
 
         if (minPhi >= maxPhi) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 4)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTSPHERICAL", exprs.size() + 3, exprs.size() + 4));
         }
         if (minTau >= maxTau) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 5)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 6)
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTSPHERICAL", exprs.size() + 5, exprs.size() + 6));
         }
         if (maxPhi - minPhi > 20 * Math.PI) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 3)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 4)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTSPHERICAL", exprs.size() + 3, exprs.size() + 4));
         }
         if (maxTau - minTau > 20 * Math.PI) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_1")
-                    + (exprs.size() + 5)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_2")
-                    + (exprs.size() + 6)
-                    + Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTSPHERICAL", exprs.size() + 5, exprs.size() + 6));
         }
 
         // Graphen zeichnen.
@@ -2694,10 +2652,11 @@ public abstract class MathCommandCompiler {
             double varOrdEnd = y_1.evaluate();
 
             if (varAbscStart >= varAbscEnd) {
-                throw new EvaluationException(Translator.translateOutputMessage("MCC_FIRST_LIMITS_MUST_BE_WELL_ORDERED_IN_REGRESSIONLINE"));
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_REGRESSIONLINE_NOT_POSSIBLE_TO_COMPUTE"));
             }
-            if (varOrdStart >= varOrdEnd) {
-                throw new EvaluationException(Translator.translateOutputMessage("MCC_SECOND_LIMITS_MUST_BE_WELL_ORDERED_IN_REGRESSIONLINE"));
+            if (varOrdStart == varOrdEnd) {
+                y_0 = y_0.sub(1);
+                y_1 = y_1.add(1);
             }
 
             ArrayList<Expression> exprs = new ArrayList<>();
@@ -2873,11 +2832,7 @@ public abstract class MathCommandCompiler {
         double xEnd = x_1.evaluate();
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_1")
-                    + 2
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_2")
-                    + 3
-                    + Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE_3"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVE", 2, 3));
         }
 
         /*
@@ -2975,8 +2930,8 @@ public abstract class MathCommandCompiler {
 
     }
 
-    @Execute(type = TypeCommand.solvedeq)
-    private static void executeSolveDEQ(Command command)
+    @Execute(type = TypeCommand.solvediffeq)
+    private static void executeSolveDiffEq(Command command)
             throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
@@ -2991,11 +2946,7 @@ public abstract class MathCommandCompiler {
             varWithoutPrimes = (String) iter.next();
             if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
-                            + ord
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
-                            + (ord - 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
+                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -3048,7 +2999,7 @@ public abstract class MathCommandCompiler {
         double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquation(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
 
         // Formulierung und Ausgabe des AWP.
-        String formulationOfAWPForTextArea = Translator.translateOutputMessage("MCC_SOLUTION_OF_DEQ") + varOrd;
+        String formulationOfAWPForTextArea = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
         ArrayList formulationOfAWPForGraphicArea = new ArrayList();
 
         for (int i = 0; i < ord; i++) {
@@ -3101,11 +3052,9 @@ public abstract class MathCommandCompiler {
         }
         if (solutionOfDifferentialEquation.length < 1001) {
             // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
-            output.add(Translator.translateOutputMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
-                    + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+            output.add(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ". \n \n");
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTION_OF_DEQ_NOT_DEFINED_IN_POINT")
-                    + (x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ".");
         }
 
@@ -3149,11 +3098,7 @@ public abstract class MathCommandCompiler {
             for (String solutionVar : solutionVars) {
                 degInVar = SimplifyPolynomialMethods.degreeOfPolynomial(equations[i], solutionVar);
                 if (degInVar.compareTo(BigInteger.ONE) > 0) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_1")
-                            + (i + 1)
-                            + Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_2")
-                            + solutionVar
-                            + Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM_3"));
+                    throw new EvaluationException(Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM", i + 1, solutionVar));
                 }
             }
         }
@@ -3261,9 +3206,7 @@ public abstract class MathCommandCompiler {
         logExpr.addContainedIndeterminates(vars);
         int numberOfVars = vars.size();
         if (numberOfVars > 20) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_1")
-                    + logExpr.writeLogicalExpression()
-                    + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES_2"));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES", logExpr));
         }
 
         // Texttliche Ausgabe
@@ -3280,18 +3223,18 @@ public abstract class MathCommandCompiler {
                         + logExpr.writeLogicalExpression()
                         + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
                 // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + logExpr.writeLogicalExpression()
-                        + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
+                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
+                        logExpr,
+                        Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
                 // Texttliche Ausgabe
                 output.add(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
                         + logExpr.writeLogicalExpression()
                         + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
                 // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + logExpr.writeLogicalExpression()
-                        + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
+                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
+                        logExpr,
+                        Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
             return;
         }
@@ -3466,8 +3409,8 @@ public abstract class MathCommandCompiler {
 
     }
 
-    @Execute(type = TypeCommand.taylordeq)
-    private static void executeTaylorDEQ(Command command) throws EvaluationException {
+    @Execute(type = TypeCommand.taylordiffeq)
+    private static void executeTaylorDiffEq(Command command) throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
@@ -3481,11 +3424,7 @@ public abstract class MathCommandCompiler {
             varWithoutPrimes = (String) iter.next();
             if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_1")
-                            + ord
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_2")
-                            + (ord - 1)
-                            + Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DEQ_3"));
+                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
                 }
                 varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
@@ -3551,9 +3490,9 @@ public abstract class MathCommandCompiler {
                 SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().remove((String) function);
                 SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().remove((String) function);
                 // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED_2") + " \n \n");
+                output.add(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED", function) + " \n \n");
                 // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED_1") + (String) function + Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED_2"));
+                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED", function));
             }
         }
 
@@ -3568,9 +3507,9 @@ public abstract class MathCommandCompiler {
             if (Variable.getVariablesWithPredefinedValues().contains((String) var)) {
                 Variable.setPreciseExpression((String) var, null);
                 // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2") + " \n \n");
+                output.add(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN", var) + " \n \n");
                 // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_1") + (String) var + Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN_2"));
+                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN", var));
             }
         }
 
