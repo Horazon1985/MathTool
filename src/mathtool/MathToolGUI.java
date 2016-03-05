@@ -516,7 +516,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.solvediffeq)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.solvediffeq) && c.getParams().length >= 6) {
             graphicPanel2D.setVisible(true);
             saveLabel.setVisible(true);
         } else {

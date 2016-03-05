@@ -50,13 +50,72 @@ import abstractexpressions.expression.equation.SolveMethods;
 import computationbounds.ComputationBounds;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import notations.NotationLoader;
 import lang.translator.Translator;
 import mathtool.annotations.Execute;
+import mathtool.annotations.GetCommand;
 
 public abstract class MathCommandCompiler {
+
+    // Patterns für die einzelnen Befehle.
+    public static final String PATTERN_APPROX_EXPR = "approx(expr)";
+    public static final String PATTERN_APPROX_MATEXPR = "approx(matexpr)";
+    @GetCommand(type = TypeCommand.ccnf)
+    public static final String PATTERN_CCNF = "ccnf(logexpr)";
+    @GetCommand(type = TypeCommand.cdnf)
+    public static final String PATTERN_CDNF = "cdnf(logexpr)";
+    @GetCommand(type = TypeCommand.clear)
+    public static final String PATTERN_CLEAR = "clear()";
+    @GetCommand(type = TypeCommand.deffuncs)
+    public static final String PATTERN_DEFFUNCS = "deffuncs()";
+    @GetCommand(type = TypeCommand.defvars)
+    public static final String PATTERN_DEFVARS = "defvars()";
+    @GetCommand(type = TypeCommand.eigenvalues)
+    public static final String PATTERN_EIGENVALUES = "eigenvalues(matexpr)";
+    @GetCommand(type = TypeCommand.eigenvectors)
+    public static final String PATTERN_EIGENVECTORS = "eigenvectors(matexpr)";
+    @GetCommand(type = TypeCommand.euler)
+    public static final String PATTERN_EULER = "euler(integer(0,2147483647))";
+    @GetCommand(type = TypeCommand.expand)
+    public static final String PATTERN_EXPAND = "expand(expr)";
+    public static final String PATTERN_EXTREMA_ONE_VAR = "extrema(expr(0,1))";
+    public static final String PATTERN_EXTREMA_WITH_PARAMETER = "extrema(expr,var)";
+    public static final String PATTERN_EXTREMA_APPROX = "extrema(expr(0,1),expr(0,0),expr(0,0))";
+    public static final String PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS = "extrema(expr(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
+    @GetCommand(type = TypeCommand.ker)
+    public static final String PATTERN_KER = "ker(matexpr)";
+    @GetCommand(type = TypeCommand.pi)
+    public static final String PATTERN_PI = "pi(integer(0,2147483647))";
+    @GetCommand(type = TypeCommand.plotcurve2d)
+    public static final String PATTERN_PLOTCURVE2D = "plotcurve2d(matexpr(0,1),expr(0,0),expr(0,0))";
+    @GetCommand(type = TypeCommand.plotcurve3d)
+    public static final String PATTERN_PLOTCURVE3D = "plotcurve3d(matexpr(0,1),expr(0,0),expr(0,0))";
+    @GetCommand(type = TypeCommand.plotimplicit)
+    public static final String PATTERN_PLOTIMPLICIT = "plotimplicit(equation(0,2),expr(0,0),expr(0,0),expr(0,0),expr(0,0))";
+    @GetCommand(type = TypeCommand.regressionline)
+    public static final String PATTERN_REGRESSIONLINE = "regressionline(matexpr,matexpr+)";
+    public static final String PATTERN_SOLVE_ONE_VAR = "solve(equation(0,1))";
+    public static final String PATTERN_SOLVE_WITH_PARAMETER = "solve(equation,var)";
+    public static final String PATTERN_SOLVE_APPROX = "solve(equation(0,1),expr(0,0),expr(0,0))";
+    public static final String PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS = "solve(equation(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
+    @GetCommand(type = TypeCommand.solvesystem)
+    public static final String PATTERN_SOLVESYSTEM = "solvesystem(equation+,uniquevar+)";
+    @GetCommand(type = TypeCommand.table)
+    public static final String PATTERN_TABLE = "table(logexpr)";
+    @GetCommand(type = TypeCommand.undefvars)
+    public static final String PATTERN_UNDEFVARS = "undefvars(var+)";
+    @GetCommand(type = TypeCommand.undeffuncs)
+    public static final String PATTERN_UNDEFFUNCS = "undeffuncs(var+)";
+    @GetCommand(type = TypeCommand.undefallvars)
+    public static final String PATTERN_UNDEFALLVARS = "undefallvars()";
+    @GetCommand(type = TypeCommand.undefallfuncs)
+    public static final String PATTERN_UNDEFALLFUNCS = "undefallfuncs()";
+    @GetCommand(type = TypeCommand.undefall)
+    public static final String PATTERN_UNDEFALL = "undefall()";
 
     private static GraphicPanel2D graphicPanel2D;
     private static GraphicPanel3D graphicPanel3D;
@@ -236,62 +295,61 @@ public abstract class MathCommandCompiler {
         switch (commandName) {
             case "approx":
                 try {
-
-                    return OperationParser.parseDefaultCommand(commandName, params, "approx(expr)");
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_EXPR);
                 } catch (ExpressionException e) {
                     try {
-                        return OperationParser.parseDefaultCommand(commandName, params, "approx(matexpr)");
+                        return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_MATEXPR);
                     } catch (ExpressionException ex) {
                         throw new ExpressionException(Translator.translateOutputMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
                     }
                 }
             case "ccnf":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CCNF);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CCNF);
             case "cdnf":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CDNF);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CDNF);
             case "clear":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_CLEAR);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CLEAR);
             case "def":
                 return getCommandDef(params);
             case "deffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_DEFFUNCS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_DEFFUNCS);
             case "defvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_DEFVARS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_DEFVARS);
             case "eigenvalues":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EIGENVALUES);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EIGENVALUES);
             case "eigenvectors":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EIGENVECTORS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EIGENVECTORS);
             case "euler":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EULER);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EULER);
             case "expand":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXPAND);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXPAND);
             case "extrema":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_ONE_VAR);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_ONE_VAR);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_WITH_PARAMETER);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_WITH_PARAMETER);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_APPROX);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX);
                 }
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS);
             case "ker":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_KER);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_KER);
             case "latex":
                 return getCommandLatex(params);
             case "pi":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PI);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PI);
             case "plot2d":
                 return getCommandPlot2D(params);
             case "plotimplicit":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTIMPLICIT);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTIMPLICIT);
             case "plot3d":
                 return getCommandPlot3D(params);
             case "plotcurve2d":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTCURVE2D);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTCURVE2D);
             case "plotcurve3d":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_PLOTCURVE3D);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTCURVE3D);
             case "plotpolar":
                 return getCommandPlotPolar(params);
             case "plotcylindrical":
@@ -299,38 +357,41 @@ public abstract class MathCommandCompiler {
             case "plotspherical":
                 return getCommandPlotSpherical(params);
             case "regressionline":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_REGRESSIONLINE);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_REGRESSIONLINE);
             case "solve":
                 if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_ONE_VAR);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_ONE_VAR);
                 }
                 if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_WITH_PARAMETER);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_WITH_PARAMETER);
                 }
                 if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX);
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX);
                 }
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
             case "solvediffeq":
-                return getCommandSolveDiffEq(params);
+                if (params.length <= 3) {
+                    return getCommandSolveDiffEquationAlgebraic(params);
+                }
+                return getCommandSolveDiffEquationNumeric(params);
             case "solvesystem":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_SOLVESYSTEM);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVESYSTEM);
             case "table":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_TABLE);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_TABLE);
             case "tangent":
                 return getCommandTangent(params);
             case "taylordiffeq":
                 return getCommandTaylorDiffEq(params);
             case "undeffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFFUNCS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFFUNCS);
             case "undefvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFVARS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFVARS);
             case "undefallfuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALLFUNCS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALLFUNCS);
             case "undefallvars":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALLVARS);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALLVARS);
             case "undefall":
-                return OperationParser.parseDefaultCommand(commandName, params, Command.PATTERN_UNDEFALL);
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALL);
             // Sollte theoretisch nie vorkommen.
             default:
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
@@ -338,6 +399,90 @@ public abstract class MathCommandCompiler {
 
     }
 
+    /**
+     * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
+     * zu den Parametern params gehört. Ansonsten wird eine entsprechende
+     * ExpressionException geworfen. WICHTIG: Der String command und die
+     * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
+     * im Vorfeld beseitigt.
+     *
+     * @throws ExpressionException, EvaluationException
+     */
+    public static Command getCommand2(String commandName, String[] params) throws ExpressionException {
+
+        // Sonderfälle_ überladene Befehle.
+        switch (commandName) {
+            case "approx":
+                try {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_EXPR);
+                } catch (ExpressionException e) {
+                    try {
+                        return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_MATEXPR);
+                    } catch (ExpressionException ex) {
+                        throw new ExpressionException(Translator.translateOutputMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
+                    }
+                }
+            case "extrema":
+                if (params.length <= 1) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_ONE_VAR);
+                }
+                if (params.length == 2) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_WITH_PARAMETER);
+                }
+                if (params.length == 3) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX);
+                }
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS);
+            case "solve":
+                if (params.length <= 1) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_ONE_VAR);
+                }
+                if (params.length == 2) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_WITH_PARAMETER);
+                }
+                if (params.length == 3) {
+                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX);
+                }
+                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
+        }
+
+        // Befehle, die man mittels parseDefaultCommand() kompilieren kann.
+        // Mittels Reflection das passende Pattern suchen.
+        Field[] fields = MathCommandCompiler.class.getDeclaredFields();
+        GetCommand annotation;
+        for (Field field : fields) {
+            annotation = field.getAnnotation(GetCommand.class);
+            try {
+                if (annotation != null && annotation.type().name().equals(commandName)) {
+                    return OperationParser.parseDefaultCommand(commandName, params, (String) field.get(null));
+                }
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+            }
+        }
+
+        // Befehle, die für das Kompilieren individuelle Methoden benötigen (diese sind entsprechend annotiert).
+        Method[] methods = MathCommandCompiler.class.getDeclaredMethods();
+        for (Method method : methods) {
+            annotation = method.getAnnotation(GetCommand.class);
+            if (annotation != null && annotation.type().name().equals(commandName)) {
+                try {
+                    return (Command) method.invoke((Object) null, (Object[]) params);
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    if (e.getCause() instanceof ExpressionException) {
+                        // Methoden können nur EvaluationExceptions werfen.
+                        throw (ExpressionException) e.getCause();
+                    }
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
+                }
+            }
+        }
+
+        // Sollte theoretisch nie vorkommen.
+        throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
+
+    }
+
+    @GetCommand(type = TypeCommand.def)
     private static Command getCommandDef(String[] params) throws ExpressionException {
 
         // Struktur: def(VAR = VALUE) oder def(FUNCTION(VAR_1, ..., VAR_n) = EXPRESSION(VAR_1, ..., VAR_n))
@@ -488,6 +633,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.latex)
     private static Command getCommandLatex(String[] params) throws ExpressionException {
 
         /*
@@ -529,6 +675,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plot2d)
     private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
         /*
@@ -581,6 +728,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plot3d)
     private static Command getCommandPlot3D(String[] params) throws ExpressionException {
 
         /*
@@ -626,6 +774,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotcylindrical)
     private static Command getCommandPlotCylindrical(String[] params) throws ExpressionException {
 
         /*
@@ -690,6 +839,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotspherical)
     private static Command getCommandPlotSpherical(String[] params) throws ExpressionException {
 
         /*
@@ -754,6 +904,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotpolar)
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
         /*
@@ -811,12 +962,78 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.solvediffeq)
     private static Command getCommandSolveDiffEq(String[] params) throws ExpressionException {
 
+        if (params.length <= 3) {
+            return getCommandSolveDiffEquationAlgebraic(params);
+        }
+        return getCommandSolveDiffEquationNumeric(params);
+
+    }
+
+    private static Command getCommandSolveDiffEquationAlgebraic(String[] params) throws ExpressionException {
+
         /*
-         Struktur: solvedeq(EXPRESSION, var, ord, x_0, x_1, y_0, y'(0), ...,
-         y^(ord - 1)(0)) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         Struktur: solvediffeq(Equation, varAbsc, varOrd), Equation: Die Differentialgleichung.
+         */
+        if (params.length != 3) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_SOLVEDIFFEQ"));
+        }
+
+        String varAbsc = params[1], varOrd = params[2];
+        // Beide Variablen dürfen KEINE Apostrophs enthalten. Diese sind hier für Ableitungen resereviert.
+        if (!Expression.isValidVariable(varAbsc)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDIFFEQ"));
+        }
+        if (!Expression.isValidVariable(varOrd)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
+        }
+
+        if (!params[0].contains("=")) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_1_PARAMETER_IN_SOLVEDIFFEQ_MUST_CONTAIN_EQUALITY_SIGN"));
+        }
+
+        /*
+         Prüft, ob es sich um eine korrekte DGL handelt.
+         */
+        HashSet<String> vars = new HashSet<>();
+        Expression diffEquationLeft, diffEquationRight;
+        try {
+            diffEquationLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
+            diffEquationRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            diffEquationLeft.addContainedIndeterminates(vars);
+            diffEquationRight.addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDIFFEQ") + e.getMessage());
+        }
+
+        int ord = 0;
+        for (String var : vars) {
+            if (var.startsWith(varOrd) && var.contains("'")) {
+                ord = var.length() - var.replaceAll("'", "").length();
+            }
+        }
+
+        if (ord == 0) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NO_DERIVATIVE_IN_1_PARAMETER_IN_SOLVEDIFFEQ"));
+        }
+
+        Object[] commandParams = new Object[3];
+        commandParams[0] = new Expression[]{diffEquationLeft, diffEquationRight};
+        commandParams[1] = params[1];
+        commandParams[2] = params[2];
+
+        return new Command(TypeCommand.solvediffeq, commandParams);
+
+    }
+
+    private static Command getCommandSolveDiffEquationNumeric(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: solvediffeq(Equation, var, ord, x_0, x_1, y_0, y'(0), ...,
+         y^(ord - 1)(0)) Equation: Rechte Seite der DGL y^{(ord)} =
+         Equation. Anzahl der parameter ist also = ord + 5 var = Variable in
          der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
          fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
@@ -867,7 +1084,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDIFFEQ"));
         }
 
-        if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
+        if (Expression.isValidVariable(params[1])) {
             if (varsWithoutPrimes.size() == 2) {
                 if (!vars.contains(params[1])) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDIFFEQ", params[1]));
@@ -915,6 +1132,7 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.tangent)
     private static Command getCommandTangent(String[] params) throws ExpressionException {
 
         /*
@@ -991,12 +1209,13 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.taylordiffeq)
     private static Command getCommandTaylorDiffEq(String[] params) throws ExpressionException {
 
         /*
-         Struktur: taylordeq(EXPRESSION, var, ord, x_0, y_0, y'(0), ...,
-         y^(ord - 1)(0), k) EXPRESSION: Rechte Seite der DGL y^{(ord)} =
-         EXPRESSION. Anzahl der parameter ist also = ord + 5 var = Variable in
+         Struktur: taylordiffeq(Equation, var, ord, x_0, y_0, y'(0), ...,
+         y^(ord - 1)(0), k) Equation: Rechte Seite der DGL y^{(ord)} =
+         Equation. Anzahl der parameter ist also = ord + 5 var = Variable in
          der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
          fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
          */
@@ -2932,6 +3151,23 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.solvediffeq)
     private static void executeSolveDiffEq(Command command)
+            throws EvaluationException {
+
+        if (command.getParams().length <= 3) {
+            executeSolveDiffEquationAlgebraic(command);
+        } else {
+            executeSolveDiffEquationNumeric(command);
+        }
+
+    }
+
+    private static void executeSolveDiffEquationAlgebraic(Command command)
+            throws EvaluationException {
+
+        // TO DO.
+    }
+
+    private static void executeSolveDiffEquationNumeric(Command command)
             throws EvaluationException {
 
         int ord = (int) command.getParams()[2];
