@@ -46,14 +46,13 @@ import abstractexpressions.matrixexpression.classes.Matrix;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
 import operationparser.OperationParser;
-import abstractexpressions.expression.equation.SolveMethods;
+import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import computationbounds.ComputationBounds;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import notations.NotationLoader;
 import lang.translator.Translator;
 import mathtool.annotations.Execute;
@@ -1804,7 +1803,7 @@ public abstract class MathCommandCompiler {
         Expression secondDerivateive = derivative.diff(var);
         Expression secondDerAtZero;
 
-        ExpressionCollection zeros = SolveMethods.solveEquation(derivative, ZERO, var);
+        ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(derivative, ZERO, var);
         ExpressionCollection extremaPoints = new ExpressionCollection();
         ExpressionCollection extremaValues = new ExpressionCollection();
         ExpressionCollection valuesOfSecondDerivative = new ExpressionCollection();
@@ -2924,10 +2923,10 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        ExpressionCollection zeros = SolveMethods.solveEquation(f, g, var);
+        ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(f, g, var);
 
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
-        if (zeros.isEmpty() && zeros != SolveMethods.ALL_REALS) {
+        if (zeros.isEmpty() && zeros != SolveGeneralEquationMethods.ALL_REALS) {
             // Textliche Ausgabe
             output.add(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
             // Graphische Ausgabe
@@ -2940,7 +2939,7 @@ public abstract class MathCommandCompiler {
                 + ((Expression[]) command.getParams()[0])[0].writeExpression()
                 + " = "
                 + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
-        if (zeros == SolveMethods.ALL_REALS) {
+        if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
             output.add(Translator.translateOutputMessage("MCC_ALL_REALS") + " \n \n");
         } else {
             for (int i = 0; i < zeros.getBound(); i++) {
@@ -2959,7 +2958,7 @@ public abstract class MathCommandCompiler {
         // Grafische Ausgabe
         mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], " :");
-        if (zeros == SolveMethods.ALL_REALS) {
+        if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
             mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_ALL_REALS") + " \n \n");
         } else {
             MultiIndexVariable multiVar;
