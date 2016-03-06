@@ -246,6 +246,24 @@ public abstract class MathCommandCompiler {
         mathToolGraphicArea.addComponent(out);
 
     }
+    
+    /**
+     * Leitet die Ausgabe an die textliche und die grafische Ausgabeoberfläche
+     * weiter.
+     */
+    private static void doPrintOutput(ArrayList out) {
+
+        // Textliche Ausgabe.
+        String lineToPrint = "";
+        for (Object o : out) {
+            lineToPrint += o.toString();
+        }
+        mathToolTextArea.append(lineToPrint + " \n \n");
+
+        // Grafische Ausgabe.
+        mathToolGraphicArea.addComponent(out);
+
+    }
 
     /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
@@ -1605,16 +1623,16 @@ public abstract class MathCommandCompiler {
                 (MatrixExpression) command.getParams()[0],
                 Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_2"));
 
-        Object[] eigenvaluesAsArray = new Object[2 * eigenvalues.getBound() - 1];
+        ArrayList eigenvaluesAsArrayList = new ArrayList();
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
-            eigenvaluesAsArray[2 * i] = eigenvalues.get(i);
+            eigenvaluesAsArrayList.add(eigenvalues.get(i));
             if (i < eigenvalues.getBound() - 1) {
-                eigenvaluesAsArray[2 * i + 1] = ", ";
+                eigenvaluesAsArrayList.add(", ");
             }
         }
 
-        doPrintOutput(eigenvaluesAsArray);
+        doPrintOutput(eigenvaluesAsArrayList);
 
     }
 
@@ -1631,8 +1649,7 @@ public abstract class MathCommandCompiler {
         MatrixExpressionCollection eigenvectors;
         MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
 
-        String eigenvectorsAsString;
-        ArrayList<Object> eigenvectorsAsObjectArray;
+        ArrayList<Object> eigenvectorsAsArrayList;
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
 
@@ -1643,44 +1660,27 @@ public abstract class MathCommandCompiler {
             // Eigenvektoren berechnen.
             eigenvectors = EigenvaluesEigenvectorsAlgorithms.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
 
-            eigenvectorsAsString = "";
-            eigenvectorsAsObjectArray = new ArrayList<>();
-            eigenvectorsAsObjectArray.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
-            eigenvectorsAsObjectArray.add(eigenvalues.get(i));
-            eigenvectorsAsObjectArray.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
+            eigenvectorsAsArrayList = new ArrayList<>();
+            eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
+            eigenvectorsAsArrayList.add(eigenvalues.get(i));
+            eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
             if (eigenvectors.isEmpty()) {
-                // Für textliche Ausgabe
-                eigenvectorsAsString = Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS");
-                // Für graphische Ausgabe
-                eigenvectorsAsObjectArray.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
+                eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
             } else {
                 for (int j = 0; j < eigenvectors.getBound(); j++) {
-
-                    // Für textliche Ausgabe
-                    eigenvectorsAsString = eigenvectorsAsString + eigenvectors.get(j).writeMatrixExpression();
-                    // Für graphische Ausgabe
-                    eigenvectorsAsObjectArray.add(eigenvectors.get(j));
+                    eigenvectorsAsArrayList.add(eigenvectors.get(j));
                     if (j < eigenvectors.getBound() - 1) {
-                        eigenvectorsAsString = eigenvectorsAsString + ", ";
-                        eigenvectorsAsObjectArray.add(", ");
+                        eigenvectorsAsArrayList.add(", ");
                     }
-
                 }
             }
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1")
-                    + eigenvalues.get(i).writeExpression()
-                    + Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2")
-                    + eigenvectorsAsString + "\n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(eigenvectorsAsObjectArray);
+            
+            doPrintOutput(eigenvectorsAsArrayList);
+            
         }
 
         if (eigenvalues.isEmpty()) {
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EIGENVECTORS"));
         }
 
     }
@@ -1803,18 +1803,18 @@ public abstract class MathCommandCompiler {
             }
             maxIndex--;
 
-            Object[] freeParametersInfoArray = new Object[2 * maxIndex];
+            ArrayList freeParametersInfoArray = new ArrayList();
 
             for (int i = 1; i <= maxIndex; i++) {
-                freeParametersInfoArray[2 * i - 2] = new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR, BigInteger.valueOf(i));
+                freeParametersInfoArray.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR, BigInteger.valueOf(i)));
                 if (i < maxIndex - 1) {
-                    freeParametersInfoArray[2 * i - 1] = ", ";
+                    freeParametersInfoArray.add(", ");
                 }
             }
             if (maxIndex == 1) {
-                freeParametersInfoArray[1] = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER");
+                freeParametersInfoArray.add(Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER"));
             } else {
-                freeParametersInfoArray[2 * maxIndex - 1] = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS");
+                freeParametersInfoArray.add(Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS"));
             }
 
             doPrintOutput(freeParametersInfoArray);
