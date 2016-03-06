@@ -230,6 +230,24 @@ public abstract class MathCommandCompiler {
     }
 
     /**
+     * Leitet die Ausgabe an die textliche und die grafische Ausgabeoberfläche
+     * weiter.
+     */
+    private static void doPrintOutput(Object... out) {
+
+        // Textliche Ausgabe.
+        String lineToPrint = "";
+        for (Object o : out) {
+            lineToPrint += o.toString();
+        }
+        mathToolTextArea.append(lineToPrint + " \n \n");
+
+        // Grafische Ausgabe.
+        mathToolGraphicArea.addComponent(out);
+
+    }
+
+    /**
      * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
      * benötigt. Sie prüft nach, ob name keine bereits definierte Funktion,
      * Operator oder Befehl ist. Ferner dürfen die Zeichen + - * / ^ nicht
@@ -1388,10 +1406,9 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        for (String out : output) {
-            mathToolTextArea.append(out);
-        }
-
+//        for (String out : output) {
+//            mathToolTextArea.append(out);
+//        }
     }
 
     /**
@@ -1420,16 +1437,11 @@ public abstract class MathCommandCompiler {
              (precise = false) sind.
              */
             Variable.setAllPrecise(true);
-
-            // Textliche Ausgabe
-            output.add(expr.writeExpression() + " \n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(expr);
+            doPrintOutput(expr);
 
         } else if (command.getParams()[0] instanceof MatrixExpression) {
 
             MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
-
             // Mit Werten belegte Variablen müssen durch ihren exakten Ausdruck ersetzt werden.
             matExpr = matExpr.simplifyByInsertingDefinedVars();
             // Zunächst wird, soweit es geht, EXAKT vereinfacht, danach approximativ ausgewertet.
@@ -1441,11 +1453,7 @@ public abstract class MathCommandCompiler {
              (precise = false) sind.
              */
             Variable.setAllPrecise(true);
-
-            // Textliche Ausgabe
-            output.add(matExpr.writeMatrixExpression() + " \n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(matExpr);
+            doPrintOutput(matExpr);
 
         }
 
@@ -1460,12 +1468,8 @@ public abstract class MathCommandCompiler {
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF", logExpr));
         }
-
         LogicalExpression logExprInCCNF = logExpr.toCCNF();
-        // Textliche Ausgabe
-        output.add(logExprInCCNF.writeLogicalExpression() + " \n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(logExprInCCNF);
+        doPrintOutput(logExprInCCNF);
 
     }
 
@@ -1478,12 +1482,8 @@ public abstract class MathCommandCompiler {
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF", logExpr));
         }
-
         LogicalExpression logExprInCDNF = logExpr.toCDNF();
-        // Textliche Ausgabe
-        output.add(logExprInCDNF.writeLogicalExpression() + " \n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(logExprInCDNF);
+        doPrintOutput(logExprInCDNF);
 
     }
 
@@ -1504,31 +1504,18 @@ public abstract class MathCommandCompiler {
             Expression preciseExpression = ((Expression) command.getParams()[1]).simplifyByInsertingDefinedVars().simplify();
             Variable.setPreciseExpression(var, preciseExpression);
             if (((Expression) command.getParams()[1]).equals(preciseExpression)) {
-                // Textliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
-                        + preciseExpression.writeExpression()
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
-                        + " \n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
-                        preciseExpression, Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1"),
+                        var,
+                        Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
+                        preciseExpression,
+                        Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             } else {
-                // Textliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2")
-                        + ((Expression) command.getParams()[1]).writeExpression() + " = " + preciseExpression.writeExpression()
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3")
-                        + " \n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1")
-                        + var
-                        + Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
-                        (Expression) command.getParams()[1], " = ", preciseExpression,
+                doPrintOutput(Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_1"),
+                        var,
+                        Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_2"),
+                        (Expression) command.getParams()[1],
+                        " = ",
+                        preciseExpression,
                         Translator.translateOutputMessage("MCC_VALUE_ASSIGNED_TO_VARIABLE_3"));
             }
         } else {
@@ -1545,11 +1532,7 @@ public abstract class MathCommandCompiler {
             SelfDefinedFunction f = new SelfDefinedFunction(functionName, vars, (Expression) command.getParams()[command.getParams().length - 1], exprsForVars);
             SelfDefinedFunction.createSelfDefinedFunction(f);
 
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_FUNCTION_WAS_DEFINED") + f.writeExpression() + " = "
-                    + f.getAbstractExpression().writeExpression() + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_FUNCTION_WAS_DEFINED"),
+            doPrintOutput(Translator.translateOutputMessage("MCC_FUNCTION_WAS_DEFINED"),
                     f, " = ", f.getAbstractExpression());
 
         }
@@ -1566,10 +1549,7 @@ public abstract class MathCommandCompiler {
         // Alle selbstdefinierten Funktionen nacheinander ausgeben.
         if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().isEmpty()) {
 
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_LIST_OF_DEFINED_FUNCTIONS") + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_LIST_OF_DEFINED_FUNCTIONS"));
             for (String functionName : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()) {
 
                 arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().get(functionName);
@@ -1580,50 +1560,27 @@ public abstract class MathCommandCompiler {
                     exprsForVars[i] = Variable.create(NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (i + 1));
                 }
                 SelfDefinedFunction f = new SelfDefinedFunction(functionName, arguments, abstractExpression, exprsForVars);
-
-                // Textliche Ausgabe
-                output.add(f.writeExpression() + " = " + f.getAbstractExpression().writeExpression() + "\n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(f, " = ", f.getAbstractExpression());
+                doPrintOutput(f, " = ", f.getAbstractExpression());
 
             }
 
         } else {
-
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_DEFINED_FUNCTIONS") + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_DEFINED_FUNCTIONS"));
-
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_DEFINED_FUNCTIONS"));
         }
 
     }
 
     @Execute(type = TypeCommand.defvars)
     public static void executeDefVars(Command command) {
-
         HashSet<String> vars = Variable.getVariablesWithPredefinedValues();
-
         if (!vars.isEmpty()) {
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_LIST_OF_VARIABLES") + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LIST_OF_VARIABLES"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : vars) {
-                // Textliche Ausgabe
-                output.add(var + " = " + Variable.create(var).getPreciseExpression().writeExpression() + "\n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(var, " = ", Variable.create(var).getPreciseExpression());
+                doPrintOutput(var, " = ", Variable.create(var).getPreciseExpression());
             }
         } else {
-
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_DEFINED_VARS") + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_DEFINED_VARS"));
-
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_DEFINED_VARS"));
         }
-
     }
 
     @Execute(type = TypeCommand.eigenvalues)
@@ -1637,44 +1594,27 @@ public abstract class MathCommandCompiler {
         ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
         if (eigenvalues.isEmpty()) {
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_EIGENVALUES_1")
-                    + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
-                    + Translator.translateOutputMessage("MCC_NO_EIGENVALUES_2") + "\n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_EIGENVALUES_1"),
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_EIGENVALUES_1"),
                     (MatrixExpression) command.getParams()[0],
                     Translator.translateOutputMessage("MCC_NO_EIGENVALUES_2"));
             return;
         }
 
         // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_1")
-                + ((MatrixExpression) command.getParams()[0]).writeMatrixExpression()
-                + Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_2") + "\n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_1"),
+        doPrintOutput(Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_1"),
                 (MatrixExpression) command.getParams()[0],
                 Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_2"));
 
-        String eigenvaluesAsString = "";
-        ArrayList<Object> eigenvaluesAsObjectArray = new ArrayList<>();
+        Object[] eigenvaluesAsArray = new Object[2 * eigenvalues.getBound() - 1];
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
-            // Für textliche Ausgabe
-            eigenvaluesAsString = eigenvaluesAsString + eigenvalues.get(i).writeExpression();
-            // Für graphische Ausgabe
-            eigenvaluesAsObjectArray.add(eigenvalues.get(i));
+            eigenvaluesAsArray[2 * i] = eigenvalues.get(i);
             if (i < eigenvalues.getBound() - 1) {
-                eigenvaluesAsString = eigenvaluesAsString + ", ";
-                eigenvaluesAsObjectArray.add(", ");
+                eigenvaluesAsArray[2 * i + 1] = ", ";
             }
         }
 
-        // Textliche Ausgabe
-        output.add(eigenvaluesAsString);
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(eigenvaluesAsObjectArray);
+        doPrintOutput(eigenvaluesAsArray);
 
     }
 
@@ -1748,20 +1688,14 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.euler)
     private static void executeEuler(Command command) throws EvaluationException {
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
-        // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]) + e.toString() + "\n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]) + e.toString());
+        doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]), e.toString());
     }
 
     @Execute(type = TypeCommand.expand)
     private static void executeExpand(Command command) throws EvaluationException {
         Expression expr = (Expression) command.getParams()[0];
         expr = expr.simplify(simplifyTypesExpand);
-        // Textliche Ausgabe
-        output.add(expr.writeExpression() + "\n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(expr);
+        doPrintOutput(expr);
     }
 
     @Execute(type = TypeCommand.extrema)
@@ -1792,10 +1726,7 @@ public abstract class MathCommandCompiler {
         // Fall: expr ist bzgl. var konstant.
         if (expr.getContainedIndeterminates().isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND"));
             return;
         }
 
@@ -1823,54 +1754,11 @@ public abstract class MathCommandCompiler {
 
         if (extremaPoints.isEmpty()) {
             // Keinen Kandidaten für Extrema gefunden.
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND") + "\n \n");
-            // Graphische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXTREMA_FOUND"));
             return;
         }
 
-        // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_EXTREMA")
-                + ((Expression) command.getParams()[0]).writeExpression()
-                + ": \n \n");
-
-        for (int i = 0; i < extremaPoints.getBound(); i++) {
-            /*
-             Falls var etwa x_1 ist, so sollen die Extremstellen
-             (x_1)_i, i = 1, 2, 3, ... heißen.
-             */
-            if (var.contains("_")) {
-                if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
-                    output.add(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN")
-                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
-                            + Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
-                            + extremaValues.get(i).writeExpression()
-                            + "\n \n");
-                } else {
-                    output.add(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN")
-                            + "(" + var + ")_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
-                            + Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
-                            + extremaValues.get(i).writeExpression()
-                            + "\n \n");
-                }
-            } else if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
-                output.add(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN")
-                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
-                        + Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
-                        + extremaValues.get(i).writeExpression()
-                        + "\n \n");
-            } else {
-                output.add(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN")
-                        + var + "_" + (i + 1) + " = " + extremaPoints.get(i).writeExpression()
-                        + Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE")
-                        + extremaValues.get(i).writeExpression()
-                        + "\n \n");
-            }
-        }
-
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], " :");
+        doPrintOutput(Translator.translateOutputMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], ":");
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
@@ -1879,12 +1767,12 @@ public abstract class MathCommandCompiler {
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
             if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN"),
+                doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN"),
                         multiVar, " = ", extremaPoints.get(i),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
                         extremaValues.get(i));
             } else {
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN"),
+                doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN"),
                         multiVar, " = ", extremaPoints.get(i),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
                         extremaValues.get(i));
@@ -1896,8 +1784,6 @@ public abstract class MathCommandCompiler {
          ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
          */
         boolean solutionContainsFreeParameter = false;
-        String freeParameters = "";
-        String infoAboutFreeParameters = "";
 
         for (int i = 0; i < extremaPoints.getBound(); i++) {
             solutionContainsFreeParameter = solutionContainsFreeParameter || extremaPoints.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
@@ -1917,32 +1803,21 @@ public abstract class MathCommandCompiler {
             }
             maxIndex--;
 
-            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
-            for (int i = 1; i <= maxIndex; i++) {
-                freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
-                freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
-            }
-            freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
-            if (maxIndex == 1) {
-                infoAboutFreeParameters = infoAboutFreeParameters
-                        + Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
-            } else {
-                infoAboutFreeParameters = infoAboutFreeParameters
-                        + Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
-            }
+            Object[] freeParametersInfoArray = new Object[2 * maxIndex];
 
-            // Textliche Ausgabe
-            output.add(freeParameters + infoAboutFreeParameters);
-            // Grafische Ausgabe
-            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
-            for (int i = 0; i < freeParameterVars.size(); i++) {
-                infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
-                if (i < freeParameterVars.size() - 1) {
-                    infoAboutFreeParametersForGraphicArea.add(", ");
+            for (int i = 1; i <= maxIndex; i++) {
+                freeParametersInfoArray[2 * i - 2] = new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR, BigInteger.valueOf(i));
+                if (i < maxIndex - 1) {
+                    freeParametersInfoArray[2 * i - 1] = ", ";
                 }
             }
-            infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-            mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+            if (maxIndex == 1) {
+                freeParametersInfoArray[1] = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER");
+            } else {
+                freeParametersInfoArray[2 * maxIndex - 1] = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS");
+            }
+
+            doPrintOutput(freeParametersInfoArray);
 
         }
 
