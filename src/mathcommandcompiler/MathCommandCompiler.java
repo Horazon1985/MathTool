@@ -248,8 +248,16 @@ public abstract class MathCommandCompiler {
 
         // Textliche Ausgabe.
         String lineToPrint = "";
+        boolean nextExpressionIsSurroundedByBrackets = false;
         for (Object o : out) {
-            lineToPrint += o.toString();
+            if (o instanceof TypeBracket) {
+                nextExpressionIsSurroundedByBrackets = true;
+            } else if (nextExpressionIsSurroundedByBrackets) {
+                lineToPrint += "(" + o.toString() + ")";
+                nextExpressionIsSurroundedByBrackets = false;
+            } else {
+                lineToPrint += o.toString();
+            }
         }
         mathToolTextArea.append(lineToPrint + " \n \n");
 
@@ -1415,7 +1423,7 @@ public abstract class MathCommandCompiler {
                 }
             }
         }
-        
+
     }
 
     /**
@@ -2593,7 +2601,7 @@ public abstract class MathCommandCompiler {
 
             ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
             Expression regressionLine = SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
-            
+
             doPrintOutput(Translator.translateOutputMessage("MCC_REGRESSIONLINE_MESSAGE"),
                     "Y = ", regressionLine);
 
@@ -2866,10 +2874,9 @@ public abstract class MathCommandCompiler {
         expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
-        Iterator iter = vars.iterator();
         String varWithoutPrimes;
-        for (int i = 0; i < vars.size(); i++) {
-            varWithoutPrimes = (String) iter.next();
+        for (String var : vars) {
+            varWithoutPrimes = var;
             if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
                     throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
@@ -2896,6 +2903,7 @@ public abstract class MathCommandCompiler {
          werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
         String varOrd;
+        Iterator iter = vars.iterator();
 
         if (varsWithoutPrimes.isEmpty()) {
             if (varAbsc.equals("y")) {
@@ -3282,10 +3290,9 @@ public abstract class MathCommandCompiler {
         expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
-        Iterator iter = vars.iterator();
         String varWithoutPrimes;
-        for (int i = 0; i < vars.size(); i++) {
-            varWithoutPrimes = (String) iter.next();
+        for (String var : vars) {
+            varWithoutPrimes = var;
             if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
                 if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
                     throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
@@ -3309,6 +3316,7 @@ public abstract class MathCommandCompiler {
          werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
         String varOrd;
+        Iterator<String> iter = vars.iterator();
 
         if (varsWithoutPrimes.isEmpty()) {
             if (varAbsc.equals("y")) {
