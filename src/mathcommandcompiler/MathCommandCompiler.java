@@ -132,13 +132,6 @@ public abstract class MathCommandCompiler {
     private static final HashSet simplifyTypesPlot = getSimplifyTypesPlot();
     private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
 
-    /**
-     * Hier werden Berechnungsergebnisse/zusätzliche
-     * Hinweise/Meldungen/Warnungen etc. gespeichert, die dem Benutzer nach
-     * Beenden der Befehlsausführung mitgeteilt werden.
-     */
-    private static final ArrayList<String> output = new ArrayList<>();
-
     private static HashSet<TypeSimplify> getSimplifyTypesExpand() {
         HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
         simplifyTypes.add(TypeSimplify.simplify_trivial);
@@ -1395,7 +1388,6 @@ public abstract class MathCommandCompiler {
      */
     public static void executeCommand(String input) throws ExpressionException, EvaluationException {
 
-        output.clear();
         input = input.replaceAll(" ", "").toLowerCase();
 
         String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
@@ -1423,10 +1415,7 @@ public abstract class MathCommandCompiler {
                 }
             }
         }
-
-//        for (String out : output) {
-//            mathToolTextArea.append(out);
-//        }
+        
     }
 
     /**
@@ -2936,29 +2925,25 @@ public abstract class MathCommandCompiler {
         double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquation(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
 
         // Formulierung und Ausgabe des AWP.
-        String formulationOfAWPForTextArea = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
+        String formulationOfAWP = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
         ArrayList formulationOfAWPForGraphicArea = new ArrayList();
 
         for (int i = 0; i < ord; i++) {
-            formulationOfAWPForTextArea = formulationOfAWPForTextArea + "'";
+            formulationOfAWP = formulationOfAWP + "'";
         }
+        formulationOfAWP += "(" + varAbsc + ") = ";
 
-        formulationOfAWPForGraphicArea.add(formulationOfAWPForTextArea + "(" + varAbsc + ") = ");
+        formulationOfAWPForGraphicArea.add(formulationOfAWP);
         formulationOfAWPForGraphicArea.add(expr);
-        formulationOfAWPForTextArea = formulationOfAWPForTextArea + "(" + varAbsc + ") = " + expr.writeExpression();
 
         String varOrdWithPrimes;
         for (int i = 0; i < ord; i++) {
-            formulationOfAWPForTextArea = formulationOfAWPForTextArea + ", " + varOrd;
             formulationOfAWPForGraphicArea.add(", ");
             varOrdWithPrimes = varOrd;
             for (int j = 0; j < i; j++) {
-                formulationOfAWPForTextArea = formulationOfAWPForTextArea + "'";
                 varOrdWithPrimes = varOrdWithPrimes + "'";
             }
 
-            formulationOfAWPForTextArea = formulationOfAWPForTextArea + "(" + x_0.writeExpression() + ") = ";
-            formulationOfAWPForTextArea = formulationOfAWPForTextArea + y_0[i].writeExpression();
             formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
             formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
             formulationOfAWPForGraphicArea.add(x_0);
@@ -2966,7 +2951,6 @@ public abstract class MathCommandCompiler {
             formulationOfAWPForGraphicArea.add(y_0[i]);
         }
 
-        formulationOfAWPForTextArea = formulationOfAWPForTextArea + ", " + x_0.writeExpression() + " \u2264 " + varAbsc + " \u2264 " + x_1.writeExpression() + ": \n \n";
         formulationOfAWPForGraphicArea.add(", ");
         formulationOfAWPForGraphicArea.add(x_0);
         formulationOfAWPForGraphicArea.add(" \u2264 ");
@@ -2975,23 +2959,15 @@ public abstract class MathCommandCompiler {
         formulationOfAWPForGraphicArea.add(x_1);
         formulationOfAWPForGraphicArea.add(":");
 
-        // Texttliche Ausgabe
-        output.add(formulationOfAWPForTextArea);
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(formulationOfAWPForGraphicArea);
+        doPrintOutput(formulationOfAWPForGraphicArea);
 
         // Lösungen ausgeben.
         for (double[] solution : solutionOfDifferentialEquation) {
-            // Texttliche Ausgabe
-            output.add(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1] + "\n \n");
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
+            doPrintOutput(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
         }
         if (solutionOfDifferentialEquation.length < 1001) {
             // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
-            output.add(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
-                    + ". \n \n");
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+            doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
                     + ".");
         }
 
@@ -3130,30 +3106,17 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES", logExpr));
         }
 
-        // Texttliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION") + logExpr.writeLogicalExpression() + ": \n \n");
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr, ":");
+        doPrintOutput(Translator.translateOutputMessage("MCC_TABLE_OF_VALUES_FOR_LOGICAL_EXPRESSION"), logExpr, ":");
 
         // Falls es sich um einen konstanten Ausdruck handelt.
         if (numberOfVars == 0) {
             boolean value = logExpr.evaluate();
             if (value) {
-                // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + logExpr.writeLogicalExpression()
-                        + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2") + " \n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
+                doPrintOutput(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
                         logExpr,
                         Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_2"));
             } else {
-                // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1")
-                        + logExpr.writeLogicalExpression()
-                        + Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3") + " \n \n");
-                // Grafische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
+                doPrintOutput(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_1"),
                         logExpr,
                         Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_IS_CONSTANT_3"));
             }
@@ -3177,12 +3140,9 @@ public abstract class MathCommandCompiler {
         for (int i = 0; i < varsEnumerated.size(); i++) {
             varsInOrder = varsInOrder + varsEnumerated.get(i) + ", ";
         }
-        varsInOrder = varsInOrder.substring(0, varsInOrder.length() - 2) + " \n \n";
+        varsInOrder = varsInOrder.substring(0, varsInOrder.length() - 2);
 
-        // Texttliche Ausgabe
-        output.add(varsInOrder);
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(varsInOrder);
+        doPrintOutput(varsInOrder);
 
         /*
          Erstellung eines Binärcounters zum Durchlaufen aller möglichen
@@ -3207,22 +3167,14 @@ public abstract class MathCommandCompiler {
 
             currentValue = logExpr.evaluate();
             if (currentValue) {
-                binaryCounter = binaryCounter + "1 \n";
+                binaryCounter = binaryCounter + "1";
             } else {
-                binaryCounter = binaryCounter + "0 \n";
+                binaryCounter = binaryCounter + "0";
             }
 
-            // Texttliche Ausgabe
-            output.add(binaryCounter);
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(binaryCounter);
+            doPrintOutput(binaryCounter);
 
             varsValues = LogicalExpression.binaryCounter(varsValues);
-
-            // Am Ende der Tabelle: Leerzeile lassen.
-            if (i == tableLength - 1) {
-                output.add("\n");
-            }
 
         }
 
@@ -3235,33 +3187,24 @@ public abstract class MathCommandCompiler {
         Expression expr = (Expression) command.getParams()[0];
         HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
 
-        String tangentInfoForTextArea = Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_1")
-                + expr.writeExpression()
-                + Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_2");
         ArrayList tangentInfoForGraphicArea = new ArrayList();
         tangentInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
         tangentInfoForGraphicArea.add(expr);
         tangentInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
-            tangentInfoForTextArea = tangentInfoForTextArea + var + " = " + vars.get(var).writeExpression() + ", ";
             tangentInfoForGraphicArea.add(var + " = ");
             tangentInfoForGraphicArea.add(vars.get(var));
             tangentInfoForGraphicArea.add(", ");
         }
         // In der textlichen und in der grafischen Ausgabe das letzte (überflüssige) Komma entfernen.
-        tangentInfoForTextArea = tangentInfoForTextArea.substring(0, tangentInfoForTextArea.length() - 2) + ": \n \n";
         tangentInfoForGraphicArea.remove(tangentInfoForGraphicArea.size() - 1);
-        tangentInfoForGraphicArea.add(" :");
+        tangentInfoForGraphicArea.add(":");
 
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
 
-        // Texttliche Ausgabe
-        output.add(tangentInfoForTextArea);
-        output.add("Y = " + tangent.writeExpression() + "\n \n");
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(tangentInfoForGraphicArea);
-        mathToolGraphicArea.addComponent("Y = ", tangent);
+        doPrintOutput(tangentInfoForGraphicArea);
+        doPrintOutput("Y = ", tangent);
 
         if (vars.size() == 1) {
 
@@ -3393,10 +3336,7 @@ public abstract class MathCommandCompiler {
         }
 
         Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
-        // Texttliche Ausgabe
-        output.add(varOrd + "(" + varAbsc + ") = " + result.writeExpression() + "\n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(varOrd + "(" + varAbsc + ") = ", result);
+        doPrintOutput(varOrd + "(" + varAbsc + ") = ", result);
 
     }
 
