@@ -3064,13 +3064,8 @@ public abstract class MathCommandCompiler {
         try {
 
             Expression[] solutions = GaussAlgorithm.solveLinearSystemOfEquations(m, b);
-            // Texttliche Ausgabe
             for (int i = 0; i < solutions.length; i++) {
-                output.add(solutionVars.get(i) + " = " + solutions[i] + ": \n \n");
-            }
-            // Grafische Ausgabe
-            for (int i = 0; i < solutions.length; i++) {
-                mathToolGraphicArea.addComponent(solutionVars.get(i), " = ", solutions[i]);
+                doPrintOutput(solutionVars.get(i), " = ", solutions[i]);
             }
 
             /*
@@ -3078,8 +3073,7 @@ public abstract class MathCommandCompiler {
              ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
              */
             boolean solutionContainsFreeParameter = false;
-            String freeParameters = "";
-            String infoAboutFreeParameters = "";
+            String infoAboutFreeParameters;
 
             for (Expression solution : solutions) {
                 solutionContainsFreeParameter = solutionContainsFreeParameter || solution.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_0");
@@ -3099,21 +3093,14 @@ public abstract class MathCommandCompiler {
 
                 ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
                 for (int i = 0; i <= maxIndex; i++) {
-                    freeParameters = freeParameters + "T_" + i + ", ";
-                    freeParameterVars.add(new MultiIndexVariable("T_" + i));
+                    freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_REAL_PARAMETER_VAR, BigInteger.valueOf(i)));
                 }
-                freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
                 if (maxIndex == 0) {
-                    infoAboutFreeParameters = infoAboutFreeParameters
-                            + Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_SOLVESYSTEM") + " \n \n";
+                    infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_SOLVESYSTEM");
                 } else {
-                    infoAboutFreeParameters = infoAboutFreeParameters
-                            + Translator.translateOutputMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM") + " \n \n";
+                    infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM");
                 }
 
-                // Textliche Ausgabe
-                output.add(freeParameters + infoAboutFreeParameters);
-                // Grafische Ausgabe
                 ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
                 for (int i = 0; i < freeParameterVars.size(); i++) {
                     infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
@@ -3122,15 +3109,12 @@ public abstract class MathCommandCompiler {
                     }
                 }
                 infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-                mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+                doPrintOutput(infoAboutFreeParametersForGraphicArea);
 
             }
 
         } catch (EvaluationException e) {
-            // Texttliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_SYSTEM_NOT_SOLVABLE"));
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SYSTEM_NOT_SOLVABLE"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_SYSTEM_NOT_SOLVABLE"));
         }
 
     }
@@ -3426,10 +3410,7 @@ public abstract class MathCommandCompiler {
                 SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().remove((String) function);
                 SelfDefinedFunction.getArgumentsForSelfDefinedFunctions().remove((String) function);
                 SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions().remove((String) function);
-                // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED", function) + " \n \n");
-                // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED", function));
+                doPrintOutput(Translator.translateOutputMessage("MCC_FUNCTION_IS_REMOVED", function));
             }
         }
 
@@ -3443,10 +3424,7 @@ public abstract class MathCommandCompiler {
         for (Object var : vars) {
             if (Variable.getVariablesWithPredefinedValues().contains((String) var)) {
                 Variable.setPreciseExpression((String) var, null);
-                // Texttliche Ausgabe
-                output.add(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN", var) + " \n \n");
-                // Graphische Ausgabe
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN", var));
+                doPrintOutput(Translator.translateOutputMessage("MCC_VARIABLE_IS_INDETERMINATE_AGAIN", var));
             }
         }
 
@@ -3471,10 +3449,7 @@ public abstract class MathCommandCompiler {
             innerExpressions.remove(f);
             arguments.remove(f);
         }
-        // Texttliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED") + " \n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED"));
+        doPrintOutput(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS_ARE_REMOVED"));
 
     }
 
@@ -3484,10 +3459,7 @@ public abstract class MathCommandCompiler {
         for (String var : Variable.getVariablesWithPredefinedValues()) {
             Variable.setPreciseExpression(var, null);
         }
-        // Texttliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN") + " \n \n");
-        // Graphische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN"));
+        doPrintOutput(Translator.translateOutputMessage("MCC_ALL_VARIABLES_ARE_INDETERMINATES_AGAIN"));
 
     }
 
