@@ -2691,32 +2691,10 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION")
-                + ((Expression[]) command.getParams()[0])[0].writeExpression()
-                + " = "
-                + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
+        doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+                " = ", ((Expression[]) command.getParams()[0])[1], ":");
         if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
-            output.add(Translator.translateOutputMessage("MCC_ALL_REALS") + " \n \n");
-        } else {
-            for (int i = 0; i < zeros.getBound(); i++) {
-                /*
-                 Falls var etwa x_1 ist, so sollen die Lösungen
-                 (x_1)_i, i = 1, 2, 3, ... heißen.
-                 */
-                if (var.contains("_")) {
-                    output.add("(" + var + ")_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                } else {
-                    output.add(var + "_" + (i + 1) + " = " + zeros.get(i).writeExpression() + "\n \n");
-                }
-            }
-        }
-
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
-                " = ", ((Expression[]) command.getParams()[0])[1], " :");
-        if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_ALL_REALS") + " \n \n");
+            doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
         } else {
             MultiIndexVariable multiVar;
             ArrayList<BigInteger> multiIndex;
@@ -2724,7 +2702,7 @@ public abstract class MathCommandCompiler {
                 multiVar = new MultiIndexVariable(Variable.create(var));
                 multiIndex = multiVar.getIndices();
                 multiIndex.add(BigInteger.valueOf(i + 1));
-                mathToolGraphicArea.addComponent(multiVar, " = ", zeros.get(i));
+                doPrintOutput(multiVar, " = ", zeros.get(i));
             }
         }
 
@@ -2733,8 +2711,7 @@ public abstract class MathCommandCompiler {
          ausgeben: K_1, K_2, ... sind beliebige ganze Zahlen.
          */
         boolean solutionContainsFreeParameter = false;
-        String freeParameters = "";
-        String infoAboutFreeParameters = "";
+        String infoAboutFreeParameters;
 
         for (int i = 0; i < zeros.getBound(); i++) {
             solutionContainsFreeParameter = solutionContainsFreeParameter || zeros.get(i).contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
@@ -2755,21 +2732,14 @@ public abstract class MathCommandCompiler {
 
             ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
             for (int i = 1; i <= maxIndex; i++) {
-                freeParameters = freeParameters + NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i + ", ";
                 freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
             }
-            freeParameters = freeParameters.substring(0, freeParameters.length() - 2);
             if (maxIndex == 1) {
-                infoAboutFreeParameters = infoAboutFreeParameters
-                        + Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
             } else {
-                infoAboutFreeParameters = infoAboutFreeParameters
-                        + Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
             }
 
-            // Textliche Ausgabe
-            output.add(freeParameters + infoAboutFreeParameters);
-            // Grafische Ausgabe
             ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
             for (int i = 0; i < freeParameterVars.size(); i++) {
                 infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
@@ -2778,7 +2748,7 @@ public abstract class MathCommandCompiler {
                 }
             }
             infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-            mathToolGraphicArea.addComponent(infoAboutFreeParametersForGraphicArea);
+            doPrintOutput(infoAboutFreeParametersForGraphicArea);
 
         }
 
@@ -2821,23 +2791,12 @@ public abstract class MathCommandCompiler {
         }
 
         if (equation.isConstant()) {
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION")
-                    + ((Expression[]) command.getParams()[0])[0].writeExpression()
-                    + " = "
-                    + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
+            doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+                    " = ", ((Expression[]) command.getParams()[0])[1], ":");
             if (equation.equals(Expression.ZERO)) {
-                output.add(Translator.translateOutputMessage("MCC_ALL_REALS") + " \n \n");
+                doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
             } else {
-                output.add(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS") + " \n \n");
-            }
-            // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
-                    " = ", ((Expression[]) command.getParams()[0])[1], " :");
-            if (equation.equals(Expression.ZERO)) {
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_ALL_REALS"));
-            } else {
-                mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
             }
 
             // Graphen der linken und der rechten Seite zeichnen.
@@ -2852,36 +2811,22 @@ public abstract class MathCommandCompiler {
 
         ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
-        // Textliche Ausgabe
-        output.add(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION")
-                + ((Expression[]) command.getParams()[0])[0].writeExpression()
-                + " = "
-                + ((Expression[]) command.getParams()[0])[1].writeExpression() + ": \n \n");
-        // Grafische Ausgabe
-        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
-                " = ", ((Expression[]) command.getParams()[0])[1], " :");
+        doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
+                " = ", ((Expression[]) command.getParams()[0])[1], ":");
 
         MultiIndexVariable multiVar;
         ArrayList<BigInteger> multiIndex;
-        String varForTextOutput = var;
-        if (var.contains("_")) {
-            varForTextOutput = "(" + var + ")";
-        }
         for (int i = 0; i < zeros.size(); i++) {
-            // Textliche Ausgabe
-            output.add(varForTextOutput + "_" + (i + 1) + " = " + zeros.get(i) + "\n \n");
             // Grafische Ausgabe
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
-            mathToolGraphicArea.addComponent(multiVar, " = " + String.valueOf(zeros.get(i)));
+            doPrintOutput(multiVar, " = " + String.valueOf(zeros.get(i)));
         }
 
         if (zeros.isEmpty()) {
-            // Textliche Ausgabe
-            output.add(Translator.translateOutputMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND") + " \n \n");
             // Grafische Ausgabe
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_SOLUTIONS_OF_EQUATION_FOUND"));
         }
 
         // Nullstellen als Array (zum Markieren).

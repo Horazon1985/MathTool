@@ -92,7 +92,7 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 
 In addition, MathTool plots both graphs (those of x^3+x/2+3 and of 12+25*(x-2)/2).<br><br>
 
-<strong>taylordeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+<strong>taylordiffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
 <em>Example:</em> taylordeq(-y,t,2,0,1,0,10) returns the Taylor polynomial of degree 10 of the solution of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0. The exact solution is given by y(t) = cos(t), hence the power series is<br><br>
 

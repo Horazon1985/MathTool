@@ -92,7 +92,7 @@ MathTool знает такие команды:<br><br>
 
 Дополнительно MathTool строит оба графика (функций x^3+x/2+3 и 12+25*(x-2)/2).<br><br>
 
-<strong>taylordeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Возвращает полином Тейлора степеня m решения дифференциального уравнения y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+<strong>taylordiffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Возвращает полином Тейлора степеня m решения дифференциального уравнения y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
 <em>Пример:</em> taylordeq(-y,t,2,0,1,0,10) вернёт полином Тейлора степеня 10 уравнения y''(t) = -y(t), y(0) = 1, y'(0) = 0. Точное решение задано равенством y(t) = cos(t), поскольку последовательности степеней имеют следующий вид<br><br>
 
