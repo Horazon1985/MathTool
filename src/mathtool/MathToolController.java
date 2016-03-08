@@ -426,7 +426,7 @@ public class MathToolController {
             return 6;
         }
         if (commandName.equals(TypeCommand.solvediffeq.name())) {
-            return 5;
+            return 2;
         }
         if (commandName.equals(TypeCommand.tangent.name())) {
             return 1;
