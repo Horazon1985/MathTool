@@ -3044,7 +3044,7 @@ public abstract class MathCommandCompiler {
         BigInteger degInVar;
         for (int i = 0; i < numberOfEquations; i++) {
             for (String solutionVar : solutionVars) {
-                degInVar = SimplifyPolynomialMethods.degreeOfPolynomial(equations[i], solutionVar);
+                degInVar = SimplifyPolynomialMethods.getDegreeOfPolynomial(equations[i], solutionVar);
                 if (degInVar.compareTo(BigInteger.ONE) > 0) {
                     throw new EvaluationException(Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM", i + 1, solutionVar));
                 }
