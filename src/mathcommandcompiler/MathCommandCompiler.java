@@ -17,6 +17,7 @@ import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.TypeFunction;
 import abstractexpressions.expression.classes.TypeOperator;
 import abstractexpressions.expression.classes.Variable;
+import abstractexpressions.expression.diferentialequation.SolveGeneralDifferentialEquationMethods;
 import abstractexpressions.expression.utilities.ExpressionCollection;
 import abstractexpressions.expression.utilities.SimplifyPolynomialMethods;
 import graphic.GraphicArea;
@@ -2862,7 +2863,34 @@ public abstract class MathCommandCompiler {
     private static void executeSolveDiffEquationAlgebraic(Command command)
             throws EvaluationException {
 
-        // TO DO.
+        Expression exprLeft = ((Expression[]) command.getParams()[0])[0];
+        Expression exprRight = ((Expression[]) command.getParams()[0])[1];
+        String varAbsc = (String) command.getParams()[1];
+        String varOrd = (String) command.getParams()[2];
+        
+        ExpressionCollection solutions = SolveGeneralDifferentialEquationMethods.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
+
+        // Falls keine Lösungen ermittelt werden konnten, User informieren.
+        if (solutions.isEmpty() && solutions != SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
+            doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_DIFFERENTIAL_EQUATION_FOUND"));
+            return;
+        }
+        
+        doPrintOutput(Translator.translateOutputMessage("MCC_ALGEBRAIC_SOLUTION_OF_DIFFEQ"), exprLeft, " = ", exprRight, ":");
+        
+        if (solutions == SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
+            doPrintOutput(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS"));
+        } else {
+            MultiIndexVariable multiVar;
+            ArrayList<BigInteger> multiIndex;
+            for (int i = 0; i < solutions.getBound(); i++) {
+                multiVar = new MultiIndexVariable(Variable.create(varOrd));
+                multiIndex = multiVar.getIndices();
+                multiIndex.add(BigInteger.valueOf(i + 1));
+                doPrintOutput(multiVar, " = ", solutions.get(i));
+            }
+        }
+        
     }
 
     private static void executeSolveDiffEquationNumeric(Command command)
@@ -2903,7 +2931,6 @@ public abstract class MathCommandCompiler {
          werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
         String varOrd;
-        Iterator iter = vars.iterator();
 
         if (varsWithoutPrimes.isEmpty()) {
             if (varAbsc.equals("y")) {
@@ -2919,14 +2946,14 @@ public abstract class MathCommandCompiler {
                     varOrd = "y";
                 }
             } else {
-                iter = varsWithoutPrimes.iterator();
-                varOrd = (String) iter.next();
+                Iterator<String> iter = varsWithoutPrimes.iterator();
+                varOrd = iter.next();
             }
         } else {
-            iter = varsWithoutPrimes.iterator();
-            varOrd = (String) iter.next();
+            Iterator<String> iter = varsWithoutPrimes.iterator();
+            varOrd = iter.next();
             if (varOrd.equals(varAbsc)) {
-                varOrd = (String) iter.next();
+                varOrd = iter.next();
             }
         }
 
@@ -3316,7 +3343,6 @@ public abstract class MathCommandCompiler {
          werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
          */
         String varOrd;
-        Iterator<String> iter = vars.iterator();
 
         if (varsWithoutPrimes.isEmpty()) {
             if (varAbsc.equals("y")) {
@@ -3332,18 +3358,51 @@ public abstract class MathCommandCompiler {
                     varOrd = "y";
                 }
             } else {
-                iter = varsWithoutPrimes.iterator();
-                varOrd = (String) iter.next();
+                Iterator<String> iter = varsWithoutPrimes.iterator();
+                varOrd = iter.next();
             }
         } else {
-            iter = varsWithoutPrimes.iterator();
-            varOrd = (String) iter.next();
+            Iterator<String> iter = varsWithoutPrimes.iterator();
+            varOrd = iter.next();
             if (varOrd.equals(varAbsc)) {
-                varOrd = (String) iter.next();
+                varOrd = iter.next();
             }
         }
 
         Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
+        
+        // Formulierung und Ausgabe des AWP.
+        String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
+        ArrayList formulationOfAWPForGraphicArea = new ArrayList();
+
+        for (int i = 0; i < ord; i++) {
+            formulationOfAWP = formulationOfAWP + "'";
+        }
+        formulationOfAWP += "(" + varAbsc + ") = ";
+
+        formulationOfAWPForGraphicArea.add(formulationOfAWP);
+        formulationOfAWPForGraphicArea.add(expr);
+
+        String varOrdWithPrimes;
+        for (int i = 0; i < ord; i++) {
+            formulationOfAWPForGraphicArea.add(", ");
+            varOrdWithPrimes = varOrd;
+            for (int j = 0; j < i; j++) {
+                varOrdWithPrimes = varOrdWithPrimes + "'";
+            }
+
+            formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
+            formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+            formulationOfAWPForGraphicArea.add(x_0);
+            formulationOfAWPForGraphicArea.add(" = ");
+            formulationOfAWPForGraphicArea.add(y_0[i]);
+        }
+
+        formulationOfAWPForGraphicArea.add(":");
+
+        doPrintOutput(formulationOfAWPForGraphicArea);
+
+        // Ausgabe des Taylorpolynoms        
         doPrintOutput(varOrd + "(" + varAbsc + ") = ", result);
 
     }
