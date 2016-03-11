@@ -4,13 +4,13 @@ MathTool kennt die folgenden Operatoren:<br><br>
 
 <strong>cov([x<sub>1</sub>, y<sub>1</sub>], ..., [x<sub>n</sub>, y<sub>n</sub>]):</strong> Berechnet die Kovarianz f&uuml; die Werte x<sub>1</sub>, ..., x<sub>n</sub> und y<sub>1</sub>, ..., y<sub>n</sub>.<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Berechnet die partielle Ableitung ∂F/∂x<sub>i</sub> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Berechnet die partielle Ableitung &#8706;F/&#8706;x<sub>i</sub> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Berechnet die k-te partielle Ableitung ∂<sup>k</sup>F/∂x<sub>i</sub><sup>k</sup> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Berechnet die k-te partielle Ableitung &#8706;<sup>k</sup>F/&#8706;x<sub>i</sub><sup>k</sup> der Funktion F nach der Variablen x<sub>i</sub>.<br><br>
 
-<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Berechnet die iterierte partielle Ableitung ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> der Funktion F nach den Variablen x<sub>i</sub>, ..., x<sub>j</sub>. Die Variablen x<sub>i</sub>, ..., x<sub>j</sub> m&uuml;ssen nicht alle verschieden sein.<br><br>
+<strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Berechnet die iterierte partielle Ableitung &#8706;(... &#8706;F/&#8706;x<sub>i</sub>)/&#8706;x<sub>j</sub> der Funktion F nach den Variablen x<sub>i</sub>, ..., x<sub>j</sub>. Die Variablen x<sub>i</sub>, ..., x<sub>j</sub> m&uuml;ssen nicht alle verschieden sein.<br><br>
 
-<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet die Divergenz div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> der Funktion F.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Berechnet die Divergenz div(F) = &#8706;F/&#8706;x<sub>1</sub> + ··· + &#8706;F/&#8706;x<sub>n</sub> der Funktion F.<br><br>
 
 <strong>fac(n) oder n!:</strong> Berechnet die Fakult&auml;t der Zahl n. F&uuml;r nicht-negative ganze Zahlen n liefert es die gew&ouml;hnliche Fakult&auml;t n! = 1·2· ··· ·n. Fakult&auml;ten negativer ganzer Zahlen liefern einen Fehler und Fakult&auml;ten von nicht-ganzen Zahlen werden im Approximationsmodus durch den Wert der <em>Gammafunktion</em> &#915;(n + 1) approximiert. Fakult&auml;ten ganzer Zahlen werden nur bis n &lt;= 10000 ausgeschrieben.<br><br>
 
@@ -26,13 +26,13 @@ vereinfacht wird.<br><br>
 
 <strong>gcd(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Berechnet den gr&ouml;&szlig;ten gemeinsamen Teiler der ganzen Zahlen n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
-<strong>grad(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet den Gradienten grad(F) = [∂F/∂x<sub>1</sub>; ··· ; ∂F/∂x<sub>n</sub>] der Funktion F.<br><br>
+<strong>grad(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet den Gradienten grad(F) = [&#8706;F/&#8706;x<sub>1</sub>; ··· ; &#8706;F/&#8706;x<sub>n</sub>] der Funktion F.<br><br>
 
-<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Berechnet das unbestimmte Integral ∫F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx &uuml;ber die Funktion F(x, a<sub>1</sub>, ..., a<sub>n</sub>) (bez&uuml;glich x).<br><br>
+<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x):</strong> Berechnet das unbestimmte Integral &#8747;F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx &uuml;ber die Funktion F(x, a<sub>1</sub>, ..., a<sub>n</sub>) (bez&uuml;glich x).<br><br>
 
-<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Berechnet das bestimmte Integral ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx &uuml;ber die Funktion F(x, a<sub>1</sub>, ..., a<sub>n</sub>) von b<sub>1</sub> bis b<sub>2</sub> (bez&uuml;glich x).<br><br>
+<strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Berechnet das bestimmte Integral &#8747;<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx &uuml;ber die Funktion F(x, a<sub>1</sub>, ..., a<sub>n</sub>) von b<sub>1</sub> bis b<sub>2</sub> (bez&uuml;glich x).<br><br>
 
-<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Berechnet den Laplace-Operator ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> der Funktion F.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Berechnet den Laplace-Operator &#916;F = &#8706;<sup>2</sup>F/&#8706;x<sub>1</sub><sup>2</sup> + ··· + &#8706;<sup>2</sup>F/&#8706;x<sub>n</sub><sup>2</sup> der Funktion F.<br><br>
 
 <strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Berechnet das kleinste gemeinsame Vielfache der ganzen Zahlen n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
@@ -50,7 +50,7 @@ vereinfacht wird.<br><br>
 
 <strong>prod(F(k, x<sub>1</sub>, ..., x<sub>n</sub>), k, k<sub>1</sub>, k<sub>2</sub>):</strong> Berechnet das Produkt F(k<sub>1</sub>, x<sub>1</sub>, ..., x<sub>n</sub>)·F(k<sub>1</sub> + 1, x<sub>1</sub>, ..., x<sub>n</sub>)· ··· ·F(k<sub>2</sub>, x<sub>1</sub>, ..., x<sub>n</sub>). Falls k<sub>1</sub> &gt; k<sub>2</sub> ist, so ist das Ergebnis 1.<br><br>
 
-<strong>rot([F<sub>1</sub>; F<sub>2</sub>; F<sub>3</sub>], x, y, z):</strong> Berechnet die Rotation rot(F) = [∂F/∂y(F<sub>3</sub>) - ∂F/∂z(F<sub>2</sub>); -∂F/∂x(F<sub>3</sub>) + ∂F/∂z(F<sub>1</sub>) ; ∂F/∂x(F<sub>2</sub>) - ∂F/∂y(F<sub>1</sub>)] der Funktion F.<br><br>
+<strong>rot([F<sub>1</sub>; F<sub>2</sub>; F<sub>3</sub>], x, y, z):</strong> Berechnet die Rotation rot(F) = [&#8706;F/&#8706;y(F<sub>3</sub>) - &#8706;F/&#8706;z(F<sub>2</sub>); -&#8706;F/&#8706;x(F<sub>3</sub>) + &#8706;F/&#8706;z(F<sub>1</sub>) ; &#8706;F/&#8706;x(F<sub>2</sub>) - &#8706;F/&#8706;y(F<sub>1</sub>)] der Funktion F.<br><br>
 
 <strong>sigma(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Berechnet die Standardabweichung der Werte x<sub>1</sub>, ..., x<sub>n</sub>.<br><br>
 

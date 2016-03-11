@@ -10,7 +10,7 @@ MathTool knows the following operators:<br><br>
 
 <strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Computes the partial derivative ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> of the function F with respect to the variables x<sub>i</sub>, ..., x<sub>j</sub>. The variables x<sub>i</sub>, ..., x<sub>j</sub> do not have to be different.<br><br>
 
-<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Computes the divergence div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> of the function F.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Computes the divergence div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> of the function F.<br><br>
 
 <strong>fac(n) oder n!:</strong> Computes the factorial of n. For nonnegative integers n it returns the well-known factorial n! = 1·2· ··· ·n of n. Factorials of negative integers return errors and for factorials of non-integers it returns the value &#915;(n + 1) of the <em>Gamma function</em> in approximation mode. Factorials of integers will be computed explicitly only if n &lt;= 10000.<br><br>
 
@@ -30,7 +30,7 @@ while approx(0.5!) returns<br>
 
 <strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Computes the definite integral ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx of the function F(x, a<sub>1</sub>, ..., a<sub>n</sub>) from b<sub>1</sub> to b<sub>2</sub> (with respect to x).<br><br>
 
-<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Computes the Laplace operator ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> of the function F.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Computes the Laplace operator ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> of the function F.<br><br>
 
 <strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Computes the least common multiple of the integers n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 

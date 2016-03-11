@@ -10,7 +10,7 @@ MathTool знає такі оператори:<br><br>
 
 <strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Обчислює часткову похідну ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> функції F по зміннійs x<sub>i</sub>, ..., x<sub>j</sub>. Змінні x<sub>i</sub>, ..., x<sub>j</sub> не мають бути різними.<br><br>
 
-<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Обчислює дивергенцію div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> функції F.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Обчислює дивергенцію div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> функції F.<br><br>
 
 <strong>fac(n) oder n!:</strong> Обчислює факторіал n. Для невід'ємного n вона повертає добре відомий факторіал n! = 1·2· ··· ·n від n. Факторіали від від'ємних чисел повертають помилки, а факторіла від нецілих чисел, повертають значення &#915;(n + 1)  <em>Гама функції</em> у наближеному вигляді. Факторіали цілих чисел будуть обчислені точно тільки для n &lt;= 10000.<br><br>
 
@@ -30,7 +30,7 @@ MathTool знає такі оператори:<br><br>
 
 <strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Обчислює визначений інтеграл ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx функції F(x, a<sub>1</sub>, ..., a<sub>n</sub>) від b<sub>1</sub> до b<sub>2</sub> (по x).<br><br>
 
-<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Обчислює оператор Лапласа ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> функції F.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Обчислює оператор Лапласа ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> функції F.<br><br>
 
 <strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Обчислює найменше спільне кратне цілих чисел n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 

@@ -213,7 +213,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
                     currentComponentLevel += this.stub;
                 }
                 this.infoEditorPane = new JEditorPane();
-                this.infoEditorPane.setContentType("text/html");
+                this.infoEditorPane.setContentType("text/html; charset=UTF-8");
                 this.add(this.infoEditorPane);
                 this.infoEditorPane.setBounds(20, currentComponentLevel, 460, 300);
                 this.infoEditorPane.setEditable(false);

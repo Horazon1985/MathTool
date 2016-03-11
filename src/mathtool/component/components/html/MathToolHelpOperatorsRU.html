@@ -10,7 +10,7 @@ MathTool знает такие операторы:<br><br>
 
 <strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, ..., x<sub>j</sub>):</strong> Вычисляет частную производную ∂(... ∂F/∂x<sub>i</sub>)/∂x<sub>j</sub> функции F по переменнойs x<sub>i</sub>, ..., x<sub>j</sub>. Переменные x<sub>i</sub>, ..., x<sub>j</sub> не должны быть разными.<br><br>
 
-<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Вычисляет дивергенцию div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> функции F.<br><br>
+<strong>div(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Вычисляет дивергенцию div(F) = ∂F/∂x<sub>1</sub> + ··· + ∂F/∂x<sub>n</sub> функции F.<br><br>
 
 <strong>fac(n) oder n!:</strong> Вычисляет факториал n. Для неотрицательных целых чисел n она возвращает хорошо известный факториал n! = 1·2· ··· ·n числа n. 
 Факториалы отрицательных чисел возвращают ошибки, а факториал нецелых чисел возвращает значение &#915;(n + 1) <em>Гамма функции</em> 
@@ -32,7 +32,7 @@ MathTool знает такие операторы:<br><br>
 
 <strong>int(F(x, a<sub>1</sub>, ..., a<sub>n</sub>), x, b<sub>1</sub>, b<sub>2</sub>):</strong> Вычисиляет определённый интеграл ∫<sub>b<sub>1</sub></sub><sup>b<sub>2</sub></sup>F(x, a<sub>1</sub>, ..., a<sub>n</sub>)dx функции F(x, a<sub>1</sub>, ..., a<sub>n</sub>) от b<sub>1</sub> до b<sub>2</sub> (по x).<br><br>
 
-<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Вычисляет ооператор Лапласа ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> функции F.<br><br>
+<strong>laplace(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Вычисляет ооператор Лапласа ΔF = ∂<sup>2</sup>F/∂x<sub>1</sub><sup>2</sup> + ··· + ∂<sup>2</sup>F/∂x<sub>n</sub><sup>2</sup> функции F.<br><br>
 
 <strong>lcm(n<sub>1</sub>, ..., n<sub>k</sub>):</strong> Вычисляет наименьшее общее кратное целых чисел n<sub>1</sub>, ..., n<sub>k</sub>.<br><br>
 
