@@ -317,7 +317,7 @@ public abstract class MathCommandCompiler {
         }
         return true;
     }
-
+    
     /**
      * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
      * zu den Parametern params gehört. Ansonsten wird eine entsprechende
@@ -328,124 +328,6 @@ public abstract class MathCommandCompiler {
      * @throws ExpressionException, EvaluationException
      */
     public static Command getCommand(String commandName, String[] params) throws ExpressionException {
-
-        switch (commandName) {
-            case "approx":
-                try {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_EXPR);
-                } catch (ExpressionException e) {
-                    try {
-                        return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_MATEXPR);
-                    } catch (ExpressionException ex) {
-                        throw new ExpressionException(Translator.translateOutputMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
-                    }
-                }
-            case "ccnf":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CCNF);
-            case "cdnf":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CDNF);
-            case "clear":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_CLEAR);
-            case "def":
-                return getCommandDef(params);
-            case "deffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_DEFFUNCS);
-            case "defvars":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_DEFVARS);
-            case "eigenvalues":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EIGENVALUES);
-            case "eigenvectors":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EIGENVECTORS);
-            case "euler":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EULER);
-            case "expand":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXPAND);
-            case "extrema":
-                if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_ONE_VAR);
-                }
-                if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_WITH_PARAMETER);
-                }
-                if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX);
-                }
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS);
-            case "ker":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_KER);
-            case "latex":
-                return getCommandLatex(params);
-            case "pi":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PI);
-            case "plot2d":
-                return getCommandPlot2D(params);
-            case "plotimplicit":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTIMPLICIT);
-            case "plot3d":
-                return getCommandPlot3D(params);
-            case "plotcurve2d":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTCURVE2D);
-            case "plotcurve3d":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_PLOTCURVE3D);
-            case "plotpolar":
-                return getCommandPlotPolar(params);
-            case "plotcylindrical":
-                return getCommandPlotCylindrical(params);
-            case "plotspherical":
-                return getCommandPlotSpherical(params);
-            case "regressionline":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_REGRESSIONLINE);
-            case "solve":
-                if (params.length <= 1) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_ONE_VAR);
-                }
-                if (params.length == 2) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_WITH_PARAMETER);
-                }
-                if (params.length == 3) {
-                    return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX);
-                }
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS);
-            case "solvediffeq":
-                if (params.length <= 3) {
-                    return getCommandSolveDiffEquationAlgebraic(params);
-                }
-                return getCommandSolveDiffEquationNumeric(params);
-            case "solvesystem":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_SOLVESYSTEM);
-            case "table":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_TABLE);
-            case "tangent":
-                return getCommandTangent(params);
-            case "taylordiffeq":
-                return getCommandTaylorDiffEq(params);
-            case "undeffuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFFUNCS);
-            case "undefvars":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFVARS);
-            case "undefallfuncs":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALLFUNCS);
-            case "undefallvars":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALLVARS);
-            case "undefall":
-                return OperationParser.parseDefaultCommand(commandName, params, PATTERN_UNDEFALL);
-            // Sollte theoretisch nie vorkommen.
-            default:
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
-        }
-
-    }
-
-    /**
-     * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
-     * zu den Parametern params gehört. Ansonsten wird eine entsprechende
-     * ExpressionException geworfen. WICHTIG: Der String command und die
-     * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
-     * im Vorfeld beseitigt.
-     *
-     * @throws ExpressionException, EvaluationException
-     */
-    public static Command getCommand2(String commandName, String[] params) throws ExpressionException {
 
         // Sonderfälle_ überladene Befehle.
         switch (commandName) {
@@ -503,7 +385,7 @@ public abstract class MathCommandCompiler {
             annotation = method.getAnnotation(GetCommand.class);
             if (annotation != null && annotation.type().name().equals(commandName)) {
                 try {
-                    return (Command) method.invoke((Object) null, (Object[]) params);
+                    return (Command) method.invoke(null, new Object[] { params });
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     if (e.getCause() instanceof ExpressionException) {
                         // Methoden können nur EvaluationExceptions werfen.
