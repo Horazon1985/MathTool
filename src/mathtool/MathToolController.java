@@ -480,6 +480,9 @@ public class MathToolController {
      * Ermittelt den Typ des GraphicPanels, welcher zum Befehl c gehört.
      */
     public static TypeGraphic getTypeGraphicFromCommand(Command c) {
+        if (c.getTypeCommand().equals(TypeCommand.extrema) && c.getParams().length >= 3){
+            return TypeGraphic.GRAPH2D;
+        }
         if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             return TypeGraphic.GRAPH2D;
         }
@@ -507,7 +510,7 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 3 || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 1) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getTypeCommand().equals(TypeCommand.solvediffeq)) {
+        if (c.getTypeCommand().equals(TypeCommand.solvediffeq) && c.getParams().length >= 6) {
             return TypeGraphic.GRAPH2D;
         }
         return TypeGraphic.NONE;
