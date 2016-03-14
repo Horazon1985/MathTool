@@ -27,7 +27,7 @@ import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelImplicit2D;
 import graphic.GraphicPanelPolar;
-import graphic.MultiIndexVariable;
+import abstractexpressions.expression.classes.MultiIndexVariable;
 import graphic.TypeBracket;
 import java.awt.Dimension;
 import java.math.BigDecimal;
