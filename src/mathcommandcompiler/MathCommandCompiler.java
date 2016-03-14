@@ -2796,6 +2796,26 @@ public abstract class MathCommandCompiler {
             }
         }
 
+        ArrayList<Variable> integrationConstants = SolveGeneralDifferentialEquationMethods.getListOfFreeIntegrationConstants(solutions);
+        ArrayList integrationConstantsInfoMessage = new ArrayList();
+
+        for (int i = 0; i < integrationConstants.size(); i++) {
+            integrationConstantsInfoMessage.add(integrationConstants.get(i));
+            if (i < integrationConstants.size() - 1) {
+                integrationConstantsInfoMessage.add(", ");
+            }
+        }
+
+        if (integrationConstants.size() == 1) {
+            integrationConstantsInfoMessage.add(Translator.translateOutputMessage("MCC_DIFFEQ_IS_FREE_CONSTANT"));
+        } else if (integrationConstants.size() > 1) {
+            integrationConstantsInfoMessage.add(Translator.translateOutputMessage("MCC_DIFFEQ_ARE_FREE_CONSTANTS"));
+        }
+
+        if (!integrationConstants.isEmpty()) {
+            doPrintOutput(integrationConstantsInfoMessage);
+        }
+
     }
 
     private static void executeSolveDiffEquationNumeric(Command command)
