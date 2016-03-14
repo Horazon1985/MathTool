@@ -317,7 +317,7 @@ public abstract class MathCommandCompiler {
         }
         return true;
     }
-    
+
     /**
      * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
      * zu den Parametern params gehört. Ansonsten wird eine entsprechende
@@ -385,7 +385,7 @@ public abstract class MathCommandCompiler {
             annotation = method.getAnnotation(GetCommand.class);
             if (annotation != null && annotation.type().name().equals(commandName)) {
                 try {
-                    return (Command) method.invoke(null, new Object[] { params });
+                    return (Command) method.invoke(null, new Object[]{params});
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     if (e.getCause() instanceof ExpressionException) {
                         // Methoden können nur EvaluationExceptions werfen.
@@ -957,7 +957,7 @@ public abstract class MathCommandCompiler {
          fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
         if (params.length < 6) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDIFFEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
 
         // Ordnung der DGL ermitteln.
@@ -2749,30 +2749,53 @@ public abstract class MathCommandCompiler {
         Expression exprRight = ((Expression[]) command.getParams()[0])[1];
         String varAbsc = (String) command.getParams()[1];
         String varOrd = (String) command.getParams()[2];
-        
+
         ExpressionCollection solutions = SolveGeneralDifferentialEquationMethods.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
 
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
-        if (solutions.isEmpty() && solutions != SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
+        if (solutions.isEmpty()) {
+            if (solutions == SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
+                doPrintOutput(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS"));
+                return;
+            } else if (solutions == SolveGeneralDifferentialEquationMethods.NO_SOLUTIONS) {
+                doPrintOutput(Translator.translateOutputMessage("MCC_NO_SOLUTIONS"));
+                return;
+            }
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_DIFFERENTIAL_EQUATION_FOUND"));
             return;
         }
-        
+
         doPrintOutput(Translator.translateOutputMessage("MCC_ALGEBRAIC_SOLUTION_OF_DIFFEQ"), exprLeft, " = ", exprRight, ":");
-        
-        if (solutions == SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
-            doPrintOutput(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS"));
-        } else {
+
+        // Zwischen impliziten und expliziten Lösungen unterscheiden.
+        ExpressionCollection solutionsImplicit = new ExpressionCollection();
+        ExpressionCollection solutionsExplicit = new ExpressionCollection();
+        for (Expression solution : solutions) {
+            if (solution.contains(varOrd)) {
+                solutionsImplicit.add(solution);
+            } else {
+                solutionsExplicit.add(solution);
+            }
+        }
+
+        if (!solutionsImplicit.isEmpty()) {
+            doPrintOutput(Translator.translateOutputMessage("MCC_IMPLICIT_OF_DIFFEQ"));
+            for (int i = 0; i < solutionsImplicit.getBound(); i++) {
+                doPrintOutput(solutionsImplicit.get(i), " = ", ZERO);
+            }
+        }
+        if (!solutionsExplicit.isEmpty()) {
+            doPrintOutput(Translator.translateOutputMessage("MCC_EXPLICIT_OF_DIFFEQ"));
             MultiIndexVariable multiVar;
             ArrayList<BigInteger> multiIndex;
-            for (int i = 0; i < solutions.getBound(); i++) {
+            for (int i = 0; i < solutionsExplicit.getBound(); i++) {
                 multiVar = new MultiIndexVariable(Variable.create(varOrd));
                 multiIndex = multiVar.getIndices();
                 multiIndex.add(BigInteger.valueOf(i + 1));
-                doPrintOutput(multiVar, " = ", solutions.get(i));
+                doPrintOutput(multiVar, " = ", solutionsExplicit.get(i));
             }
         }
-        
+
     }
 
     private static void executeSolveDiffEquationNumeric(Command command)
@@ -3252,7 +3275,7 @@ public abstract class MathCommandCompiler {
         }
 
         Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
-        
+
         // Formulierung und Ausgabe des AWP.
         String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
         ArrayList formulationOfAWPForGraphicArea = new ArrayList();
