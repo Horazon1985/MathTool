@@ -2750,7 +2750,13 @@ public abstract class MathCommandCompiler {
         String varAbsc = (String) command.getParams()[1];
         String varOrd = (String) command.getParams()[2];
 
-        ExpressionCollection solutions = SolveGeneralDifferentialEquationMethods.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
+        ExpressionCollection solutions;
+        try {
+            Variable.setDependingOnVariable(varOrd, varAbsc);
+            solutions = SolveGeneralDifferentialEquationMethods.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
+        } finally {
+            Variable.setDependingOnVariable(varOrd, null);
+        }
 
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
         if (solutions.isEmpty()) {
@@ -3238,7 +3244,7 @@ public abstract class MathCommandCompiler {
 
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
-        Expression expr = ((Expression) command.getParams()[0]).simplify();
+        Expression expr = (Expression) command.getParams()[0];
         expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
@@ -3294,42 +3300,49 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
+        try {
+            Variable.setDependingOnVariable(varOrd, varAbsc);
+            expr = expr.simplify();
+            Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
 
-        // Formulierung und Ausgabe des AWP.
-        String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
-        ArrayList formulationOfAWPForGraphicArea = new ArrayList();
+            // Formulierung und Ausgabe des AWP.
+            String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
+            ArrayList formulationOfAWPForGraphicArea = new ArrayList();
 
-        for (int i = 0; i < ord; i++) {
-            formulationOfAWP = formulationOfAWP + "'";
-        }
-        formulationOfAWP += "(" + varAbsc + ") = ";
+            for (int i = 0; i < ord; i++) {
+                formulationOfAWP = formulationOfAWP + "'";
+            }
+            formulationOfAWP += "(" + varAbsc + ") = ";
 
-        formulationOfAWPForGraphicArea.add(formulationOfAWP);
-        formulationOfAWPForGraphicArea.add(expr);
+            formulationOfAWPForGraphicArea.add(formulationOfAWP);
+            formulationOfAWPForGraphicArea.add(expr);
 
-        String varOrdWithPrimes;
-        for (int i = 0; i < ord; i++) {
-            formulationOfAWPForGraphicArea.add(", ");
-            varOrdWithPrimes = varOrd;
-            for (int j = 0; j < i; j++) {
-                varOrdWithPrimes = varOrdWithPrimes + "'";
+            String varOrdWithPrimes;
+            for (int i = 0; i < ord; i++) {
+                formulationOfAWPForGraphicArea.add(", ");
+                varOrdWithPrimes = varOrd;
+                for (int j = 0; j < i; j++) {
+                    varOrdWithPrimes = varOrdWithPrimes + "'";
+                }
+
+                formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
+                formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+                formulationOfAWPForGraphicArea.add(x_0);
+                formulationOfAWPForGraphicArea.add(" = ");
+                formulationOfAWPForGraphicArea.add(y_0[i]);
             }
 
-            formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
-            formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
-            formulationOfAWPForGraphicArea.add(x_0);
-            formulationOfAWPForGraphicArea.add(" = ");
-            formulationOfAWPForGraphicArea.add(y_0[i]);
+            formulationOfAWPForGraphicArea.add(":");
+
+            doPrintOutput(formulationOfAWPForGraphicArea);
+
+            // Ausgabe des Taylorpolynoms        
+            doPrintOutput(varOrd + "(" + varAbsc + ") = ", result);
+
+        } finally {
+            Variable.setDependingOnVariable(varOrd, null);
         }
-
-        formulationOfAWPForGraphicArea.add(":");
-
-        doPrintOutput(formulationOfAWPForGraphicArea);
-
-        // Ausgabe des Taylorpolynoms        
-        doPrintOutput(varOrd + "(" + varAbsc + ") = ", result);
-
+        
     }
 
     @Execute(type = TypeCommand.undeffuncs)
