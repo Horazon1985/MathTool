@@ -2829,7 +2829,7 @@ public abstract class MathCommandCompiler {
 
         int ord = (int) command.getParams()[2];
         HashSet<String> vars = new HashSet<>();
-        Expression expr = ((Expression) command.getParams()[0]).simplify();
+        Expression expr = (Expression) command.getParams()[0];
         expr.addContainedIndeterminates(vars);
 
         HashSet<String> varsWithoutPrimes = new HashSet<>();
@@ -2888,58 +2888,70 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquation(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
+        try {
+            Variable.setDependingOnVariable(varOrd, varAbsc);
+            expr = expr.simplify();
 
-        // Formulierung und Ausgabe des AWP.
-        String formulationOfAWP = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
-        ArrayList formulationOfAWPForGraphicArea = new ArrayList();
-
-        for (int i = 0; i < ord; i++) {
-            formulationOfAWP = formulationOfAWP + "'";
-        }
-        formulationOfAWP += "(" + varAbsc + ") = ";
-
-        formulationOfAWPForGraphicArea.add(formulationOfAWP);
-        formulationOfAWPForGraphicArea.add(expr);
-
-        String varOrdWithPrimes;
-        for (int i = 0; i < ord; i++) {
-            formulationOfAWPForGraphicArea.add(", ");
-            varOrdWithPrimes = varOrd;
-            for (int j = 0; j < i; j++) {
-                varOrdWithPrimes = varOrdWithPrimes + "'";
+            if (doesExpressionContainDerivativesOfTooHighOrder(expr, varOrd, ord - 1)) {
+                throw new EvaluationException(Translator.translateOutputMessage(""));
             }
 
-            formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
-            formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+            double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquationByRungeKutta(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
+
+            // Formulierung und Ausgabe des AWP.
+            String formulationOfAWP = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
+            ArrayList formulationOfAWPForGraphicArea = new ArrayList();
+
+            for (int i = 0; i < ord; i++) {
+                formulationOfAWP = formulationOfAWP + "'";
+            }
+            formulationOfAWP += "(" + varAbsc + ") = ";
+
+            formulationOfAWPForGraphicArea.add(formulationOfAWP);
+            formulationOfAWPForGraphicArea.add(expr);
+
+            String varOrdWithPrimes;
+            for (int i = 0; i < ord; i++) {
+                formulationOfAWPForGraphicArea.add(", ");
+                varOrdWithPrimes = varOrd;
+                for (int j = 0; j < i; j++) {
+                    varOrdWithPrimes = varOrdWithPrimes + "'";
+                }
+
+                formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
+                formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
+                formulationOfAWPForGraphicArea.add(x_0);
+                formulationOfAWPForGraphicArea.add(" = ");
+                formulationOfAWPForGraphicArea.add(y_0[i]);
+            }
+
+            formulationOfAWPForGraphicArea.add(", ");
             formulationOfAWPForGraphicArea.add(x_0);
-            formulationOfAWPForGraphicArea.add(" = ");
-            formulationOfAWPForGraphicArea.add(y_0[i]);
+            formulationOfAWPForGraphicArea.add(" \u2264 ");
+            formulationOfAWPForGraphicArea.add(varAbsc);
+            formulationOfAWPForGraphicArea.add(" \u2264 ");
+            formulationOfAWPForGraphicArea.add(x_1);
+            formulationOfAWPForGraphicArea.add(":");
+
+            doPrintOutput(formulationOfAWPForGraphicArea);
+
+            // Lösungen ausgeben.
+            for (double[] solution : solutionOfDifferentialEquation) {
+                doPrintOutput(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
+            }
+            if (solutionOfDifferentialEquation.length < 1001) {
+                // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
+                doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
+                        + ".");
+            }
+
+            // Lösungsgraphen zeichnen.
+            graphicPanel2D.setVars(varAbsc, varOrd);
+            graphicPanel2D.drawGraphs2D(solutionOfDifferentialEquation);
+
+        } finally {
+            Variable.setDependingOnVariable(varOrd, null);
         }
-
-        formulationOfAWPForGraphicArea.add(", ");
-        formulationOfAWPForGraphicArea.add(x_0);
-        formulationOfAWPForGraphicArea.add(" \u2264 ");
-        formulationOfAWPForGraphicArea.add(varAbsc);
-        formulationOfAWPForGraphicArea.add(" \u2264 ");
-        formulationOfAWPForGraphicArea.add(x_1);
-        formulationOfAWPForGraphicArea.add(":");
-
-        doPrintOutput(formulationOfAWPForGraphicArea);
-
-        // Lösungen ausgeben.
-        for (double[] solution : solutionOfDifferentialEquation) {
-            doPrintOutput(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
-        }
-        if (solutionOfDifferentialEquation.length < 1001) {
-            // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
-            doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_NOT_DEFINED_IN_POINT", x_0.evaluate() + (solutionOfDifferentialEquation.length) * (x_1.evaluate() - x_0.evaluate()) / 1000)
-                    + ".");
-        }
-
-        // Lösungsgraphen zeichnen.
-        graphicPanel2D.setVars(varAbsc, varOrd);
-        graphicPanel2D.drawGraphs2D(solutionOfDifferentialEquation);
 
     }
 
@@ -3303,6 +3315,11 @@ public abstract class MathCommandCompiler {
         try {
             Variable.setDependingOnVariable(varOrd, varAbsc);
             expr = expr.simplify();
+
+            if (doesExpressionContainDerivativesOfTooHighOrder(expr, varOrd, ord - 1)) {
+                throw new EvaluationException(Translator.translateOutputMessage(""));
+            }
+
             Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
 
             // Formulierung und Ausgabe des AWP.
@@ -3342,7 +3359,7 @@ public abstract class MathCommandCompiler {
         } finally {
             Variable.setDependingOnVariable(varOrd, null);
         }
-        
+
     }
 
     @Execute(type = TypeCommand.undeffuncs)
@@ -3412,6 +3429,33 @@ public abstract class MathCommandCompiler {
     private static void executeUndefAll(Command command) {
         executeUndefAllFuncs(command);
         executeUndefAllVars(command);
+    }
+
+    /*
+    Diverse Hilfsmethoden.
+     */
+    /**
+     * Gibt zurück, ob expr Veränderliche enthält, deren Namen mit varOrd
+     * beginnen und die mehr als ord Apostrophs enthalten.<br>
+     * VORAUSSETZUNG: varOrd darf selbst keine Apostrophs enthalten.
+     */
+    private static boolean doesExpressionContainDerivativesOfTooHighOrder(Expression expr, String varOrd, int ord) {
+
+        HashSet<String> vars = expr.getContainedIndeterminates();
+        int numberOfPrimesInVar;
+        for (String var : vars) {
+            numberOfPrimesInVar = 0;
+            while (var.startsWith(varOrd) && var.substring(var.length() - 1).equals("'")) {
+                numberOfPrimesInVar++;
+                var = var.substring(0, var.length() - 1);
+            }
+            if (numberOfPrimesInVar > ord) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
 }
