@@ -596,18 +596,17 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plot2d(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         value_2: Grenzen des Zeichenbereichs.
+         Struktur: plot2d(f_1(var), ..., f_n(var), var, x_0, x_1), f_i(var): 
+         Ausdruck in einer Variablen. x_0 < x_1: Grenzen des Zeichenbereichs.
          */
-        if (params.length < 3) {
+        if (params.length < 4) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
         }
 
         Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
-        for (int i = 0; i < params.length - 2; i++) {
+        for (int i = 0; i < params.length - 3; i++) {
             try {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
@@ -616,8 +615,15 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        if (vars.size() > 1) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT2D", vars.size()));
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 3])){
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT2D", params.length - 2));
+        }
+
+        commandParams[params.length - 3] = params[params.length - 3];
+        vars.remove(params[params.length - 3]);
+        
+        if (vars.size() > 0) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT2D", params[params.length - 3]));
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
@@ -1901,11 +1907,10 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        HashSet<String> vars = new HashSet<>();
         ArrayList<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
-        for (int i = 0; i < command.getParams().length - 2; i++) {
+        for (int i = 0; i < command.getParams().length - 3; i++) {
 
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
@@ -1916,7 +1921,6 @@ public abstract class MathCommandCompiler {
                         expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
-                expr.addContainedIndeterminates(vars);
             }
 
         }
@@ -1924,16 +1928,10 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
-        // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
-        if (vars.isEmpty()) {
-            vars.add("x");
-        }
-
         Expression x_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
         Expression x_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
+        String var = (String) command.getParams()[command.getParams().length - 3];
 
         // Validierung der Zeichenbereichsgrenzen.
         double xStart, xEnd;
