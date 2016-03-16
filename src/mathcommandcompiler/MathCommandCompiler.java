@@ -83,7 +83,7 @@ public abstract class MathCommandCompiler {
     @GetCommand(type = TypeCommand.expand)
     public static final String PATTERN_EXPAND = "expand(expr)";
     public static final String PATTERN_EXTREMA_ONE_VAR = "extrema(expr(0,1))";
-    public static final String PATTERN_EXTREMA_WITH_PARAMETER = "extrema(expr,var)";
+    public static final String PATTERN_EXTREMA_WITH_PARAMETER = "extrema(expr,indet)";
     public static final String PATTERN_EXTREMA_APPROX = "extrema(expr(0,1),expr(0,0),expr(0,0))";
     public static final String PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS = "extrema(expr(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
     @GetCommand(type = TypeCommand.ker)
@@ -99,17 +99,15 @@ public abstract class MathCommandCompiler {
     @GetCommand(type = TypeCommand.regressionline)
     public static final String PATTERN_REGRESSIONLINE = "regressionline(matexpr,matexpr+)";
     public static final String PATTERN_SOLVE_ONE_VAR = "solve(equation(0,1))";
-    public static final String PATTERN_SOLVE_WITH_PARAMETER = "solve(equation,var)";
+    public static final String PATTERN_SOLVE_WITH_PARAMETER = "solve(equation,indet)";
     public static final String PATTERN_SOLVE_APPROX = "solve(equation(0,1),expr(0,0),expr(0,0))";
     public static final String PATTERN_SOLVE_APPROX_WITH_NUMBER_OF_INTERVALS = "solve(equation(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
     @GetCommand(type = TypeCommand.solvesystem)
-    public static final String PATTERN_SOLVESYSTEM = "solvesystem(equation+,uniquevar+)";
+    public static final String PATTERN_SOLVESYSTEM = "solvesystem(equation+,uniqueindet+)";
     @GetCommand(type = TypeCommand.table)
     public static final String PATTERN_TABLE = "table(logexpr)";
     @GetCommand(type = TypeCommand.undefvars)
     public static final String PATTERN_UNDEFVARS = "undefvars(var+)";
-    @GetCommand(type = TypeCommand.undeffuncs)
-    public static final String PATTERN_UNDEFFUNCS = "undeffuncs(var+)";
     @GetCommand(type = TypeCommand.undefallvars)
     public static final String PATTERN_UNDEFALLVARS = "undefallvars()";
     @GetCommand(type = TypeCommand.undefallfuncs)
@@ -422,7 +420,7 @@ public abstract class MathCommandCompiler {
          Beispiel: def(x = 2) liefert: result.name = "def" result.params =
          {"x"} result.left = 2 (als Expression)
          */
-        if (Expression.isValidDerivateOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
+        if (Expression.isValidDerivativeOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
 
             Expression preciseExpression;
             HashSet<String> vars;
@@ -494,7 +492,7 @@ public abstract class MathCommandCompiler {
 
         // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
         for (String functionVar : functionVars) {
-            if (!Expression.isValidDerivateOfVariable(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
+            if (!Expression.isValidDerivativeOfVariable(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_1") + functionVar + Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
             }
         }
@@ -724,7 +722,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
+            if (!Expression.isValidDerivativeOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
@@ -789,7 +787,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivateOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
+            if (!Expression.isValidDerivativeOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
@@ -1081,7 +1079,7 @@ public abstract class MathCommandCompiler {
             if (!params[i].contains("=")) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT", i + 1));
             }
-            if (!Expression.isValidDerivateOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
+            if (!Expression.isValidDerivativeOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT", params[i].substring(0, params[i].indexOf("="))));
             }
             try {
@@ -1271,6 +1269,26 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.undeffuncs)
+    private static Command getCommandUndeffuncs(String[] params) throws ExpressionException {
+        
+        if (params.length < 1) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_UNDEFFUNCS"));
+        }
+        
+        Object[] commandParams = new Object[params.length];
+        
+        for (int i = 0; i < params.length; i++){
+            if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet().contains(params[i])){
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNCS", i + 1));
+            }
+            commandParams[i] = params[i];
+        }
+        
+        return new Command(TypeCommand.undeffuncs, commandParams);
+        
+    }
+    
     /**
      * Hauptmethode zum Ausführen des Befehls.
      *
@@ -2893,7 +2911,7 @@ public abstract class MathCommandCompiler {
             expr = expr.simplify();
 
             if (doesExpressionContainDerivativesOfTooHighOrder(expr, varOrd, ord - 1)) {
-                throw new EvaluationException(Translator.translateOutputMessage(""));
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDIFFEQ", ord, ord - 1));
             }
 
             double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquationByRungeKutta(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
@@ -3317,7 +3335,7 @@ public abstract class MathCommandCompiler {
             expr = expr.simplify();
 
             if (doesExpressionContainDerivativesOfTooHighOrder(expr, varOrd, ord - 1)) {
-                throw new EvaluationException(Translator.translateOutputMessage(""));
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDIFFEQ", ord, ord - 1));
             }
 
             Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
