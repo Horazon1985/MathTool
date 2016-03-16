@@ -622,7 +622,7 @@ public abstract class MathCommandCompiler {
         commandParams[params.length - 3] = params[params.length - 3];
         vars.remove(params[params.length - 3]);
         
-        if (vars.size() > 0) {
+        if (!vars.isEmpty()) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT2D", params[params.length - 3]));
         }
 
@@ -660,14 +660,14 @@ public abstract class MathCommandCompiler {
          value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
          Variablen werden dabei alphabetisch geordnet.
          */
-        if (params.length < 5) {
+        if (params.length < 7) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT3D"));
         }
 
         Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
-        for (int i = 0; i < params.length - 4; i++) {
+        for (int i = 0; i < params.length - 6; i++) {
             try {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
@@ -676,8 +676,23 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOT3D", String.valueOf(vars.size())));
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 6])){
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT3D", params.length - 6));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 5])){
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT2D", params.length - 5));
+        }
+        if (params[params.length - 6].equals(params[params.length - 5])){
+            throw new ExpressionException(Translator.translateOutputMessage(""));
+        }
+        
+        commandParams[params.length - 6] = params[params.length - 6];
+        commandParams[params.length - 5] = params[params.length - 5];
+        vars.remove(params[params.length - 6]);
+        vars.remove(params[params.length - 5]);
+        
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT3D", params[params.length - 6], params[params.length - 5]));
         }
 
         HashSet<String> varsInLimits = new HashSet<>();
@@ -2054,11 +2069,10 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        HashSet<String> vars = new HashSet<>();
         ArrayList<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
-        for (int i = 0; i < command.getParams().length - 4; i++) {
+        for (int i = 0; i < command.getParams().length - 6; i++) {
 
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
@@ -2068,7 +2082,6 @@ public abstract class MathCommandCompiler {
                         exprs.get(i), Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
-                expr.addContainedIndeterminates(vars);
             }
 
         }
@@ -2081,6 +2094,9 @@ public abstract class MathCommandCompiler {
         Expression y_0 = ((Expression) command.getParams()[command.getParams().length - 2]).simplify(simplifyTypesPlot);
         Expression y_1 = ((Expression) command.getParams()[command.getParams().length - 1]).simplify(simplifyTypesPlot);
 
+        String varAbsc = (String) command.getParams()[command.getParams().length - 6];
+        String varOrd = (String) command.getParams()[command.getParams().length - 5];
+        
         // Validierung der Zeichenbereichsgrenzen
         double xStart, xEnd, yStart, yEnd;
 
@@ -2098,45 +2114,6 @@ public abstract class MathCommandCompiler {
         }
         if (yStart >= yEnd) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOT3D", exprs.size() + 3, exprs.size() + 4));
-        }
-
-        // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
-        if (vars.isEmpty()) {
-            vars.add("x");
-            vars.add("y");
-        }
-
-        /*
-         Falls alle Ausdrück exprs nur von einer Variablen abhängen, sollen die
-         andere Achse eine fest gewählte Bezeichnung tragen. Dies wirdim
-         Folgenden geregelt.
-         */
-        if (vars.size() == 1) {
-            if (vars.contains("y")) {
-                vars.add("z");
-            } else {
-                vars.add("y");
-            }
-        }
-
-        Iterator iter = vars.iterator();
-        String varOne = (String) iter.next();
-        String varTwo = (String) iter.next();
-
-        /*
-         Die Variablen varOne und varTwo sind evtl. noch nicht in
-         alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
-         Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
-         Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
-         beiden bilden die Grenzen für die Abszisse, die anderen beiden für
-         die Ordinate.
-         */
-        String varAbsc = varOne;
-        String varOrd = varTwo;
-
-        if (varAbsc.compareTo(varOrd) > 0) {
-            varAbsc = varTwo;
-            varOrd = varOne;
         }
 
         // Graphen zeichnen.
