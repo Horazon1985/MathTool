@@ -90,12 +90,6 @@ public abstract class MathCommandCompiler {
     public static final String PATTERN_KER = "ker(matexpr)";
     @GetCommand(type = TypeCommand.pi)
     public static final String PATTERN_PI = "pi(integer(0,2147483647))";
-    @GetCommand(type = TypeCommand.plotcurve2d)
-    public static final String PATTERN_PLOTCURVE2D = "plotcurve2d(matexpr(0,1),expr(0,0),expr(0,0))";
-    @GetCommand(type = TypeCommand.plotcurve3d)
-    public static final String PATTERN_PLOTCURVE3D = "plotcurve3d(matexpr(0,1),expr(0,0),expr(0,0))";
-    @GetCommand(type = TypeCommand.plotimplicit)
-    public static final String PATTERN_PLOTIMPLICIT = "plotimplicit(equation(0,2),expr(0,0),expr(0,0),expr(0,0),expr(0,0))";
     @GetCommand(type = TypeCommand.regressionline)
     public static final String PATTERN_REGRESSIONLINE = "regressionline(matexpr,matexpr+)";
     public static final String PATTERN_SOLVE_ONE_VAR = "solve(equation(0,1))";
@@ -615,13 +609,13 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 3])){
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 3])) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT2D", params.length - 2));
         }
 
         commandParams[params.length - 3] = params[params.length - 3];
         vars.remove(params[params.length - 3]);
-        
+
         if (!vars.isEmpty()) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT2D", params[params.length - 3]));
         }
@@ -651,6 +645,73 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotimplicit)
+    private static Command getCommandPlotImplicit2D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotimplicit(F(x, y) = G(x, y), x, y, x_0, x_1, y_0, y_1). 
+         F, G: Ausdrücke in höchstens zwei Variablen x, y. x_0 < x_1,
+         y_0 < y_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 7) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTIMPLICIT2D"));
+        }
+
+        Object[] commandParams = new Object[7];
+        HashSet<String> vars = new HashSet<>();
+
+        if (!params[0].contains("=")) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT2D_MUST_BE_A_VALID_EQUATION"));
+        }
+
+        Expression left, right;
+        try {
+            left = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
+            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            left.addContainedIndeterminates(vars);
+            right.addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT2D_MUST_BE_A_VALID_EQUATION"));
+        }
+
+        commandParams[0] = new Expression[]{left, right};
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT2D", 1));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT2D", 2));
+        }
+        if (params[1].equals(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_DIFFERENT_IN_PLOTIMPLICIT2D"));
+        }
+
+        commandParams[1] = params[1];
+        commandParams[2] = params[2];
+        vars.remove(params[1]);
+        vars.remove(params[2]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTIMPLICIT2D", params[1], params[2]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 3; i < 7; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT2D", i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT2D", i + 1));
+            }
+        }
+
+        return new Command(TypeCommand.plotimplicit, commandParams);
+
+    }
+
     @GetCommand(type = TypeCommand.plot3d)
     private static Command getCommandPlot3D(String[] params) throws ExpressionException {
 
@@ -676,21 +737,21 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 6])){
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 6])) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT3D", params.length - 6));
         }
-        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 5])){
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT2D", params.length - 5));
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 5])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT3D", params.length - 5));
         }
-        if (params[params.length - 6].equals(params[params.length - 5])){
-            throw new ExpressionException(Translator.translateOutputMessage(""));
+        if (params[params.length - 6].equals(params[params.length - 5])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_DIFFERENT_IN_PLOT3D"));
         }
-        
+
         commandParams[params.length - 6] = params[params.length - 6];
         commandParams[params.length - 5] = params[params.length - 5];
         vars.remove(params[params.length - 6]);
         vars.remove(params[params.length - 5]);
-        
+
         if (!vars.isEmpty()) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT3D", params[params.length - 6], params[params.length - 5]));
         }
@@ -709,6 +770,120 @@ public abstract class MathCommandCompiler {
         }
 
         return new Command(TypeCommand.plot3d, commandParams);
+
+    }
+
+    @GetCommand(type = TypeCommand.plotcurve2d)
+    private static Command getCommandPlotCurve2D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotcurve2d(matexpr(var), var, t_0, t_1), matexpr(var): 
+         Matrizenusdruck in einer Variablen. t_0 < t_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 4) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE2D"));
+        }
+
+        Object[] commandParams = new Object[4];
+        HashSet<String> vars = new HashSet<>();
+
+        try {
+            commandParams[0] = MatrixExpression.build(params[0], null);
+            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTCURVE2D", e.getMessage()));
+        }
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTCURVE2D"));
+        }
+
+        commandParams[1] = params[1];
+        vars.remove(params[1]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTCURVE2D", params[1]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        try {
+            commandParams[2] = Expression.build(params[2], null);
+            ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 3));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 3));
+        }
+
+        try {
+            commandParams[3] = Expression.build(params[3], null);
+            ((Expression) commandParams[3]).addContainedIndeterminates(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 4));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 4));
+        }
+
+        return new Command(TypeCommand.plotcurve2d, commandParams);
+
+    }
+
+    @GetCommand(type = TypeCommand.plotcurve3d)
+    private static Command getCommandPlotCurve3D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotcurve2d(matexpr(var), var, t_0, t_1), matexpr(var): 
+         Matrizenusdruck in einer Variablen. t_0 < t_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 4) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE3D"));
+        }
+
+        Object[] commandParams = new Object[4];
+        HashSet<String> vars = new HashSet<>();
+
+        try {
+            commandParams[0] = MatrixExpression.build(params[0], null);
+            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTCURVE3D", e.getMessage()));
+        }
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTCURVE3D"));
+        }
+
+        commandParams[1] = params[1];
+        vars.remove(params[1]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTCURVE3D", params[1]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        try {
+            commandParams[2] = Expression.build(params[2], null);
+            ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 3));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 3));
+        }
+
+        try {
+            commandParams[3] = Expression.build(params[3], null);
+            ((Expression) commandParams[3]).addContainedIndeterminates(varsInLimits);
+            if (!varsInLimits.isEmpty()) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 4));
+            }
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 4));
+        }
+
+        return new Command(TypeCommand.plotcurve3d, commandParams);
 
     }
 
@@ -1292,24 +1467,24 @@ public abstract class MathCommandCompiler {
 
     @GetCommand(type = TypeCommand.undeffuncs)
     private static Command getCommandUndeffuncs(String[] params) throws ExpressionException {
-        
+
         if (params.length < 1) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_UNDEFFUNCS"));
         }
-        
+
         Object[] commandParams = new Object[params.length];
-        
-        for (int i = 0; i < params.length; i++){
-            if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet().contains(params[i])){
+
+        for (int i = 0; i < params.length; i++) {
+            if (!SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_UNDEFFUNCS", i + 1));
             }
             commandParams[i] = params[i];
         }
-        
+
         return new Command(TypeCommand.undeffuncs, commandParams);
-        
+
     }
-    
+
     /**
      * Hauptmethode zum Ausführen des Befehls.
      *
@@ -1980,17 +2155,20 @@ public abstract class MathCommandCompiler {
 
         // Falls eines der Graphen nicht gezeichnet werden kann.
         if (expr.containsOperator()) {
-            Expression difference = ((Expression) command.getParams()[0]).sub((Expression) command.getParams()[1]);
+            Expression difference = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]);
             doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
                     difference, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
 
-        Expression x_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
-        Expression x_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
-        Expression y_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
-        Expression y_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        String varAbsc = (String) command.getParams()[1];
+        String varOrd = (String) command.getParams()[2];
+        
+        Expression x_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[6]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen
         double xStart, xEnd, yStart, yEnd;
@@ -2009,48 +2187,6 @@ public abstract class MathCommandCompiler {
         }
         if (yStart >= yEnd) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 4, 5));
-        }
-
-        HashSet<String> vars = expr.getContainedIndeterminates();
-
-        // Falls der Ausdruck expr konstant ist, sollen die Achsen die Bezeichnungen "x" und "y" tragen.
-        if (vars.isEmpty()) {
-            vars.add("x");
-            vars.add("y");
-        }
-
-        if (vars.size() == 1) {
-            if (vars.contains("y")) {
-                vars.add("z");
-            } else {
-                vars.add("y");
-            }
-        }
-
-        Iterator iter = vars.iterator();
-        String varOne = (String) iter.next();
-        String varTwo = (String) iter.next();
-
-        String varAbsc = varOne;
-        String varOrd = varTwo;
-
-        if ((int) varOne.charAt(0) > (int) varTwo.charAt(0)) {
-            varAbsc = varTwo;
-            varOrd = varOne;
-        }
-        if ((int) varOne.charAt(0) == (int) varTwo.charAt(0)) {
-            if ((varOne.length() > 1) && (varTwo.length() == 1)) {
-                varAbsc = varTwo;
-                varOrd = varOne;
-            }
-            if ((varOne.length() > 1) && (varTwo.length() > 1)) {
-                int indexOfVarOne = Integer.parseInt(varOne.substring(2));
-                int indexOfVarTwo = Integer.parseInt(varTwo.substring(2));
-                if (indexOfVarOne > indexOfVarTwo) {
-                    varAbsc = varTwo;
-                    varOrd = varOne;
-                }
-            }
         }
 
         // Graphen zeichnen.
@@ -2096,7 +2232,7 @@ public abstract class MathCommandCompiler {
 
         String varAbsc = (String) command.getParams()[command.getParams().length - 6];
         String varOrd = (String) command.getParams()[command.getParams().length - 5];
-        
+
         // Validierung der Zeichenbereichsgrenzen
         double xStart, xEnd, yStart, yEnd;
 
@@ -2129,8 +2265,6 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        HashSet<String> vars = new HashSet<>();
-
         MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
         try {
             matExpr = matExpr.simplify(simplifyTypesPlot);
@@ -2160,11 +2294,12 @@ public abstract class MathCommandCompiler {
 
             }
             components[i] = exprSimplified;
-            exprSimplified.addContainedIndeterminates(vars);
 
         }
-        Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+
+        String var = (String) command.getParams()[1];
+        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen.
         try {
@@ -2173,14 +2308,6 @@ public abstract class MathCommandCompiler {
         } catch (EvaluationException e) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
-
-        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
-        if (vars.isEmpty()) {
-            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
-        }
-
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
 
         // Kurve zeichnen.
         graphicPanelCurves2D.setVar(var);
@@ -2194,8 +2321,6 @@ public abstract class MathCommandCompiler {
         if (graphicPanelCurves3D == null || mathToolGraphicArea == null) {
             return;
         }
-
-        HashSet<String> vars = new HashSet<>();
 
         MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
         try {
@@ -2226,11 +2351,12 @@ public abstract class MathCommandCompiler {
 
             }
             components[i] = exprSimplified;
-            exprSimplified.addContainedIndeterminates(vars);
 
         }
-        Expression t_0 = ((Expression) command.getParams()[1]).simplify(simplifyTypesPlot);
-        Expression t_1 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+
+        String var = (String) command.getParams()[1];
+        Expression t_0 = ((Expression) command.getParams()[2]).simplify(simplifyTypesPlot);
+        Expression t_1 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
 
         // Validierung der Zeichenbereichsgrenzen.
         try {
@@ -2239,14 +2365,6 @@ public abstract class MathCommandCompiler {
         } catch (EvaluationException e) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
-
-        // Falls der Ausdruck expr konstant ist, soll der Parameter die Bezeichnung "t" tragen.
-        if (vars.isEmpty()) {
-            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
-        }
-
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
 
         // Kurve zeichnen.
         graphicPanelCurves3D.setParameters(var, 150, 200, 30, 30);
