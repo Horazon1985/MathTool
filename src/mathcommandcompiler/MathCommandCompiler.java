@@ -683,7 +683,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT2D", 2));
         }
         if (params[1].equals(params[2])) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_DIFFERENT_IN_PLOTIMPLICIT2D"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTIMPLICIT2D"));
         }
 
         commandParams[1] = params[1];
@@ -744,7 +744,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOT3D", params.length - 5));
         }
         if (params[params.length - 6].equals(params[params.length - 5])) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_DIFFERENT_IN_PLOT3D"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOT3D"));
         }
 
         commandParams[params.length - 6] = params[params.length - 6];
