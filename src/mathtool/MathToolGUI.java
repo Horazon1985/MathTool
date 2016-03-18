@@ -129,17 +129,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
         setMinimumSize(minimumDimension);
 
         // Labels ausrichten
-        legendLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
+        legendLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_LEGEND") + "</b></html>");
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
 
-        saveLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_SAVE") + "</b></html>");
+        saveLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_SAVE") + "</b></html>");
         saveLabel.setVisible(false);
         add(saveLabel);
         saveLabel.addMouseListener(this);
 
-        rotateLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
         rotateLabel.setVisible(false);
         add(rotateLabel);
         rotateLabel.addMouseListener(this);
@@ -773,39 +773,39 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions = new HashMap<>();
 
         // Menüeinträge
-        componentCaptions.put(menuFile, "GUI_MathToolForm_MENU_FILE");
-        componentCaptions.put(menuItemOpen, "GUI_MathToolForm_MENU_OPEN");
-        componentCaptions.put(menuItemSave, "GUI_MathToolForm_MENU_SAVE");
-        componentCaptions.put(menuItemQuit, "GUI_MathToolForm_MENU_QUIT");
-        componentCaptions.put(menuMathTool, "GUI_MathToolForm_MENU_MATHTOOL");
-        componentCaptions.put(menuItemHelp, "GUI_MathToolForm_MENU_HELP");
-        componentCaptions.put(menuItemLanguageMenu, "GUI_MathToolForm_MENU_LANGUAGES");
-        componentCaptions.put(menuItemLanguageEnglish, "GUI_MathToolForm_MENU_ENGLISH");
-        componentCaptions.put(menuItemLanguageGerman, "GUI_MathToolForm_MENU_GERMAN");
-        componentCaptions.put(menuItemLanguageRussian, "GUI_MathToolForm_MENU_RUSSIAN");
-        componentCaptions.put(menuItemLanguageUkrainian, "GUI_MathToolForm_MENU_UKRAINIAN");
-        componentCaptions.put(menuItemRepresentationMenu, "GUI_MathToolForm_MENU_REPRESENTATION_MODE");
-        componentCaptions.put(menuItemRepresentationFormula, "GUI_MathToolForm_FORMULA_MODE");
-        componentCaptions.put(menuItemRepresentationText, "GUI_MathToolForm_MENU_TEXT_MODE");
-        componentCaptions.put(menuItemAbout, "GUI_MathToolForm_MENU_ABOUT");
-        componentCaptions.put(menuItemOptionsMenu, "GUI_MathToolForm_MENU_OPTIONS");
-        componentCaptions.put(menuItemOutputOptions, "GUI_MathToolForm_MENU_OUTPUT_OPTIONS");
-        componentCaptions.put(menuItemGraphicOptions, "GUI_MathToolForm_MENU_GRAPHIC_OPTIONS");
+        componentCaptions.put(menuFile, "GUI_MENU_FILE");
+        componentCaptions.put(menuItemOpen, "GUI_MENU_OPEN");
+        componentCaptions.put(menuItemSave, "GUI_MENU_SAVE");
+        componentCaptions.put(menuItemQuit, "GUI_MENU_QUIT");
+        componentCaptions.put(menuMathTool, "GUI_MENU_MATHTOOL");
+        componentCaptions.put(menuItemHelp, "GUI_MENU_HELP");
+        componentCaptions.put(menuItemLanguageMenu, "GUI_MENU_LANGUAGES");
+        componentCaptions.put(menuItemLanguageEnglish, "GUI_MENU_ENGLISH");
+        componentCaptions.put(menuItemLanguageGerman, "GUI_MENU_GERMAN");
+        componentCaptions.put(menuItemLanguageRussian, "GUI_MENU_RUSSIAN");
+        componentCaptions.put(menuItemLanguageUkrainian, "GUI_MENU_UKRAINIAN");
+        componentCaptions.put(menuItemRepresentationMenu, "GUI_MENU_REPRESENTATION_MODE");
+        componentCaptions.put(menuItemRepresentationFormula, "GUI_FORMULA_MODE");
+        componentCaptions.put(menuItemRepresentationText, "GUI_MENU_TEXT_MODE");
+        componentCaptions.put(menuItemAbout, "GUI_MENU_ABOUT");
+        componentCaptions.put(menuItemOptionsMenu, "GUI_MENU_OPTIONS");
+        componentCaptions.put(menuItemOutputOptions, "GUI_MENU_OUTPUT_OPTIONS");
+        componentCaptions.put(menuItemGraphicOptions, "GUI_MENU_GRAPHIC_OPTIONS");
 
         // Buttons
-        componentCaptions.put(approxButton, "GUI_MathToolForm_APPROX");
-        componentCaptions.put(latexButton, "GUI_MathToolForm_LATEX_CODE");
-        componentCaptions.put(clearButton, "GUI_MathToolForm_CLEAR");
-        componentCaptions.put(inputButton, "GUI_MathToolForm_INPUT");
-        componentCaptions.put(cancelButton, "GUI_MathToolForm_CANCEL");
+        componentCaptions.put(approxButton, "GUI_APPROX");
+        componentCaptions.put(latexButton, "GUI_LATEX_CODE");
+        componentCaptions.put(clearButton, "GUI_CLEAR");
+        componentCaptions.put(inputButton, "GUI_INPUT");
+        componentCaptions.put(cancelButton, "GUI_CANCEL");
 
         // Labels
-        componentCaptions.put(legendLabel, "GUI_MathToolForm_LEGEND");
-        componentCaptions.put(saveLabel, "GUI_MathToolForm_SAVE");
+        componentCaptions.put(legendLabel, "GUI_LEGEND");
+        componentCaptions.put(saveLabel, "GUI_SAVE");
         if (isRotating) {
-            componentCaptions.put(rotateLabel, "GUI_MathToolForm_STOP_ROTATION");
+            componentCaptions.put(rotateLabel, "GUI_STOP_ROTATION");
         } else {
-            componentCaptions.put(rotateLabel, "GUI_MathToolForm_ROTATE_GRAPH");
+            componentCaptions.put(rotateLabel, "GUI_ROTATE_GRAPH");
         }
 
     }
@@ -1121,7 +1121,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.start();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
+            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</u></b></html>");
         } else {
             isRotating = false;
             switch (typeGraphic) {
@@ -1139,7 +1139,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.interrupt();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
+            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</u></b></html>");
         }
     }
 
@@ -1528,18 +1528,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_LEGEND") + "</u></b></html>");
+            legendLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_LEGEND") + "</u></b></html>");
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_SAVE") + "</u></b></html>");
+            saveLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_SAVE") + "</u></b></html>");
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_STOP_ROTATION") + "</u></b></html>");
+                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</u></b></html>");
             } else {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</u></b></html>");
+                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</u></b></html>");
             }
             validate();
             repaint();
@@ -1549,18 +1549,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_LEGEND") + "</b></html>");
+            legendLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_LEGEND") + "</b></html>");
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_SAVE") + "</b></html>");
+            saveLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_SAVE") + "</b></html>");
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_STOP_ROTATION") + "</b></html>");
+                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</b></html>");
             } else {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
             }
             validate();
             repaint();

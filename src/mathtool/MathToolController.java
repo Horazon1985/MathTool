@@ -104,7 +104,7 @@ public class MathToolController {
         }
         Collections.sort(operators);
         operatorChoice.removeAllItems();
-        operatorChoice.addItem(Translator.translateOutputMessage("GUI_MathToolForm_OPERATOR"));
+        operatorChoice.addItem(Translator.translateOutputMessage("GUI_OPERATOR"));
         for (String op : operators) {
             operatorChoice.addItem(op);
         }
@@ -119,7 +119,7 @@ public class MathToolController {
             commands.add(value.toString());
         }
         commandChoice.removeAllItems();
-        commandChoice.addItem(Translator.translateOutputMessage("GUI_MathToolForm_COMMAND"));
+        commandChoice.addItem(Translator.translateOutputMessage("GUI_COMMAND"));
         for (String c : commands) {
             commandChoice.addItem(c);
         }
@@ -667,7 +667,7 @@ public class MathToolController {
             graphicPanelCurves3D.setIsRotating(false);
         }
         rotateThread.interrupt();
-        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_MathToolForm_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
 
     }
 
