@@ -46,6 +46,8 @@ import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
@@ -1568,6 +1570,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     public static void main(String args[]) {
+        
+        if (args.length > 0){
+            try {
+                Expression expr = Expression.build(args[0], null);
+                expr = expr.simplify();
+                System.out.println(expr);
+            } catch (ExpressionException | EvaluationException e) {
+                System.out.println(e.getMessage());
+            }
+            return;
+        }
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
