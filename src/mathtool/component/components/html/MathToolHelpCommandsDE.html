@@ -8,6 +8,8 @@ MathTool kennt die folgenden Befehle:<br><br>
 
 <p style="text-align: center;">1.7320508075688772</p><br>
 
+<strong>ccnf(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Liefert die kanonische konjunktive Normalform des logischen Ausdrucks F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
+
 <strong>cdnf(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong> Liefert die kanonische disjunktive Normalform des logischen Ausdrucks F(x<sub>1</sub>, ..., x<sub>n</sub>).<br><br>
 
 <strong>clear():</strong> Leert die gesamte Konsole. Bereits definierte Variablen und Funktionen bleiben jedoch erhalten.<br><br>
@@ -80,6 +82,8 @@ Approximiert lauten diese x<sub>1, 2</sub> ≈ ±1.1777403511345441. Letzteres w
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Bestimmt die numerischen L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) im Bereich x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Hierbei wird das Intervall [x<sub>1</sub>, x<sub>2</sub>] in n gleiche Teile unterteilt und in jedem Teilintervall wird h&ouml;chstens eine L&ouml;sung ermittelt. H&ouml;heres n kann zwar potentiell mehr L&ouml;sungen liefern, verl&auml;ngert daf&uuml;r aber die Berechnungszeit. Diese Funktion kann dann n&uuml;tzlich sein, wenn der Benutzer &uuml;ber bestimmte Kenntnisse bez&uuml;glich der L&ouml;sungen der Gleichung F<sub>1</sub>(x) = F<sub>2</sub>(x) verf&uuml;gt.<br><br>
+
+<strong>solvediffeq(F<sub>1</sub>(x, y, y', y'', ..., y<sup>(n)</sup>) = F<sub>2</sub>(x, y, y', y'', ..., y<sup>(n)</sup>), x, y):</strong> Liefert eine L&ouml;sung der Diferentialgleichung F<sub>1</sub>(x, y, y', y'', ..., y<sup>(n)</sup>) = F<sub>2</sub>(x, y, y', y'', ..., y<sup>(n)</sup>).<br><br>
 
 <strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Liefert eine numerische L&ouml;sung der Diferentialgleichung y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> im Bereich x_0 &lt;= x &lt;= x<sub>1</sub>. F&uuml;r die numerische Berechnung wird das Intervall [x<sub>0</sub>, x<sub>1</sub>] in 1000 gleiche Teile unterteilt und in der Konsole werden alle 1001 Funktionswerte an den betreffenden Stellen ausgegeben.<br><br>
 
