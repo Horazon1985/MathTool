@@ -1017,6 +1017,123 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotvectorfield2d)
+    private static Command getCommandPlotVectorField2D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotvectorfield2d(matexpr(x, y), x, y, x_0, x_1, y_0, y_1), matexpr(x, y): 
+         Matrizenusdruck in zwei Variablen. x_0 < x_1, y_0 < y_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 7) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELD2D"));
+        }
+
+        Object[] commandParams = new Object[7];
+        HashSet<String> vars = new HashSet<>();
+
+        try {
+            commandParams[0] = MatrixExpression.build(params[0], null);
+            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELD2D", e.getMessage()));
+        }
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELD2D", 2));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELD2D", 3));
+        }
+        if (params[1].equals(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELD2D"));
+        }
+
+        commandParams[1] = params[1];
+        commandParams[2] = params[2];
+        vars.remove(params[1]);
+        vars.remove(params[2]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D", params[1], params[2]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 3; i < 7; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD2D", i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD2D", i + 1));
+            }
+        }
+
+        return new Command(TypeCommand.plotvectorfield2d, commandParams);
+
+    }
+
+    @GetCommand(type = TypeCommand.plotvectorfield3d)
+    private static Command getCommandPlotVectorField3D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotvectorfield3d(matexpr(x, y, z), x, y, z, x_0, x_1, y_0, y_1, z_0, z_1), matexpr(x, y): 
+         Matrizenusdruck in zwei Variablen. x_0 < x_1, y_0 < y_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 10) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELD3D"));
+        }
+
+        Object[] commandParams = new Object[10];
+        HashSet<String> vars = new HashSet<>();
+
+        try {
+            commandParams[0] = MatrixExpression.build(params[0], null);
+            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELD3D", e.getMessage()));
+        }
+
+        for (int i = 1; i < 4; i++) {
+            if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
+            }
+        }
+        for (int i = 1; i < 4; i++) {
+            for (int j = i + 1; j < 4; j++) {
+                if (params[1].equals(params[2])) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELD3D", i + 1, j + 1));
+                }
+            }
+        }
+
+        for (int i = 1; i < 4; i++) {
+            commandParams[i] = params[i];
+            vars.remove(params[i]);
+        }
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D", params[1], params[2]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 4; i < 10; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
+            }
+        }
+
+        return new Command(TypeCommand.plotvectorfield3d, commandParams);
+
+    }
+
     @GetCommand(type = TypeCommand.plotpolar)
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
@@ -2164,7 +2281,7 @@ public abstract class MathCommandCompiler {
 
         String varAbsc = (String) command.getParams()[1];
         String varOrd = (String) command.getParams()[2];
-        
+
         Expression x_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
         Expression x_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
         Expression y_0 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
@@ -2559,6 +2676,135 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelSpherical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
         graphicPanelSpherical.drawCylindricalGraphs3D(phi_0, phi_1, tau_0, tau_1, exprs);
+
+    }
+
+    @Execute(type = TypeCommand.plotvectorfield2d)
+    private static void executePlotVectorField2D(Command command) throws EvaluationException {
+
+//        if (graphicPanelCurves2D == null || mathToolGraphicArea == null) {
+//            return;
+//        }
+
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        try {
+            matExpr = matExpr.simplify(simplifyTypesPlot);
+            Dimension dim = matExpr.getDimension();
+            if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 2) {
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
+        }
+
+        Expression[] components = new Expression[2];
+        for (int i = 0; i < 2; i++) {
+            components[i] = ((Matrix) matExpr).getEntry(i, 0);
+        }
+
+        Expression exprSimplified;
+        for (int i = 0; i < 2; i++) {
+
+            exprSimplified = components[i].simplify(simplifyTypesPlot);
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprSimplified.containsOperator()) {
+                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
+
+            }
+            components[i] = exprSimplified;
+
+        }
+
+        String varAbsc = (String) command.getParams()[1];
+        String varOrd = (String) command.getParams()[2];
+        Expression x_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[6]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        try {
+            x_0.evaluate();
+            x_1.evaluate();
+            y_0.evaluate();
+            y_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
+        }
+
+        // Vektorfeld zeichnen.
+//        graphicPanelCurves2D.setVar(varAbsc);
+//        graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
+
+    }
+
+    @Execute(type = TypeCommand.plotvectorfield3d)
+    private static void executePlotVectorField3D(Command command) throws EvaluationException {
+
+//        if (graphicPanelCurves2D == null || mathToolGraphicArea == null) {
+//            return;
+//        }
+
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        try {
+            matExpr = matExpr.simplify(simplifyTypesPlot);
+            Dimension dim = matExpr.getDimension();
+            if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 3) {
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD3D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD3D_1_PARAMETER_MUST_BE_2_DIM_VECTOR"));
+        }
+
+        Expression[] components = new Expression[3];
+        for (int i = 0; i < 3; i++) {
+            components[i] = ((Matrix) matExpr).getEntry(i, 0);
+        }
+
+        Expression exprSimplified;
+        for (int i = 0; i < 3; i++) {
+
+            exprSimplified = components[i].simplify(simplifyTypesPlot);
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprSimplified.containsOperator()) {
+                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
+
+            }
+            components[i] = exprSimplified;
+
+        }
+
+        String varAbsc = (String) command.getParams()[1];
+        String varOrd = (String) command.getParams()[2];
+        String varAppl = (String) command.getParams()[3];
+        Expression x_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[6]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[7]).simplify(simplifyTypesPlot);
+        Expression z_0 = ((Expression) command.getParams()[8]).simplify(simplifyTypesPlot);
+        Expression z_1 = ((Expression) command.getParams()[9]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        try {
+            x_0.evaluate();
+            x_1.evaluate();
+            y_0.evaluate();
+            y_1.evaluate();
+            z_0.evaluate();
+            z_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
+        }
+
+        // Vektorfeld zeichnen.
+//        graphicPanelCurves2D.setVar(varAbsc);
+//        graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
 
     }
 
