@@ -233,7 +233,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D,
-            graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical};
+            graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical, graphicPanelVectorField2D};
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
         // Alle Buttons und Dropdowns ausrichten.
