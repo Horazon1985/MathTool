@@ -46,8 +46,7 @@ import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import graphic.GraphicPanelVectorField2D;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
@@ -80,6 +79,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelPolar graphicPanelPolar;
     private static GraphicPanelCylindrical graphicPanelCylindrical;
     private static GraphicPanelSpherical graphicPanelSpherical;
+    private static GraphicPanelVectorField2D graphicPanelVectorField2D;
 
     private final JPanel[] graphicPanels;
     private final JComponent[] buttonsAndDropDowns;
@@ -228,8 +228,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelSpherical = new GraphicPanelSpherical();
         add(graphicPanelSpherical);
 
+        graphicPanelVectorField2D = new GraphicPanelVectorField2D();
+        add(graphicPanelVectorField2D);
+
         // Alle Grafikpanels unsichtbar machen.
-        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D, 
+        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D,
             graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical};
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
@@ -250,6 +253,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar);
         MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
+        MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -407,24 +411,24 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Getter für graphicPanel3D
      */
-    public static GraphicPanel3D getGraphicPanel3D(){
+    public static GraphicPanel3D getGraphicPanel3D() {
         return graphicPanel3D;
     }
-    
+
     /**
      * Getter für graphicPanelCylindrical
      */
-    public static GraphicPanelCylindrical getGraphicPanelCylindrical(){
+    public static GraphicPanelCylindrical getGraphicPanelCylindrical() {
         return graphicPanelCylindrical;
     }
-    
+
     /**
      * Getter für graphicPanelSpherical
      */
-    public static GraphicPanelSpherical getGraphicPanelSpherical(){
+    public static GraphicPanelSpherical getGraphicPanelSpherical() {
         return graphicPanelSpherical;
     }
-    
+
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
@@ -510,6 +514,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)) {
+            graphicPanelVectorField2D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
+//            graphicPanelVectorField3D.setVisible(true);
+//            legendLabel.setVisible(true);
+//            saveLabel.setVisible(true);
+//            rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
@@ -1462,6 +1475,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelSpherical.getColors(), exprs);
                     break;
+                case VECTORFIELD2D:
+                    instructions.addAll(graphicPanelVectorField2D.getInstructions());
+                    ArrayList<Color> colors = new ArrayList<>();
+                    colors.add(graphicPanelVectorField2D.getColor());
+                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().writeMatrixExpression());
+                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
                 default:
                     break;
             }
@@ -1491,6 +1512,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case GRAPHSPHERICAL:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelSpherical);
+                    break;
+                case VECTORFIELD2D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);
                     break;
                 default:
                     break;
@@ -1570,8 +1594,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     public static void main(String args[]) {
-        
-        if (args.length > 0){
+
+        if (args.length > 0) {
             try {
                 Expression expr = Expression.build(args[0], null);
                 expr = expr.simplify();
@@ -1581,7 +1605,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
             return;
         }
-        
+
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

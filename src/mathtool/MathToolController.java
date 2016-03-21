@@ -504,6 +504,12 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)){
             return TypeGraphic.GRAPHCYLINDRCAL;
         }
+        if (c.getTypeCommand().equals(TypeCommand.plotspherical)){
+            return TypeGraphic.GRAPHSPHERICAL;
+        }
+        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)){
+            return TypeGraphic.VECTORFIELD2D;
+        }
         if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
         }

@@ -51,6 +51,7 @@ import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import computationbounds.ComputationBounds;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
+import graphic.GraphicPanelVectorField2D;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -117,7 +118,8 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelPolar graphicPanelPolar2D;
     private static GraphicPanelCylindrical graphicPanelCylindrical;
     private static GraphicPanelSpherical graphicPanelSpherical;
-
+    private static GraphicPanelVectorField2D graphicPanelVectorField2D;
+    
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
 
@@ -205,6 +207,10 @@ public abstract class MathCommandCompiler {
 
     public static void setGraphicPanelSpherical(GraphicPanelSpherical gPSpherical) {
         graphicPanelSpherical = gPSpherical;
+    }
+    
+    public static void setGraphicPanelVectorField2D(GraphicPanelVectorField2D gPVectorField2D){
+        graphicPanelVectorField2D = gPVectorField2D;
     }
 
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
@@ -2682,9 +2688,9 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.plotvectorfield2d)
     private static void executePlotVectorField2D(Command command) throws EvaluationException {
 
-//        if (graphicPanelCurves2D == null || mathToolGraphicArea == null) {
-//            return;
-//        }
+        if (graphicPanelVectorField2D == null || mathToolGraphicArea == null) {
+            return;
+        }
 
         MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
         try {
@@ -2736,8 +2742,8 @@ public abstract class MathCommandCompiler {
         }
 
         // Vektorfeld zeichnen.
-//        graphicPanelCurves2D.setVar(varAbsc);
-//        graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
+        graphicPanelVectorField2D.setVars(varAbsc, varOrd);
+        graphicPanelVectorField2D.drawVectorField2D(x_0, x_1, y_0, y_1, components);
 
     }
 
