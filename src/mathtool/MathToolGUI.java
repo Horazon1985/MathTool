@@ -44,9 +44,12 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import graphic.Exportable;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.DevelopersDialogGUI;
@@ -81,7 +84,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelSpherical graphicPanelSpherical;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
 
-    private final JPanel[] graphicPanels;
+    private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
 
     private HashMap<JComponent, String> componentCaptions;
@@ -232,8 +235,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         add(graphicPanelVectorField2D);
 
         // Alle Grafikpanels unsichtbar machen.
-        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D,
-            graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical, graphicPanelVectorField2D};
+//        graphicPanels = new JPanel[]{graphicPanel2D, graphicPanel3D, graphicPanelCurves2D, graphicPanelCurves3D, graphicPanelImplicit2D,
+//            graphicPanelPolar, graphicPanelCylindrical, graphicPanelSpherical, graphicPanelVectorField2D};
+        graphicPanels = getAllGraphicPanels();
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
 
         // Alle Buttons und Dropdowns ausrichten.
@@ -427,6 +431,29 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static GraphicPanelSpherical getGraphicPanelSpherical() {
         return graphicPanelSpherical;
+    }
+
+    /**
+     * Gibt mittels Reflection ein Array mit allen GraphicPanels zurück.
+     */
+    private static JPanel[] getAllGraphicPanels() {
+        ArrayList<JPanel> graphicPanelsAsList = new ArrayList<>();
+        Field[] fields = MathToolGUI.class.getDeclaredFields();
+        Class[] interfaces;
+        for (Field field : fields){
+            if (JPanel.class.isAssignableFrom(field.getType()) && Modifier.isStatic(field.getModifiers())){
+                interfaces = field.getType().getInterfaces();
+                for (Class intfc : interfaces){
+                    if (intfc.equals(Exportable.class)){
+                        try {
+                            graphicPanelsAsList.add((JPanel) field.get(null));
+                        } catch (IllegalArgumentException | IllegalAccessException e) {
+                        }
+                    }
+                }
+            }
+        }
+        return graphicPanelsAsList.toArray(graphicPanels);
     }
 
     /**
