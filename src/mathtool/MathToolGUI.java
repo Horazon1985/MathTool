@@ -555,10 +555,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
-            graphicPanelVectorField3D.setVisible(true);
-            legendLabel.setVisible(true);
-            saveLabel.setVisible(true);
-            rotateLabel.setVisible(true);
+//            graphicPanelVectorField3D.setVisible(true);
+//            legendLabel.setVisible(true);
+//            saveLabel.setVisible(true);
+//            rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
