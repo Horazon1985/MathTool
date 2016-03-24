@@ -1392,7 +1392,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
 
-    private void mathToolTextFieldKeyPressed(java.awt.event.KeyEvent evt) {
+    private void mathToolTextFieldKeyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.

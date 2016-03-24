@@ -60,6 +60,7 @@ import notations.NotationLoader;
 import lang.translator.Translator;
 import mathtool.annotations.Execute;
 import mathtool.annotations.GetCommand;
+import mathtool.component.components.LegendGUI;
 
 public abstract class MathCommandCompiler {
 
@@ -2270,6 +2271,8 @@ public abstract class MathCommandCompiler {
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.setSpecialPoints(false);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2318,12 +2321,15 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 4, 5));
         }
 
+        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
+                x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
+        
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
-        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
-                x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         graphicPanelImplicit2D.drawGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2384,6 +2390,8 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
         graphicPanel3D.drawGraphs3D(x_0, x_1, y_0, y_1, exprs);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2441,6 +2449,8 @@ public abstract class MathCommandCompiler {
         // Kurve zeichnen.
         graphicPanelCurves2D.setVar(var);
         graphicPanelCurves2D.drawCurve2D(t_0, t_1, components);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2498,6 +2508,8 @@ public abstract class MathCommandCompiler {
         // Kurve zeichnen.
         graphicPanelCurves3D.setParameters(var, 150, 200, 30, 30);
         graphicPanelCurves3D.drawCurve3D(t_0, t_1, components);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2558,6 +2570,8 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelPolar2D.setVar(var);
         graphicPanelPolar2D.drawGraphPolar(phi_0, phi_1, exprs);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2623,6 +2637,8 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelCylindrical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
         graphicPanelCylindrical.drawCylindricalGraphs3D(r_0, r_1, phi_0, phi_1, exprs);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2688,6 +2704,8 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelSpherical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
         graphicPanelSpherical.drawCylindricalGraphs3D(phi_0, phi_1, tau_0, tau_1, exprs);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2750,6 +2768,8 @@ public abstract class MathCommandCompiler {
         // Vektorfeld zeichnen.
         graphicPanelVectorField2D.setVars(varAbsc, varOrd);
         graphicPanelVectorField2D.drawVectorField2D(x_0, x_1, y_0, y_1, components);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 
@@ -2817,6 +2837,8 @@ public abstract class MathCommandCompiler {
         // Vektorfeld zeichnen.
         graphicPanelVectorField3D.setParameters(varAbsc, varOrd, varAppl,  150, 200, 30, 30);
 //        graphicPanelVectorField3D.drawVectorField3D(x_0, x_1, y_0, y_1, z_0, z_1, components);
+        // Alte Legende schließen
+        LegendGUI.close();
 
     }
 

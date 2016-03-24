@@ -39,8 +39,10 @@ public class LegendGUI extends MathToolInfoComponentTemplate {
     }
 
     public static void close() {
-        instance.dispose();
-        instance = null;
+        if (instance != null) {
+            instance.dispose();
+            instance = null;
+        }
     }
 
     @Override
