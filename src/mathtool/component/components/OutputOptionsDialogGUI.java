@@ -3,26 +3,51 @@ package mathtool.component.components;
 import mathtool.MathToolGUI;
 import mathtool.component.templates.MathToolOptionComponentTemplate;
 import enums.TypeSimplify;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import lang.translator.Translator;
 
+/**
+ * Vereinfachungsoptionen. Singletonklasse.
+ */
 public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
+
+    private static OutputOptionsDialogGUI instance = null;
 
     private final HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
     private HashSet<TypeSimplify> simplifyTypes;
 
-    public OutputOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    private OutputOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE",
                 "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         loadOptions();
         initMandatorySimplifyTypes();
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                instance.dispose();
+                instance = null;
+            }
+        });
+        
     }
 
+    public static OutputOptionsDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            String saveButtonLabel, String cancelButtonLabel) {
+        if (instance == null) {
+            instance = new OutputOptionsDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
+            numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+        }
+        return instance;
+    }
+    
     private void initMandatorySimplifyTypes() {
         mandatorySimplifyTypes.add(TypeSimplify.order_difference_and_division);
         mandatorySimplifyTypes.add(TypeSimplify.order_sums_and_products);

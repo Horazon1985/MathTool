@@ -45,7 +45,7 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         setTitle(Translator.translateOutputMessage(titleID));
         setLayout(null);
         setResizable(false);
-        setModal(true);
+        setAlwaysOnTop(true);
         this.getContentPane().setBackground(Color.white);
 
         int currentComponentLevel;

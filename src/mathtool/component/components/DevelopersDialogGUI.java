@@ -21,7 +21,7 @@ public class DevelopersDialogGUI extends JDialog {
         setTitle(Translator.translateOutputMessage("GUI_DevelopersDialogGUI_ABOUT"));
         setLayout(null);
         setResizable(false);
-        setModal(true);
+        setAlwaysOnTop(true);
 
         this.setBounds((mathtoolformWidth - 505)/2 + mathtoolformX, (mathtoolformHeight - 530)/2 + mathtoolformY, 505, 530);
         this.getContentPane().setBackground(Color.white);

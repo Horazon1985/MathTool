@@ -2,18 +2,40 @@ package mathtool.component.components;
 
 import mathtool.component.templates.MathToolInfoComponentTemplate;
 import abstractexpressions.expression.classes.Expression;
+import java.awt.event.WindowAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Hilfemenü. Singletonklasse.
+ */
 public class HelpDialogGUI extends MathToolInfoComponentTemplate {
 
-    public HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    private static HelpDialogGUI instance = null;
+
+    private HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
                 "GUI_HelpDialogGUI_HELP", "icons/HelpLogo.png",
                 null, null, null, menuCaptions, fileNames);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                instance.dispose();
+                instance = null;
+            }
+        });
+
+    }
+
+    public static HelpDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+            ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
+        if (instance == null) {
+            instance = new HelpDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, menuCaptions, fileNames);
+        }
+        return instance;
     }
 
     @Override

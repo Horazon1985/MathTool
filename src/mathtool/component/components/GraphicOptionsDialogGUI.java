@@ -3,6 +3,7 @@ package mathtool.component.components;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import lang.translator.Translator;
@@ -11,11 +12,13 @@ import mathtool.component.templates.MathToolOptionComponentTemplate;
 
 public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTemplate {
     
+    private static GraphicOptionsDialogGUI instance = null;
+
     private final GraphicPanel3D graphicPanel3D;
     private final GraphicPanelCylindrical graphicPanelCylindrical;
     private final GraphicPanelSpherical graphicPanelSpherical;
     
-    public GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    private GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE",
@@ -24,6 +27,25 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
         this.graphicPanelCylindrical = MathToolGUI.getGraphicPanelCylindrical();
         this.graphicPanelSpherical = MathToolGUI.getGraphicPanelSpherical();
         loadOptions();
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                instance.dispose();
+                instance = null;
+            }
+        });
+        
+    }
+    
+    public static GraphicOptionsDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            String saveButtonLabel, String cancelButtonLabel) {
+        if (instance == null) {
+            instance = new GraphicOptionsDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
+            numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+        }
+        return instance;
     }
     
     @Override

@@ -47,6 +47,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
+import graphic.GraphicPanelVectorField3D;
 import java.lang.reflect.Field;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
@@ -91,6 +92,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelSpherical graphicPanelSpherical;
     @GraphicPanel
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
+    @GraphicPanel
+    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
 
     private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
@@ -242,6 +245,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelVectorField2D = new GraphicPanelVectorField2D();
         add(graphicPanelVectorField2D);
 
+        graphicPanelVectorField3D = new GraphicPanelVectorField3D();
+        add(graphicPanelVectorField3D);
+
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = getAllGraphicPanels();
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
@@ -264,6 +270,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
+        MathCommandCompiler.setGraphicPanelVectorField3D(graphicPanelVectorField3D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -548,10 +555,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
-//            graphicPanelVectorField3D.setVisible(true);
-//            legendLabel.setVisible(true);
-//            saveLabel.setVisible(true);
-//            rotateLabel.setVisible(true);
+            graphicPanelVectorField3D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+            rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
@@ -1202,9 +1209,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         fileNames.add("Operators");
         fileNames.add("Commands");
         fileNames.add("Contact");
-        HelpDialogGUI helpDialogGUI = new HelpDialogGUI(this.getX(), this.getY(),
-                this.getWidth(), this.getHeight(), menuCaptions, fileNames
-        );
+        HelpDialogGUI helpDialogGUI = HelpDialogGUI.getInstance(this.getX(), this.getY(),
+                this.getWidth(), this.getHeight(), menuCaptions, fileNames);
         helpDialogGUI.setVisible(true);
     }//GEN-LAST:event_menuItemHelpActionPerformed
 
@@ -1339,7 +1345,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE"),
             Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND")});
 
-        OutputOptionsDialogGUI outputOptionsDialogGUI = new OutputOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+        OutputOptionsDialogGUI outputOptionsDialogGUI = OutputOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, simplifyOptions, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         outputOptionsDialogGUI.setVisible(true);
 
@@ -1380,7 +1386,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         dropDownOptions.add(new String[]{Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
             Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY")});
 
-        GraphicOptionsDialogGUI graphicOptionsDialogGUI = new GraphicOptionsDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+        GraphicOptionsDialogGUI graphicOptionsDialogGUI = GraphicOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         graphicOptionsDialogGUI.setVisible(true);
 
@@ -1432,7 +1438,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
                     }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel2D.getColors(), exprs);
                     break;
                 case GRAPHIMPLICIT2D: {
@@ -1443,7 +1449,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             + graphicPanelImplicit2D.getExpressions().get(1).writeExpression());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelImplicit2D.getColor());
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
                 }
@@ -1452,7 +1458,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).writeExpression());
                     }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel3D.getColors(), exprs);
                     break;
                 case GRAPHCURVE2D: {
@@ -1463,7 +1469,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             + "(" + graphicPanelCurves2D.getExpressions()[0]
                             + ", " + graphicPanelCurves2D.getExpressions()[1] + ")"
                     );
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
                 }
@@ -1476,7 +1482,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             + ", " + graphicPanelCurves3D.getExpressions()[1]
                             + ", " + graphicPanelCurves3D.getExpressions()[2] + ")"
                     );
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
                 }
@@ -1485,7 +1491,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     for (int i = 0; i < graphicPanelPolar.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar.getExpressions().get(i).writeExpression());
                     }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelPolar.getColors(), exprs);
                     break;
                 case GRAPHCYLINDRCAL:
@@ -1493,7 +1499,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     for (int i = 0; i < graphicPanelCylindrical.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelCylindrical.getExpressions().get(i).writeExpression());
                     }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelCylindrical.getColors(), exprs);
                     break;
                 case GRAPHSPHERICAL:
@@ -1501,7 +1507,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     for (int i = 0; i < graphicPanelSpherical.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).writeExpression());
                     }
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelSpherical.getColors(), exprs);
                     break;
                 case VECTORFIELD2D:
@@ -1509,7 +1515,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField2D.getColor());
                     exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().writeMatrixExpression());
-                    legendGUI = new LegendGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
+                case VECTORFIELD3D:
+                    instructions.addAll(graphicPanelVectorField3D.getInstructions());
+                    colors = new ArrayList<>();
+                    colors.add(graphicPanelVectorField3D.getColor());
+                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField3D.getVectorFieldExpression().writeMatrixExpression());
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
                 default:
@@ -1544,6 +1558,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case VECTORFIELD2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);
+                    break;
+                case VECTORFIELD3D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField3D);
                     break;
                 default:
                     break;
