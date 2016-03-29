@@ -232,7 +232,7 @@ public abstract class MathCommandCompiler {
      * Leitet die Ausgabe an die textliche und die grafische Ausgabeoberfläche
      * weiter.
      */
-    private static void doPrintOutput(Object... out) {
+    public static void doPrintOutput(Object... out) {
 
         // Textliche Ausgabe.
         String lineToPrint = "";

@@ -901,7 +901,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 try {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
                 } catch (Exception e) {
-                    mathToolGraphicArea.addComponent("ERROR!!!!!");
                 }
                 MathToolController.initializeTimer(computingTimer, computingDialog);
 
@@ -932,17 +931,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
 
                     if (validCommand) {
-
-                        // Hinzufügen zum textlichen Ausgabefeld.
-                        mathToolTextArea.append(input + "\n \n");
-                        // Hinzufügen zum graphischen Ausgabefeld.
-                        mathToolGraphicArea.addComponent(MathCommandCompiler.getCommand(commandName[0], params));
+                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.getCommand(commandName[0], params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName[0], params);
                         mathToolTextField.setText("");
-
                     }
 
                 } catch (ExpressionException | EvaluationException e) {
@@ -953,15 +947,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      könnte.
                      */
                     if (validCommand) {
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (validCommand) {
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
                     }
                 }
@@ -992,27 +984,21 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     try {
 
                         Expression exprSimplified = expr.simplify(simplifyTypes);
-                        // Hinzufügen zum textlichen Ausgabefeld.
-                        mathToolTextArea.append(expr.writeExpression() + " = " + exprSimplified.writeExpression() + "\n \n");
-                        // Hinzufügen zum graphischen Ausgabefeld.
-                        mathToolGraphicArea.addComponent(expr, "  =  ", exprSimplified);
+                        MathCommandCompiler.doPrintOutput(expr, "  =  ", exprSimplified);
                         mathToolTextField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
-                            mathToolTextArea.append(expr.writeExpression() + "\n \n");
-                            mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                            mathToolGraphicArea.addComponent(expr);
-                            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                            MathCommandCompiler.doPrintOutput(expr);
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
                         }
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputAlgebraicExpression(input)) {
-                            mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                             return null;
                         }
                     }
@@ -1024,15 +1010,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
                          arithmetischen Ausdrücken geworfen wurde.
                          */
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputAlgebraicExpression(input)) {
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
                     }
                 }
@@ -1055,30 +1039,21 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                         MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
-                        if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
-                            mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + ((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()).writeExpression() + "\n \n");
-                        } else {
-                            mathToolTextArea.append(matExpr.writeMatrixExpression() + " = " + matExprSimplified.writeMatrixExpression() + "\n \n");
-                        }
-                        // Hinzufügen zum graphischen Ausgabefeld.
-                        mathToolGraphicArea.addComponent(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
+                        MathCommandCompiler.doPrintOutput(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         mathToolTextField.setText("");
                         return null;
 
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
-                            mathToolTextArea.append(matExpr.writeMatrixExpression() + "\n \n");
-                            mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                            mathToolGraphicArea.addComponent(matExpr);
-                            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                            MathCommandCompiler.doPrintOutput(matExpr);
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
                         }
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputMatrixExpression(input)) {
-                            mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                             return null;
                         }
                     }
@@ -1090,15 +1065,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
                          arithmetischen Ausdrücken geworfen wurde.
                          */
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputMatrixExpression(input)) {
-                        mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                        mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                         return null;
                     }
                 }
@@ -1111,18 +1084,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                     LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
-                    // Hinzufügen zum textlichen Ausgabefeld.
-                    mathToolTextArea.append(logExpr.writeLogicalExpression() + Translator.translateOutputMessage("GUI_EQUIVALENT_TO") + logExprSimplified.writeLogicalExpression() + " \n \n");
-                    // Hinzufügen zum graphischen Ausgabefeld.
-                    mathToolGraphicArea.addComponent(logExpr, Translator.translateOutputMessage("GUI_EQUIVALENT_TO"), logExprSimplified);
+                    MathCommandCompiler.doPrintOutput(logExpr, Translator.translateOutputMessage("GUI_EQUIVALENT_TO"), logExprSimplified);
                     mathToolTextField.setText("");
 
                 } catch (ExpressionException e) {
-                    mathToolTextArea.append(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage() + "\n \n");
-                    mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                 } catch (Exception exception) {
-                    mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage() + "\n \n");
-                    mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                 }
 
                 return null;
@@ -1643,11 +1611,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         if (args.length > 0) {
             try {
+                System.out.println("Eingegebener Parameter: " + args[0]);
                 Expression expr = Expression.build(args[0], null);
+                System.out.println("Eingegebener Ausdruck: " + expr.writeExpression());
                 expr = expr.simplify();
-                System.out.println(expr);
+                System.out.println("Vereinfachter Ausdruck: " + expr.writeExpression());
             } catch (ExpressionException | EvaluationException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Fehler!");
+                if (e.getMessage().isEmpty()) {
+                    System.out.println("Keine Fehlermessage.");
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
             return;
         }
