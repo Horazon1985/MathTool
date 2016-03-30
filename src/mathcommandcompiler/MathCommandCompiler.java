@@ -2956,6 +2956,12 @@ public abstract class MathCommandCompiler {
 
         ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(f, g, var);
 
+        // Falls die Gleichung keine Lösungen besitzt, User informieren.
+        if (zeros == SolveGeneralEquationMethods.NO_SOLUTIONS) {
+                doPrintOutput(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
+            return;
+        }
+        
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
         if (zeros.isEmpty() && zeros != SolveGeneralEquationMethods.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
