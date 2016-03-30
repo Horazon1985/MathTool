@@ -122,7 +122,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelSpherical graphicPanelSpherical;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
     private static GraphicPanelVectorField3D graphicPanelVectorField3D;
-    
+
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
 
@@ -211,12 +211,12 @@ public abstract class MathCommandCompiler {
     public static void setGraphicPanelSpherical(GraphicPanelSpherical gPSpherical) {
         graphicPanelSpherical = gPSpherical;
     }
-    
-    public static void setGraphicPanelVectorField2D(GraphicPanelVectorField2D gPVectorField2D){
+
+    public static void setGraphicPanelVectorField2D(GraphicPanelVectorField2D gPVectorField2D) {
         graphicPanelVectorField2D = gPVectorField2D;
     }
 
-    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D){
+    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D) {
         graphicPanelVectorField3D = gPVectorField3D;
     }
 
@@ -2323,7 +2323,7 @@ public abstract class MathCommandCompiler {
 
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        
+
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
@@ -2835,7 +2835,7 @@ public abstract class MathCommandCompiler {
         }
 
         // Vektorfeld zeichnen.
-        graphicPanelVectorField3D.setParameters(varAbsc, varOrd, varAppl,  150, 200, 30, 30);
+        graphicPanelVectorField3D.setParameters(varAbsc, varOrd, varAppl, 150, 200, 30, 30);
 //        graphicPanelVectorField3D.drawVectorField3D(x_0, x_1, y_0, y_1, z_0, z_1, components);
         // Alte Legende schließen
         LegendGUI.close();
@@ -2958,10 +2958,10 @@ public abstract class MathCommandCompiler {
 
         // Falls die Gleichung keine Lösungen besitzt, User informieren.
         if (zeros == SolveGeneralEquationMethods.NO_SOLUTIONS) {
-                doPrintOutput(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
             return;
         }
-        
+
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
         if (zeros.isEmpty() && zeros != SolveGeneralEquationMethods.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
