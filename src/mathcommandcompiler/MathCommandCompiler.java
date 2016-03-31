@@ -127,6 +127,7 @@ public abstract class MathCommandCompiler {
     private static JTextArea mathToolTextArea;
 
     private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
+    private static final HashSet simplifyTypesExpandShort = getSimplifyTypesExpandShort();
     private static final HashSet simplifyTypesPlot = getSimplifyTypesPlot();
     private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
 
@@ -137,6 +138,23 @@ public abstract class MathCommandCompiler {
         simplifyTypes.add(TypeSimplify.simplify_trivial);
         simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
+        simplifyTypes.add(TypeSimplify.simplify_collect_products);
+        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypes.add(TypeSimplify.simplify_reduce_leadings_coefficients);
+        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
+        return simplifyTypes;
+    }
+
+    private static HashSet<TypeSimplify> getSimplifyTypesExpandShort() {
+        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+        simplifyTypes.add(TypeSimplify.order_difference_and_division);
+        simplifyTypes.add(TypeSimplify.order_sums_and_products);
+        simplifyTypes.add(TypeSimplify.simplify_trivial);
+        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
+        simplifyTypes.add(TypeSimplify.simplify_expand_short);
         simplifyTypes.add(TypeSimplify.simplify_collect_products);
         simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
         simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
@@ -1959,13 +1977,22 @@ public abstract class MathCommandCompiler {
         Expression secondDerAtZero;
 
         ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(derivative, ZERO, var);
+        /*
+         Wenn ganzzahlige Variablen auftauchen, so müssen sicherheitshalber Klammern ausgelöst werden.
+         */
+        for (int i = 0; i < zeros.getBound(); i++) {
+            if (expressionContainsIntegerVariables(zeros.get(i))) {
+                zeros.put(i, zeros.get(i).simplify(simplifyTypesExpandShort));
+            }
+        }
+
         ExpressionCollection extremaPoints = new ExpressionCollection();
         ExpressionCollection extremaValues = new ExpressionCollection();
         ExpressionCollection valuesOfSecondDerivative = new ExpressionCollection();
 
         for (Expression zero : zeros) {
             try {
-                secondDerAtZero = secondDerivateive.replaceVariable(var, zero).simplify();
+                secondDerAtZero = secondDerivateive.replaceVariable(var, zero).simplify(simplifyTypesExpandShort);
                 if (secondDerAtZero.isAlwaysPositive() || secondDerAtZero.isAlwaysNegative()) {
                     extremaPoints.add(zero);
                     extremaValues.add(expr.replaceVariable(var, zero).simplify());
@@ -2045,6 +2072,20 @@ public abstract class MathCommandCompiler {
 
         }
 
+    }
+
+    /**
+     * Hilfsmethode. Gibt zurück, ob der Ausdruck expr eine Variable mit
+     * ganzzahligen Werten (also eine Variable der Form K_1, K_2, ...) enthält.
+     */
+    private static boolean expressionContainsIntegerVariables(Expression expr) {
+        HashSet<String> vars = expr.getContainedIndeterminates();
+        for (String var : vars) {
+            if (var.startsWith(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_") && !var.contains("'")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void executeExtremaNumeric(Command command) throws EvaluationException {
