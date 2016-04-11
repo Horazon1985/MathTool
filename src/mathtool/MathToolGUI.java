@@ -554,7 +554,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanelVectorField2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
+//        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
 //            graphicPanelVectorField3D.setVisible(true);
 //            legendLabel.setVisible(true);
 //            saveLabel.setVisible(true);

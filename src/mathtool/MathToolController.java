@@ -428,9 +428,9 @@ public class MathToolController {
         if (commandName.equals(TypeCommand.plotvectorfield2d.name())) {
             return 6;
         }
-        if (commandName.equals(TypeCommand.plotvectorfield3d.name())) {
-            return 9;
-        }
+//        if (commandName.equals(TypeCommand.plotvectorfield3d.name())) {
+//            return 9;
+//        }
         if (commandName.equals(TypeCommand.solvediffeq.name())) {
             return 2;
         }
@@ -516,9 +516,9 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)){
             return TypeGraphic.VECTORFIELD2D;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)){
-            return TypeGraphic.VECTORFIELD3D;
-        }
+//        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)){
+//            return TypeGraphic.VECTORFIELD3D;
+//        }
         if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
         }
