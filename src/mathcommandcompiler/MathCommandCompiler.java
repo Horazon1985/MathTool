@@ -342,6 +342,19 @@ public abstract class MathCommandCompiler {
     }
 
     /**
+     * Diese Funktion wird zum Prüfen für die Vergabe neuer Funktionsnamen
+     * benötigt. Sie prüft nach, ob der Funktionsname nur aus Ziffern besteht.
+     */
+    private static boolean isNameIntegerNumber(String name) {
+        for (int i = 0; i < name.length(); i++) {
+            if (!((int) name.charAt(i) >= 48 && (int) name.charAt(i) < 57)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Gibt eine Instanz der Klasse Command zurück, welche zum Namen command und
      * zu den Parametern params gehört. Ansonsten wird eine entsprechende
      * ExpressionException geworfen. WICHTIG: Der String command und die
@@ -507,8 +520,13 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_FUNC_NAME_CONTAINS_SPECIAL_CHARS", functionName));
         }
 
+        // Prüfen, ob der Funktionsname nicht nur aus Ziffern besteht.
+        if (isNameIntegerNumber(functionName)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_FUNC_NAME_CONTAINS_ONLY_DIGITS", functionName));
+        }
+
         /*
-         Falls functions_vars leer ist -> Fehler ausgeben (es muss
+         Falls functionsVars leer ist -> Fehler ausgeben (es muss
          mindestens eine Variable vorhanden sein).
          */
         if (functionVars.length == 0) {
