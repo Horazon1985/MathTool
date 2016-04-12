@@ -569,7 +569,7 @@ public class MathToolController {
      */
     public static void locateButtonsAndDropDowns(JComponent[] components, int x, int y, int width, int height, int delta) {
         for (int i = 0; i < components.length; i++) {
-            components[i].setBounds(x + i * delta, y, width, height);
+            components[i].setBounds(x + i * (width + delta), y, width, height);
         }
     }
 

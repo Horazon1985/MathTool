@@ -296,7 +296,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 40, getHeight() - 170,
                         mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
                 // Alle Buttons und Dropdowns korrekt ausrichten.
-                MathToolController.locateButtonsAndDropDowns(buttonsAndDropDowns, 10, scrollPaneText.getHeight() + 60, 130, 30, 135);
+                MathToolController.locateButtonsAndDropDowns(buttonsAndDropDowns, 10, scrollPaneText.getHeight() + 60, 150, 30, 5);
                 // Alle Grafikpanels korrekt ausrichten.
                 MathToolController.locateGraphicPanels(graphicPanels, scrollPaneText.getWidth() - 490, scrollPaneText.getHeight() - 490, 500, 500);
 
