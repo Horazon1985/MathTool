@@ -17,7 +17,7 @@ import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.TypeFunction;
 import abstractexpressions.expression.classes.TypeOperator;
 import abstractexpressions.expression.classes.Variable;
-import abstractexpressions.expression.diferentialequation.SolveGeneralDifferentialEquationMethods;
+import abstractexpressions.expression.differentialequation.SolveGeneralDifferentialEquationMethods;
 import abstractexpressions.expression.utilities.ExpressionCollection;
 import abstractexpressions.expression.utilities.SimplifyPolynomialMethods;
 import graphic.GraphicArea;
