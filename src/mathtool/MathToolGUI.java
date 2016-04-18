@@ -211,6 +211,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         mathToolGraphicArea.setFontSize(fontSizeGraphic);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mathToolGraphicArea.setCaretPosition(mathToolGraphicArea.getDocument().getLength());
         add(scrollPaneGraphic);
 
         // Buttons ausrichten
