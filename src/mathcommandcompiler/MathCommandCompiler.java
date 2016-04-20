@@ -263,6 +263,7 @@ public abstract class MathCommandCompiler {
 
         // Grafische Ausgabe.
         mathToolGraphicArea.addComponent(out);
+//        mathToolGraphicArea.setCaretPosition(mathToolGraphicArea.getDocument().getLength());
 
     }
 
