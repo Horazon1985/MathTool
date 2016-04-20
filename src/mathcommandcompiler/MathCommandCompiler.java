@@ -89,6 +89,8 @@ public abstract class MathCommandCompiler {
     public static final String PATTERN_EXTREMA_WITH_PARAMETER = "extrema(expr,indet)";
     public static final String PATTERN_EXTREMA_APPROX = "extrema(expr(0,1),expr(0,0),expr(0,0))";
     public static final String PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS = "extrema(expr(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
+//    @GetCommand(type = TypeCommand.groebnerbasis)
+    public static final String PATTERN_GROEBNERBASIS = "groebnerbasis(expr+,type(lex,deglex,revlex,degrevlex),uniquevar+)";
     @GetCommand(type = TypeCommand.ker)
     public static final String PATTERN_KER = "ker(matexpr)";
     @GetCommand(type = TypeCommand.pi)
