@@ -3030,7 +3030,7 @@ public abstract class MathCommandCompiler {
         }
 
         doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
-                " = ", ((Expression[]) command.getParams()[0])[1], ":");
+                " = ", ((Expression[]) command.getParams()[0])[1], " :");
         if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
         } else {
@@ -3130,7 +3130,7 @@ public abstract class MathCommandCompiler {
 
         if (equation.isConstant()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
-                    " = ", ((Expression[]) command.getParams()[0])[1], ":");
+                    " = ", ((Expression[]) command.getParams()[0])[1], " :");
             if (equation.equals(Expression.ZERO)) {
                 doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
             } else {
