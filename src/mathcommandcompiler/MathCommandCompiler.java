@@ -48,6 +48,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
+import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
 import computationbounds.ComputationBounds;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
@@ -1185,7 +1186,6 @@ public abstract class MathCommandCompiler {
 //        return new Command(TypeCommand.plotvectorfield3d, commandParams);
 //
 //    }
-
     @GetCommand(type = TypeCommand.plotpolar)
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
@@ -2903,7 +2903,6 @@ public abstract class MathCommandCompiler {
 //        LegendGUI.close();
 //
 //    }
-
     @Execute(type = TypeCommand.regressionline)
     private static void executeRegressionLine(Command command)
             throws EvaluationException {
@@ -3415,8 +3414,7 @@ public abstract class MathCommandCompiler {
     }
 
     @Execute(type = TypeCommand.solvesystem)
-    private static void executeSolveSystem(Command command)
-            throws EvaluationException {
+    private static void executeSolveSystem(Command command) throws EvaluationException {
 
         Object[] params = command.getParams();
 
@@ -3436,98 +3434,74 @@ public abstract class MathCommandCompiler {
             solutionVars.add((String) params[i]);
         }
 
-        // Lineares Gleichungssystem bilden.
+        // Gleichungssystem bilden.
         Expression[] equations = new Expression[numberOfEquations];
         for (int i = 0; i < numberOfEquations; i++) {
             equations[i] = ((Expression[]) params[i])[0].sub(((Expression[]) params[i])[1]).simplify(simplifyTypesSolveSystem);
         }
 
-        // Prüfung, ob alle Gleichungen linear in den angegebenen Variablen sind.
-        BigInteger degInVar;
-        for (int i = 0; i < numberOfEquations; i++) {
-            for (String solutionVar : solutionVars) {
-                degInVar = SimplifyPolynomialMethods.getDegreeOfPolynomial(equations[i], solutionVar);
-                if (degInVar.compareTo(BigInteger.ONE) > 0) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_GENERAL_EQUATION_NOT_LINEAR_IN_SOLVESYSTEM", i + 1, solutionVar));
+        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveGeneralSystemOfEquations(equations, solutionVars);
+        Object[] solutionLine;
+        for (Expression[] solution : solutions) {
+            solutionLine = new Object[4 * solutionVars.size() - 1];
+            for (int i = 0; i < solution.length; i++) {
+                solutionLine[4 * i] = solutionVars.get(i);
+                solutionLine[4 * i + 1] = " = ";
+                solutionLine[4 * i + 2] = solution[i];
+                if (i < solution.length - 1) {
+                    solutionLine[4 * i + 3] = ", ";
                 }
             }
+            doPrintOutput(solutionLine);
         }
 
-        Expression[][] matrixEntries = new Expression[numberOfEquations][solutionVars.size()];
-        Expression[] vectorEntries = new Expression[numberOfEquations];
+        /*
+         Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
+         ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
+         */
+        boolean solutionContainsFreeParameter = false;
+        String infoAboutFreeParameters;
 
-        for (int i = 0; i < numberOfEquations; i++) {
-            for (int j = 0; j < solutionVars.size(); j++) {
-                matrixEntries[i][j] = equations[i].diff(solutionVars.get(j)).simplify();
+        for (Expression[] solution : solutions) {
+            for (Expression solutionEntry : solution) {
+                solutionContainsFreeParameter = solutionContainsFreeParameter || solutionEntry.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_0");
             }
         }
 
-        // Alle Variablen durch 0 ersetzen.
-        for (int i = 0; i < numberOfEquations; i++) {
-            vectorEntries[i] = equations[i];
-            for (String solutionVar : solutionVars) {
-                vectorEntries[i] = vectorEntries[i].replaceVariable(solutionVar, ZERO);
-            }
-            vectorEntries[i] = MINUS_ONE.mult(vectorEntries[i]).simplify();
-        }
-
-        Matrix m = new Matrix(matrixEntries);
-        Matrix b = new Matrix(vectorEntries);
-
-        try {
-
-            Expression[] solutions = GaussAlgorithm.solveLinearSystemOfEquations(m, b);
-            for (int i = 0; i < solutions.length; i++) {
-                doPrintOutput(solutionVars.get(i), " = ", solutions[i]);
-            }
-
-            /*
-             Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
-             ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
-             */
-            boolean solutionContainsFreeParameter = false;
-            String infoAboutFreeParameters;
-
-            for (Expression solution : solutions) {
-                solutionContainsFreeParameter = solutionContainsFreeParameter || solution.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_0");
-            }
-
-            if (solutionContainsFreeParameter) {
-                boolean solutionContainsFreeParameterOfGivenIndex = true;
-                int maxIndex = 0;
-                while (solutionContainsFreeParameterOfGivenIndex) {
-                    maxIndex++;
-                    solutionContainsFreeParameterOfGivenIndex = false;
-                    for (Expression solution : solutions) {
-                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solution.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_" + maxIndex);
+        if (solutionContainsFreeParameter) {
+            boolean solutionContainsFreeParameterOfGivenIndex = true;
+            int maxIndex = 0;
+            while (solutionContainsFreeParameterOfGivenIndex) {
+                maxIndex++;
+                solutionContainsFreeParameterOfGivenIndex = false;
+                for (Expression[] solution : solutions) {
+                    for (Expression solutionEntry : solution) {
+                    solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_" + maxIndex);
                     }
                 }
-                maxIndex--;
+            }
+            maxIndex--;
 
-                ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
-                for (int i = 0; i <= maxIndex; i++) {
-                    freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_REAL_PARAMETER_VAR, BigInteger.valueOf(i)));
-                }
-                if (maxIndex == 0) {
-                    infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_SOLVESYSTEM");
-                } else {
-                    infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM");
-                }
-
-                ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
-                for (int i = 0; i < freeParameterVars.size(); i++) {
-                    infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
-                    if (i < freeParameterVars.size() - 1) {
-                        infoAboutFreeParametersForGraphicArea.add(", ");
-                    }
-                }
-                infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
-                doPrintOutput(infoAboutFreeParametersForGraphicArea);
-
+            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            for (int i = 0; i <= maxIndex; i++) {
+                freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_REAL_PARAMETER_VAR, BigInteger.valueOf(i)));
+            }
+            if (maxIndex == 0) {
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_SOLVESYSTEM");
+            } else {
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM");
             }
 
-        } catch (EvaluationException e) {
-            doPrintOutput(Translator.translateOutputMessage("MCC_SYSTEM_NOT_SOLVABLE"));
+            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+            for (int i = 0; i < freeParameterVars.size(); i++) {
+                infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
+                if (i < freeParameterVars.size() - 1) {
+                    infoAboutFreeParametersForGraphicArea.add(", ");
+                }
+            }
+            infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
+            doPrintOutput(infoAboutFreeParametersForGraphicArea);
+
         }
 
     }
