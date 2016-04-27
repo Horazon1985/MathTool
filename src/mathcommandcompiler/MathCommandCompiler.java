@@ -3440,7 +3440,7 @@ public abstract class MathCommandCompiler {
             equations[i] = ((Expression[]) params[i])[0].sub(((Expression[]) params[i])[1]).simplify(simplifyTypesSolveSystem);
         }
 
-        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveGeneralSystemOfEquations(equations, solutionVars);
+        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveSystemOfEquations(equations, solutionVars);
         Object[] solutionLine;
         for (Expression[] solution : solutions) {
             solutionLine = new Object[4 * solutionVars.size() - 1];
