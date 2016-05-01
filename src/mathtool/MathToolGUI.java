@@ -48,6 +48,7 @@ import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
 import graphic.GraphicPanelVectorField3D;
+import java.awt.event.KeyAdapter;
 import java.lang.reflect.Field;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.component.components.ComputingDialogGUI;
@@ -175,7 +176,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         mathToolTextField = new MathToolTextField();
         mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12));
-        mathToolTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+        mathToolTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 mathToolTextFieldKeyPressed(evt);
@@ -891,8 +892,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 computingDialog.setVisible(false);
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
-                // mathToolArea nach unten scrollen lassen.
+                // mathToolTextArea und mathToolGraphicArea nach unten scrollen lassen.
                 scrollPaneText.getVerticalScrollBar().setValue(scrollPaneText.getVerticalScrollBar().getMaximum());
+                scrollPaneGraphic.getVerticalScrollBar().setValue(scrollPaneGraphic.getVerticalScrollBar().getMaximum());
             }
 
             @Override
