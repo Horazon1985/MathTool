@@ -1207,6 +1207,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         computingSwingWorker.cancel(true);
+        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
@@ -1382,6 +1383,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
                     computingSwingWorker.cancel(true);
+                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
                 } else {
                     mathToolTextField.setText("");
                 }

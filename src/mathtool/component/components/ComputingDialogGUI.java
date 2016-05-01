@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import javax.swing.SwingWorker;
+import mathcommandcompiler.MathCommandCompiler;
 
 public class ComputingDialogGUI extends JDialog {
 
@@ -35,8 +36,8 @@ public class ComputingDialogGUI extends JDialog {
         } catch (Exception e) {
             icon = null;
         }
-        
-        if (icon != null){
+
+        if (icon != null) {
             owlLabel = new JLabel(icon);
         } else {
             owlLabel = new JLabel();
@@ -68,6 +69,7 @@ public class ComputingDialogGUI extends JDialog {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
                 swingWorker.cancel(true);
+                MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
                 break;
         }
     }
