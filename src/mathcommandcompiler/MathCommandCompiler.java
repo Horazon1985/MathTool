@@ -3445,6 +3445,15 @@ public abstract class MathCommandCompiler {
         }
 
         ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveSystemOfEquations(equations, solutionVars);
+        
+        // Sonderfälle: keine Lösungen, alle reellen Zahlentupel.
+        if (solutions == SolveGeneralSystemOfEquationsMethods.ALL_REALS){
+            doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_ALL_REAL_TUPLES_AS_SOLUTIONS"));
+        } else if (solutions == SolveGeneralSystemOfEquationsMethods.NO_SOLUTIONS){
+            doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_NO_SOLUTIONS"));
+        }
+        
+        
         Object[] solutionLine;
         for (Expression[] solution : solutions) {
             solutionLine = new Object[4 * solutionVars.size() - 1];
