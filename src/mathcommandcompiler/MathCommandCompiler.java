@@ -50,6 +50,7 @@ import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
 import computationbounds.ComputationBounds;
+import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
@@ -427,8 +428,10 @@ public abstract class MathCommandCompiler {
                     return (Command) method.invoke(null, new Object[]{params});
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     if (e.getCause() instanceof ExpressionException) {
-                        // Methoden können nur EvaluationExceptions werfen.
                         throw (ExpressionException) e.getCause();
+                    }
+                    if (e.getCause() instanceof CancellationException) {
+                        throw (CancellationException) e.getCause();
                     }
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
                 }
@@ -1681,8 +1684,10 @@ public abstract class MathCommandCompiler {
                     break;
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     if (e.getCause() instanceof EvaluationException) {
-                        // Methoden können nur EvaluationExceptions werfen.
                         throw (EvaluationException) e.getCause();
+                    }
+                    if (e.getCause() instanceof CancellationException) {
+                        throw (CancellationException) e.getCause();
                     }
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
                 }

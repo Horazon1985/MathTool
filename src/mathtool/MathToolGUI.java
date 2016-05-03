@@ -44,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
@@ -952,6 +953,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                         return null;
                     }
+                } catch (CancellationException e) {
+                    MathCommandCompiler.doPrintOutput(e.getMessage());
+                    return null;
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (validCommand) {
@@ -997,6 +1001,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             mathToolTextField.setText("");
                             return null;
                         }
+                    } catch (CancellationException e) {
+                        MathCommandCompiler.doPrintOutput(e.getMessage());
+                        return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputAlgebraicExpression(input)) {
@@ -1052,6 +1059,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             mathToolTextField.setText("");
                             return null;
                         }
+                    } catch (CancellationException e) {
+                        MathCommandCompiler.doPrintOutput(e.getMessage());
+                        return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputMatrixExpression(input)) {
@@ -1089,8 +1099,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     MathCommandCompiler.doPrintOutput(logExpr, Translator.translateOutputMessage("GUI_EQUIVALENT_TO"), logExprSimplified);
                     mathToolTextField.setText("");
 
-                } catch (ExpressionException e) {
+                } catch (ExpressionException | EvaluationException e) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                    return null;
+                } catch (CancellationException e) {
+                    MathCommandCompiler.doPrintOutput(e.getMessage());
+                    return null;
                 } catch (Exception exception) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
                 }
@@ -1209,7 +1223,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         computingSwingWorker.cancel(true);
-        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
@@ -1385,7 +1398,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
                     computingSwingWorker.cancel(true);
-                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
                 } else {
                     mathToolTextField.setText("");
                 }

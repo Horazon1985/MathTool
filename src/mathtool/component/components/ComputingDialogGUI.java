@@ -20,6 +20,7 @@ public class ComputingDialogGUI extends JDialog {
         setTitle(Translator.translateOutputMessage("GUI_ComputingDialogGUI_INFO"));
         setLayout(null);
         setResizable(false);
+        setAlwaysOnTop(true);
 
         this.setBounds((mathtoolformWidth - 550) / 2 + mathtoolformX, (mathtoolformHeight - 100) / 2 + mathtoolformY, 550, 100);
         this.getContentPane().setBackground(Color.white);
@@ -69,7 +70,6 @@ public class ComputingDialogGUI extends JDialog {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
                 swingWorker.cancel(true);
-                MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("MCC_COMPUTATION_ABORTED"));
                 break;
         }
     }
