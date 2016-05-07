@@ -3449,8 +3449,13 @@ public abstract class MathCommandCompiler {
         // Sonderfälle: keine Lösungen, alle reellen Zahlentupel.
         if (solutions == SolveGeneralSystemOfEquationsMethods.ALL_REALS){
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_ALL_REAL_TUPLES_AS_SOLUTIONS"));
+            return;
         } else if (solutions == SolveGeneralSystemOfEquationsMethods.NO_SOLUTIONS){
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_NO_SOLUTIONS"));
+            return;
+        } else if (solutions.isEmpty()){
+            doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_NO_SOLUTIONS_FOUND"));
+            return;
         }
         
         
