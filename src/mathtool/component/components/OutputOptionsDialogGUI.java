@@ -51,7 +51,7 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
     private void initMandatorySimplifyTypes() {
         mandatorySimplifyTypes.add(TypeSimplify.order_difference_and_division);
         mandatorySimplifyTypes.add(TypeSimplify.order_sums_and_products);
-        mandatorySimplifyTypes.add(TypeSimplify.simplify_trivial);
+        mandatorySimplifyTypes.add(TypeSimplify.simplify_basic);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_collect_products);
