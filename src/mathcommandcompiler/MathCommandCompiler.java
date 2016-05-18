@@ -1960,9 +1960,42 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.expand)
     private static void executeExpand(Command command) throws EvaluationException {
+        
         Expression expr = (Expression) command.getParams()[0];
+
+        // Voreingestellte Vereinfachungstypen müssen eingebunden werden, welche expand() nicht widersprechen.
+        HashSet<TypeSimplify> simplifyTypesMathTool = MathToolGUI.getSimplifyTypes();
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_algebraic_expressions)){
+            simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
+        } else {
+            simplifyTypesExpand.remove(TypeSimplify.simplify_algebraic_expressions);
+        }
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_functional_relations)){
+            simplifyTypesExpand.add(TypeSimplify.simplify_functional_relations);
+        } else {
+            simplifyTypesExpand.remove(TypeSimplify.simplify_functional_relations);
+        }
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_expand_logarithms)){
+            simplifyTypesExpand.add(TypeSimplify.simplify_expand_logarithms);
+        } else {
+            simplifyTypesExpand.remove(TypeSimplify.simplify_expand_logarithms);
+        }
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_collect_logarithms)){
+            simplifyTypesExpand.add(TypeSimplify.simplify_collect_logarithms);
+        } else {
+            simplifyTypesExpand.remove(TypeSimplify.simplify_collect_logarithms);
+        }
+        
         expr = expr.simplify(simplifyTypesExpand);
+        
+        // Voreingestellte Vereinfachungstypen müssen aus simplifyTypesExpand wieder entfernt werden.
+        simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypesExpand.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypesExpand.remove(TypeSimplify.simplify_expand_logarithms);
+        simplifyTypesExpand.remove(TypeSimplify.simplify_collect_logarithms);
+        
         doPrintOutput(expr);
+        
     }
 
     @Execute(type = TypeCommand.extrema)
