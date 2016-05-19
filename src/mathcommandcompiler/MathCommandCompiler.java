@@ -2333,6 +2333,7 @@ public abstract class MathCommandCompiler {
 
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
+            System.out.println("Vereinfacht: " + exprSimplified);
 
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
