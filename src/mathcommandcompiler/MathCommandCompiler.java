@@ -3110,9 +3110,9 @@ public abstract class MathCommandCompiler {
                 freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
             }
             if (maxIndex == 1) {
-                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER") + " \n \n";
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER");
             } else {
-                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS") + " \n \n";
+                infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS");
             }
 
             ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
@@ -3507,15 +3507,18 @@ public abstract class MathCommandCompiler {
         }
 
         /*
-         Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
+         (1) Falls Lösungen Parameter T_0, T_0, ... enthalten, dann zusätzlich
          ausgeben: T_0, T_1, ... sind beliebige freie Veränderliche.
+         (2) Falls Lösungen Parameter K_1, K_2, ... enthalten, dann zusätzlich
+         ausgeben: K_1, K_2, ... sind beliebige ganzzahlige Veränderliche.
          */
-        boolean solutionContainsFreeParameter = false;
-        String infoAboutFreeParameters;
+        boolean solutionContainsFreeParameter = false, solutionContainsIntegerParameter = false;
+        String infoAboutFreeParameters, infoAboutIntegerParameters;
 
         for (Expression[] solution : solutions) {
             for (Expression solutionEntry : solution) {
                 solutionContainsFreeParameter = solutionContainsFreeParameter || solutionEntry.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_0");
+                solutionContainsIntegerParameter = solutionContainsIntegerParameter || solutionEntry.contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_1");
             }
         }
 
@@ -3552,6 +3555,42 @@ public abstract class MathCommandCompiler {
             }
             infoAboutFreeParametersForGraphicArea.add(infoAboutFreeParameters);
             doPrintOutput(infoAboutFreeParametersForGraphicArea);
+
+        }
+        
+        if (solutionContainsIntegerParameter) {
+            boolean solutionContainsIntegerParameterOfGivenIndex = true;
+            int maxIndex = 1;
+            while (solutionContainsIntegerParameterOfGivenIndex) {
+                maxIndex++;
+                solutionContainsIntegerParameterOfGivenIndex = false;
+                for (Expression[] solution : solutions) {
+                    for (Expression solutionEntry : solution) {
+                    solutionContainsIntegerParameterOfGivenIndex = solutionContainsIntegerParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
+                    }
+                }
+            }
+            maxIndex--;
+
+            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            for (int i = 1; i <= maxIndex; i++) {
+                freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR, BigInteger.valueOf(i)));
+            }
+            if (maxIndex == 1) {
+                infoAboutIntegerParameters = Translator.translateOutputMessage("MCC_IS_ARBITRARY_INTEGER");
+            } else {
+                infoAboutIntegerParameters = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS");
+            }
+
+            ArrayList infoAboutIntegerParametersForGraphicArea = new ArrayList();
+            for (int i = 0; i < freeParameterVars.size(); i++) {
+                infoAboutIntegerParametersForGraphicArea.add(freeParameterVars.get(i));
+                if (i < freeParameterVars.size() - 1) {
+                    infoAboutIntegerParametersForGraphicArea.add(", ");
+                }
+            }
+            infoAboutIntegerParametersForGraphicArea.add(infoAboutIntegerParameters);
+            doPrintOutput(infoAboutIntegerParametersForGraphicArea);
 
         }
 
