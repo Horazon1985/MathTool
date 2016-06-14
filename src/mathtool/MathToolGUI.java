@@ -982,18 +982,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                     Expression expr = Expression.build(input, null);
 
-                    /*
-                     Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
-                     Beispielsweise ist 1/0 zwar ein gültiger Ausdruck, liefert aber
-                     beim Auswerten einen Fehler.
-                     */
                     try {
-
                         Expression exprSimplified = expr.simplify(simplifyTypes);
                         MathCommandCompiler.doPrintOutput(expr, "  =  ", exprSimplified);
                         mathToolTextField.setText("");
                         return null;
-
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(expr);
@@ -1039,19 +1032,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                     MatrixExpression matExpr = MatrixExpression.build(input, null);
 
-                    /*
-                     Falls es bei Vereinfachungen zu Auswertungsfehlern kommt.
-                     Beispielsweise ist 1/0 zwar ein gültiger Ausdruck, liefert aber
-                     beim Auswerten einen Fehler.
-                     */
                     try {
-
                         MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
                         MathCommandCompiler.doPrintOutput(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         mathToolTextField.setText("");
                         return null;
-
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(matExpr);
@@ -1093,12 +1079,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
                  */
                 try {
-
                     LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
                     MathCommandCompiler.doPrintOutput(logExpr, Translator.translateOutputMessage("GUI_EQUIVALENT_TO"), logExprSimplified);
                     mathToolTextField.setText("");
-
                 } catch (ExpressionException | EvaluationException e) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                     return null;
