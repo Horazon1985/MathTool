@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mathToolConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MathToolConfigXSD.xsd">
     <generalSettings>
-        <fontSizeGraphic>18</fontSizeGraphic>
+        <fontSizeGraphic>20</fontSizeGraphic>
         <fontSizeText>15</fontSizeText>
 	<language>DE</language>
 	<mode>GRAPHIC</mode>
