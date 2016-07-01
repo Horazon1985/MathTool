@@ -214,6 +214,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
+        
+        mathToolGraphicArea.addMouseListener(this);
 
         // Buttons ausrichten
         cancelButton.setVisible(false);
@@ -1479,7 +1481,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             instructions, graphicPanelSpherical.getColors(), exprs);
                     break;
                 case VECTORFIELD2D:
-                    instructions.addAll(graphicPanelVectorField2D.getInstructions());
+                    instructions.addAll(GraphicPanelVectorField2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField2D.getColor());
                     exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().writeMatrixExpression());
@@ -1487,7 +1489,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             instructions, colors, exprs);
                     break;
                 case VECTORFIELD3D:
-                    instructions.addAll(graphicPanelVectorField3D.getInstructions());
+                    instructions.addAll(GraphicPanelVectorField3D.getInstructions());
                     colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField3D.getColor());
                     exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField3D.getVectorFieldExpression().writeMatrixExpression());
