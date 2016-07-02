@@ -323,13 +323,13 @@ public class MathToolController {
             }
 
             try {
-                Expression.build(s, new HashSet<String>());
+                Expression.build(s, null);
             } catch (ExpressionException eExpr) {
                 try {
-                    LogicalExpression.build(s, new HashSet<String>());
+                    LogicalExpression.build(s, null);
                 } catch (ExpressionException eLogExpr) {
                     try {
-                        MatrixExpression.build(s, new HashSet<String>());
+                        MatrixExpression.build(s, null);
                     } catch (ExpressionException eMatExpr) {
                         mathToolTextField.setForeground(Color.red);
                         mathToolTextField.setToolTipText(eMatExpr.getMessage());
