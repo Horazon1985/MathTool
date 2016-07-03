@@ -7,7 +7,7 @@ public class MathToolTextField extends JTextField {
 
     public MathToolTextField(){
         super();
-        this.setFont(new Font("Times New Roman", Font.BOLD, 12));
+        setFont(new Font("Verdana", Font.PLAIN, 12));
     }
     
 }

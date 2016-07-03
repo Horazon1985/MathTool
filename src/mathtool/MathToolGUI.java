@@ -164,8 +164,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
-        Font mathToolAreaFont = new Font("Arial", Font.BOLD, fontSizeText);
-        mathToolTextArea.setFont(mathToolAreaFont);
+        mathToolTextArea.setFont(new Font("Times New Roman", Font.BOLD, fontSizeText));
         mathToolTextArea.setEditable(false);
         mathToolTextArea.setLineWrap(true);
         mathToolTextArea.setWrapStyleWord(true);
@@ -176,7 +175,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         scrollPaneText.setVisible(false);
 
         mathToolTextField = new MathToolTextField();
-        mathToolTextField.setFont(new java.awt.Font("Verdana", 0, 12));
         mathToolTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
