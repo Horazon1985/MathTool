@@ -32,7 +32,7 @@ public class SessionLoader {
         for (String var : Variable.getVariablesWithPredefinedValues()) {
             definedVar = new DefinedVar();
             definedVar.setVarname(var);
-            definedVar.setValue(Variable.create(var).getPreciseExpression().writeExpression());
+            definedVar.setValue(Variable.create(var).getPreciseExpression().toString());
             definedVarsToSet.add(definedVar);
         }
         definedVars.setDefinedVarList(definedVarsToSet);
@@ -47,7 +47,7 @@ public class SessionLoader {
             argumentsToSet = new Arguments();
             argumentsToSet.setArguments(arguments);
             definedfunction.setArguments(argumentsToSet);
-            definedfunction.setFunctionterm(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(function).writeExpression());
+            definedfunction.setFunctionterm(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().get(function).toString());
             definedfunctionsToSet.add(definedfunction);
         }
         definedFunctions.setDefinedFunctionList(definedfunctionsToSet);

@@ -1404,7 +1404,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPH2D:
                     instructions.addAll(graphicPanel2D.getInstructions());
                     for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).writeExpression());
+                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel2D.getColors(), exprs);
@@ -1412,9 +1412,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHIMPLICIT2D: {
                     instructions.addAll(graphicPanelImplicit2D.getInstructions());
                     exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
-                            + graphicPanelImplicit2D.getExpressions().get(0).writeExpression()
+                            + graphicPanelImplicit2D.getExpressions().get(0).toString()
                             + " = "
-                            + graphicPanelImplicit2D.getExpressions().get(1).writeExpression());
+                            + graphicPanelImplicit2D.getExpressions().get(1).toString());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelImplicit2D.getColor());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
@@ -1424,7 +1424,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPH3D:
                     instructions.addAll(GraphicPanel3D.getInstructions());
                     for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).writeExpression());
+                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel3D.getColors(), exprs);
@@ -1457,7 +1457,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHPOLAR:
                     instructions.addAll(GraphicPanelPolar.getInstructions());
                     for (int i = 0; i < graphicPanelPolar.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar.getExpressions().get(i).writeExpression());
+                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelPolar.getColors(), exprs);
@@ -1465,7 +1465,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHCYLINDRCAL:
                     instructions.addAll(GraphicPanelCylindrical.getInstructions());
                     for (int i = 0; i < graphicPanelCylindrical.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelCylindrical.getExpressions().get(i).writeExpression());
+                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelCylindrical.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelCylindrical.getColors(), exprs);
@@ -1473,7 +1473,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHSPHERICAL:
                     instructions.addAll(GraphicPanelSpherical.getInstructions());
                     for (int i = 0; i < graphicPanelSpherical.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).writeExpression());
+                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelSpherical.getColors(), exprs);
@@ -1482,7 +1482,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelVectorField2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField2D.getColor());
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().writeMatrixExpression());
+                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().toString());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
@@ -1490,7 +1490,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelVectorField3D.getInstructions());
                     colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField3D.getColor());
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField3D.getVectorFieldExpression().writeMatrixExpression());
+                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
@@ -1613,9 +1613,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
             try {
                 System.out.println("Eingegebener Parameter: " + args[0]);
                 Expression expr = Expression.build(args[0], null);
-                System.out.println("Eingegebener Ausdruck: " + expr.writeExpression());
+                System.out.println("Eingegebener Ausdruck: " + expr.toString());
                 expr = expr.simplify();
-                System.out.println("Vereinfachter Ausdruck: " + expr.writeExpression());
+                System.out.println("Vereinfachter Ausdruck: " + expr.toString());
             } catch (ExpressionException | EvaluationException e) {
                 System.out.println("Fehler!");
                 if (e.getMessage().isEmpty()) {
