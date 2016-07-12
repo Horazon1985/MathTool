@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import javax.swing.SwingWorker;
-import mathcommandcompiler.MathCommandCompiler;
 
 public class ComputingDialogGUI extends JDialog {
 

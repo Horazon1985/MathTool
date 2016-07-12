@@ -2,6 +2,7 @@ package test.mathcommandcompiler;
 
 import graphic.GraphicArea;
 import javax.swing.JTextArea;
+import mathtool.MathToolGUI;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,7 +24,7 @@ public class CommandExecutionTests {
     @Before
     public static void initGraphicArea() throws Exception {
         mathToolTextArea = new JTextArea();
-        mathToolGraphicArea = new GraphicArea(0, 0, 100, 100);
+        mathToolGraphicArea = new GraphicArea(0, 0, 100, 100, new MathToolGUI());
     }
 
     @Test

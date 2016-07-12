@@ -442,7 +442,7 @@ public class MathToolController {
             return 5;
         }
 
-        Field[] fields = Command.class.getDeclaredFields();
+        Field[] fields = MathCommandCompiler.class.getDeclaredFields();
         String value;
         int numberOfCommas = -1;
 
@@ -574,7 +574,7 @@ public class MathToolController {
         }
     }
 
-    public static void initializeTimer(Timer computingTimer, final ComputingDialogGUI computingDialog) {
+    public static void initTimer(Timer computingTimer, final ComputingDialogGUI computingDialog) {
 
         // Es folgen die TimerTasks, welche die Eule veranlassen, mit den Augen zu zwinkern.
         TimerTask start = new TimerTask() {

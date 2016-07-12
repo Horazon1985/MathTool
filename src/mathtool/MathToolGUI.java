@@ -46,6 +46,7 @@ import mathcommandcompiler.MathCommandCompiler;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelFormula;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
 import graphic.GraphicPanelVectorField3D;
@@ -61,6 +62,7 @@ import mathtool.component.components.OutputOptionsDialogGUI;
 import lang.translator.Translator;
 import mathtool.annotations.GraphicPanel;
 import mathtool.component.components.GraphicOptionsDialogGUI;
+import mathtool.component.components.OutputDetailsGUI;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
@@ -207,13 +209,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         mathToolGraphicAreaWidth = this.getWidth() - 40;
         mathToolGraphicAreaHeight = this.getHeight() - 170;
         mathToolGraphicArea = new GraphicArea(mathToolGraphicAreaX, mathToolGraphicAreaY,
-                mathToolGraphicAreaWidth, mathToolGraphicAreaHeight);
+                mathToolGraphicAreaWidth, mathToolGraphicAreaHeight, this);
         mathToolGraphicArea.setFontSize(fontSizeGraphic);
         scrollPaneGraphic = new JScrollPane(mathToolGraphicArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
-        
-        mathToolGraphicArea.addMouseListener(this);
 
         // Buttons ausrichten
         cancelButton.setVisible(false);
@@ -272,7 +272,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
-        MathCommandCompiler.setGraphicPanelVectorField3D(graphicPanelVectorField3D);
+//        MathCommandCompiler.setGraphicPanelVectorField3D(graphicPanelVectorField3D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -905,12 +905,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
                 } catch (Exception e) {
                 }
-                MathToolController.initializeTimer(computingTimer, computingDialog);
+                MathToolController.initTimer(computingTimer, computingDialog);
 
                 boolean validCommand = false;
 
                 // Leerzeichen werden im Vorfeld beseitigt.
                 String input = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
+
+                if (input.isEmpty()) {
+                    return null;
+                }
 
                 // Befehl loggen!
                 commandList.add(input);
@@ -984,12 +988,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                     try {
                         Expression exprSimplified = expr.simplify(simplifyTypes);
-                        MathCommandCompiler.doPrintOutput(expr, "  =  ", exprSimplified);
+                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(expr), "  =  ", MathCommandCompiler.convertToEditableObject(exprSimplified));
+//                        MathCommandCompiler.doPrintOutput(expr, "  =  ", exprSimplified);
                         mathToolTextField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(expr);
+                            MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(expr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
@@ -1035,12 +1040,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     try {
                         MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
-                        MathCommandCompiler.doPrintOutput(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
+                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(matExpr), "  =  ", MathCommandCompiler.convertToEditableObject(matExprSimplified.convertOneTimesOneMatrixToExpression()));
+//                        MathCommandCompiler.doPrintOutput(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
                         mathToolTextField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(matExpr);
+                            MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(matExpr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
@@ -1081,7 +1087,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 try {
                     LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
-                    MathCommandCompiler.doPrintOutput(logExpr, Translator.translateOutputMessage("GUI_EQUIVALENT_TO"), logExprSimplified);
+                    MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(logExpr),
+                            Translator.translateOutputMessage("GUI_EQUIVALENT_TO"),
+                            MathCommandCompiler.convertToEditableObject(logExprSimplified));
                     mathToolTextField.setText("");
                 } catch (ExpressionException | EvaluationException e) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
@@ -1399,7 +1407,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         ArrayList<String> exprs = new ArrayList<>();
         instructions.add("<html><b><u>" + Translator.translateOutputMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
 
-        if (e.getSource() == legendLabel) {
+        if (e.getSource() == legendLabel && e.getButton() == MouseEvent.BUTTON1) {
             switch (typeGraphic) {
                 case GRAPH2D:
                     instructions.addAll(graphicPanel2D.getInstructions());
@@ -1497,7 +1505,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 default:
                     break;
             }
-        } else if (e.getSource() == saveLabel) {
+        } else if (e.getSource() == saveLabel && e.getButton() == MouseEvent.BUTTON1) {
 
             switch (typeGraphic) {
                 case GRAPH2D:
@@ -1534,9 +1542,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
 
-        } else if (e.getSource() == rotateLabel) {
+        } else if (e.getSource() == rotateLabel && e.getButton() == MouseEvent.BUTTON1) {
             if (rotateLabel.isVisible()) {
                 rotateLabelClick();
+            }
+        }
+
+        // Prüfen, ob eine der Ausgabeobjekte mit Rechtsklick angeklickt wurde.
+        for (GraphicPanelFormula formula : mathToolGraphicArea.getFormulas()) {
+            if (e.getSource() == formula && e.getButton() == MouseEvent.BUTTON3) {
+                OutputDetailsGUI.getInstance(e.getX(), e.getY(), 400, formula.getContainedAbstractExpression());
             }
         }
 
@@ -1608,25 +1623,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     public static void main(String args[]) {
-
-        if (args.length > 0) {
-            try {
-                System.out.println("Eingegebener Parameter: " + args[0]);
-                Expression expr = Expression.build(args[0], null);
-                System.out.println("Eingegebener Ausdruck: " + expr.toString());
-                expr = expr.simplify();
-                System.out.println("Vereinfachter Ausdruck: " + expr.toString());
-            } catch (ExpressionException | EvaluationException e) {
-                System.out.println("Fehler!");
-                if (e.getMessage().isEmpty()) {
-                    System.out.println("Keine Fehlermessage.");
-                } else {
-                    System.out.println(e.getMessage());
-                }
-            }
-            return;
-        }
-
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

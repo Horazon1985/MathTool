@@ -49,6 +49,7 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
+import abstractexpressions.interfaces.AbstractExpression;
 import computationbounds.ComputationBounds;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
@@ -125,81 +126,67 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelCylindrical graphicPanelCylindrical;
     private static GraphicPanelSpherical graphicPanelSpherical;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
-    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
+//    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
 
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
 
-    private static final HashSet simplifyTypesExpand = getSimplifyTypesExpand();
-    private static final HashSet simplifyTypesExpandShort = getSimplifyTypesExpandShort();
-    private static final HashSet simplifyTypesPlot = getSimplifyTypesPlot();
-    private static final HashSet simplifyTypesSolveSystem = getSimplifyTypesSolveSystem();
+    private static final HashSet<TypeSimplify> simplifyTypesExpand = new HashSet<>();
+    private static final HashSet<TypeSimplify> simplifyTypesExpandShort = new HashSet<>();
+    private static final HashSet<TypeSimplify> simplifyTypesPlot = new HashSet<>();
+    private static final HashSet<TypeSimplify> simplifyTypesSolveSystem = new HashSet<>();
 
-    private static HashSet<TypeSimplify> getSimplifyTypesExpand() {
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_basic);
-        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
-        simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
-        simplifyTypes.add(TypeSimplify.simplify_collect_products);
-        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
-        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        return simplifyTypes;
-    }
+    static {
+        simplifyTypesExpand.add(TypeSimplify.order_difference_and_division);
+        simplifyTypesExpand.add(TypeSimplify.order_sums_and_products);
+        simplifyTypesExpand.add(TypeSimplify.simplify_basic);
+        simplifyTypesExpand.add(TypeSimplify.simplify_by_inserting_defined_vars);
+        simplifyTypesExpand.add(TypeSimplify.simplify_expand_powerful);
+        simplifyTypesExpand.add(TypeSimplify.simplify_collect_products);
+        simplifyTypesExpand.add(TypeSimplify.simplify_factorize_all_but_rationals);
+        simplifyTypesExpand.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypesExpand.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
+        simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypesExpand.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypesExpand.add(TypeSimplify.simplify_functional_relations);
 
-    private static HashSet<TypeSimplify> getSimplifyTypesExpandShort() {
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_basic);
-        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
-        simplifyTypes.add(TypeSimplify.simplify_expand_short);
-        simplifyTypes.add(TypeSimplify.simplify_collect_products);
-        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
-        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        return simplifyTypes;
-    }
+        simplifyTypesExpandShort.add(TypeSimplify.order_difference_and_division);
+        simplifyTypesExpandShort.add(TypeSimplify.order_sums_and_products);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_basic);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_by_inserting_defined_vars);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_expand_short);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_collect_products);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_factorize_all_but_rationals);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypesExpandShort.add(TypeSimplify.simplify_functional_relations);
 
-    private static HashSet<TypeSimplify> getSimplifyTypesPlot() {
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_basic);
-        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
-        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
-        simplifyTypes.add(TypeSimplify.simplify_collect_products);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
-        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        return simplifyTypes;
-    }
+        simplifyTypesPlot.add(TypeSimplify.order_difference_and_division);
+        simplifyTypesPlot.add(TypeSimplify.order_sums_and_products);
+        simplifyTypesPlot.add(TypeSimplify.simplify_basic);
+        simplifyTypesPlot.add(TypeSimplify.simplify_by_inserting_defined_vars);
+        simplifyTypesPlot.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypesPlot.add(TypeSimplify.simplify_collect_products);
+        simplifyTypesPlot.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypesPlot.add(TypeSimplify.simplify_factorize_all_but_rationals);
+        simplifyTypesPlot.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
+        simplifyTypesPlot.add(TypeSimplify.simplify_functional_relations);
 
-    private static HashSet<TypeSimplify> getSimplifyTypesSolveSystem() {
-        HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
-        simplifyTypes.add(TypeSimplify.order_difference_and_division);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        simplifyTypes.add(TypeSimplify.simplify_basic);
-        simplifyTypes.add(TypeSimplify.simplify_by_inserting_defined_vars);
-        simplifyTypes.add(TypeSimplify.simplify_expand_powerful);
-        simplifyTypes.add(TypeSimplify.simplify_collect_products);
-        simplifyTypes.add(TypeSimplify.simplify_factorize_all_but_rationals);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_quotients);
-        simplifyTypes.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
-        simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-        simplifyTypes.add(TypeSimplify.simplify_pull_apart_powers);
-        simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-        simplifyTypes.add(TypeSimplify.order_sums_and_products);
-        return simplifyTypes;
+        simplifyTypesSolveSystem.add(TypeSimplify.order_difference_and_division);
+        simplifyTypesSolveSystem.add(TypeSimplify.order_sums_and_products);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_basic);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_by_inserting_defined_vars);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_expand_powerful);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_collect_products);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_factorize_all_but_rationals);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_reduce_quotients);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_reduce_differences_and_quotients_advanced);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_algebraic_expressions);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_pull_apart_powers);
+        simplifyTypesSolveSystem.add(TypeSimplify.simplify_functional_relations);
+        simplifyTypesSolveSystem.add(TypeSimplify.order_sums_and_products);
     }
 
     public static void setGraphicPanel2D(GraphicPanel2D gP2D) {
@@ -238,10 +225,10 @@ public abstract class MathCommandCompiler {
         graphicPanelVectorField2D = gPVectorField2D;
     }
 
-    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D) {
-        graphicPanelVectorField3D = gPVectorField3D;
-    }
-
+//    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D) {
+//        graphicPanelVectorField3D = gPVectorField3D;
+//    }
+    
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
         mathToolGraphicArea = mTGraphicArea;
     }
@@ -259,7 +246,12 @@ public abstract class MathCommandCompiler {
         // Textliche Ausgabe.
         String lineToPrint = "";
         for (Object o : out) {
-            lineToPrint += o.toString();
+            if (o instanceof Object[] && ((Object[]) o).length == 2
+                    && ((Object[]) o)[0] instanceof AbstractExpression && ((Object[]) o)[1] instanceof Boolean) {
+                lineToPrint += ((AbstractExpression) ((Object[]) o)[0]).toString();
+            } else {
+                lineToPrint += o.toString();
+            }
         }
         mathToolTextArea.append(lineToPrint + " \n \n");
 
@@ -278,7 +270,15 @@ public abstract class MathCommandCompiler {
         String lineToPrint = "";
         boolean nextExpressionIsSurroundedByBrackets = false;
         for (Object o : out) {
-            if (o instanceof TypeBracket) {
+            if (o instanceof Object[] && ((Object[]) o).length == 2
+                    && ((Object[]) o)[0] instanceof AbstractExpression && ((Object[]) o)[1] instanceof Boolean) {
+                /*
+                 Fall: es handelt sich um ein bearbeitbares / kopierbares Objekt.
+                 Für die textliche Ausgabe hat dies keine Relevanz (sondern nur
+                 für die grafische).
+                 */
+                lineToPrint += ((AbstractExpression) ((Object[]) o)[0]).toString();
+            } else if (o instanceof TypeBracket) {
                 nextExpressionIsSurroundedByBrackets = true;
             } else if (nextExpressionIsSurroundedByBrackets) {
                 lineToPrint += "(" + o.toString() + ")";
@@ -292,6 +292,16 @@ public abstract class MathCommandCompiler {
         // Grafische Ausgabe.
         mathToolGraphicArea.addComponent(out);
 
+    }
+
+    /**
+     * Hilfsmethode für die Darstellung einer grafischen Ausgabe. Liefert ein
+     * Array zurück, in dem das übergebene Objekt das erste Element und ein
+     * 'true' das zweite Element ist. Das 'true' markiert, dass das übergebene
+     * Objekt bearbeitbar / kopierbar sein soll.
+     */
+    public static Object[] convertToEditableObject(Object out) {
+        return new Object[]{out, true};
     }
 
     /**
@@ -1960,42 +1970,42 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.expand)
     private static void executeExpand(Command command) throws EvaluationException {
-        
+
         Expression expr = (Expression) command.getParams()[0];
 
         // Voreingestellte Vereinfachungstypen müssen eingebunden werden, welche expand() nicht widersprechen.
         HashSet<TypeSimplify> simplifyTypesMathTool = MathToolGUI.getSimplifyTypes();
-        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_algebraic_expressions)){
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_algebraic_expressions)) {
             simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
         } else {
             simplifyTypesExpand.remove(TypeSimplify.simplify_algebraic_expressions);
         }
-        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_functional_relations)){
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_functional_relations)) {
             simplifyTypesExpand.add(TypeSimplify.simplify_functional_relations);
         } else {
             simplifyTypesExpand.remove(TypeSimplify.simplify_functional_relations);
         }
-        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_expand_logarithms)){
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_expand_logarithms)) {
             simplifyTypesExpand.add(TypeSimplify.simplify_expand_logarithms);
         } else {
             simplifyTypesExpand.remove(TypeSimplify.simplify_expand_logarithms);
         }
-        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_collect_logarithms)){
+        if (simplifyTypesMathTool.contains(TypeSimplify.simplify_collect_logarithms)) {
             simplifyTypesExpand.add(TypeSimplify.simplify_collect_logarithms);
         } else {
             simplifyTypesExpand.remove(TypeSimplify.simplify_collect_logarithms);
         }
-        
+
         expr = expr.simplify(simplifyTypesExpand);
-        
+
         // Voreingestellte Vereinfachungstypen müssen aus simplifyTypesExpand wieder entfernt werden.
         simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
         simplifyTypesExpand.add(TypeSimplify.simplify_functional_relations);
         simplifyTypesExpand.remove(TypeSimplify.simplify_expand_logarithms);
         simplifyTypesExpand.remove(TypeSimplify.simplify_collect_logarithms);
-        
+
         doPrintOutput(expr);
-        
+
     }
 
     @Execute(type = TypeCommand.extrema)
@@ -3478,20 +3488,19 @@ public abstract class MathCommandCompiler {
         }
 
         ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveSystemOfEquations(equations, solutionVars);
-        
+
         // Sonderfälle: keine Lösungen, alle reellen Zahlentupel.
-        if (solutions == SolveGeneralSystemOfEquationsMethods.ALL_REALS){
+        if (solutions == SolveGeneralSystemOfEquationsMethods.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_ALL_REAL_TUPLES_AS_SOLUTIONS"));
             return;
-        } else if (solutions == SolveGeneralSystemOfEquationsMethods.NO_SOLUTIONS){
+        } else if (solutions == SolveGeneralSystemOfEquationsMethods.NO_SOLUTIONS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_NO_SOLUTIONS"));
             return;
-        } else if (solutions.isEmpty()){
+        } else if (solutions.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_NO_SOLUTIONS_FOUND"));
             return;
         }
-        
-        
+
         Object[] solutionLine;
         for (Expression[] solution : solutions) {
             solutionLine = new Object[4 * solutionVars.size() - 1];
@@ -3530,7 +3539,7 @@ public abstract class MathCommandCompiler {
                 solutionContainsFreeParameterOfGivenIndex = false;
                 for (Expression[] solution : solutions) {
                     for (Expression solutionEntry : solution) {
-                    solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_" + maxIndex);
+                        solutionContainsFreeParameterOfGivenIndex = solutionContainsFreeParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_REAL_PARAMETER_VAR + "_" + maxIndex);
                     }
                 }
             }
@@ -3557,7 +3566,7 @@ public abstract class MathCommandCompiler {
             doPrintOutput(infoAboutFreeParametersForGraphicArea);
 
         }
-        
+
         if (solutionContainsIntegerParameter) {
             boolean solutionContainsIntegerParameterOfGivenIndex = true;
             int maxIndex = 1;
@@ -3566,7 +3575,7 @@ public abstract class MathCommandCompiler {
                 solutionContainsIntegerParameterOfGivenIndex = false;
                 for (Expression[] solution : solutions) {
                     for (Expression solutionEntry : solution) {
-                    solutionContainsIntegerParameterOfGivenIndex = solutionContainsIntegerParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
+                        solutionContainsIntegerParameterOfGivenIndex = solutionContainsIntegerParameterOfGivenIndex || solutionEntry.contains(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + maxIndex);
                     }
                 }
             }
