@@ -71,7 +71,7 @@ public class OutputDetailsGUI extends JDialog {
         for (int i = 0; i < abstrExpr.length; i++) {
             this.formulas[i] = new JTextField(abstrExpr[i].toString());
             add(this.formulas[i]);
-            this.formulas[i].setBounds(100, 80 + 35 * i, 100, 25);
+            this.formulas[i].setBounds(100, 80 + 35 * i, this.getWidth() - 120, 25);
             this.formulas[i].setEditable(false);
         }
     }
