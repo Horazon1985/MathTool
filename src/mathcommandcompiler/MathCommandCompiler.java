@@ -229,7 +229,6 @@ public abstract class MathCommandCompiler {
 //    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D) {
 //        graphicPanelVectorField3D = gPVectorField3D;
 //    }
-    
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
         mathToolGraphicArea = mTGraphicArea;
     }
@@ -1755,7 +1754,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF", logExpr));
         }
         LogicalExpression logExprInCCNF = logExpr.toCCNF();
-        doPrintOutput(logExprInCCNF);
+        doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExprInCCNF));
 
     }
 
@@ -1769,7 +1768,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF", logExpr));
         }
         LogicalExpression logExprInCDNF = logExpr.toCDNF();
-        doPrintOutput(logExprInCDNF);
+        doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExprInCDNF));
 
     }
 
@@ -1862,7 +1861,7 @@ public abstract class MathCommandCompiler {
         if (!vars.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : vars) {
-                doPrintOutput(var, " = ", Variable.create(var).getPreciseExpression());
+                doPrintOutput(var, " = ", MathToolUtilities.convertToEditableAbstractExpression(Variable.create(var).getPreciseExpression()));
             }
         } else {
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_DEFINED_VARS"));
@@ -1894,7 +1893,7 @@ public abstract class MathCommandCompiler {
         ArrayList eigenvaluesAsArrayList = new ArrayList();
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
-            eigenvaluesAsArrayList.add(eigenvalues.get(i));
+            eigenvaluesAsArrayList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvalues.get(i)));
             if (i < eigenvalues.getBound() - 1) {
                 eigenvaluesAsArrayList.add(", ");
             }
@@ -1917,7 +1916,7 @@ public abstract class MathCommandCompiler {
         MatrixExpressionCollection eigenvectors;
         MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
 
-        ArrayList<Object> eigenvectorsAsArrayList;
+        ArrayList eigenvectorsAsArrayList;
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
 
@@ -1928,7 +1927,7 @@ public abstract class MathCommandCompiler {
             // Eigenvektoren berechnen.
             eigenvectors = EigenvaluesEigenvectorsAlgorithms.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
 
-            eigenvectorsAsArrayList = new ArrayList<>();
+            eigenvectorsAsArrayList = new ArrayList();
             eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
             eigenvectorsAsArrayList.add(eigenvalues.get(i));
             eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
@@ -1936,7 +1935,7 @@ public abstract class MathCommandCompiler {
                 eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
             } else {
                 for (int j = 0; j < eigenvectors.getBound(); j++) {
-                    eigenvectorsAsArrayList.add(eigenvectors.get(j));
+                    eigenvectorsAsArrayList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvectors.get(j)));
                     if (j < eigenvectors.getBound() - 1) {
                         eigenvectorsAsArrayList.add(", ");
                     }
@@ -1995,7 +1994,7 @@ public abstract class MathCommandCompiler {
         simplifyTypesExpand.remove(TypeSimplify.simplify_expand_logarithms);
         simplifyTypesExpand.remove(TypeSimplify.simplify_collect_logarithms);
 
-        doPrintOutput(expr);
+        doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
 
     }
 
@@ -2078,9 +2077,9 @@ public abstract class MathCommandCompiler {
             multiIndex.add(BigInteger.valueOf(i + 1));
             if (valuesOfSecondDerivative.get(i).isAlwaysPositive()) {
                 doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN"),
-                        multiVar, " = ", extremaPoints.get(i),
+                        multiVar, " = ", MathToolUtilities.convertToEditableAbstractExpression(extremaPoints.get(i)),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
-                        extremaValues.get(i));
+                        MathToolUtilities.convertToEditableAbstractExpression(extremaValues.get(i)));
             } else {
                 doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN"),
                         multiVar, " = ", extremaPoints.get(i),
@@ -2258,31 +2257,32 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.ker)
     private static void executeKer(Command command) throws EvaluationException {
 
-        MatrixExpression matExpr = ((MatrixExpression) command.getParams()[0]).simplify();
-        if (!(matExpr instanceof Matrix)) {
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        MatrixExpression matExprSimplified = matExpr.simplify();
+        if (!(matExprSimplified instanceof Matrix)) {
             doPrintOutput(Translator.translateOutputMessage("MCC_KER_COULD_NOT_BE_COMPUTED_1"),
                     (MatrixExpression) command.getParams()[0],
                     Translator.translateOutputMessage("MCC_KER_COULD_NOT_BE_COMPUTED_2"));
             return;
         }
 
-        MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExpr);
+        MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExprSimplified);
 
         if (basisOfKer.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_TRIVIAL_KER_1"),
-                    (MatrixExpression) command.getParams()[0],
+                    matExpr,
                     Translator.translateOutputMessage("MCC_TRIVIAL_KER_2"),
-                    MatrixExpression.getZeroMatrix(((Matrix) matExpr).getRowNumber(), 1),
+                    MatrixExpression.getZeroMatrix(((Matrix) matExprSimplified).getRowNumber(), 1),
                     Translator.translateOutputMessage("MCC_TRIVIAL_KER_3"));
             return;
         }
 
         doPrintOutput(Translator.translateOutputMessage("MCC_BASIS_OF_KER_1"), matExpr, Translator.translateOutputMessage("MCC_BASIS_OF_KER_2"));
 
-        ArrayList<Object> basisAsArray = new ArrayList<>();
+        ArrayList basisAsArray = new ArrayList();
         for (int i = 0; i < basisOfKer.getBound(); i++) {
             // Für graphische Ausgabe
-            basisAsArray.add(basisOfKer.get(i));
+            basisAsArray.add(MathToolUtilities.convertToEditableAbstractExpression(basisOfKer.get(i)));
             if (i < basisOfKer.getBound() - 1) {
                 basisAsArray.add(", ");
             }
@@ -2941,6 +2941,7 @@ public abstract class MathCommandCompiler {
 //        LegendGUI.close();
 //
 //    }
+    
     @Execute(type = TypeCommand.regressionline)
     private static void executeRegressionLine(Command command)
             throws EvaluationException {
@@ -2976,7 +2977,7 @@ public abstract class MathCommandCompiler {
             Expression regressionLine = SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
 
             doPrintOutput(Translator.translateOutputMessage("MCC_REGRESSIONLINE_MESSAGE"),
-                    "Y = ", regressionLine);
+                    "Y = ", MathToolUtilities.convertToEditableAbstractExpression(regressionLine));
 
             /* 
              Graphen der Regressionsgeraden zeichnen, inkl. der Stichproben (als rot markierte Punkte),
@@ -3078,7 +3079,7 @@ public abstract class MathCommandCompiler {
                 multiVar = new MultiIndexVariable(Variable.create(var));
                 multiIndex = multiVar.getIndices();
                 multiIndex.add(BigInteger.valueOf(i + 1));
-                doPrintOutput(multiVar, " = ", zeros.get(i));
+                doPrintOutput(multiVar, " = ", MathToolUtilities.convertToEditableAbstractExpression(zeros.get(i)));
             }
         }
 
@@ -3283,7 +3284,7 @@ public abstract class MathCommandCompiler {
         if (!solutionsImplicit.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_IMPLICIT_OF_DIFFEQ"));
             for (int i = 0; i < solutionsImplicit.getBound(); i++) {
-                doPrintOutput(solutionsImplicit.get(i), " = ", ZERO);
+                doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(solutionsImplicit.get(i)), " = ", ZERO);
             }
         }
         if (!solutionsExplicit.isEmpty()) {
@@ -3294,7 +3295,7 @@ public abstract class MathCommandCompiler {
                 multiVar = new MultiIndexVariable(Variable.create(varOrd));
                 multiIndex = multiVar.getIndices();
                 multiIndex.add(BigInteger.valueOf(i + 1));
-                doPrintOutput(multiVar, " = ", solutionsExplicit.get(i));
+                doPrintOutput(multiVar, " = ", MathToolUtilities.convertToEditableAbstractExpression(solutionsExplicit.get(i)));
             }
         }
 
@@ -3498,7 +3499,7 @@ public abstract class MathCommandCompiler {
             for (int i = 0; i < solution.length; i++) {
                 solutionLine[4 * i] = solutionVars.get(i);
                 solutionLine[4 * i + 1] = " = ";
-                solutionLine[4 * i + 2] = solution[i];
+                solutionLine[4 * i + 2] = MathToolUtilities.convertToEditableAbstractExpression(solution[i]);
                 if (i < solution.length - 1) {
                     solutionLine[4 * i + 3] = ", ";
                 }
@@ -3705,7 +3706,7 @@ public abstract class MathCommandCompiler {
         Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
 
         doPrintOutput(tangentInfoForGraphicArea);
-        doPrintOutput("Y = ", tangent);
+        doPrintOutput("Y = ", MathToolUtilities.convertToEditableAbstractExpression(tangent));
 
         if (vars.size() == 1) {
 
@@ -3877,7 +3878,7 @@ public abstract class MathCommandCompiler {
             doPrintOutput(formulationOfAWPForGraphicArea);
 
             // Ausgabe des Taylorpolynoms        
-            doPrintOutput(varOrd + "(" + varAbsc + ") = ", result);
+            doPrintOutput(varOrd + "(" + varAbsc + ") = ", MathToolUtilities.convertToEditableAbstractExpression(result));
 
         } finally {
             Variable.setDependingOnVariable(varOrd, null);
