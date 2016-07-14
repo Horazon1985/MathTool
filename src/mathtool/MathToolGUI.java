@@ -63,6 +63,7 @@ import lang.translator.Translator;
 import mathtool.annotations.GraphicPanel;
 import mathtool.component.components.GraphicOptionsDialogGUI;
 import mathtool.component.components.OutputDetailsGUI;
+import mathtool.utilities.MathToolUtilities;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
@@ -988,13 +989,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                     try {
                         Expression exprSimplified = expr.simplify(simplifyTypes);
-                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(expr), "  =  ", MathCommandCompiler.convertToEditableObject(exprSimplified));
-//                        MathCommandCompiler.doPrintOutput(expr, "  =  ", exprSimplified);
+                        MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(exprSimplified));
                         mathToolTextField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(expr));
+                            MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
@@ -1040,13 +1040,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     try {
                         MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
                         // Hinzufügen zum textlichen Ausgabefeld.
-                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(matExpr), "  =  ", MathCommandCompiler.convertToEditableObject(matExprSimplified.convertOneTimesOneMatrixToExpression()));
-//                        MathCommandCompiler.doPrintOutput(matExpr, "  =  ", matExprSimplified.convertOneTimesOneMatrixToExpression());
+                        if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
+                            MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()));
+                        } else {
+                            MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(matExprSimplified));
+                        }
                         mathToolTextField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(matExpr));
+                            MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
@@ -1087,9 +1090,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 try {
                     LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
-                    MathCommandCompiler.doPrintOutput(MathCommandCompiler.convertToEditableObject(logExpr),
+                    MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
                             Translator.translateOutputMessage("GUI_EQUIVALENT_TO"),
-                            MathCommandCompiler.convertToEditableObject(logExprSimplified));
+                            MathToolUtilities.convertToEditableAbstractExpression(logExprSimplified));
                     mathToolTextField.setText("");
                 } catch (ExpressionException | EvaluationException e) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());

@@ -64,6 +64,7 @@ import lang.translator.Translator;
 import mathtool.annotations.Execute;
 import mathtool.annotations.GetCommand;
 import mathtool.component.components.LegendGUI;
+import mathtool.utilities.MathToolUtilities;
 
 public abstract class MathCommandCompiler {
 
@@ -292,16 +293,6 @@ public abstract class MathCommandCompiler {
         // Grafische Ausgabe.
         mathToolGraphicArea.addComponent(out);
 
-    }
-
-    /**
-     * Hilfsmethode für die Darstellung einer grafischen Ausgabe. Liefert ein
-     * Array zurück, in dem das übergebene Objekt das erste Element und ein
-     * 'true' das zweite Element ist. Das 'true' markiert, dass das übergebene
-     * Objekt bearbeitbar / kopierbar sein soll.
-     */
-    public static Object[] convertToEditableObject(Object out) {
-        return new Object[]{out, true};
     }
 
     /**
@@ -1732,7 +1723,7 @@ public abstract class MathCommandCompiler {
              (precise = false) sind.
              */
             Variable.setAllPrecise(true);
-            doPrintOutput(expr);
+            doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
 
         } else if (command.getParams()[0] instanceof MatrixExpression) {
 
@@ -1748,7 +1739,7 @@ public abstract class MathCommandCompiler {
              (precise = false) sind.
              */
             Variable.setAllPrecise(true);
-            doPrintOutput(matExpr);
+            doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
 
         }
 
