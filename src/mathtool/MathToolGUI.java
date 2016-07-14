@@ -1553,8 +1553,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Prüfen, ob eine der Ausgabeobjekte mit Rechtsklick angeklickt wurde.
         for (GraphicPanelFormula formula : this.mathToolGraphicArea.getFormulas()) {
-            if (e.getSource() == formula && e.getButton() == MouseEvent.BUTTON3 && formula.getContainedAbstractExpression().length > 0) {
-                OutputDetailsGUI.getInstance(e.getX() + 20, e.getY() + 20 + mathToolGraphicArea.getOutputCoordinate(formula).y, 500, formula.getContainedAbstractExpression());
+            if (e.getSource() == formula && e.getButton() == MouseEvent.BUTTON3 
+                    && formula.getContainedAbstractExpression().length + formula.getContainedEditableStrings().length > 0) {
+                OutputDetailsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 500, 
+                        formula.getContainedAbstractExpression(), formula.getContainedEditableStrings());
             }
         }
 

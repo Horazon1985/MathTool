@@ -50,6 +50,8 @@ import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
 import abstractexpressions.interfaces.AbstractExpression;
+import abstractexpressions.output.EditableAbstractExpression;
+import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
@@ -245,10 +247,17 @@ public abstract class MathCommandCompiler {
 
         // Textliche Ausgabe.
         String lineToPrint = "";
+        boolean nextExpressionIsSurroundedByBrackets = false;
         for (Object o : out) {
-            if (o instanceof Object[] && ((Object[]) o).length == 2
-                    && ((Object[]) o)[0] instanceof AbstractExpression && ((Object[]) o)[1] instanceof Boolean) {
-                lineToPrint += ((AbstractExpression) ((Object[]) o)[0]).toString();
+            if (o instanceof EditableAbstractExpression) {
+                lineToPrint += ((EditableAbstractExpression) o).getAbstractExpression().toString();
+            } else if (o instanceof EditableString) {
+                lineToPrint += ((EditableString) o).getText();
+            } else if (o instanceof TypeBracket) {
+                nextExpressionIsSurroundedByBrackets = true;
+            } else if (nextExpressionIsSurroundedByBrackets) {
+                lineToPrint += "(" + o.toString() + ")";
+                nextExpressionIsSurroundedByBrackets = false;
             } else {
                 lineToPrint += o.toString();
             }
@@ -270,14 +279,10 @@ public abstract class MathCommandCompiler {
         String lineToPrint = "";
         boolean nextExpressionIsSurroundedByBrackets = false;
         for (Object o : out) {
-            if (o instanceof Object[] && ((Object[]) o).length == 2
-                    && ((Object[]) o)[0] instanceof AbstractExpression && ((Object[]) o)[1] instanceof Boolean) {
-                /*
-                 Fall: es handelt sich um ein bearbeitbares / kopierbares Objekt.
-                 Für die textliche Ausgabe hat dies keine Relevanz (sondern nur
-                 für die grafische).
-                 */
-                lineToPrint += ((AbstractExpression) ((Object[]) o)[0]).toString();
+            if (o instanceof EditableAbstractExpression) {
+                lineToPrint += ((EditableAbstractExpression) o).getAbstractExpression().toString();
+            } else if (o instanceof EditableString) {
+                lineToPrint += ((EditableString) o).getText();
             } else if (o instanceof TypeBracket) {
                 nextExpressionIsSurroundedByBrackets = true;
             } else if (nextExpressionIsSurroundedByBrackets) {
@@ -1955,7 +1960,7 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.euler)
     private static void executeEuler(Command command) throws EvaluationException {
         BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
-        doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0], e.toString()));
+        doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]), MathToolUtilities.convertToEditableString(e));
     }
 
     @Execute(type = TypeCommand.expand)
@@ -2082,9 +2087,9 @@ public abstract class MathCommandCompiler {
                         MathToolUtilities.convertToEditableAbstractExpression(extremaValues.get(i)));
             } else {
                 doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN"),
-                        multiVar, " = ", extremaPoints.get(i),
+                        multiVar, " = ", MathToolUtilities.convertToEditableAbstractExpression(extremaPoints.get(i)),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
-                        extremaValues.get(i));
+                        MathToolUtilities.convertToEditableAbstractExpression(extremaValues.get(i)));
             }
         }
 
@@ -2225,14 +2230,14 @@ public abstract class MathCommandCompiler {
             multiIndex.add(BigInteger.valueOf(i + 1));
             if (valuesOfSecondDerivative.get(i) > 0) {
                 doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MINIMUM_IN"),
-                        multiVar, " = ", extremaPoints.get(i).toString(),
+                        multiVar, " = ", MathToolUtilities.convertToEditableString(extremaPoints.get(i)),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
-                        extremaValues.get(i).toString());
+                        MathToolUtilities.convertToEditableString(extremaValues.get(i)));
             } else {
                 doPrintOutput(Translator.translateOutputMessage("MCC_LOCAL_MAXIMUM_IN"),
-                        multiVar, " = ", extremaPoints.get(i).toString(),
+                        multiVar, " = ", MathToolUtilities.convertToEditableString(extremaPoints.get(i)),
                         Translator.translateOutputMessage("MCC_LOCAL_EXTREMA_FUNCTION_VALUE"),
-                        extremaValues.get(i).toString());
+                        MathToolUtilities.convertToEditableString(extremaValues.get(i)));
             }
 
         }
@@ -2310,14 +2315,14 @@ public abstract class MathCommandCompiler {
             latexCode = latexCode + ((Expression) command.getParams()[command.getParams().length - 1]).expressionToLatex() + "\n \n";
         }
 
-        doPrintOutput(latexCode);
+        doPrintOutput(MathToolUtilities.convertToEditableString(latexCode));
 
     }
 
     @Execute(type = TypeCommand.pi)
     private static void executePi(Command command) throws EvaluationException {
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
-        doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_PI", (int) command.getParams()[0], pi.toString()));
+        doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_PI", (int) command.getParams()[0]), MathToolUtilities.convertToEditableString(pi));
     }
 
     @Execute(type = TypeCommand.plot2d)
@@ -2941,7 +2946,6 @@ public abstract class MathCommandCompiler {
 //        LegendGUI.close();
 //
 //    }
-    
     @Execute(type = TypeCommand.regressionline)
     private static void executeRegressionLine(Command command)
             throws EvaluationException {
@@ -3198,7 +3202,7 @@ public abstract class MathCommandCompiler {
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
             multiIndex.add(BigInteger.valueOf(i + 1));
-            doPrintOutput(multiVar, " = " + String.valueOf(zeros.get(i)));
+            doPrintOutput(multiVar, " = ", MathToolUtilities.convertToEditableString(zeros.get(i)));
         }
 
         if (zeros.isEmpty()) {
@@ -3434,7 +3438,7 @@ public abstract class MathCommandCompiler {
 
             // Lösungen ausgeben.
             for (double[] solution : solutionOfDifferentialEquation) {
-                doPrintOutput(varAbsc + " = " + solution[0] + "; " + varOrd + " = " + solution[1]);
+                doPrintOutput(varAbsc + " = ", MathToolUtilities.convertToEditableString(solution[0]), "; " + varOrd + " = ", MathToolUtilities.convertToEditableString(solution[1]));
             }
             if (solutionOfDifferentialEquation.length < 1001) {
                 // Falls die Lösung innerhalb des Berechnungsbereichs unendlich/undefiniert ist.
@@ -3654,6 +3658,7 @@ public abstract class MathCommandCompiler {
         boolean currentValue;
 
         String binaryCounter;
+        String result;
         for (int i = 0; i < tableLength; i++) {
 
             binaryCounter = "(";
@@ -3669,12 +3674,12 @@ public abstract class MathCommandCompiler {
 
             currentValue = logExpr.evaluate();
             if (currentValue) {
-                binaryCounter = binaryCounter + "1";
+                result = "1";
             } else {
-                binaryCounter = binaryCounter + "0";
+                result = "0";
             }
 
-            doPrintOutput(binaryCounter);
+            doPrintOutput(binaryCounter, MathToolUtilities.convertToEditableString(result));
 
             varsValues = LogicalExpression.binaryCounter(varsValues);
 
@@ -3955,9 +3960,7 @@ public abstract class MathCommandCompiler {
         executeUndefAllVars(command);
     }
 
-    /*
-    Diverse Hilfsmethoden.
-     */
+    ///////////////////////// Diverse Hilfsmethoden ///////////////////////////////////
     /**
      * Gibt zurück, ob expr Veränderliche enthält, deren Namen mit varOrd
      * beginnen und die mehr als ord Apostrophs enthalten.<br>

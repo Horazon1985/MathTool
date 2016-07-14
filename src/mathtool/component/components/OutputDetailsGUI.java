@@ -21,14 +21,16 @@ public class OutputDetailsGUI extends JDialog {
     private JLabel[] formulaLabels;
     private JTextField[] formulas;
 
-    public OutputDetailsGUI(int mouseX, int mouseY, int width, AbstractExpression... abstrExprs) {
+    public OutputDetailsGUI(int mathToolGUIX, int mathToolGUIY, int mathToolGUIWidth, int mathToolGUIHeight, int width, AbstractExpression[] abstrExprs, String[] texts) {
 
         setTitle(Translator.translateOutputMessage("GUI_OutputDetailsGUI_INFO"));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
 
-        this.setBounds(mouseX, mouseY, width, 120 + 35 * abstrExprs.length);
+        int height = 120 + 35 * (abstrExprs.length + texts.length);
+        this.setBounds((mathToolGUIWidth - width) / 2 + mathToolGUIX,
+                (mathToolGUIHeight - height) / 2 + mathToolGUIY, width, height);
         this.getContentPane().setBackground(Color.WHITE);
 
         // Logo laden
@@ -37,9 +39,9 @@ public class OutputDetailsGUI extends JDialog {
         panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/DetailsLogo.png"))));
         panel.setBounds(0, -5, 500, 70);
         panel.setVisible(true);
-        
-        initFormulaLabels(abstrExprs);
-        initFormulas(abstrExprs);
+
+        initFormulaLabels(abstrExprs, texts);
+        initFormulas(abstrExprs, texts);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -57,31 +59,38 @@ public class OutputDetailsGUI extends JDialog {
         repaint();
     }
 
-    private void initFormulaLabels(AbstractExpression... abstrExpr) {
-        this.formulaLabels = new JLabel[abstrExpr.length];
-        for (int i = 0; i < abstrExpr.length; i++) {
+    private void initFormulaLabels(AbstractExpression[] abstrExprs, String[] texts) {
+        this.formulaLabels = new JLabel[abstrExprs.length + texts.length];
+        for (int i = 0; i < abstrExprs.length + texts.length; i++) {
             this.formulaLabels[i] = new JLabel(Translator.translateOutputMessage("GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION", i + 1));
             add(this.formulaLabels[i]);
             this.formulaLabels[i].setBounds(10, 80 + 35 * i, 100, 25);
         }
     }
 
-    private void initFormulas(AbstractExpression... abstrExpr) {
-        this.formulas = new JTextField[abstrExpr.length];
-        for (int i = 0; i < abstrExpr.length; i++) {
-            this.formulas[i] = new JTextField(abstrExpr[i].toString());
-            add(this.formulas[i]);
-            this.formulas[i].setBounds(100, 80 + 35 * i, this.getWidth() - 120, 25);
-            this.formulas[i].setEditable(false);
+    private void initFormulas(AbstractExpression[] abstrExprs, String[] texts) {
+        this.formulas = new JTextField[abstrExprs.length + texts.length];
+        for (int i = 0; i < abstrExprs.length + texts.length; i++) {
+            if (i < abstrExprs.length) {
+                this.formulas[i] = new JTextField(abstrExprs[i].toString());
+                add(this.formulas[i]);
+                this.formulas[i].setBounds(100, 80 + 35 * i, this.getWidth() - 120, 25);
+                this.formulas[i].setEditable(false);
+            } else {
+                this.formulas[i] = new JTextField(texts[i - abstrExprs.length]);
+                add(this.formulas[i]);
+                this.formulas[i].setBounds(100, 80 + 35 * i, this.getWidth() - 120, 25);
+                this.formulas[i].setEditable(false);
+            }
         }
     }
 
-    public static OutputDetailsGUI getInstance(int mouseX, int mouseY, int width, AbstractExpression... abstrExprs) {
+    public static OutputDetailsGUI getInstance(int mathToolGUIX, int mathToolGUIY, int mathToolGUIWidth, int mathToolGUIHeight, int width, AbstractExpression[] abstrExprs, String[] texts) {
         if (instance == null) {
-            instance = new OutputDetailsGUI(mouseX, mouseY, width, abstrExprs);
+            instance = new OutputDetailsGUI(mathToolGUIX, mathToolGUIY, mathToolGUIWidth, mathToolGUIHeight, width, abstrExprs, texts);
         } else {
             close();
-            instance = new OutputDetailsGUI(mouseX, mouseY, width, abstrExprs);
+            instance = new OutputDetailsGUI(mathToolGUIX, mathToolGUIY, mathToolGUIWidth, mathToolGUIHeight, width, abstrExprs, texts);
         }
         instance.setVisible(true);
         return instance;

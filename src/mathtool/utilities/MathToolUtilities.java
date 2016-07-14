@@ -1,7 +1,8 @@
 package mathtool.utilities;
 
 import abstractexpressions.interfaces.AbstractExpression;
-import abstractexpressions.interfaces.EditableAbstractExpression;
+import abstractexpressions.output.EditableAbstractExpression;
+import abstractexpressions.output.EditableString;
 import java.util.ArrayList;
 
 /**
@@ -11,9 +12,9 @@ public abstract class MathToolUtilities {
 
     /**
      * Hilfsmethode für die Darstellung einer grafischen Ausgabe. Liefert ein
-     * Array zurück, in dem das übergebene Objekt das erste Element und ein
-     * 'true' das zweite Element ist. Das 'true' markiert, dass das übergebene
-     * Objekt bearbeitbar / kopierbar sein soll.
+     * Array zurück, in dem der übergebene Ausdruck das erste Attribut und ein
+     * 'true' das zweite Attribut ist. Das 'true' markiert, dass der übergebene
+     * Ausdruck bearbeitbar / kopierbar sein soll.
      */
     public static EditableAbstractExpression convertToEditableAbstractExpression(AbstractExpression out) {
         return new EditableAbstractExpression(out, true);
@@ -21,9 +22,9 @@ public abstract class MathToolUtilities {
 
     /**
      * Hilfsmethode für die Darstellung einer grafischen Ausgabe. Liefert ein
-     * Array zurück, in dem das übergebene Objekt das erste Element und ein
-     * 'true' das zweite Element ist. Das 'true' markiert, dass das übergebene
-     * Objekt bearbeitbar / kopierbar sein soll.
+     * Array zurück, in dem der übergebene Ausdruck das erste Attribut und ein
+     * 'true' das zweite Attribut ist. Das 'true' markiert, dass der übergebene
+     * Ausdruck bearbeitbar / kopierbar sein soll.
      */
     public static EditableAbstractExpression[] convertToEditableAbstractExpression(AbstractExpression... out) {
         EditableAbstractExpression[] editableAbstractExpressions = new EditableAbstractExpression[out.length];
@@ -44,6 +45,16 @@ public abstract class MathToolUtilities {
             convertedOutputs.add(MathToolUtilities.convertToEditableAbstractExpression(abstrExpr));
         }
         return convertedOutputs;
+    }
+
+    /**
+     * Hilfsmethode für die Darstellung einer grafischen Ausgabe. Liefert ein
+     * EditableString zurück, in dem das übergebene Objekt als String das erste
+     * Attribut und ein 'true' das zweite Attribut ist. Das 'true' markiert,
+     * dass der übergebene Text bearbeitbar / kopierbar sein soll.
+     */
+    public static EditableString convertToEditableString(Object out) {
+        return new EditableString(out.toString(), true);
     }
 
 }
