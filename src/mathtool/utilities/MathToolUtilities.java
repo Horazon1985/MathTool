@@ -17,7 +17,7 @@ public abstract class MathToolUtilities {
      * Ausdruck bearbeitbar / kopierbar sein soll.
      */
     public static EditableAbstractExpression convertToEditableAbstractExpression(AbstractExpression out) {
-        return new EditableAbstractExpression(out, true);
+        return new EditableAbstractExpression(out);
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class MathToolUtilities {
     public static EditableAbstractExpression[] convertToEditableAbstractExpression(AbstractExpression... out) {
         EditableAbstractExpression[] editableAbstractExpressions = new EditableAbstractExpression[out.length];
         for (int i = 0; i < out.length; i++) {
-            editableAbstractExpressions[i] = new EditableAbstractExpression(out[i], true);
+            editableAbstractExpressions[i] = new EditableAbstractExpression(out[i]);
         }
         return editableAbstractExpressions;
     }
@@ -54,7 +54,7 @@ public abstract class MathToolUtilities {
      * dass der übergebene Text bearbeitbar / kopierbar sein soll.
      */
     public static EditableString convertToEditableString(Object out) {
-        return new EditableString(out.toString(), true);
+        return new EditableString(out.toString());
     }
 
 }

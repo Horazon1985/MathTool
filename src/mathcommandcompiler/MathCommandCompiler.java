@@ -1320,31 +1320,44 @@ public abstract class MathCommandCompiler {
     private static Command getCommandSolveDiffEquationNumeric(String[] params) throws ExpressionException {
 
         /*
-         Struktur: solvediffeq(Equation, var, ord, x_0, x_1, y_0, y'(0), ...,
+         Struktur: solvediffeq(Equation, varAbsc, varOrd, ord, x_0, x_1, y_0, y'(0), ...,
          y^(ord - 1)(0)) Equation: Rechte Seite der DGL y^{(ord)} =
          Equation. Anzahl der parameter ist also = ord + 5 var = Variable in
          der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
          fest x_1 = Obere x-Schranke für die numerische Berechnung
          */
-        if (params.length < 6) {
+        if (params.length < 7) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
 
         // Ordnung der DGL ermitteln.
         int ord;
         try {
-            ord = Integer.parseInt(params[2]);
+            ord = Integer.parseInt(params[3]);
             if (ord < 1) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVEDIFFEQ"));
             }
         } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_4_PARAMETER_IN_SOLVEDIFFEQ"));
+        }
+
+        if (!Expression.isValidIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_SOLVEDIFFEQ", 2));
+        }
+        if (!Expression.isValidIndeterminate(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_SOLVEDIFFEQ", 3));
+        }
+
+        String varAbsc = params[1];
+        String varOrd = params[2];
+        if (varAbsc.equals(varOrd)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_SOLVEDIFFEQ"));
         }
 
         /*
-         Prüft, ob es sich um eine korrekte DGL handelt:
-         Beispielsweise darf in einer DGL der ordnung 3 nicht y''',
-         y'''' etc. auf der rechten Seite auftreten.
+         Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
+         darf in einer DGL der Ordnung 3 nicht y''', y'''' etc. auf der
+         rechten Seite auftreten.
          */
         HashSet<String> vars;
         Expression diffEquation;
@@ -1355,43 +1368,31 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDIFFEQ") + e.getMessage());
         }
 
-        HashSet<String> varsWithoutPrimes = new HashSet<>();
-        Iterator iter = vars.iterator();
         String varWithoutPrimes;
-        for (int i = 0; i < vars.size(); i++) {
-            varWithoutPrimes = (String) iter.next();
-            if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
-                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
+        for (String var : vars) {
+            varWithoutPrimes = var.replaceAll("'", "");
+            if (varWithoutPrimes.equals(varOrd)) {
+                if (var.length() - varWithoutPrimes.length() >= ord) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDIFFEQ", ord, ord - 1));
                 }
-                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
             }
-            varsWithoutPrimes.add(varWithoutPrimes);
-        }
-
-        if (varsWithoutPrimes.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDIFFEQ"));
-        }
-
-        if (Expression.isValidVariable(params[1])) {
-            if (varsWithoutPrimes.size() == 2) {
-                if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_SOLVEDIFFEQ", params[1]));
-                }
+            if (!varWithoutPrimes.equals(var) && !varWithoutPrimes.equals(varOrd)) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDIFFEQ"));
             }
-        } else {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDIFFEQ"));
+            if (!varWithoutPrimes.equals(varAbsc) && !varWithoutPrimes.equals(varOrd)) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_SOLVEDIFFEQ"));
+            }
         }
 
-        if (params.length < ord + 5) {
+        if (params.length < ord + 6) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
-        if (params.length > ord + 5) {
+        if (params.length > ord + 6) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_SOLVEDIFFEQ"));
         }
 
         // Prüft, ob die AWP-Daten korrekt sind.
-        for (int i = 3; i < ord + 5; i++) {
+        for (int i = 4; i < ord + 6; i++) {
             try {
                 Expression limit = Expression.build(params[i], null);
                 if (!limit.isConstant()) {
@@ -1409,11 +1410,12 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        Object[] commandParams = new Object[ord + 5];
+        Object[] commandParams = new Object[ord + 6];
         commandParams[0] = diffEquation;
         commandParams[1] = params[1];
-        commandParams[2] = ord;
-        for (int i = 3; i < ord + 5; i++) {
+        commandParams[2] = params[2];
+        commandParams[3] = ord;
+        for (int i = 4; i < ord + 6; i++) {
             commandParams[i] = Expression.build(params[i], vars);
         }
 
@@ -1502,149 +1504,6 @@ public abstract class MathCommandCompiler {
     private static Command getCommandTaylorDiffEq(String[] params) throws ExpressionException {
 
         /*
-         Struktur: taylordiffeq(Equation, var, ord, x_0, y_0, y'(0), ...,
-         y^(ord - 1)(0), k) Equation: Rechte Seite der DGL y^{(ord)} =
-         Equation. Anzahl der parameter ist also = ord + 5 var = Variable in
-         der DGL ord = Ordnung der DGL. x_0, y_0, y'(0), ... legen das AWP
-         fest k = Ordnung des Taylorpolynoms (an der Stelle x_0)
-         */
-        if (params.length < 6) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDIFFEQ"));
-        }
-
-        // Ordnung der DGL ermitteln.
-        int ord;
-        try {
-            ord = Integer.parseInt(params[2]);
-            if (ord < 1) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDIFFEQ"));
-            }
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDIFFEQ"));
-        }
-
-        /*
-         Prüft, ob es sich um eine korrekte DGL handelt: Beispielsweise
-         darf in einer DGL der ordnung 3 nicht y''', y'''' etc. auf der
-         rechten Seite auftreten.
-         */
-        HashSet<String> vars;
-        Expression diffEquation;
-        try {
-            diffEquation = Expression.build(params[0], null);
-            vars = diffEquation.getContainedIndeterminates();
-        } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDIFFEQ") + e.getMessage());
-        }
-
-        HashSet<String> varsWithoutPrimes = new HashSet<>();
-        String varWithoutPrimes;
-        for (String var : vars) {
-            varWithoutPrimes = var;
-            if (!varWithoutPrimes.replaceAll("'", "").equals(params[1])) {
-                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDIFFEQ", ord, ord - 1));
-                }
-                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
-            }
-            varsWithoutPrimes.add(varWithoutPrimes);
-        }
-
-        if (varsWithoutPrimes.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TWO_VARIABLES_ARE_ALLOWED_IN_TAYLORDIFFEQ"));
-        }
-
-        if (Expression.isValidVariable(params[1]) && !Expression.isPI(params[1])) {
-            if (varsWithoutPrimes.size() == 2) {
-                if (!vars.contains(params[1])) {
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TAYLORDIFFEQ", params[1]));
-                }
-            }
-        } else {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDIFFEQ"));
-        }
-
-        if (params.length < ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TAYLORDIFFEQ"));
-        }
-
-        if (params.length > ord + 5) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_TOO_MANY_PARAMETERS_IN_TAYLORDIFFEQ"));
-        }
-
-        /*
-         Nun wird varsWithoutPrimes, falls nötig, soweit ergänzt, dass es
-         alle in der DGL auftretenden Variablen enthält (max. 2). Dies
-         wird später wichtig sein, wenn es darum geht, zu prüfen, ob die
-         SWP-Daten korrekt sind.
-         */
-        if (varsWithoutPrimes.isEmpty()) {
-            varsWithoutPrimes.add(params[1]);
-            if (params[1].equals("y")) {
-                varsWithoutPrimes.add("z");
-            } else {
-                varsWithoutPrimes.add("y");
-            }
-        } else if (varsWithoutPrimes.size() == 1) {
-
-            if (varsWithoutPrimes.contains(params[1])) {
-                if (params[1].equals("y")) {
-                    varsWithoutPrimes.add("z");
-                } else {
-                    varsWithoutPrimes.add("y");
-                }
-            } else {
-                varsWithoutPrimes.add(params[1]);
-            }
-
-        }
-
-        // Prüft, ob die AWP-Daten korrekt sind.
-        HashSet<String> varsInLimits;
-        Expression limit;
-        for (int i = 3; i < ord + 4; i++) {
-            try {
-                limit = Expression.build(params[i], null).simplify();
-                varsInLimits = limit.getContainedIndeterminates();
-                /*
-                 Im Folgenden wird geprüft, ob in den Anfangsbedingungen
-                 die Variablen aus der eigentlichen DGL nicht auftreten
-                 (diese beiden Variablen sind im HashSet varsWithoutPrimes
-                 gespeichert).
-                 */
-                for (String var : varsWithoutPrimes) {
-                    if (varsInLimits.contains(var)) {
-                        throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDIFFEQ", i + 1));
-                    }
-                }
-            } catch (ExpressionException | EvaluationException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_TAYLORDIFFEQ", i + 1));
-            }
-        }
-
-        try {
-            Integer.parseInt(params[ord + 4]);
-        } catch (NumberFormatException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_TAYLORDIFFEQ"));
-        }
-
-        Object[] commandParams = new Object[ord + 5];
-        commandParams[0] = diffEquation;
-        commandParams[1] = params[1];
-        commandParams[2] = ord;
-        for (int i = 3; i < ord + 4; i++) {
-            commandParams[i] = Expression.build(params[i], vars);
-        }
-        commandParams[ord + 4] = Integer.parseInt(params[ord + 4]);
-
-        return new Command(TypeCommand.taylordiffeq, commandParams);
-
-    }
-
-//    @GetCommand(type = TypeCommand.taylordiffeq)
-    private static Command getCommandTaylorDiffEq2(String[] params) throws ExpressionException {
-
-        /*
          Struktur: taylordiffeq(Equation, varAbsc, varOrd, ord, x_0, y_0, y'(0), ...,
          y^(ord - 1)(0), k) Equation: Rechte Seite der DGL y^{(ord)} =
          Equation. Anzahl der parameter ist also = ord + 6 var = Variable in
@@ -1667,10 +1526,10 @@ public abstract class MathCommandCompiler {
         }
 
         if (!Expression.isValidIndeterminate(params[1])) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_TAYLORDIFFEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_TAYLORDIFFEQ", 2));
         }
         if (!Expression.isValidIndeterminate(params[2])) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_TAYLORDIFFEQ"));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_TAYLORDIFFEQ", 3));
         }
 
         String varAbsc = params[1];
@@ -3444,65 +3303,29 @@ public abstract class MathCommandCompiler {
     private static void executeSolveDiffEquationNumeric(Command command)
             throws EvaluationException {
 
-        int ord = (int) command.getParams()[2];
-        HashSet<String> vars = new HashSet<>();
         Expression expr = (Expression) command.getParams()[0];
-        expr.addContainedIndeterminates(vars);
-
-        HashSet<String> varsWithoutPrimes = new HashSet<>();
-        String varWithoutPrimes;
-        for (String var : vars) {
-            varWithoutPrimes = var;
-            if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
-                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
-                }
-                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
-            }
-            varsWithoutPrimes.add(varWithoutPrimes);
-        }
-
         String varAbsc = (String) command.getParams()[1];
-        Expression x_0 = (Expression) command.getParams()[3];
-        Expression x_1 = (Expression) command.getParams()[4];
+        String varOrd = (String) command.getParams()[2];
+        int ord = (int) command.getParams()[3];
+        Expression x_0 = (Expression) command.getParams()[4];
+        Expression x_1 = (Expression) command.getParams()[5];
         Expression[] y_0 = new Expression[ord];
         for (int i = 0; i < y_0.length; i++) {
-            y_0[i] = (Expression) command.getParams()[i + 5];
+            y_0[i] = (Expression) command.getParams()[i + 6];
         }
+
+        // Prüfen, ob x_0 < x_1 ist.
+        try {
+            if (x_0.evaluate() >= x_1.evaluate()) {
+                throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_SOLVEDIFFEQ", 5, 6));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ_CANNOT_BE_PLOTTED"));
+        }
+
         double[] startValues = new double[ord];
         for (int i = 0; i < y_0.length; i++) {
             startValues[i] = y_0[i].evaluate();
-        }
-
-        /*
-         Zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
-         werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
-         */
-        String varOrd;
-
-        if (varsWithoutPrimes.isEmpty()) {
-            if (varAbsc.equals("y")) {
-                varOrd = "z";
-            } else {
-                varOrd = "y";
-            }
-        } else if (varsWithoutPrimes.size() == 1) {
-            if (varsWithoutPrimes.contains(varAbsc)) {
-                if (varAbsc.equals("y")) {
-                    varOrd = "z";
-                } else {
-                    varOrd = "y";
-                }
-            } else {
-                Iterator<String> iter = varsWithoutPrimes.iterator();
-                varOrd = iter.next();
-            }
-        } else {
-            Iterator<String> iter = varsWithoutPrimes.iterator();
-            varOrd = iter.next();
-            if (varOrd.equals(varAbsc)) {
-                varOrd = iter.next();
-            }
         }
 
         try {
@@ -3899,123 +3722,12 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.taylordiffeq)
     private static void executeTaylorDiffEq(Command command) throws EvaluationException {
 
-        int ord = (int) command.getParams()[2];
-        HashSet<String> vars = new HashSet<>();
-        Expression expr = (Expression) command.getParams()[0];
-        expr.addContainedIndeterminates(vars);
-
-        HashSet<String> varsWithoutPrimes = new HashSet<>();
-        String varWithoutPrimes;
-        for (String var : vars) {
-            varWithoutPrimes = var;
-            if (!varWithoutPrimes.replaceAll("'", "").equals(command.getParams()[1])) {
-                if (varWithoutPrimes.length() - varWithoutPrimes.replaceAll("'", "").length() >= ord) {
-                    throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_DIFFEQ", ord, ord - 1));
-                }
-                varWithoutPrimes = varWithoutPrimes.replaceAll("'", "");
-            }
-            varsWithoutPrimes.add(varWithoutPrimes);
-        }
-
-        String varAbsc = (String) command.getParams()[1];
-        Expression x_0 = (Expression) command.getParams()[3];
-        Expression[] y_0 = new Expression[ord];
-        for (int i = 0; i < y_0.length; i++) {
-            y_0[i] = (Expression) command.getParams()[i + 4];
-        }
-
-        int k = (int) command.getParams()[ord + 4];
-
-        /*
-         Zunächst muss der Name der Variablen y in der DGL y' = expr ermittelt
-         werden. Falls dieser nicht eindeutig ist, wird "Y" vorgegeben.
-         */
-        String varOrd;
-
-        if (varsWithoutPrimes.isEmpty()) {
-            if (varAbsc.equals("y")) {
-                varOrd = "z";
-            } else {
-                varOrd = "y";
-            }
-        } else if (varsWithoutPrimes.size() == 1) {
-            if (varsWithoutPrimes.contains(varAbsc)) {
-                if (varAbsc.equals("y")) {
-                    varOrd = "z";
-                } else {
-                    varOrd = "y";
-                }
-            } else {
-                Iterator<String> iter = varsWithoutPrimes.iterator();
-                varOrd = iter.next();
-            }
-        } else {
-            Iterator<String> iter = varsWithoutPrimes.iterator();
-            varOrd = iter.next();
-            if (varOrd.equals(varAbsc)) {
-                varOrd = iter.next();
-            }
-        }
-
-        try {
-            Variable.setDependingOnVariable(varOrd, varAbsc);
-            expr = expr.simplify();
-
-            if (doesExpressionContainDerivativesOfTooHighOrder(expr, varOrd, ord - 1)) {
-                throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDIFFEQ", ord, ord - 1));
-            }
-
-            Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
-
-            // Formulierung und Ausgabe des AWP.
-            String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
-            ArrayList formulationOfAWPForGraphicArea = new ArrayList();
-
-            for (int i = 0; i < ord; i++) {
-                formulationOfAWP = formulationOfAWP + "'";
-            }
-            formulationOfAWP += "(" + varAbsc + ") = ";
-
-            formulationOfAWPForGraphicArea.add(formulationOfAWP);
-            formulationOfAWPForGraphicArea.add(expr);
-
-            String varOrdWithPrimes;
-            for (int i = 0; i < ord; i++) {
-                formulationOfAWPForGraphicArea.add(", ");
-                varOrdWithPrimes = varOrd;
-                for (int j = 0; j < i; j++) {
-                    varOrdWithPrimes = varOrdWithPrimes + "'";
-                }
-
-                formulationOfAWPForGraphicArea.add(varOrdWithPrimes);
-                formulationOfAWPForGraphicArea.add(TypeBracket.BRACKET_SURROUNDING_EXPRESSION);
-                formulationOfAWPForGraphicArea.add(x_0);
-                formulationOfAWPForGraphicArea.add(" = ");
-                formulationOfAWPForGraphicArea.add(y_0[i]);
-            }
-
-            formulationOfAWPForGraphicArea.add(":");
-
-            doPrintOutput(formulationOfAWPForGraphicArea);
-
-            // Ausgabe des Taylorpolynoms        
-            doPrintOutput(varOrd + "(" + varAbsc + ") = ", MathToolUtilities.convertToEditableAbstractExpression(result));
-
-        } finally {
-            Variable.setDependingOnVariable(varOrd, null);
-        }
-
-    }
-
-//    @Execute(type = TypeCommand.taylordiffeq)
-    private static void executeTaylorDiffEq2(Command command) throws EvaluationException {
-
         Expression expr = (Expression) command.getParams()[0];
         String varAbsc = (String) command.getParams()[1];
         String varOrd = (String) command.getParams()[2];
         int ord = (int) command.getParams()[3];
         Expression x_0 = (Expression) command.getParams()[4];
-        
+
         Expression[] y_0 = new Expression[ord];
         for (int i = 0; i < y_0.length; i++) {
             y_0[i] = (Expression) command.getParams()[i + 5];

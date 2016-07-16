@@ -439,7 +439,7 @@ public class MathToolController {
             return 1;
         }
         if (commandName.equals(TypeCommand.taylordiffeq.name())) {
-            return 5;
+            return 6;
         }
 
         Field[] fields = MathCommandCompiler.class.getDeclaredFields();

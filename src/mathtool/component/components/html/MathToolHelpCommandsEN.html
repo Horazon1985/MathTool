@@ -83,9 +83,11 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x), x<sub>1</sub>, x<sub>2</sub>, n):</strong> Returns the numerical solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in the interval x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Here, the interval [x<sub>1</sub>, x<sub>2</sub>] is subdivided in n equal subintervals and in every subinterval at most one solution can be found. Higher n may potentially yield more solutions, but it increases the computation time. This function can be useful if the user has specific knowlegde of the solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x).<br><br>
 
-<strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Returns the numerical solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> in the interval x_0 &lt;= x &lt;= x<sub>1</sub>. For the numerical computation, the interval [x<sub>0</sub>, x<sub>1</sub>] is subdivided in 1000 subintervals and MathTool returns all 1001 function values in the corresponding points.<br><br>
+<strong>solvediffeq(F<sub>1</sub>(x, y, y', y'', ..., y<sup>(n)</sup>) = F<sub>2</sub>(x, y, y', y'', ..., y<sup>(n)</sup>), x, y):</strong> Returns the solution of the differential equation F<sub>1</sub>(x, y, y', y'', ..., y<sup>(n)</sup>) = F<sub>2</sub>(x, y, y', y'', ..., y<sup>(n)</sup>).<br><br>
 
-<em>Example:</em> solvedeq(-y,t,2,0,10,1,0) returns the numerical solutions of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0 for 0 &lt;= t &lt;= 10. Here, MathTool returns 1001 values of y(t), hence the increment is 0.01.<br><br>
+<strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, y, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Returns the numerical solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> in the interval x_0 &lt;= x &lt;= x<sub>1</sub>. For the numerical computation, the interval [x<sub>0</sub>, x<sub>1</sub>] is subdivided in 1000 subintervals and MathTool returns all 1001 function values in the corresponding points.<br><br>
+
+<em>Example:</em> solvedeq(-y,t,y,2,0,10,1,0) returns the numerical solutions of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0 for 0 &lt;= t &lt;= 10. Here, MathTool returns 1001 values of y(t), hence the increment is 0.01.<br><br>
 
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Returns the equation of the tangent space to the graph of F at the point (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Example:</em> tangent(x^3+x/2+3,x=2) returns the following equation:<br>
@@ -94,9 +96,9 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 
 In addition, MathTool plots both graphs (those of x^3+x/2+3 and of 12+25*(x-2)/2).<br><br>
 
-<strong>taylordiffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
+<strong>taylordiffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, y, n, x<sub>0</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>, m):</strong> Returns the Taylor polynomial of degree m of the solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y_0, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub>.<br><br>
 
-<em>Example:</em> taylordeq(-y,t,2,0,1,0,10) returns the Taylor polynomial of degree 10 of the solution of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0. The exact solution is given by y(t) = cos(t), hence the power series is<br><br>
+<em>Example:</em> taylordeq(-y,t,y,2,0,1,0,10) returns the Taylor polynomial of degree 10 of the solution of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0. The exact solution is given by y(t) = cos(t), hence the power series is<br><br>
 
 <p style="text-align: center;">y(t) = cos(t) = 1 - t^2/2! + t^4/4! - t^6/6! + ...</p><br>
 
