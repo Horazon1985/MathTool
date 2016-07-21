@@ -624,21 +624,17 @@ public abstract class MathCommandCompiler {
             }
             expressions = params[0];
             Expression[] exprs = new Expression[n + 1];
-            HashSet<String> vars = new HashSet<>();
             for (int i = 0; i < n; i++) {
                 if (expressions.indexOf("=") == 0) {
-                    exprs[i] = null;
-                    expressions = expressions.substring(1, expressions.length());
-                } else {
-                    exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), vars);
-                    expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY"));
                 }
+                exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), null);
+                expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
             }
             if (expressions.length() == 0) {
-                exprs[n] = null;
-            } else {
-                exprs[n] = Expression.build(expressions, vars);
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY"));
             }
+            exprs[n] = Expression.build(expressions, null);
             return new Command(TypeCommand.latex, exprs);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
