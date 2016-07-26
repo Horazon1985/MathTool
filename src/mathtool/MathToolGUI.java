@@ -67,6 +67,68 @@ import mathtool.utilities.MathToolUtilities;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
+    private static final String GUI_LEGEND = "GUI_LEGEND";    
+    private static final String GUI_SAVE = "GUI_SAVE";    
+    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";    
+    private static final String LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE = "LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE";    
+    private static final String GUI_MENU_FILE = "GUI_MENU_FILE";    
+    private static final String GUI_MENU_OPEN = "GUI_MENU_OPEN";    
+    private static final String GUI_MENU_SAVE = "GUI_MENU_SAVE";    
+    private static final String GUI_MENU_QUIT = "GUI_MENU_QUIT";    
+    private static final String GUI_MENU_MATHTOOL = "GUI_MENU_MATHTOOL";    
+    private static final String GUI_MENU_HELP = "GUI_MENU_HELP";    
+    private static final String GUI_MENU_LANGUAGES = "GUI_MENU_LANGUAGES";    
+    private static final String GUI_MENU_ENGLISH = "GUI_MENU_ENGLISH";    
+    private static final String GUI_MENU_GERMAN = "GUI_MENU_GERMAN";    
+    private static final String GUI_MENU_RUSSIAN = "GUI_MENU_RUSSIAN";    
+    private static final String GUI_MENU_UKRAINIAN = "GUI_MENU_UKRAINIAN";    
+    private static final String GUI_MENU_REPRESENTATION_MODE = "GUI_MENU_REPRESENTATION_MODE";    
+    private static final String GUI_FORMULA_MODE = "GUI_FORMULA_MODE";    
+    private static final String GUI_MENU_TEXT_MODE = "GUI_MENU_TEXT_MODE";    
+    private static final String GUI_MENU_ABOUT = "GUI_MENU_ABOUT";    
+    private static final String GUI_MENU_OPTIONS = "GUI_MENU_OPTIONS";    
+    private static final String GUI_MENU_OUTPUT_OPTIONS = "GUI_MENU_OUTPUT_OPTIONS";    
+    private static final String GUI_MENU_GRAPHIC_OPTIONS = "GUI_MENU_GRAPHIC_OPTIONS";    
+    private static final String GUI_APPROX = "GUI_APPROX";    
+    private static final String GUI_LATEX_CODE = "GUI_LATEX_CODE";    
+    private static final String GUI_CLEAR = "GUI_CLEAR";    
+    private static final String GUI_INPUT = "GUI_INPUT";    
+    private static final String GUI_CANCEL = "GUI_CANCEL";    
+    private static final String GUI_STOP_ROTATION = "GUI_STOP_ROTATION";    
+    private static final String GUI_ERROR = "GUI_ERROR";    
+    private static final String GUI_UNEXPECTED_EXCEPTION = "GUI_UNEXPECTED_EXCEPTION";    
+    private static final String GUI_EQUIVALENT_TO = "GUI_EQUIVALENT_TO";    
+    private static final String GUI_HelpDialogGUI_GENERALITIES = "GUI_HelpDialogGUI_GENERALITIES";    
+    private static final String GUI_HelpDialogGUI_MATH_FORMULAS = "GUI_HelpDialogGUI_MATH_FORMULAS";    
+    private static final String GUI_HelpDialogGUI_LOGICAL_EXPRESSION = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION";    
+    private static final String GUI_HelpDialogGUI_OPERATORS = "GUI_HelpDialogGUI_OPERATORS";    
+    private static final String GUI_HelpDialogGUI_COMMANDS = "GUI_HelpDialogGUI_COMMANDS";    
+    private static final String GUI_HelpDialogGUI_BUG_REPORT = "GUI_HelpDialogGUI_BUG_REPORT";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER";    
+    private static final String GUI_OutputOptionsDialogGUI_SAVE_BUTTON = "GUI_OutputOptionsDialogGUI_SAVE_BUTTON";    
+    private static final String GUI_OutputOptionsDialogGUI_CANCEL_BUTTON = "GUI_OutputOptionsDialogGUI_CANCEL_BUTTON";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE";    
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND";    
+    private static final String GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME = "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME";    
+    private static final String GUI_GraphicOptionsDialogGUI_SAVE_BUTTON = "GUI_GraphicOptionsDialogGUI_SAVE_BUTTON";    
+    private static final String GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON = "GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON";    
+    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT";    
+    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK";    
+    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH";    
+    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY";    
+    private static final String GUI_LegendGUI_CONTROLS = "GUI_LegendGUI_CONTROLS";    
+    private static final String GUI_LegendGUI_GRAPH = "GUI_LegendGUI_GRAPH";    
+    private static final String GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION";    
+    private static final String GUI_LegendGUI_PARAMETERIZED_CURVE = "GUI_LegendGUI_PARAMETERIZED_CURVE";    
+    private static final String GUI_LegendGUI_VECTORFIELD = "GUI_LegendGUI_VECTORFIELD";    
+    
     public static final Color BACKGROUND_COLOR = new Color(255, 150, 0);
 
     private final JLabel legendLabel;
@@ -150,17 +212,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
         setMinimumSize(minimumDimension);
 
         // Labels ausrichten
-        legendLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_LEGEND") + "</b></html>");
+        legendLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_LEGEND) + "</b></html>");
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
 
-        saveLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_SAVE") + "</b></html>");
+        saveLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_SAVE) + "</b></html>");
         saveLabel.setVisible(false);
         add(saveLabel);
         saveLabel.addMouseListener(this);
 
-        rotateLabel = new JLabel("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
         rotateLabel.setVisible(false);
         add(rotateLabel);
         rotateLabel.addMouseListener(this);
@@ -827,39 +889,39 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions = new HashMap<>();
 
         // Menüeinträge
-        componentCaptions.put(menuFile, "GUI_MENU_FILE");
-        componentCaptions.put(menuItemOpen, "GUI_MENU_OPEN");
-        componentCaptions.put(menuItemSave, "GUI_MENU_SAVE");
-        componentCaptions.put(menuItemQuit, "GUI_MENU_QUIT");
-        componentCaptions.put(menuMathTool, "GUI_MENU_MATHTOOL");
-        componentCaptions.put(menuItemHelp, "GUI_MENU_HELP");
-        componentCaptions.put(menuItemLanguageMenu, "GUI_MENU_LANGUAGES");
-        componentCaptions.put(menuItemLanguageEnglish, "GUI_MENU_ENGLISH");
-        componentCaptions.put(menuItemLanguageGerman, "GUI_MENU_GERMAN");
-        componentCaptions.put(menuItemLanguageRussian, "GUI_MENU_RUSSIAN");
-        componentCaptions.put(menuItemLanguageUkrainian, "GUI_MENU_UKRAINIAN");
-        componentCaptions.put(menuItemRepresentationMenu, "GUI_MENU_REPRESENTATION_MODE");
-        componentCaptions.put(menuItemRepresentationFormula, "GUI_FORMULA_MODE");
-        componentCaptions.put(menuItemRepresentationText, "GUI_MENU_TEXT_MODE");
-        componentCaptions.put(menuItemAbout, "GUI_MENU_ABOUT");
-        componentCaptions.put(menuItemOptionsMenu, "GUI_MENU_OPTIONS");
-        componentCaptions.put(menuItemOutputOptions, "GUI_MENU_OUTPUT_OPTIONS");
-        componentCaptions.put(menuItemGraphicOptions, "GUI_MENU_GRAPHIC_OPTIONS");
+        componentCaptions.put(menuFile, GUI_MENU_FILE);
+        componentCaptions.put(menuItemOpen, GUI_MENU_OPEN);
+        componentCaptions.put(menuItemSave, GUI_MENU_SAVE);
+        componentCaptions.put(menuItemQuit, GUI_MENU_QUIT);
+        componentCaptions.put(menuMathTool, GUI_MENU_MATHTOOL);
+        componentCaptions.put(menuItemHelp, GUI_MENU_HELP);
+        componentCaptions.put(menuItemLanguageMenu, GUI_MENU_LANGUAGES);
+        componentCaptions.put(menuItemLanguageEnglish, GUI_MENU_ENGLISH);
+        componentCaptions.put(menuItemLanguageGerman, GUI_MENU_GERMAN);
+        componentCaptions.put(menuItemLanguageRussian, GUI_MENU_RUSSIAN);
+        componentCaptions.put(menuItemLanguageUkrainian, GUI_MENU_UKRAINIAN);
+        componentCaptions.put(menuItemRepresentationMenu, GUI_MENU_REPRESENTATION_MODE);
+        componentCaptions.put(menuItemRepresentationFormula, GUI_FORMULA_MODE);
+        componentCaptions.put(menuItemRepresentationText, GUI_MENU_TEXT_MODE);
+        componentCaptions.put(menuItemAbout, GUI_MENU_ABOUT);
+        componentCaptions.put(menuItemOptionsMenu, GUI_MENU_OPTIONS);
+        componentCaptions.put(menuItemOutputOptions, GUI_MENU_OUTPUT_OPTIONS);
+        componentCaptions.put(menuItemGraphicOptions, GUI_MENU_GRAPHIC_OPTIONS);
 
         // Buttons
-        componentCaptions.put(approxButton, "GUI_APPROX");
-        componentCaptions.put(latexButton, "GUI_LATEX_CODE");
-        componentCaptions.put(clearButton, "GUI_CLEAR");
-        componentCaptions.put(inputButton, "GUI_INPUT");
-        componentCaptions.put(cancelButton, "GUI_CANCEL");
+        componentCaptions.put(approxButton, GUI_APPROX);
+        componentCaptions.put(latexButton, GUI_LATEX_CODE);
+        componentCaptions.put(clearButton, GUI_CLEAR);
+        componentCaptions.put(inputButton, GUI_INPUT);
+        componentCaptions.put(cancelButton, GUI_CANCEL);
 
         // Labels
-        componentCaptions.put(legendLabel, "GUI_LEGEND");
-        componentCaptions.put(saveLabel, "GUI_SAVE");
+        componentCaptions.put(legendLabel, GUI_LEGEND);
+        componentCaptions.put(saveLabel, GUI_SAVE);
         if (isRotating) {
-            componentCaptions.put(rotateLabel, "GUI_STOP_ROTATION");
+            componentCaptions.put(rotateLabel, GUI_STOP_ROTATION);
         } else {
-            componentCaptions.put(rotateLabel, "GUI_ROTATE_GRAPH");
+            componentCaptions.put(rotateLabel, GUI_ROTATE_GRAPH);
         }
 
     }
@@ -955,7 +1017,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                      könnte.
                      */
                     if (validCommand) {
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                         return null;
                     }
                 } catch (CancellationException e) {
@@ -964,7 +1026,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (validCommand) {
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                         return null;
                     }
                 }
@@ -995,7 +1057,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
-                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
                         }
@@ -1005,7 +1067,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputAlgebraicExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                             return null;
                         }
                     }
@@ -1017,13 +1079,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
                          arithmetischen Ausdrücken geworfen wurde.
                          */
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputAlgebraicExpression(input)) {
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                         return null;
                     }
                 }
@@ -1050,7 +1112,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
-                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                             mathToolTextField.setText("");
                             return null;
                         }
@@ -1060,7 +1122,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputMatrixExpression(input)) {
-                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                            MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                             return null;
                         }
                     }
@@ -1072,13 +1134,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
                          arithmetischen Ausdrücken geworfen wurde.
                          */
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputMatrixExpression(input)) {
-                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                        MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                         return null;
                     }
                 }
@@ -1091,17 +1153,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     LogicalExpression logExpr = LogicalExpression.build(input, null);
                     LogicalExpression logExprSimplified = logExpr.simplify();
                     MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
-                            Translator.translateOutputMessage("GUI_EQUIVALENT_TO"),
+                            Translator.translateOutputMessage(GUI_EQUIVALENT_TO),
                             MathToolUtilities.convertToEditableAbstractExpression(logExprSimplified));
                     mathToolTextField.setText("");
                 } catch (ExpressionException | EvaluationException e) {
-                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_ERROR") + e.getMessage());
+                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                     return null;
                 } catch (CancellationException e) {
                     MathCommandCompiler.doPrintOutput(e.getMessage());
                     return null;
                 } catch (Exception exception) {
-                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + exception.getMessage());
+                    MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                 }
 
                 return null;
@@ -1151,7 +1213,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.start();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</u></b></html>");
+            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</u></b></html>");
         } else {
             isRotating = false;
             switch (typeGraphic) {
@@ -1169,19 +1231,19 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.interrupt();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</u></b></html>");
+            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</u></b></html>");
         }
     }
 
     private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
         ArrayList<String> menuCaptions = new ArrayList<>();
         ArrayList<String> fileNames = new ArrayList<>();
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_GENERALITIES"));
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_MATH_FORMULAS"));
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_LOGICAL_EXPRESSION"));
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_OPERATORS"));
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_COMMANDS"));
-        menuCaptions.add(Translator.translateOutputMessage("GUI_HelpDialogGUI_BUG_REPORT"));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_GENERALITIES));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_MATH_FORMULAS));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_LOGICAL_EXPRESSION));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_OPERATORS));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_COMMANDS));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_BUG_REPORT));
         fileNames.add("Generalities");
         fileNames.add("Formulas");
         fileNames.add("LogicalExpressions");
@@ -1264,8 +1326,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         try {
             MathCommandCompiler.executeCommand("clear()");
         } catch (ExpressionException | EvaluationException e) {
-            mathToolTextArea.append(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + e.getMessage() + "\n \n");
-            mathToolGraphicArea.addComponent(Translator.translateOutputMessage("GUI_UNEXPECTED_EXCEPTION") + e.getMessage());
+            mathToolTextArea.append(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + e.getMessage() + "\n \n");
+            mathToolGraphicArea.addComponent(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + e.getMessage());
         }
     }//GEN-LAST:event_clearButtonActionPerformed
 
@@ -1305,24 +1367,24 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed
 
-        String simplifyOptionsTitle = Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME");
+        String simplifyOptionsTitle = Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME);
 
         // Checkboxen.
         ArrayList<String> simplifyOptions = new ArrayList<>();
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
-        simplifyOptions.add("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
-        String saveButtonLabel = Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SAVE_BUTTON");
-        String cancelButtonLabel = Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_CANCEL_BUTTON");
+        simplifyOptions.add(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS);
+        simplifyOptions.add(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS);
+        simplifyOptions.add(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER);
+        String saveButtonLabel = Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SAVE_BUTTON);
+        String cancelButtonLabel = Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_CANCEL_BUTTON);
 
         // DropDowns.
         ArrayList<String[]> dropDownOptions = new ArrayList<>();
-        dropDownOptions.add(new String[]{Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION"),
-            Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS"),
-            Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS")});
-        dropDownOptions.add(new String[]{Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION"),
-            Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE"),
-            Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND")});
+        dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION),
+            Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS),
+            Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS)});
+        dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION),
+            Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE),
+            Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND)});
 
         OutputOptionsDialogGUI outputOptionsDialogGUI = OutputOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, simplifyOptions, dropDownOptions, saveButtonLabel, cancelButtonLabel);
@@ -1353,17 +1415,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemGraphicOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGraphicOptionsActionPerformed
 
-        String simplifyOptionsTitle = Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME");
+        String simplifyOptionsTitle = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME);
 
-        String saveButtonLabel = Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_SAVE_BUTTON");
-        String cancelButtonLabel = Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON");
+        String saveButtonLabel = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_SAVE_BUTTON);
+        String cancelButtonLabel = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON);
 
         // DropDowns.
         ArrayList<String[]> dropDownOptions = new ArrayList<>();
-        dropDownOptions.add(new String[]{Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT"),
-            Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK")});
-        dropDownOptions.add(new String[]{Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH"),
-            Translator.translateOutputMessage("GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY")});
+        dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT),
+            Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK)});
+        dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH),
+            Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY)});
 
         GraphicOptionsDialogGUI graphicOptionsDialogGUI = GraphicOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
@@ -1408,21 +1470,21 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         ArrayList<String> instructions = new ArrayList<>();
         ArrayList<String> exprs = new ArrayList<>();
-        instructions.add("<html><b><u>" + Translator.translateOutputMessage("GUI_LegendGUI_CONTROLS") + "</u></b></html>");
+        instructions.add("<html><b><u>" + Translator.translateOutputMessage(GUI_LegendGUI_CONTROLS) + "</u></b></html>");
 
         if (e.getSource() == legendLabel && e.getButton() == MouseEvent.BUTTON1) {
             switch (typeGraphic) {
                 case GRAPH2D:
                     instructions.addAll(graphicPanel2D.getInstructions());
                     for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).toString());
+                        exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel2D.getColors(), exprs);
                     break;
                 case GRAPHIMPLICIT2D: {
                     instructions.addAll(graphicPanelImplicit2D.getInstructions());
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION")
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION)
                             + graphicPanelImplicit2D.getExpressions().get(0).toString()
                             + " = "
                             + graphicPanelImplicit2D.getExpressions().get(1).toString());
@@ -1435,7 +1497,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPH3D:
                     instructions.addAll(GraphicPanel3D.getInstructions());
                     for (int i = 0; i < graphicPanel3D.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).toString());
+                        exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanel3D.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel3D.getColors(), exprs);
@@ -1444,7 +1506,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelCurves2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(Color.blue);
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_PARAMETERIZED_CURVE)
                             + "(" + graphicPanelCurves2D.getExpressions()[0]
                             + ", " + graphicPanelCurves2D.getExpressions()[1] + ")"
                     );
@@ -1456,7 +1518,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelCurves3D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(Color.blue);
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_PARAMETERIZED_CURVE")
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_PARAMETERIZED_CURVE)
                             + "(" + graphicPanelCurves3D.getExpressions()[0]
                             + ", " + graphicPanelCurves3D.getExpressions()[1]
                             + ", " + graphicPanelCurves3D.getExpressions()[2] + ")"
@@ -1468,7 +1530,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHPOLAR:
                     instructions.addAll(GraphicPanelPolar.getInstructions());
                     for (int i = 0; i < graphicPanelPolar.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelPolar.getExpressions().get(i).toString());
+                        exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanelPolar.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelPolar.getColors(), exprs);
@@ -1476,7 +1538,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHCYLINDRCAL:
                     instructions.addAll(GraphicPanelCylindrical.getInstructions());
                     for (int i = 0; i < graphicPanelCylindrical.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelCylindrical.getExpressions().get(i).toString());
+                        exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanelCylindrical.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelCylindrical.getColors(), exprs);
@@ -1484,7 +1546,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHSPHERICAL:
                     instructions.addAll(GraphicPanelSpherical.getInstructions());
                     for (int i = 0; i < graphicPanelSpherical.getExpressions().size(); i++) {
-                        exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_GRAPH") + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).toString());
+                        exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanelSpherical.getExpressions().get(i).toString());
                     }
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelSpherical.getColors(), exprs);
@@ -1493,7 +1555,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelVectorField2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField2D.getColor());
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField2D.getVectorFieldExpression().toString());
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD) + ": " + graphicPanelVectorField2D.getVectorFieldExpression().toString());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
@@ -1501,7 +1563,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     instructions.addAll(GraphicPanelVectorField3D.getInstructions());
                     colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField3D.getColor());
-                    exprs.add(Translator.translateOutputMessage("GUI_LegendGUI_VECTORFIELD") + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD) + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
@@ -1588,18 +1650,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_LEGEND") + "</u></b></html>");
+            legendLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_LEGEND) + "</u></b></html>");
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_SAVE") + "</u></b></html>");
+            saveLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_SAVE) + "</u></b></html>");
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</u></b></html>");
+                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</u></b></html>");
             } else {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</u></b></html>");
+                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</u></b></html>");
             }
             validate();
             repaint();
@@ -1609,18 +1671,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_LEGEND") + "</b></html>");
+            legendLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_LEGEND) + "</b></html>");
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_SAVE") + "</b></html>");
+            saveLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_SAVE) + "</b></html>");
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_STOP_ROTATION") + "</b></html>");
+                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</b></html>");
             } else {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
+                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
             }
             validate();
             repaint();
