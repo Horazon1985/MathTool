@@ -68,6 +68,8 @@ MathTool знает такие команды:<br><br>
 
 <strong>plotspherical(F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v), u, v, u<sub>1</sub>, u<sub>2</sub>, v<sub>1</sub>, v<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v) для u<sub>1</sub> &lt;= u &lt;= u<sub>2</sub> и v<sub>1</sub> &lt;= v &lt;= v<sub>2</sub> в цилиндрических координатах, где u это угол в x, y-плоскости и v - угол к оси z. Разницы u<sub>2</sub> - u<sub>1</sub> и v<sub>2</sub> - v<sub>1</sub> углов не должны превышать 20&#960; по техническим причинам. Фактор масштабирования может принимать значения между 0.1 и 10.<br><br>
 
+<strong>plotvectorfield2d([F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)], x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Plots the vector field [F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)] for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub> and y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. The zoom factor can be (almost) arbitrary.<br><br>
+
 <strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Вычисляет уравнение регрессионной прямой для точек P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, и строит её график, если это возможно. Точки P<sub>i</sub> должны быть (после упрощения) в форме [a;b], то есть должны быть (2x1)-матрицами.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Возвращает алгебраические (точные) решения уравнения F<sub>1</sub>(x) = F<sub>2</sub>(x) по переменной x, если это возможно. Например уравнение вида exp(x) - x = 3 не имеют решений, которые можна выразить алгебраически или при помощи элементарных функций. В таком случае MathTool не вернёт никаких (точных) решений.
