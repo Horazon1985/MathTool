@@ -13,12 +13,14 @@ import lang.translator.Translator;
 
 public class DevelopersDialogGUI extends JDialog {
 
+    private static final String GUI_DevelopersDialogGUI_ABOUT = "GUI_DevelopersDialogGUI_ABOUT";    
+    
     private final JEditorPane developersArea;
     private final JScrollPane scrollPaneDevelopers;
 
     public DevelopersDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
 
-        setTitle(Translator.translateOutputMessage("GUI_DevelopersDialogGUI_ABOUT"));
+        setTitle(Translator.translateOutputMessage(GUI_DevelopersDialogGUI_ABOUT));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);

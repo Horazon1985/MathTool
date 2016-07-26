@@ -9,13 +9,15 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import mathtool.MathToolGUI;
 
 /**
  * Ausgabedetails. Singletonklasse.
  */
 public class OutputDetailsGUI extends JDialog {
 
+    private static final String GUI_OutputDetailsGUI_INFO = "GUI_OutputDetailsGUI_INFO";    
+    private static final String GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION = "GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION";    
+    
     private static OutputDetailsGUI instance = null;
 
     private JLabel[] formulaLabels;
@@ -23,7 +25,7 @@ public class OutputDetailsGUI extends JDialog {
 
     public OutputDetailsGUI(int mathToolGUIX, int mathToolGUIY, int mathToolGUIWidth, int mathToolGUIHeight, int width, AbstractExpression[] abstrExprs, String[] texts) {
 
-        setTitle(Translator.translateOutputMessage("GUI_OutputDetailsGUI_INFO"));
+        setTitle(Translator.translateOutputMessage(GUI_OutputDetailsGUI_INFO));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
@@ -62,7 +64,7 @@ public class OutputDetailsGUI extends JDialog {
     private void initFormulaLabels(AbstractExpression[] abstrExprs, String[] texts) {
         this.formulaLabels = new JLabel[abstrExprs.length + texts.length];
         for (int i = 0; i < abstrExprs.length + texts.length; i++) {
-            this.formulaLabels[i] = new JLabel(Translator.translateOutputMessage("GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION", i + 1));
+            this.formulaLabels[i] = new JLabel(Translator.translateOutputMessage(GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION, i + 1));
             add(this.formulaLabels[i]);
             this.formulaLabels[i].setBounds(10, 80 + 35 * i, 100, 25);
         }

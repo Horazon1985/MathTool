@@ -11,12 +11,15 @@ import javax.swing.SwingWorker;
 
 public class ComputingDialogGUI extends JDialog {
 
+    private static final String GUI_ComputingDialogGUI_INFO = "GUI_ComputingDialogGUI_INFO";    
+    private static final String GUI_ComputingDialogGUI_COMPUTING = "GUI_ComputingDialogGUI_COMPUTING";    
+    
     private final JLabel owlLabel;
     private final SwingWorker swingWorker;
 
     public ComputingDialogGUI(SwingWorker swingWorker, int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
 
-        setTitle(Translator.translateOutputMessage("GUI_ComputingDialogGUI_INFO"));
+        setTitle(Translator.translateOutputMessage(GUI_ComputingDialogGUI_INFO));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
@@ -24,7 +27,7 @@ public class ComputingDialogGUI extends JDialog {
         this.setBounds((mathtoolformWidth - 550) / 2 + mathtoolformX, (mathtoolformHeight - 100) / 2 + mathtoolformY, 550, 100);
         this.getContentPane().setBackground(Color.white);
 
-        JLabel computingLabel = new JLabel(Translator.translateOutputMessage("GUI_ComputingDialogGUI_COMPUTING"));
+        JLabel computingLabel = new JLabel(Translator.translateOutputMessage(GUI_ComputingDialogGUI_COMPUTING));
         computingLabel.setBounds(70, 25, 450, 25);
         add(computingLabel);
 

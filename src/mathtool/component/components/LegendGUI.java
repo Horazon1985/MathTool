@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class LegendGUI extends MathToolInfoComponentTemplate {
 
+    private static final String GUI_LegendGUI_LEGEND = "GUI_LegendGUI_LEGEND";    
+    
     private static LegendGUI instance = null;
 
     private LegendGUI(int mathtoolGUIX, int mathtoolGUIY, int mathtoolGUIWidth, int mathtoolGUIHeight,
@@ -17,7 +19,7 @@ public class LegendGUI extends MathToolInfoComponentTemplate {
 
         super(mathtoolGUIX, mathtoolGUIY,
                 mathtoolGUIWidth, mathtoolGUIHeight,
-                "GUI_LegendGUI_LEGEND", "icons/LegendLogo.png",
+                GUI_LegendGUI_LEGEND, "icons/LegendLogo.png",
                 instructions, exprs, colors, null, null);
 
         addWindowListener(new WindowAdapter() {

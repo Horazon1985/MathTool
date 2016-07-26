@@ -11,13 +11,15 @@ import java.util.ArrayList;
  */
 public class HelpDialogGUI extends MathToolInfoComponentTemplate {
 
+    private static final String GUI_HelpDialogGUI_HELP = "GUI_HelpDialogGUI_HELP";    
+    
     private static HelpDialogGUI instance = null;
 
     private HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
-                "GUI_HelpDialogGUI_HELP", "icons/HelpLogo.png",
+                GUI_HelpDialogGUI_HELP, "icons/HelpLogo.png",
                 null, null, null, menuCaptions, fileNames);
 
         addWindowListener(new WindowAdapter() {

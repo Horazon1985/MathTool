@@ -62,6 +62,10 @@ import lang.translator.Translator;
 
 public class MathToolController {
 
+    private static final String GUI_OPERATOR = "GUI_OPERATOR";    
+    private static final String GUI_COMMAND = "GUI_COMMAND";    
+    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";    
+    
     private final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesOpen.png"));
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
@@ -105,7 +109,7 @@ public class MathToolController {
         }
         Collections.sort(operators);
         operatorChoice.removeAllItems();
-        operatorChoice.addItem(Translator.translateOutputMessage("GUI_OPERATOR"));
+        operatorChoice.addItem(Translator.translateOutputMessage(GUI_OPERATOR));
         for (String op : operators) {
             operatorChoice.addItem(op);
         }
@@ -120,7 +124,7 @@ public class MathToolController {
             commands.add(value.toString());
         }
         commandChoice.removeAllItems();
-        commandChoice.addItem(Translator.translateOutputMessage("GUI_COMMAND"));
+        commandChoice.addItem(Translator.translateOutputMessage(GUI_COMMAND));
         for (String c : commands) {
             commandChoice.addItem(c);
         }
@@ -683,7 +687,7 @@ public class MathToolController {
             graphicPanelCurves3D.setIsRotating(false);
         }
         rotateThread.interrupt();
-        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage("GUI_ROTATE_GRAPH") + "</b></html>");
+        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
 
     }
 
