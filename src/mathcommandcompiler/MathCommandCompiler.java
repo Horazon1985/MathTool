@@ -2403,7 +2403,7 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
-        graphicPanelImplicit2D.drawGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
+        graphicPanelImplicit2D.drawGraphImplicit2D(implicitGraph, x_0, x_1, y_0, y_1);
         // Alte Legende schließen
         LegendGUI.close();
 
