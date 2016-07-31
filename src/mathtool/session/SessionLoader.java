@@ -13,7 +13,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import mathtool.config.MathToolConfig;
 import mathtool.session.classes.Arguments;
 import mathtool.session.classes.DefinedFunctions;
 import mathtool.session.classes.DefinedVars;
