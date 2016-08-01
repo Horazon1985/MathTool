@@ -40,6 +40,7 @@ import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.classes.MatrixOperator;
 import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
+import graphic.GraphicPanelImplicit3D;
 import java.awt.Dimension;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -421,6 +422,12 @@ public class MathToolController {
         if (commandName.equals(TypeCommand.plot3d.name())) {
             return 4;
         }
+        if (commandName.equals(TypeCommand.plotimplicit2d.name())) {
+            return 6;
+        }
+        if (commandName.equals(TypeCommand.plotimplicit3d.name())) {
+            return 9;
+        }
         if (commandName.equals(TypeCommand.plotcurve2d.name()) || commandName.equals(TypeCommand.plotcurve3d.name())) {
             return 2;
         }
@@ -497,8 +504,11 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
             return TypeGraphic.GRAPH2D;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
+        if (c.getTypeCommand().equals(TypeCommand.plotimplicit2d)) {
             return TypeGraphic.GRAPHIMPLICIT2D;
+        }
+        if (c.getTypeCommand().equals(TypeCommand.plotimplicit3d)) {
+            return TypeGraphic.GRAPHIMPLICIT3D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
             return TypeGraphic.GRAPH3D;
@@ -678,13 +688,21 @@ public class MathToolController {
     /**
      * Rotation bei 3D-Graphen stoppen.
      */
-    public static void stopRotationOfGraph(GraphicPanel3D graphicPanel3D, GraphicPanelCurves3D graphicPanelCurves3D,
+    public static void stopRotationOfGraph(GraphicPanel3D graphicPanel3D, GraphicPanelImplicit3D graphicPanelImplicit3D, GraphicPanelCurves3D graphicPanelCurves3D,
             Thread rotateThread, JLabel rotateLabel) {
 
-        if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.GRAPH3D)) {
-            graphicPanel3D.setIsRotating(false);
-        } else if (MathToolGUI.getTypeGraphic().equals(TypeGraphic.GRAPHCURVE3D)) {
-            graphicPanelCurves3D.setIsRotating(false);
+        switch (MathToolGUI.getTypeGraphic()) {
+            case GRAPH3D:
+                graphicPanel3D.setIsRotating(false);
+                break;
+            case GRAPHCURVE3D:
+                graphicPanelCurves3D.setIsRotating(false);
+                break;
+            case GRAPHIMPLICIT3D:
+                graphicPanelImplicit3D.setIsRotating(false);
+                break;
+            default:
+                break;
         }
         rotateThread.interrupt();
         rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");

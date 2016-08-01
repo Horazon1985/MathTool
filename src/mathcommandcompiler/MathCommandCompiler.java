@@ -49,12 +49,13 @@ import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection
 import operationparser.OperationParser;
 import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
 import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
-import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.output.EditableAbstractExpression;
 import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelImplicit3D;
+import graphic.GraphicPanelImplicit3D.MarchingCube;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
 import graphic.GraphicPanelVectorField3D;
@@ -123,6 +124,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanel2D graphicPanel2D;
     private static GraphicPanel3D graphicPanel3D;
     private static GraphicPanelImplicit2D graphicPanelImplicit2D;
+    private static GraphicPanelImplicit3D graphicPanelImplicit3D;
     private static GraphicPanelCurves2D graphicPanelCurves2D;
     private static GraphicPanelCurves3D graphicPanelCurves3D;
     private static GraphicPanelPolar graphicPanelPolar2D;
@@ -202,6 +204,10 @@ public abstract class MathCommandCompiler {
 
     public static void setGraphicPanelImplicit2D(GraphicPanelImplicit2D gPImplicit2D) {
         graphicPanelImplicit2D = gPImplicit2D;
+    }
+
+    public static void setGraphicPanelImplicit3D(GraphicPanelImplicit3D gPImplicit3D) {
+        graphicPanelImplicit3D = gPImplicit3D;
     }
 
     public static void setGraphicPanelCurves2D(GraphicPanelCurves2D gPCurves2D) {
@@ -701,11 +707,11 @@ public abstract class MathCommandCompiler {
 
     }
 
-    @GetCommand(type = TypeCommand.plotimplicit)
+    @GetCommand(type = TypeCommand.plotimplicit2d)
     private static Command getCommandPlotImplicit2D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotimplicit(F(x, y) = G(x, y), x, y, x_0, x_1, y_0, y_1). 
+         Struktur: plotimplicit2d(F(x, y) = G(x, y), x, y, x_0, x_1, y_0, y_1). 
          F, G: Ausdrücke in höchstens zwei Variablen x, y. x_0 < x_1,
          y_0 < y_1: Grenzen des Zeichenbereichs.
          */
@@ -764,7 +770,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        return new Command(TypeCommand.plotimplicit, commandParams);
+        return new Command(TypeCommand.plotimplicit2d, commandParams);
 
     }
 
@@ -826,6 +832,78 @@ public abstract class MathCommandCompiler {
         }
 
         return new Command(TypeCommand.plot3d, commandParams);
+
+    }
+
+    @GetCommand(type = TypeCommand.plotimplicit3d)
+    private static Command getCommandPlotImplicit3D(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotimplicit3d(F(x, y, z) = G(x, y, z), x, y, z, x_0, x_1, y_0, y_1, z_0, z_1). 
+         F, G: Ausdrücke in höchstens drei Variablen x, y, z. x_0 < x_1,
+         y_0 < y_1, z_0 < z_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 10) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTIMPLICIT3D"));
+        }
+
+        Object[] commandParams = new Object[10];
+        HashSet<String> vars = new HashSet<>();
+
+        if (!params[0].contains("=")) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT3D_MUST_BE_A_VALID_EQUATION"));
+        }
+
+        Expression left, right;
+        try {
+            left = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
+            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            left.addContainedIndeterminates(vars);
+            right.addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT3D_MUST_BE_A_VALID_EQUATION"));
+        }
+
+        commandParams[0] = new Expression[]{left, right};
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT3D", 1));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT3D", 2));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[3])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT3D", 3));
+        }
+        if (params[1].equals(params[2]) || params[1].equals(params[3]) || params[2].equals(params[3])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTIMPLICIT3D"));
+        }
+
+        commandParams[1] = params[1];
+        commandParams[2] = params[2];
+        commandParams[3] = params[3];
+        vars.remove(params[1]);
+        vars.remove(params[2]);
+        vars.remove(params[3]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTIMPLICIT3D", params[1], params[2], params[3]));
+        }
+
+        HashSet<String> varsInLimits = new HashSet<>();
+        for (int i = 4; i < 10; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i], null);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT3D", i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT3D", i + 1));
+            }
+        }
+
+        return new Command(TypeCommand.plotimplicit3d, commandParams);
 
     }
 
@@ -2352,7 +2430,7 @@ public abstract class MathCommandCompiler {
 
     }
 
-    @Execute(type = TypeCommand.plotimplicit)
+    @Execute(type = TypeCommand.plotimplicit2d)
     private static void executePlotImplicit2D(Command command) throws EvaluationException {
 
         if (graphicPanelImplicit2D == null || mathToolGraphicArea == null) {
@@ -2391,10 +2469,10 @@ public abstract class MathCommandCompiler {
         }
 
         if (xStart >= xEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 2, 3));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 4, 5));
         }
         if (yStart >= yEnd) {
-            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 4, 5));
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 6, 7));
         }
 
         ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
@@ -2403,7 +2481,7 @@ public abstract class MathCommandCompiler {
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
-        graphicPanelImplicit2D.drawGraphImplicit2D(implicitGraph, x_0, x_1, y_0, y_1);
+        graphicPanelImplicit2D.drawImplicitGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
         // Alte Legende schließen
         LegendGUI.close();
 
@@ -2471,6 +2549,70 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotimplicit3d)
+    private static void executePlotImplicit3D(Command command) throws EvaluationException {
+
+        if (graphicPanelImplicit3D == null || mathToolGraphicArea == null) {
+            return;
+        }
+
+        Expression expr = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]).simplify(simplifyTypesPlot);
+
+        // Falls eines der Graphen nicht gezeichnet werden kann.
+        if (expr.containsOperator()) {
+            Expression difference = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]);
+            doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                    difference, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            // Schließlich noch Fehler werfen.
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+
+        String varAbsc = (String) command.getParams()[1];
+        String varOrd = (String) command.getParams()[2];
+        String varAppl = (String) command.getParams()[3];
+
+        Expression x_0 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression x_1 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression y_0 = ((Expression) command.getParams()[6]).simplify(simplifyTypesPlot);
+        Expression y_1 = ((Expression) command.getParams()[7]).simplify(simplifyTypesPlot);
+        Expression z_0 = ((Expression) command.getParams()[8]).simplify(simplifyTypesPlot);
+        Expression z_1 = ((Expression) command.getParams()[9]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen
+        double xStart, xEnd, yStart, yEnd, zStart, zEnd;
+
+        try {
+            xStart = x_0.evaluate();
+            xEnd = x_1.evaluate();
+            yStart = y_0.evaluate();
+            yEnd = y_1.evaluate();
+            zStart = z_0.evaluate();
+            zEnd = z_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
+        }
+
+        if (xStart >= xEnd) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT3D", 5, 6));
+        }
+        if (yStart >= yEnd) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT3D", 7, 8));
+        }
+        if (zStart >= zEnd) {
+            throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT3D", 9, 10));
+        }
+
+        MarchingCube[][][] implicitGraph = NumericalMethods.solveImplicitEquation3D(expr, varAbsc, varOrd, varAppl, xStart, xEnd, yStart, yEnd, zStart, zEnd);
+        
+        // Graphen zeichnen.
+        graphicPanelImplicit3D.setParameters(varAbsc, varOrd, varAppl, 150, 200, 30, 30);
+        graphicPanelImplicit3D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
+        graphicPanelImplicit3D.drawImplicitGraph3D(implicitGraph, x_0, x_1, y_0, y_1, z_0, z_1);
+        // Alte Legende schließen
+        LegendGUI.close();
+
+    }
+    
     @Execute(type = TypeCommand.plotcurve2d)
     private static void executePlotCurve2D(Command command) throws EvaluationException {
 

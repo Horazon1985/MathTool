@@ -47,6 +47,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelFormula;
+import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelVectorField2D;
 import graphic.GraphicPanelVectorField3D;
@@ -67,68 +68,68 @@ import mathtool.utilities.MathToolUtilities;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
-    private static final String GUI_LEGEND = "GUI_LEGEND";    
-    private static final String GUI_SAVE = "GUI_SAVE";    
-    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";    
-    private static final String LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE = "LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE";    
-    private static final String GUI_MENU_FILE = "GUI_MENU_FILE";    
-    private static final String GUI_MENU_OPEN = "GUI_MENU_OPEN";    
-    private static final String GUI_MENU_SAVE = "GUI_MENU_SAVE";    
-    private static final String GUI_MENU_QUIT = "GUI_MENU_QUIT";    
-    private static final String GUI_MENU_MATHTOOL = "GUI_MENU_MATHTOOL";    
-    private static final String GUI_MENU_HELP = "GUI_MENU_HELP";    
-    private static final String GUI_MENU_LANGUAGES = "GUI_MENU_LANGUAGES";    
-    private static final String GUI_MENU_ENGLISH = "GUI_MENU_ENGLISH";    
-    private static final String GUI_MENU_GERMAN = "GUI_MENU_GERMAN";    
-    private static final String GUI_MENU_RUSSIAN = "GUI_MENU_RUSSIAN";    
-    private static final String GUI_MENU_UKRAINIAN = "GUI_MENU_UKRAINIAN";    
-    private static final String GUI_MENU_REPRESENTATION_MODE = "GUI_MENU_REPRESENTATION_MODE";    
-    private static final String GUI_FORMULA_MODE = "GUI_FORMULA_MODE";    
-    private static final String GUI_MENU_TEXT_MODE = "GUI_MENU_TEXT_MODE";    
-    private static final String GUI_MENU_ABOUT = "GUI_MENU_ABOUT";    
-    private static final String GUI_MENU_OPTIONS = "GUI_MENU_OPTIONS";    
-    private static final String GUI_MENU_OUTPUT_OPTIONS = "GUI_MENU_OUTPUT_OPTIONS";    
-    private static final String GUI_MENU_GRAPHIC_OPTIONS = "GUI_MENU_GRAPHIC_OPTIONS";    
-    private static final String GUI_APPROX = "GUI_APPROX";    
-    private static final String GUI_LATEX_CODE = "GUI_LATEX_CODE";    
-    private static final String GUI_CLEAR = "GUI_CLEAR";    
-    private static final String GUI_INPUT = "GUI_INPUT";    
-    private static final String GUI_CANCEL = "GUI_CANCEL";    
-    private static final String GUI_STOP_ROTATION = "GUI_STOP_ROTATION";    
-    private static final String GUI_ERROR = "GUI_ERROR";    
-    private static final String GUI_UNEXPECTED_EXCEPTION = "GUI_UNEXPECTED_EXCEPTION";    
-    private static final String GUI_EQUIVALENT_TO = "GUI_EQUIVALENT_TO";    
-    private static final String GUI_HelpDialogGUI_GENERALITIES = "GUI_HelpDialogGUI_GENERALITIES";    
-    private static final String GUI_HelpDialogGUI_MATH_FORMULAS = "GUI_HelpDialogGUI_MATH_FORMULAS";    
-    private static final String GUI_HelpDialogGUI_LOGICAL_EXPRESSION = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION";    
-    private static final String GUI_HelpDialogGUI_OPERATORS = "GUI_HelpDialogGUI_OPERATORS";    
-    private static final String GUI_HelpDialogGUI_COMMANDS = "GUI_HelpDialogGUI_COMMANDS";    
-    private static final String GUI_HelpDialogGUI_BUG_REPORT = "GUI_HelpDialogGUI_BUG_REPORT";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER";    
-    private static final String GUI_OutputOptionsDialogGUI_SAVE_BUTTON = "GUI_OutputOptionsDialogGUI_SAVE_BUTTON";    
-    private static final String GUI_OutputOptionsDialogGUI_CANCEL_BUTTON = "GUI_OutputOptionsDialogGUI_CANCEL_BUTTON";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE";    
-    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND";    
-    private static final String GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME = "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME";    
-    private static final String GUI_GraphicOptionsDialogGUI_SAVE_BUTTON = "GUI_GraphicOptionsDialogGUI_SAVE_BUTTON";    
-    private static final String GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON = "GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON";    
-    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT";    
-    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK";    
-    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH";    
-    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY";    
-    private static final String GUI_LegendGUI_CONTROLS = "GUI_LegendGUI_CONTROLS";    
-    private static final String GUI_LegendGUI_GRAPH = "GUI_LegendGUI_GRAPH";    
-    private static final String GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION";    
-    private static final String GUI_LegendGUI_PARAMETERIZED_CURVE = "GUI_LegendGUI_PARAMETERIZED_CURVE";    
-    private static final String GUI_LegendGUI_VECTORFIELD = "GUI_LegendGUI_VECTORFIELD";    
-    
+    private static final String GUI_LEGEND = "GUI_LEGEND";
+    private static final String GUI_SAVE = "GUI_SAVE";
+    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";
+    private static final String LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE = "LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE";
+    private static final String GUI_MENU_FILE = "GUI_MENU_FILE";
+    private static final String GUI_MENU_OPEN = "GUI_MENU_OPEN";
+    private static final String GUI_MENU_SAVE = "GUI_MENU_SAVE";
+    private static final String GUI_MENU_QUIT = "GUI_MENU_QUIT";
+    private static final String GUI_MENU_MATHTOOL = "GUI_MENU_MATHTOOL";
+    private static final String GUI_MENU_HELP = "GUI_MENU_HELP";
+    private static final String GUI_MENU_LANGUAGES = "GUI_MENU_LANGUAGES";
+    private static final String GUI_MENU_ENGLISH = "GUI_MENU_ENGLISH";
+    private static final String GUI_MENU_GERMAN = "GUI_MENU_GERMAN";
+    private static final String GUI_MENU_RUSSIAN = "GUI_MENU_RUSSIAN";
+    private static final String GUI_MENU_UKRAINIAN = "GUI_MENU_UKRAINIAN";
+    private static final String GUI_MENU_REPRESENTATION_MODE = "GUI_MENU_REPRESENTATION_MODE";
+    private static final String GUI_FORMULA_MODE = "GUI_FORMULA_MODE";
+    private static final String GUI_MENU_TEXT_MODE = "GUI_MENU_TEXT_MODE";
+    private static final String GUI_MENU_ABOUT = "GUI_MENU_ABOUT";
+    private static final String GUI_MENU_OPTIONS = "GUI_MENU_OPTIONS";
+    private static final String GUI_MENU_OUTPUT_OPTIONS = "GUI_MENU_OUTPUT_OPTIONS";
+    private static final String GUI_MENU_GRAPHIC_OPTIONS = "GUI_MENU_GRAPHIC_OPTIONS";
+    private static final String GUI_APPROX = "GUI_APPROX";
+    private static final String GUI_LATEX_CODE = "GUI_LATEX_CODE";
+    private static final String GUI_CLEAR = "GUI_CLEAR";
+    private static final String GUI_INPUT = "GUI_INPUT";
+    private static final String GUI_CANCEL = "GUI_CANCEL";
+    private static final String GUI_STOP_ROTATION = "GUI_STOP_ROTATION";
+    private static final String GUI_ERROR = "GUI_ERROR";
+    private static final String GUI_UNEXPECTED_EXCEPTION = "GUI_UNEXPECTED_EXCEPTION";
+    private static final String GUI_EQUIVALENT_TO = "GUI_EQUIVALENT_TO";
+    private static final String GUI_HelpDialogGUI_GENERALITIES = "GUI_HelpDialogGUI_GENERALITIES";
+    private static final String GUI_HelpDialogGUI_MATH_FORMULAS = "GUI_HelpDialogGUI_MATH_FORMULAS";
+    private static final String GUI_HelpDialogGUI_LOGICAL_EXPRESSION = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION";
+    private static final String GUI_HelpDialogGUI_OPERATORS = "GUI_HelpDialogGUI_OPERATORS";
+    private static final String GUI_HelpDialogGUI_COMMANDS = "GUI_HelpDialogGUI_COMMANDS";
+    private static final String GUI_HelpDialogGUI_BUG_REPORT = "GUI_HelpDialogGUI_BUG_REPORT";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER";
+    private static final String GUI_OutputOptionsDialogGUI_SAVE_BUTTON = "GUI_OutputOptionsDialogGUI_SAVE_BUTTON";
+    private static final String GUI_OutputOptionsDialogGUI_CANCEL_BUTTON = "GUI_OutputOptionsDialogGUI_CANCEL_BUTTON";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_LOGARITHM_OPTION";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_NO_FACTPRIZATION_OPTION";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND";
+    private static final String GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME = "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME";
+    private static final String GUI_GraphicOptionsDialogGUI_SAVE_BUTTON = "GUI_GraphicOptionsDialogGUI_SAVE_BUTTON";
+    private static final String GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON = "GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON";
+    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT";
+    private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK";
+    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH";
+    private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY";
+    private static final String GUI_LegendGUI_CONTROLS = "GUI_LegendGUI_CONTROLS";
+    private static final String GUI_LegendGUI_GRAPH = "GUI_LegendGUI_GRAPH";
+    private static final String GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION";
+    private static final String GUI_LegendGUI_PARAMETERIZED_CURVE = "GUI_LegendGUI_PARAMETERIZED_CURVE";
+    private static final String GUI_LegendGUI_VECTORFIELD = "GUI_LegendGUI_VECTORFIELD";
+
     public static final Color BACKGROUND_COLOR = new Color(255, 150, 0);
 
     private final JLabel legendLabel;
@@ -151,6 +152,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelCurves3D graphicPanelCurves3D;
     @GraphicPanel
     private static GraphicPanelImplicit2D graphicPanelImplicit2D;
+    @GraphicPanel
+    private static GraphicPanelImplicit3D graphicPanelImplicit3D;
     @GraphicPanel
     private static GraphicPanelPolar graphicPanelPolar;
     @GraphicPanel
@@ -298,6 +301,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanel3D = new GraphicPanel3D();
         add(graphicPanel3D);
 
+        graphicPanelImplicit3D = new GraphicPanelImplicit3D();
+        add(graphicPanelImplicit3D);
+
         graphicPanelCurves3D = new GraphicPanelCurves3D();
         add(graphicPanelCurves3D);
 
@@ -331,6 +337,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelCurves2D(graphicPanelCurves2D);
         MathCommandCompiler.setGraphicPanelCurves3D(graphicPanelCurves3D);
         MathCommandCompiler.setGraphicPanelImplicit2D(graphicPanelImplicit2D);
+        MathCommandCompiler.setGraphicPanelImplicit3D(graphicPanelImplicit3D);
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar);
         MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
@@ -583,12 +590,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.plotimplicit)) {
+        } else if (c.getTypeCommand().equals(TypeCommand.plotimplicit2d)) {
             graphicPanelImplicit2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) && ((HashMap) c.getParams()[1]).size() == 2) {
             graphicPanel3D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+            rotateLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotimplicit3d)) {
+            graphicPanelImplicit3D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
@@ -934,7 +946,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void stopPossibleRotation() {
         if (isRotating) {
             isRotating = false;
-            MathToolController.stopRotationOfGraph(graphicPanel3D, graphicPanelCurves3D, rotateThread, rotateLabel);
+            MathToolController.stopRotationOfGraph(graphicPanel3D, graphicPanelImplicit3D, graphicPanelCurves3D, rotateThread, rotateLabel);
         }
     }
 
@@ -1502,6 +1514,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanel3D.getColors(), exprs);
                     break;
+                case GRAPHIMPLICIT3D: {
+                    instructions.addAll(GraphicPanelImplicit3D.getInstructions());
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION)
+                            + graphicPanelImplicit3D.getExpressions().get(0).toString()
+                            + " = "
+                            + graphicPanelImplicit3D.getExpressions().get(1).toString());
+                    ArrayList<Color> colors = new ArrayList<>();
+                    colors.add(graphicPanelImplicit3D.getColor());
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanel3D.getColors(), exprs);
+                    break;
+                }
                 case GRAPHCURVE2D: {
                     instructions.addAll(GraphicPanelCurves2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
@@ -1582,6 +1606,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHIMPLICIT2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelImplicit2D);
                     break;
+                case GRAPHIMPLICIT3D:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelImplicit3D);
+                    break;
                 case GRAPHCURVE2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelCurves2D);
                     break;
@@ -1615,9 +1642,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Prüfen, ob eine der Ausgabeobjekte mit Rechtsklick angeklickt wurde.
         for (GraphicPanelFormula formula : this.mathToolGraphicArea.getFormulas()) {
-            if (e.getSource() == formula && e.getButton() == MouseEvent.BUTTON3 
+            if (e.getSource() == formula && e.getButton() == MouseEvent.BUTTON3
                     && formula.getContainedAbstractExpression().length + formula.getContainedEditableStrings().length > 0) {
-                OutputDetailsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 500, 
+                OutputDetailsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 500,
                         formula.getContainedAbstractExpression(), formula.getContainedEditableStrings());
             }
         }

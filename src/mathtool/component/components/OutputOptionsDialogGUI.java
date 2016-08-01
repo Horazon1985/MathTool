@@ -15,6 +15,15 @@ import lang.translator.Translator;
  */
 public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplate {
 
+    private static final String GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE = "GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS";
+    private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS";
+    
     private static OutputOptionsDialogGUI instance = null;
 
     private final HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
@@ -23,7 +32,7 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
     private OutputOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
-        super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, "GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE",
+        super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE,
                 "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         loadOptions();
         initMandatorySimplifyTypes();
@@ -96,13 +105,13 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
         simplifyTypes.addAll(mandatorySimplifyTypes);
         // Checkboxen
         for (JCheckBox opt : getOptionCheckBoxes()) {
-            if (opt.getText().equals(Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS"))
+            if (opt.getText().equals(Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_algebraic_expressions);
-            } else if (opt.getText().equals(Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS"))
+            } else if (opt.getText().equals(Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_functional_relations);
-            } else if (opt.getText().equals(Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER"))
+            } else if (opt.getText().equals(Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER))
                     && opt.isSelected()) {
                 simplifyTypes.add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
             }
@@ -120,25 +129,25 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
 
     private String convertSimplifyTypeToOptionName(TypeSimplify type) {
         if (type.equals(TypeSimplify.simplify_algebraic_expressions)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS);
         }
         if (type.equals(TypeSimplify.simplify_functional_relations)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_FUNCTIONAL_RELATIONS);
         }
         if (type.equals(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_AND_COLLECT_IF_SHORTER);
         }
         if (type.equals(TypeSimplify.simplify_factorize)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_FACTORIZE);
         }
         if (type.equals(TypeSimplify.simplify_expand_powerful)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND);
         }
         if (type.equals(TypeSimplify.simplify_collect_logarithms)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_COLLECT_LOGARITHMS);
         }
         if (type.equals(TypeSimplify.simplify_expand_logarithms)) {
-            return Translator.translateOutputMessage("GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS");
+            return Translator.translateOutputMessage(GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_EXPAND_LOGARITHMS);
         }
         return "";
     }
