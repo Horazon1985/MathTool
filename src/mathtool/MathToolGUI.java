@@ -1208,6 +1208,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     isRotating = true;
                     graphicPanel3D.setIsRotating(true);
                     break;
+                case GRAPHIMPLICIT3D:
+                    rotateThread = new Thread(graphicPanelImplicit3D, "rotateGraphImplicit3D");
+                    isRotating = true;
+                    graphicPanelImplicit3D.setIsRotating(true);
+                    break;
                 case GRAPHCURVE3D:
                     rotateThread = new Thread(graphicPanelCurves3D, "rotateGraphCurve3D");
                     isRotating = true;
@@ -1231,6 +1236,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
             switch (typeGraphic) {
                 case GRAPH3D:
                     graphicPanel3D.setIsRotating(false);
+                    break;
+                case GRAPHIMPLICIT3D:
+                    graphicPanelImplicit3D.setIsRotating(false);
                     break;
                 case GRAPHCURVE3D:
                     graphicPanelCurves3D.setIsRotating(false);
@@ -1523,7 +1531,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelImplicit3D.getColor());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            instructions, graphicPanel3D.getColors(), exprs);
+                            instructions, colors, exprs);
                     break;
                 }
                 case GRAPHCURVE2D: {
