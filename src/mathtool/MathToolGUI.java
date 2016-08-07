@@ -1494,7 +1494,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         if (e.getSource() == legendLabel && e.getButton() == MouseEvent.BUTTON1) {
             switch (typeGraphic) {
                 case GRAPH2D:
-                    instructions.addAll(graphicPanel2D.getInstructions());
+                    instructions.addAll(GraphicPanel2D.getInstructions());
                     for (int i = 0; i < graphicPanel2D.getExpressions().size(); i++) {
                         exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_GRAPH) + (i + 1) + ": " + graphicPanel2D.getExpressions().get(i).toString());
                     }
@@ -1502,7 +1502,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                             instructions, graphicPanel2D.getColors(), exprs);
                     break;
                 case GRAPHIMPLICIT2D: {
-                    instructions.addAll(graphicPanelImplicit2D.getInstructions());
+                    instructions.addAll(GraphicPanelImplicit2D.getInstructions());
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION)
                             + graphicPanelImplicit2D.getExpressions().get(0).toString()
                             + " = "

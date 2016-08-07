@@ -652,8 +652,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plot2d(f_1(var), ..., f_n(var), var, x_0, x_1), f_i(var): 
-         Ausdruck in einer Variablen. x_0 < x_1: Grenzen des Zeichenbereichs.
+         Struktur: plot2d(f_1(x), ..., f_n(x), x, x_0, x_1). f_i: Ausdruck in einer 
+         Variablen x. x_0 < x_1: Grenzen des Zeichenbereichs.
          */
         if (params.length < 4) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D"));
@@ -712,7 +712,7 @@ public abstract class MathCommandCompiler {
 
         /*
          Struktur: plotimplicit2d(F(x, y) = G(x, y), x, y, x_0, x_1, y_0, y_1). 
-         F, G: Ausdrücke in höchstens zwei Variablen x, y. x_0 < x_1,
+         F, G: Ausdrücke in höchstens drei Variablen x, y, z. x_0 < x_1,
          y_0 < y_1: Grenzen des Zeichenbereichs.
          */
         if (params.length != 7) {
@@ -778,10 +778,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlot3D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plot3d(F_1(var1, var2), ..., F_n(var1, var2), value_1, value_2, value_3,
-         value_4) F_i: Ausdruck in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
+         Struktur: plot3d(f_1(x, y), ..., f_n(x, y), x, y, x_0, x_1, y_0, y_1) f_i: Ausdruck 
+         in höchstens zwei Variablen x und y. x_0 < x_1, y_0 < y_1: Grenzen des Zeichenbereichs.
          */
         if (params.length < 7) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT3D"));
@@ -911,8 +909,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotCurve2D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotcurve2d(matexpr(var), var, t_0, t_1), matexpr(var): 
-         Matrizenusdruck in einer Variablen. t_0 < t_1: Grenzen des Zeichenbereichs.
+         Struktur: plotcurve2d(f(t), t, t_0, t_1), f(t): 
+         Matrizenusdruck in einer Variablen t. t_0 < t_1: Grenzen des Zeichenbereichs.
          */
         if (params.length != 4) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE2D"));
@@ -968,8 +966,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotCurve3D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotcurve2d(matexpr(var), var, t_0, t_1), matexpr(var): 
-         Matrizenusdruck in einer Variablen. t_0 < t_1: Grenzen des Zeichenbereichs.
+         Struktur: plotcurve3d(f(t), t, t_0, t_1), f(t): 
+         Matrizenusdruck in einer Variablen t. t_0 < t_1: Grenzen des Zeichenbereichs.
          */
         if (params.length != 4) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTCURVE3D"));
@@ -1025,10 +1023,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotCylindrical(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotcylindrical(F_1(var_1, var_2), ..., F_n(var_1, var_2), var_1, var_2, value_1, value_2, value_3,
-         value_4) F_i: Ausdruck in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
+         Struktur: plotcylindrical(F_1(s, t), ..., F_n(s, t), s, t, s_0, s_1, t_0, t_1). 
+         F_i: Ausdruck in höchstens zwei Variablen s und t. s_0 < s_1, t_0 < t_1: Grenzen des Zeichenbereichs.
          */
         if (params.length < 7) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTCYLINDRICAL"));
@@ -1090,10 +1086,8 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotSpherical(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotspherical(F_1(var_1, var_2), ..., F_n(var_1, var_2), var_1, var_2, value_1, value_2, value_3,
-         value_4) F_i: Ausdruck in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
+         Struktur: plotspherical(F_1(s, t), ..., F_n(s, t), s, t, s_0, s_1, t_0, t_1). 
+         F_i: Ausdruck in höchstens zwei Variablen s und t. s_0 < s_1, t_0 < t_1: Grenzen des Zeichenbereichs.
          */
         if (params.length < 7) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTSPHERICAL"));
@@ -1155,7 +1149,7 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotVectorField2D(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotvectorfield2d(matexpr(x, y), x, y, x_0, x_1, y_0, y_1), matexpr(x, y): 
+         Struktur: plotvectorfield2d(f(x, y), x, y, x_0, x_1, y_0, y_1), f(x, y): 
          Matrizenusdruck in zwei Variablen. x_0 < x_1, y_0 < y_1: Grenzen des Zeichenbereichs.
          */
         if (params.length != 7) {
@@ -1271,23 +1265,17 @@ public abstract class MathCommandCompiler {
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
         /*
-         Struktur: plotpolar(EXPRESSION_1(var), ..., EXPRESSION_n(var), value_1,
-         value_2) EXPRESSION_i(var): Ausdruck in einer Variablen. value_1 <
-         value_2: Grenzen des Zeichenbereichs ODER: PLOT(EXPRESSION_1(var1,
-         var2) = EXPRESSION_2(var1, var2), value_1, value_2, value_3, value_4)
-         (Plot der Lösungsmenge {EXPRESSION_1 = EXPRESSION_2}) EXPRESSION_1,
-         EXPRESSION_2: Ausdrücke in höchstens zwei Variablen. value_1 <
-         value_2, value_3 < value_4: Grenzen des Zeichenbereichs. Die beiden
-         Variablen werden dabei alphabetisch geordnet.
+         Struktur: plotpolar(f_1(t), ..., f_n(t), t, t_0, t_1). f_i(t): Ausdruck in 
+         einer Variablen t. t_0 < t_1: Grenzen des Zeichenbereichs..
          */
-        if (params.length < 3) {
+        if (params.length < 4) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR"));
         }
 
         Object[] commandParams = new Object[params.length];
         HashSet<String> vars = new HashSet<>();
 
-        for (int i = 0; i < params.length - 2; i++) {
+        for (int i = 0; i < params.length - 3; i++) {
             try {
                 commandParams[i] = Expression.build(params[i], null);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
@@ -1296,7 +1284,14 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        if (vars.size() > 1) {
+        if (!Expression.isValidDerivativeOfIndeterminate(params[params.length - 3])) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTPOLAR", params.length - 2));
+        }
+        
+        commandParams[params.length - 3] = params[params.length - 3];
+        vars.remove(params[params.length - 3]);
+        
+        if (!vars.isEmpty()) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR", vars.size()));
         }
 
@@ -2423,6 +2418,7 @@ public abstract class MathCommandCompiler {
 
         // Graphen zeichnen.
         graphicPanel2D.setVarAbsc(var);
+        graphicPanel2D.setSpecialPoints((double[][]) null);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
         // Alte Legende schließen
         LegendGUI.close();
@@ -2602,7 +2598,7 @@ public abstract class MathCommandCompiler {
         }
 
         MarchingCube[][][] implicitGraph = NumericalMethods.solveImplicitEquation3D(expr, varAbsc, varOrd, varAppl, xStart, xEnd, yStart, yEnd, zStart, zEnd);
-        
+
         // Graphen zeichnen.
         graphicPanelImplicit3D.setParameters(varAbsc, varOrd, varAppl, 150, 200, 30, 30);
         graphicPanelImplicit3D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
@@ -2611,7 +2607,7 @@ public abstract class MathCommandCompiler {
         LegendGUI.close();
 
     }
-    
+
     @Execute(type = TypeCommand.plotcurve2d)
     private static void executePlotCurve2D(Command command) throws EvaluationException {
 
@@ -2737,7 +2733,6 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        HashSet<String> vars = new HashSet<>();
         ArrayList<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
@@ -2751,7 +2746,6 @@ public abstract class MathCommandCompiler {
                         expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
-                exprSimplified.addContainedIndeterminates(vars);
             }
 
         }
@@ -2776,13 +2770,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR", exprs.size() + 1, exprs.size() + 2));
         }
 
-        // Falls der Ausdruck expr konstant ist, soll die Achse die Bezeichnung "x" tragen.
-        if (vars.isEmpty()) {
-            vars.add(NotationLoader.FREE_REAL_PARAMETER_VAR);
-        }
-
-        Iterator iter = vars.iterator();
-        String var = (String) iter.next();
+        String var = (String) command.getParams()[command.getParams().length - 3];
 
         // Graphen zeichnen.
         graphicPanelPolar2D.setVar(var);
