@@ -2423,7 +2423,6 @@ public abstract class MathCommandCompiler {
 
         // Graphen zeichnen.
         graphicPanel2D.setVarAbsc(var);
-        graphicPanel2D.setSpecialPoints(false);
         graphicPanel2D.drawGraphs2D(x_0, x_1, exprs);
         // Alte Legende schließen
         LegendGUI.close();

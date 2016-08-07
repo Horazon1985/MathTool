@@ -71,7 +71,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_LEGEND = "GUI_LEGEND";
     private static final String GUI_SAVE = "GUI_SAVE";
     private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";
-    private static final String LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE = "LEB_LogicalExpression_EXPRESSION_EMPTY_OR_INCOMPLETE";
     private static final String GUI_MENU_FILE = "GUI_MENU_FILE";
     private static final String GUI_MENU_OPEN = "GUI_MENU_OPEN";
     private static final String GUI_MENU_SAVE = "GUI_MENU_SAVE";
