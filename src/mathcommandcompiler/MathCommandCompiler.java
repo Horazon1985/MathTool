@@ -2736,7 +2736,7 @@ public abstract class MathCommandCompiler {
         ArrayList<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
-        for (int i = 0; i < command.getParams().length - 2; i++) {
+        for (int i = 0; i < command.getParams().length - 3; i++) {
 
             expr = (Expression) command.getParams()[i];
             exprSimplified = expr.simplify(simplifyTypesPlot);
