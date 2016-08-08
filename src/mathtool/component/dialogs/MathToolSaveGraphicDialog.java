@@ -1,14 +1,14 @@
 package mathtool.component.dialogs;
 
-import graphic.Exportable;
+import graphic.AbstractGraphicPanel;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 
 public class MathToolSaveGraphicDialog extends JFileChooser {
 
-    private final Exportable image;
+    private final AbstractGraphicPanel image;
 
-    public MathToolSaveGraphicDialog(Exportable image) {
+    public MathToolSaveGraphicDialog(AbstractGraphicPanel image) {
         this.image = image;
     }
 
