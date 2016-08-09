@@ -49,6 +49,7 @@ import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelFormula;
 import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
+import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
 import graphic.GraphicPanelVectorField3D;
 import java.awt.event.KeyAdapter;
@@ -125,6 +126,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY";
     private static final String GUI_LegendGUI_CONTROLS = "GUI_LegendGUI_CONTROLS";
     private static final String GUI_LegendGUI_GRAPH = "GUI_LegendGUI_GRAPH";
+    private static final String GUI_LegendGUI_PARAMETRIZED_SURFACE = "GUI_LegendGUI_PARAMETRIZED_SURFACE";
     private static final String GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION = "GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION";
     private static final String GUI_LegendGUI_PARAMETERIZED_CURVE = "GUI_LegendGUI_PARAMETERIZED_CURVE";
     private static final String GUI_LegendGUI_VECTORFIELD = "GUI_LegendGUI_VECTORFIELD";
@@ -159,6 +161,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelCylindrical graphicPanelCylindrical;
     @GraphicPanel
     private static GraphicPanelSpherical graphicPanelSpherical;
+    @GraphicPanel
+    private static GraphicPanelSurface graphicPanelSurface;
     @GraphicPanel
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
     @GraphicPanel
@@ -312,6 +316,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelSpherical = new GraphicPanelSpherical();
         add(graphicPanelSpherical);
 
+        graphicPanelSurface = new GraphicPanelSurface();
+        add(graphicPanelSurface);
+
         graphicPanelVectorField2D = new GraphicPanelVectorField2D();
         add(graphicPanelVectorField2D);
 
@@ -340,6 +347,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelPolar2D(graphicPanelPolar);
         MathCommandCompiler.setGraphicPanelCylindrical(graphicPanelCylindrical);
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
+        MathCommandCompiler.setGraphicPanelSurface(graphicPanelSurface);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
 //        MathCommandCompiler.setGraphicPanelVectorField3D(graphicPanelVectorField3D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
@@ -518,6 +526,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
+     * Getter für graphicPanelSurface
+     */
+    public static GraphicPanelSurface getGraphicPanelSurface() {
+        return graphicPanelSurface;
+    }
+
+    /**
      * Gibt mittels Reflection ein Array mit allen GraphicPanels zurück.
      */
     private static JPanel[] getAllGraphicPanels() {
@@ -623,6 +638,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
             rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotspherical)) {
             graphicPanelSpherical.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+            rotateLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotsurface)) {
+            graphicPanelSurface.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
             rotateLabel.setVisible(true);
@@ -1222,10 +1242,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     isRotating = true;
                     graphicPanelCylindrical.setIsRotating(true);
                     break;
-                default:
+                case GRAPHSPHERICAL:
                     rotateThread = new Thread(graphicPanelSpherical, "rotateGraphSpherical");
                     isRotating = true;
                     graphicPanelSpherical.setIsRotating(true);
+                    break;
+                case GRAPHSURFACE:
+                    rotateThread = new Thread(graphicPanelSurface, "rotateGraphSurface");
+                    isRotating = true;
+                    graphicPanelSurface.setIsRotating(true);
+                    break;
+                default:
                     break;
             }
             rotateThread.start();
@@ -1245,8 +1272,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case GRAPHCYLINDRCAL:
                     graphicPanelCylindrical.setIsRotating(false);
                     break;
-                default:
+                case GRAPHSPHERICAL:
                     graphicPanelSpherical.setIsRotating(false);
+                    break;
+                case GRAPHSURFACE:
+                    graphicPanelSurface.setIsRotating(false);
+                    break;
+                default:
                     break;
             }
             rotateThread.interrupt();
@@ -1582,6 +1614,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, graphicPanelSpherical.getColors(), exprs);
                     break;
+                case GRAPHSURFACE:
+                    instructions.addAll(GraphicPanelSurface.getInstructions());
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_PARAMETRIZED_SURFACE)
+                            + "(" + graphicPanelSurface.getExpressions()[0]
+                            + ", " + graphicPanelSurface.getExpressions()[1]
+                            + ", " + graphicPanelSurface.getExpressions()[2] + ")"
+                    );
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, graphicPanelSurface.getColors(), exprs);
+                    break;
                 case VECTORFIELD2D:
                     instructions.addAll(GraphicPanelVectorField2D.getInstructions());
                     ArrayList<Color> colors = new ArrayList<>();
@@ -1630,6 +1672,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case GRAPHSPHERICAL:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelSpherical);
+                    break;
+                case GRAPHSURFACE:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelSurface);
                     break;
                 case VECTORFIELD2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);

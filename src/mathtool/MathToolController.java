@@ -437,6 +437,9 @@ public class MathToolController {
         if (commandName.equals(TypeCommand.plotcylindrical.name()) || commandName.equals(TypeCommand.plotspherical.name())) {
             return 6;
         }
+        if (commandName.equals(TypeCommand.plotsurface.name())) {
+            return 6;
+        }
         if (commandName.equals(TypeCommand.plotvectorfield2d.name())) {
             return 6;
         }
