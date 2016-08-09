@@ -1162,14 +1162,14 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTSURFACE"));
         }
 
-        Object[] commandParams = new Object[params.length];
+        Object[] commandParams = new Object[7];
         HashSet<String> vars = new HashSet<>();
 
         try {
             commandParams[0] = MatrixExpression.build(params[0], null);
             ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSURFACE", 1, e.getMessage()));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTSURFACE", 1, e.getMessage()));
         }
 
         if (vars.size() > 2) {

@@ -531,6 +531,9 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plotspherical)){
             return TypeGraphic.GRAPHSPHERICAL;
         }
+        if (c.getTypeCommand().equals(TypeCommand.plotsurface)){
+            return TypeGraphic.GRAPHSURFACE;
+        }
         if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)){
             return TypeGraphic.VECTORFIELD2D;
         }
