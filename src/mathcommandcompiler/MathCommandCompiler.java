@@ -1049,7 +1049,7 @@ public abstract class MathCommandCompiler {
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL", String.valueOf(vars.size())));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL", vars.size()));
         }
 
         HashSet<String> varsInParams = new HashSet<>();
@@ -1112,7 +1112,7 @@ public abstract class MathCommandCompiler {
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL", String.valueOf(vars.size())));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL", vars.size()));
         }
 
         HashSet<String> varsInParams = new HashSet<>();
@@ -1173,7 +1173,7 @@ public abstract class MathCommandCompiler {
         }
 
         if (vars.size() > 2) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSURFACE", String.valueOf(vars.size())));
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSURFACE", vars.size()));
         }
 
         HashSet<String> varsInParams = new HashSet<>();

@@ -512,6 +512,13 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
+     * Getter für graphicPanelImplicit3D
+     */
+    public static GraphicPanelImplicit3D getGraphicPanelImplicit3D() {
+        return graphicPanelImplicit3D;
+    }
+
+    /**
      * Getter für graphicPanelCylindrical
      */
     public static GraphicPanelCylindrical getGraphicPanelCylindrical() {
