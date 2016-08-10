@@ -1,5 +1,6 @@
 package mathtool.component.components;
 
+import graphic.AbstractGraphicPanel3D;
 import graphic.GraphicPanel3D;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelImplicit3D;
@@ -22,22 +23,11 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
     
     private static GraphicOptionsDialogGUI instance = null;
 
-    private final GraphicPanel3D graphicPanel3D;
-    private final GraphicPanelImplicit3D graphicPanelImplicit3D;
-    private final GraphicPanelCylindrical graphicPanelCylindrical;
-    private final GraphicPanelSpherical graphicPanelSpherical;
-    private final GraphicPanelSurface graphicPanelSurface;
-    
     private GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE,
                 "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
-        this.graphicPanel3D = MathToolGUI.getGraphicPanel3D();
-        this.graphicPanelImplicit3D = MathToolGUI.getGraphicPanelImplicit3D();
-        this.graphicPanelCylindrical = MathToolGUI.getGraphicPanelCylindrical();
-        this.graphicPanelSpherical = MathToolGUI.getGraphicPanelSpherical();
-        this.graphicPanelSurface = MathToolGUI.getGraphicPanelSurface();
         loadOptions();
         
         addWindowListener(new WindowAdapter() {
@@ -77,12 +67,12 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
         JComboBox<String> comboBoxPresentationMode = comboBoxes.get(1);
         
         for (int i = 0; i < comboBoxBackgroundColor.getModel().getSize(); i++) {
-            if (comboBoxBackgroundColor.getModel().getElementAt(i).equals(convertBackgroundColorModeToOptionName(graphicPanel3D.getBackgroundColorMode()))) {
+            if (comboBoxBackgroundColor.getModel().getElementAt(i).equals(convertBackgroundColorModeToOptionName(AbstractGraphicPanel3D.getBackgroundColorMode()))) {
                 comboBoxBackgroundColor.setSelectedIndex(i);
             }
         }
         for (int i = 0; i < comboBoxPresentationMode.getModel().getSize(); i++) {
-            if (comboBoxPresentationMode.getModel().getElementAt(i).equals(convertPresentationModeToOptionName(graphicPanel3D.getPresentationMode()))) {
+            if (comboBoxPresentationMode.getModel().getElementAt(i).equals(convertPresentationModeToOptionName(AbstractGraphicPanel3D.getPresentationMode()))) {
                 comboBoxPresentationMode.setSelectedIndex(i);
             }
         }
@@ -97,32 +87,16 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
 
         // Hintergrundfarbe wählen.
         if (comboBoxBackgroundColor.getItemAt(comboBoxBackgroundColor.getSelectedIndex()).equals(Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT))) {
-            this.graphicPanel3D.setBackgroundColorMode(GraphicPanel3D.BackgroundColorMode.BRIGHT);
-            this.graphicPanelImplicit3D.setBackgroundColorMode(GraphicPanelImplicit3D.BackgroundColorMode.BRIGHT);
-            this.graphicPanelCylindrical.setBackgroundColorMode(GraphicPanelCylindrical.BackgroundColorMode.BRIGHT);
-            this.graphicPanelSpherical.setBackgroundColorMode(GraphicPanelSpherical.BackgroundColorMode.BRIGHT);
-            this.graphicPanelSurface.setBackgroundColorMode(GraphicPanelSurface.BackgroundColorMode.BRIGHT);
+            AbstractGraphicPanel3D.setBackgroundColorMode(AbstractGraphicPanel3D.BackgroundColorMode.BRIGHT);
         } else if (comboBoxBackgroundColor.getItemAt(comboBoxBackgroundColor.getSelectedIndex()).equals(Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK))) {
-            this.graphicPanel3D.setBackgroundColorMode(GraphicPanel3D.BackgroundColorMode.DARK);
-            this.graphicPanelImplicit3D.setBackgroundColorMode(GraphicPanelImplicit3D.BackgroundColorMode.DARK);
-            this.graphicPanelCylindrical.setBackgroundColorMode(GraphicPanelCylindrical.BackgroundColorMode.DARK);
-            this.graphicPanelSpherical.setBackgroundColorMode(GraphicPanelSpherical.BackgroundColorMode.DARK);
-            this.graphicPanelSurface.setBackgroundColorMode(GraphicPanelSurface.BackgroundColorMode.DARK);
+            AbstractGraphicPanel3D.setBackgroundColorMode(AbstractGraphicPanel3D.BackgroundColorMode.DARK);
         }
 
         // Rastermodus wählen.
         if (comboBoxPresentationMode.getItemAt(comboBoxPresentationMode.getSelectedIndex()).equals(Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH))) {
-            this.graphicPanel3D.setPresentationMode(GraphicPanel3D.PresentationMode.WHOLE_GRAPH);
-            this.graphicPanelImplicit3D.setPresentationMode(GraphicPanelImplicit3D.PresentationMode.WHOLE_GRAPH);
-            this.graphicPanelCylindrical.setPresentationMode(GraphicPanelCylindrical.PresentationMode.WHOLE_GRAPH);
-            this.graphicPanelSpherical.setPresentationMode(GraphicPanelSpherical.PresentationMode.WHOLE_GRAPH);
-            this.graphicPanelSurface.setPresentationMode(GraphicPanelSurface.PresentationMode.WHOLE_GRAPH);
+            AbstractGraphicPanel3D.setPresentationMode(AbstractGraphicPanel3D.PresentationMode.WHOLE_GRAPH);
         } else if (comboBoxPresentationMode.getItemAt(comboBoxPresentationMode.getSelectedIndex()).equals(Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY))) {
-            this.graphicPanel3D.setPresentationMode(GraphicPanel3D.PresentationMode.GRID_ONLY);
-            this.graphicPanelImplicit3D.setPresentationMode(GraphicPanelImplicit3D.PresentationMode.GRID_ONLY);
-            this.graphicPanelCylindrical.setPresentationMode(GraphicPanelCylindrical.PresentationMode.GRID_ONLY);
-            this.graphicPanelSpherical.setPresentationMode(GraphicPanelSpherical.PresentationMode.GRID_ONLY);
-            this.graphicPanelSurface.setPresentationMode(GraphicPanelSurface.PresentationMode.GRID_ONLY);
+            AbstractGraphicPanel3D.setPresentationMode(AbstractGraphicPanel3D.PresentationMode.GRID_ONLY);
         }
         
     }
