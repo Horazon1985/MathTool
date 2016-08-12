@@ -382,7 +382,7 @@ public abstract class MathCommandCompiler {
      * Parameter params enthalten keine Leerzeichen mehr. Diese wurden bereits
      * im Vorfeld beseitigt.
      *
-     * @throws ExpressionException, EvaluationException
+     * @throws ExpressionException
      */
     public static Command getCommand(String commandName, String[] params) throws ExpressionException {
 
