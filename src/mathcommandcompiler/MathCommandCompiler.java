@@ -2975,7 +2975,7 @@ public abstract class MathCommandCompiler {
 
         // Graphen zeichnen.
         graphicPanelSpherical.setParameters((String) command.getParams()[command.getParams().length - 6], (String) command.getParams()[command.getParams().length - 5], 150, 200, 30, 30);
-        graphicPanelSpherical.drawCylindricalGraphs3D(phi_0, phi_1, tau_0, tau_1, exprs);
+        graphicPanelSpherical.drawSphericalGraphs3D(phi_0, phi_1, tau_0, tau_1, exprs);
         // Alte Legende schließen
         LegendGUI.close();
 
