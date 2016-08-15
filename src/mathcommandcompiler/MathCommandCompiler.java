@@ -59,7 +59,7 @@ import graphic.GraphicPanelImplicit3D.MarchingCube;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
-import graphic.GraphicPanelVectorField3D;
+//import graphic.GraphicPanelVectorField3D;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

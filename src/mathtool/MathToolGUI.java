@@ -51,7 +51,7 @@ import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
-import graphic.GraphicPanelVectorField3D;
+//import graphic.GraphicPanelVectorField3D;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
 import mathtool.component.dialogs.MathToolSaveGraphicDialog;
@@ -165,8 +165,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelSurface graphicPanelSurface;
     @GraphicPanel
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
-    @GraphicPanel
-    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
+//    @GraphicPanel
+//    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
 
     private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
@@ -178,7 +178,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
 
-    // MathTool-Log
+    /**
+     * MathTool-Log mit allen bisher ausgeführten Befehlen.
+     */
     private static final ArrayList<String> commandList = new ArrayList<>();
 
     // Laufzeitvariablen.
@@ -322,8 +324,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelVectorField2D = new GraphicPanelVectorField2D();
         add(graphicPanelVectorField2D);
 
-        graphicPanelVectorField3D = new GraphicPanelVectorField3D();
-        add(graphicPanelVectorField3D);
+//        graphicPanelVectorField3D = new GraphicPanelVectorField3D();
+//        add(graphicPanelVectorField3D);
 
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = getAllGraphicPanels();
@@ -477,7 +479,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
-     * Setter für language
+     * Setter für language.
      */
     public static void setLanguage(TypeLanguage language) {
         Expression.setLanguage(language);
@@ -491,21 +493,21 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
-     * Getter für simplifyTypes
+     * Getter für simplifyTypes.
      */
     public static HashSet<TypeSimplify> getSimplifyTypes() {
         return simplifyTypes;
     }
 
     /**
-     * Setter für simplifyTypes
+     * Setter für simplifyTypes.
      */
     public static void setSimplifyTypes(HashSet<TypeSimplify> simplifyTypes) {
         MathToolGUI.simplifyTypes = simplifyTypes;
     }
 
     /**
-     * Gibt mittels Reflection ein Array mit allen GraphicPanels zurück.
+     * Gibt ein Array mit allen GraphicPanels zurück.
      */
     private static JPanel[] getAllGraphicPanels() {
         ArrayList<JPanel> graphicPanelsAsList = new ArrayList<>();
@@ -887,6 +889,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Fügt dem HashMap componentCaptions alle Ids der Texte hinzu, die an den
+     * entsprechenden Komponenten (welche die Keys sind) erscheinen sollen.
+     */
     private void initCaptions() {
 
         componentCaptions = new HashMap<>();
@@ -930,9 +936,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }
 
     /**
-     * Dient dazu, dass falls ein neuer Befehl eingegeben wird, während sich
-     * eine 3D-Grafik dreht, dass diese Rotation zunächst gestoppt wird. GRUND:
-     * Es kann zu Anzeigefehlern bei der 3D-Grafik kommen.
+     * Falls ein neuer Befehl eingegeben wird, während sich eine 3D-Grafik
+     * dreht, wird die Rotation dieser 3D-Grafik gestoppt wird.<br>
+     * GRUND: Es kann zu Anzeigefehlern bei der 3D-Grafik kommen.
      */
     private void stopPossibleRotation() {
         if (isRotating) {
@@ -1191,6 +1197,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         }
     }//GEN-LAST:event_inputButtonActionPerformed
 
+    /**
+     * Führt den Klick auf das Rotationslabel für eine 3D-Grafik aus. Falls die
+     * Grafik nicht rotiert, so wird sie in Rotation versetzt. Andernfalls wird
+     * die Rotation gestoppt.
+     */
     private void rotateLabelClick() {
         if (!isRotating) {
             switch (typeGraphic) {
@@ -1456,6 +1467,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
 
+    /**
+     * Key-Steuerung für die MathToolGUI.
+     */
     private void mathToolTextFieldKeyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
@@ -1604,14 +1618,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
-                case VECTORFIELD3D:
-                    instructions.addAll(GraphicPanelVectorField3D.getInstructions());
-                    colors = new ArrayList<>();
-                    colors.add(graphicPanelVectorField3D.getColor());
-                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD) + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
-                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                            instructions, colors, exprs);
-                    break;
+//                case VECTORFIELD3D:
+//                    instructions.addAll(GraphicPanelVectorField3D.getInstructions());
+//                    colors = new ArrayList<>();
+//                    colors.add(graphicPanelVectorField3D.getColor());
+//                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD) + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
+//                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+//                            instructions, colors, exprs);
+//                    break;
                 default:
                     break;
             }
@@ -1651,9 +1665,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case VECTORFIELD2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);
                     break;
-                case VECTORFIELD3D:
-                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField3D);
-                    break;
+//                case VECTORFIELD3D:
+//                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField3D);
+//                    break;
                 default:
                     break;
             }
