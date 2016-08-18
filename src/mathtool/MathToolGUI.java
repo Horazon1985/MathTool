@@ -165,8 +165,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelSurface graphicPanelSurface;
     @GraphicPanel
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
-//    @GraphicPanel
-//    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
 
     private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
@@ -324,8 +322,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelVectorField2D = new GraphicPanelVectorField2D();
         add(graphicPanelVectorField2D);
 
-//        graphicPanelVectorField3D = new GraphicPanelVectorField3D();
-//        add(graphicPanelVectorField3D);
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = getAllGraphicPanels();
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
@@ -350,7 +346,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
         MathCommandCompiler.setGraphicPanelSurface(graphicPanelSurface);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
-//        MathCommandCompiler.setGraphicPanelVectorField3D(graphicPanelVectorField3D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
 
@@ -623,11 +618,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanelVectorField2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-//        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)) {
-//            graphicPanelVectorField3D.setVisible(true);
-//            legendLabel.setVisible(true);
-//            saveLabel.setVisible(true);
-//            rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
@@ -1612,14 +1602,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
-//                case VECTORFIELD3D:
-//                    instructions.addAll(GraphicPanelVectorField3D.getInstructions());
-//                    colors = new ArrayList<>();
-//                    colors.add(graphicPanelVectorField3D.getColor());
-//                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD) + ": " + graphicPanelVectorField3D.getVectorFieldExpression().toString());
-//                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-//                            instructions, colors, exprs);
-//                    break;
                 default:
                     break;
             }
@@ -1659,9 +1641,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 case VECTORFIELD2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);
                     break;
-//                case VECTORFIELD3D:
-//                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField3D);
-//                    break;
                 default:
                     break;
             }
