@@ -542,10 +542,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
      * veranlasst, dann wird das dazu passende Panel (auf dem die Grafik
      * gezeichnet wird) angezeigt und die Ausgabefläche wird um die
      * entsprechenden Maße nach links zusammengedrückt.
-     *
-     * @throws ExpressionException
      */
-    private void activatePanelsForGraphs(String commandName, String[] params) throws ExpressionException {
+    private void activatePanelsForGraphs(String commandName, String[] params) {
 
         Command c;
         try {
