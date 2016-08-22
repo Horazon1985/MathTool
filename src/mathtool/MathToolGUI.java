@@ -547,7 +547,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     private void activatePanelsForGraphs(String commandName, String[] params) throws ExpressionException {
 
-        Command c = MathCommandCompiler.getCommand(commandName, params);
+        Command c;
+        try {
+            c = MathCommandCompiler.getCommand(commandName, params);
+        } catch (ExpressionException e) {
+            return;
+        }
 
         // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 550, getHeight() - 170,

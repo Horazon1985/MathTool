@@ -3282,8 +3282,8 @@ public abstract class MathCommandCompiler {
         } else {
             var = "x";
             if (!vars.isEmpty()) {
-                Iterator iter = vars.iterator();
-                var = (String) iter.next();
+                Iterator<String> iter = vars.iterator();
+                var = iter.next();
             }
         }
 
