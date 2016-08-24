@@ -1741,11 +1741,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MathToolGUI mathToolForm = new MathToolGUI();
-                mathToolForm.setVisible(true);
-                mathToolForm.setBounds(50, 50, 1300, 670);
-                mathToolForm.setExtendedState(MAXIMIZED_BOTH);
-                mathToolForm.getContentPane().setBackground(BACKGROUND_COLOR);
+                MathToolGUI mathToolGUI = new MathToolGUI();
+                mathToolGUI.setVisible(true);
+                mathToolGUI.setBounds(50, 50, 1300, 670);
+                mathToolGUI.setExtendedState(MAXIMIZED_BOTH);
+                mathToolGUI.getContentPane().setBackground(BACKGROUND_COLOR);
             }
         });
     }
