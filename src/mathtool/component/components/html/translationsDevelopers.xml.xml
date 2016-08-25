@@ -1,0 +1,62 @@
+<translations>
+	<ids>
+		<id>DE</id>
+		<id>EN</id>
+		<id>RU</id>
+		<id>UA</id>
+	</ids>
+	<about>
+		<DE>&Uuml;ber</DE>
+		<EN>About</EN>
+		<RU>О</RU>
+		<UA>Про</UA>
+	</about>
+	<program>
+		<DE>Programm</DE>
+		<EN>Program</EN>
+		<RU>Программа</RU>
+		<UA>Програма</UA>
+	</program>
+	<version>
+		<DE>Version</DE>
+		<EN>Version</EN>
+		<RU>Версия</RU>
+		<UA>Версія</UA>
+	</version>
+	<developer>
+		<DE>Entwickler</DE>
+		<EN>Developer</EN>
+		<RU>Разработчик</RU>
+		<UA>Розробник</UA>
+	</developer>
+	<author>
+		<DE>Sergei Kovalenko</DE>
+		<EN>Sergei Kovalenko</EN>
+		<RU>Сергей Коваленко</RU>
+		<UA>Сергій Коваленко</UA>
+	</author>
+	<system>
+		<DE>System</DE>
+		<EN>System</EN>
+		<RU>Система</RU>
+		<UA>Система</UA>
+	</system>
+	<operating_system>
+		<DE>Jedes System, welches mindestens Java 7 unterst&uuml;tzt</DE>
+		<EN>Every system, which supports Java 7 or higher Java versions</EN>
+		<RU>Любая система, которая поддерживает Java 7 или более высокую версию Java</RU>
+		<UA>Кожна система, що підтримує Java 7 або вищі версії Java</UA>
+	</operating_system>
+	<special_thanks_to>
+		<DE>Besonderer Dank gilt</DE>
+		<EN>Special thanks to</EN>
+		<RU>Особоя благодарность</RU>
+		<UA>Особлива подяка</UA>
+	</special_thanks_to>
+	<and>
+		<DE>und</DE>
+		<EN>and</EN>
+		<RU>и</RU>
+		<UA>та</UA>
+	</and>
+</translations>

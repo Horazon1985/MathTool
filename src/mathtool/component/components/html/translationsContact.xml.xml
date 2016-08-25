@@ -1,0 +1,26 @@
+<translations>
+	<ids>
+		<id>DE</id>
+		<id>EN</id>
+		<id>RU</id>
+		<id>UA</id>
+	</ids>
+	<contact>
+		<DE>Kontakt</DE>
+		<EN>Contact</EN>
+		<RU>Контакт</RU>
+		<UA>Контакт</UA>
+	</contact>
+	<contact_me_1>
+		<DE>Falls Sie Anregungen/Vorschl&auml;ge oder Fehler im Programm melden m&ouml;chten, k&ouml;nnen Sie mich gerne unter</DE>
+		<EN>If you have suggestions for improving MathTool or if you found some bugs, you are welcome to report it to</EN>
+		<RU>Если у Вас есть предложения по улучшению MathTool, или если Вы нашли баг, пожалуйста, пишите на</RU>
+		<UA>Якщо у Вас є пропозиції щодо покращення MathTool, або якщо Ви знайшли баг, будь ласка, пишіть на</UA>
+	</contact_me_1>
+	<contact_me_2>
+		<DE>erreichen. Vielen Dank!</DE>
+		<EN>Thank you a lot!</EN>
+		<RU>Большое спасибо!</RU>
+		<UA>Дякую!</UA>
+	</contact_me_2>
+</translations>
