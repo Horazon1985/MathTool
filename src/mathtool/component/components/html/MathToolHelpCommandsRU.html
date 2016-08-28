@@ -52,7 +52,7 @@ MathTool знает такие команды:<br><br>
 
 Из соображений оптимального использования памяти n не должно превышать 100000.<br><br>
 
-<strong>plot2d(F<sub>1</sub>(x), ..., F<sub>n</sub>(x), x, x<sub>1</sub>, x<sub>2</sub>):</strong> Строит график функций F<sub>1</sub>, ..., F<sub>n</sub> for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Коэффициент масштабирования может быть (почти) произвольным.<br><br>
+<strong>plot2d(F<sub>1</sub>(x), ..., F<sub>n</sub>(x), x, x<sub>1</sub>, x<sub>2</sub>):</strong> Строит график функций F<sub>1</sub>, ..., F<sub>n</sub> для x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>. Коэффициент масштабирования может быть (почти) произвольным.<br><br>
 
 <strong>plotimplicit2d(F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y), x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Строит графики решений уравнения F<sub>1</sub>(x, y) = F<sub>2</sub>(x, y) двух переменных x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Тут масштабирование и движение системы координат невозможны.<br>
 
@@ -60,17 +60,17 @@ MathTool знает такие команды:<br><br>
 
 <strong>plotimplicit3d(F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z), x, y, z, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>, z<sub>1</sub>, z<sub>2</sub>):</strong> Plots the solution of the equation F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z) in three variables in the cuboid x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>, z<sub>1</sub> &lt;= z &lt;= z<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br>
 
-<strong>plotcurve2d([F<sub>1</sub>(t); F<sub>2</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит плоскую кривую, которая параметризированна функциями x = F<sub>1</sub>(t) и y = F<sub>2</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10. Может так случиться (если вібрать "плохую" кривую), что только одна её часть будет отображена (то есть t<sub>1</sub> &lt;= t &lt;= t' для некоторго t' &lt;= t<sub>2</sub>).<br><br>
+<strong>plotcurve2d([F<sub>1</sub>(t); F<sub>2</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит плоскую кривую, которая параметризированна функциями x = F<sub>1</sub>(t) и y = F<sub>2</sub>(t) для t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10. Может так случиться (если вібрать "плохую" кривую), что только одна её часть будет отображена (то есть t<sub>1</sub> &lt;= t &lt;= t' для некоторго t' &lt;= t<sub>2</sub>).<br><br>
 
-<strong>plotcurve3d([F<sub>1</sub>(t); F<sub>2</sub>(t); F<sub>3</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит  кривую, которая параметризированна функциями x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) и z = F<sub>3</sub>(t) от t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10. Может так случиться (если вібрать "плохую" кривую), точно так же как для плоских кривых, что только одна её часть будет отображена.<br><br>
+<strong>plotcurve3d([F<sub>1</sub>(t); F<sub>2</sub>(t); F<sub>3</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит  кривую, которая параметризированна функциями x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) и z = F<sub>3</sub>(t) для t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10. Может так случиться (если вібрать "плохую" кривую), точно так же как для плоских кривых, что только одна её часть будет отображена.<br><br>
 
-<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>, ..., F<sub>n</sub> от t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, где t - угол и F<sub>i</sub>(t) - радиус в полярных координатах. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>, ..., F<sub>n</sub> для t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, где t - угол и F<sub>i</sub>(t) - радиус в полярных координатах. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
 
 <strong>plotcylindrical(F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t), r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t) для r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> и t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub> в цилиндрических координатах, где r это радиус, а t - угол. Радиус должен быть неотрицательным, разница t<sub>2</sub> - t<sub>1</sub> углов не должна превышать 20&#960; по техническим причинам. Фактор масштабирования может принимать значения между 0.1 и 10.<br><br>
 
 <strong>plotspherical(F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v), u, v, u<sub>1</sub>, u<sub>2</sub>, v<sub>1</sub>, v<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v) для u<sub>1</sub> &lt;= u &lt;= u<sub>2</sub> и v<sub>1</sub> &lt;= v &lt;= v<sub>2</sub> в цилиндрических координатах, где u это угол в x, y-плоскости и v - угол к оси z. Разницы u<sub>2</sub> - u<sub>1</sub> и v<sub>2</sub> - v<sub>1</sub> углов не должны превышать 20&#960; по техническим причинам. Фактор масштабирования может принимать значения между 0.1 и 10.<br><br>
 
-<strong>plotsurface([F<sub>1</sub>(s, t); F<sub>2</sub>(s, t); F<sub>3</sub>(s, t)], s, t, s<sub>1</sub>, s<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the surface which is given by the component functions x = F<sub>1</sub>(s, t), y = F<sub>2</sub>(s, t) and z = F<sub>3</sub>(s, t) for s<sub>1</sub> &lt;= s &lt;= s<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
+<strong>plotsurface([F<sub>1</sub>(s, t); F<sub>2</sub>(s, t); F<sub>3</sub>(s, t)], s, t, s<sub>1</sub>, s<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит поверхность, которая задана компонентными функциями x = F<sub>1</sub>(s, t), y = F<sub>2</sub>(s, t) and z = F<sub>3</sub>(s, t) для s<sub>1</sub> &lt;= s &lt;= s<sub>2</sub> и t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
 
 <strong>plotvectorfield2d([F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)], x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Строит векторное поле [F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)] для x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub> и y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Фактор масштабирования может быть (почти) любым.<br><br>
 
@@ -93,7 +93,7 @@ MathTool знает такие команды:<br><br>
 
 <strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, y, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Возвращает числовые решения дифференциального уравнения y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> на интервале x_0 &lt;= x &lt;= x<sub>1</sub>. Для числовых рассчётов, интервал [x<sub>0</sub>, x<sub>1</sub>] разделяется на 1000 подинтервалов и MathTool возвращает все 1001 значения функции в соответствующих точках.<br><br>
 
-<em>Пример:</em> solvediffeq(-y,t,y,2,0,10,1,0) вернёт числовые решения дифференциального уравнения y''(t) = -y(t), y(0) = 1, y'(0) = 0 for 0 &lt;= t &lt;= 10. Тут MathTool вернет 1001 значение y(t), поскольку прирост равен 0.01.<br><br>
+<em>Пример:</em> solvediffeq(-y,t,y,2,0,10,1,0) вернёт числовые решения дифференциального уравнения y''(t) = -y(t), y(0) = 1, y'(0) = 0 для 0 &lt;= t &lt;= 10. Тут MathTool вернет 1001 значение y(t), поскольку прирост равен 0.01.<br><br>
 
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Возвращает уравнение касательного пространства к графику F в точке (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Пример:</em> tangent(x^3+x/2+3,x=2) вернёт такое уравнение:<br>
@@ -112,7 +112,7 @@ MathTool знает такие команды:<br><br>
 
 <p style="text-align: center;">1 + t^4/24 + t^8/40320-(t^2/2 + t^6/720 + t^10/3628800).</p><br>
 
-<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Removes the functions f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
+<strong>undeffuncs(f<sub>1</sub>, ..., f<sub>n</sub>):</strong> Удаляет функции f<sub>1</sub>, ..., f<sub>n</sub>.<br><br>
 
 <strong>undefvars(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Переменные x<sub>1</sub>, ..., x<sub>n</sub> снова являются свободными переменными, то есть им не присвоено никакое значение.<br><br>
 
