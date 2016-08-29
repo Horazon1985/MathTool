@@ -1,0 +1,44 @@
+<translations>
+	<ids>
+		<id>DE</id>
+		<id>EN</id>
+		<id>RU</id>
+		<id>UA</id>
+	</ids>
+	<logical_expressions>
+		<DE>Logische Ausdr&uuml;cke</DE>
+		<EN>Logical Expressions</EN>
+		<RU>Лигические выражения</RU>
+		<UA>Логічні вирази</UA>
+	</logical_expressions>
+	<mathtool_understands_logical_expressions>
+		<DE>MathTool versteht, ebenso wie arithmetische Ausdr&uuml;cke, auch logische Ausdr&uuml;cke und kann diese auswerten. Die Operatoren !, &, |, > und = entsprechen den logischen Operatoren NEGATION, UND, ODER, IMPLIKATION und ÄQUIVALENZ</DE>
+		<EN>MathTool can also understand and compute logical expressions. The operators !, &, |, > and = correspond to the logical operators NEGATION, AND, OR, IMPLICATION and EQUIVALENCE</EN>
+		<RU>MathTool может также понимать логические выражения а также вычислять их значения. Операторы !, &, |, > и = соответствуют логическим операторам NEGATION, AND, OR, IMPLICATION и EQUIVALENCE</RU>
+		<UA>MathTool може також розуміти та оцінювати логічні вирази. Оператори !, &, |, > та = відповідають логічним операторам NEGATION, AND, OR, IMPLICATION та EQUIVALENCE</UA>
+	</mathtool_understands_logical_expressions>
+	<important>
+		<DE>Wichtig</DE>
+		<EN>Important</EN>
+		<RU>Важно</RU>
+		<UA>Важливо</UA>
+	</important>
+	<warning>
+		<DE>Obwohl UND- bzw. ODER-Operatoren oft durch * bzw. + bezeichnet werden, akzeptiert MathTool diese Schreibweise nicht, wenn es mit logischen Ausdr&uuml;cken operiert. Dies dient dazu, um Missverst&auml;ndnissen beim Kompilieren vorzubeugen. Ansonsten w&uuml;rde MathTool beispielsweise nicht wissen, ob es sich bei</DE>
+		<EN>Although the AND and OR operators, respectively, are often denoted by * and +, respectively, MathTool does not accept this notation when it deals with logical expressions. This serves to prevent misunderstandings when compiling. Otherwise, MathTool would not know, if</EN>
+		<RU>Несмотря на то, что операторы AND и OR часто обозначают * и +, соответственно, MathTool не допускает этого для логических выражений. Это предотвращает недоразумения при компиляции. Иначе MathTool не знал бы, является ли</RU>
+		<UA>Попри те, що оператори AND та OR часто позначаються * та +, відповідно, MathTool не допускає цього для логічних виразів. Це запобігає непорозумінням при компіляції. Інакше MathTool не знав би, чи</UA>
+	</warning>
+	<correct_logical_expressions>
+		<DE>um einen arithmetischen oder um einen logischen Ausdruck handelt. G&uuml;ltige logische Ausdr&uuml;cke sehen dann etwa wie folgt aus</DE>
+		<EN>is an arithmetic or a logical expression. Valid logical expressions look like</EN>
+		<RU>арифметическим или логическим выражением. Действительное логическое выражение выглядит так</RU>
+		<UA>є арифметичним чи логісним виразом. Діючий логічний оператор має наступний вигляд</UA>
+	</correct_logical_expressions>
+	<rest>
+		<DE>Ein eingegebener logischer Ausdruck wird von MathTool sofort in vereinfachter Form ausgegeben, sofern dies möglich ist. Dies kann jedoch zu verl&auml;ngerten Wartezeiten f&uuml;hren, falls der Ausdruck zu kompliziert ist und eine Vereinfachung viel zu lange dauert. In MathTool können logische Ver&auml;nderliche, in Analogie zu arithmetischen Ver&auml;nderlichen, mit einem einfachen Kleinbuchstaben oder mit einem Kleinbuchstaben mit Index bezeichnet werden (Apostrophs sind hier jedoch nicht erlaubt). Beachten Sie, dass MathTool beim Kompilieren eines logischen Ausdrucks Leerzeichen beseitigt und Großbuchstaben zu Kleinbuchstaben macht. Insofern ist beispielsweise die Ver&auml;nderliche A_3 dasselbe wie a_3</DE>
+		<EN>MathTool returns a logical expression immediately in a simplified form, if possible. However, this may lead to increased waiting times, if the expression is too complicated and the simplification takes far too long. Variables can be denoted by a small letter or by a small letter with an index. In contrast to variables in arithmetic expressions, apostrophes are not allowed. Note, that MathTool removes empty space as well as makes capital letters to small letters while compiling a logical expression. Hence, the variable A_3 will be the same variable as a_3</EN>
+		<RU>MathTool немедленно возвращает логическое выражение в упрощённой форме, если это возможно. Тем не менее, время ожидания может увеличиться, если выражение слишком сложное, и упрощение занимает больше времени. Переменные можно обозначать маленькими латинскими буквами или маленькими латинскими буквами с индексом. В отличие от арифметических выражений, апострофы запрещены. MathTool удаляет пробелы и преобразовывает большие буквы в маленькие во время компиляции логического выражения. Таким образом, A_3 и a_3 являются одной и той же переменной</RU>
+		<UA>MathTool одразу повертає логічний вираз у спрощеній формі, якщо це можливо. Однак, це може призвести до довшого часу очікування, якщо вираз занадто складний, та спрощення потребує забагато часу. Змінні можна позначати малелькими латинськими буквами або маленькими буквами з індексом. На відмміну від арифметичних виразів, апострофи не дозволені. MathTool видаляє пропуски та перетворює великі букви на маленькі під час компіляції логічних виразів. Таким чином, A_3 та a_3 є однію й тією ж змінною</UA>
+	</rest>
+</translations>

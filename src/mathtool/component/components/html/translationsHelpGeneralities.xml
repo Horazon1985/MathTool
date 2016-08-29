@@ -1,0 +1,20 @@
+<translations>
+	<ids>
+		<id>DE</id>
+		<id>EN</id>
+		<id>RU</id>
+		<id>UA</id>
+	</ids>
+	<generalities>
+		<DE>Allgemeines &uuml;ber MathTool</DE>
+		<EN>Generalities about MathTool</EN>
+		<RU>Общее о MathTool</RU>
+		<UA>Загальне про MathTool</UA>
+	</generalities>
+	<generalities_about_mathtool>
+		<DE>MathTool ist ein Computeralgebrasystem, welches sich haupts&auml;chlich auf die Analysis konzentriert. Hierzu geh&ouml;rt etwa die Verarbeitung und Vereinfachung mathematischer Ausdr&uuml;cke, das L&ouml;sen von Gleichungen, Differentiation, Integration, L&ouml;en von Differentialgleichungen und vieles mehr. MathTool beherrscht ebenso eine Reihe numerischer Methoden, welche in komplizierten F&auml;llen L&ouml;sungen approximieren. Ebenso ist MathTool in der Lage, ebene sowie r&auml;umliche Graphen von Kurven und Fl&auml;chen plotten</DE>
+		<EN>MathTool is a computer algebra system, which mainly focuses on analysis. It deals with processing and simplification of mathematical expressions, solving equations, differentiation, integration, solving differential equations and much more. MathTool also covers a series of numerical methods which approximate solutions in complex cases. Moreover, MathTool can plot plane and three dimensional graphs</EN>
+		<RU>MathTool - это система компьютерной алгебры, которая предназначена в основном для анализа. Она работает с обработкой и упрощением математических выражений, решением уравнений, дифференцированием, интегрированием, решением дифференциальных уравнений и со многим другм. MathTool также покрывает несколько числовых методов, которые приближают решения в сложных случаях. Более того, MathTool может строить изображения плоских и трёхмерных графиков</RU>
+		<UA>MathTool - це система комп'ютерної алгебри, що в основному призначена для аналізу. Вона працює з обробкою та спрощенням математичних виразів, розв'язком рівнянь, диференціюванням, ігтегруванням, розв'язком диференціальних рівнянь та ще з багато чим іншим. MathTool також покриває декілька числових метоів, що наближають розв'язки у складних випадках. Більш того, MathTool може будувати зображення плоских та тривимірних графіків</UA>
+	</generalities_about_mathtool>
+</translations>
