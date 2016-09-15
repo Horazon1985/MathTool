@@ -654,6 +654,83 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.normal)
+    private static Command getCommandNormal(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: normal(f, var_1 = value_1, ..., var_n = value_n)
+         f = Ausdruck, welcher eine Funktion repräsentiert. var_i =
+         Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
+         var_i vorkommen, welche auch in f vorkommen.
+         */
+        if (params.length < 2) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_NORMAL"));
+        }
+
+        HashSet<String> vars;
+        Expression expr;
+        try {
+            expr = Expression.build(params[0], null);
+            vars = expr.getContainedIndeterminates();
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_NORMAL") + e.getMessage());
+        }
+
+        /*
+         Ermittelt die Anzahl der Variablen, von denen die Funktion
+         abhängt, von der der Tangentialraum berechnet werden soll.
+         */
+        for (int i = 1; i < params.length; i++) {
+            if (!params[i].contains("=")) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_NORMAL", i + 1));
+            }
+            if (!Expression.isValidDerivativeOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_NORMAL", params[i].substring(0, params[i].indexOf("="))));
+            }
+            try {
+                Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>());
+                if (!point.isConstant()) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_POINT_PARAMETER_IN_NORMAL", i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_POINT_PARAMETER_IN_NORMAL", i + 1));
+            }
+        }
+
+        // Es wird geprüft, ob keine Veränderlichen doppelt auftreten.
+        for (int i = 1; i < params.length; i++) {
+            for (int j = i + 1; j < params.length; j++) {
+                if (params[i].substring(0, params[i].indexOf("=")).equals(params[j].substring(0, params[j].indexOf("=")))) {
+                    throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLES_OCCUR_TWICE_IN_NORMAL", params[i].substring(0, params[i].indexOf("="))));
+                }
+            }
+        }
+
+        /*
+         Einzelne Punktkoordinaten werden in der HashMap
+         varsContainedInParams gespeichert.
+         */
+        HashMap<String, Expression> varsContainedInParams = new HashMap<>();
+        for (int i = 1; i < params.length; i++) {
+            varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
+        }
+
+        /*
+         Es wird geprüft, ob allen Variablen, welche in der
+         Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
+         wurde.
+         */
+        for (String var : vars) {
+            if (!varsContainedInParams.containsKey(var)) {
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_NORMAL", var));
+            }
+        }
+
+        return new Command(TypeCommand.normal, new Object[]{expr, varsContainedInParams});
+
+    }
+
     @GetCommand(type = TypeCommand.plot2d)
     private static Command getCommandPlot2D(String[] params) throws ExpressionException {
 
@@ -1563,10 +1640,10 @@ public abstract class MathCommandCompiler {
     private static Command getCommandTangent(String[] params) throws ExpressionException {
 
         /*
-         Struktur: tangent(EXPRESSION, var_1 = value_1, ..., var_n = value_n)
-         EXPRESSION: Ausdruck, welcher eine Funktion repräsentiert. var_i =
+         Struktur: tangent(f, var_1 = value_1, ..., var_n = value_n)
+         f = Ausdruck, welcher eine Funktion repräsentiert. var_i =
          Variable value_i = reelle Zahl. Es müssen alle Variablen unter den
-         var_i vorkommen, welche auch in expr vorkommen.
+         var_i vorkommen, welche auch in f vorkommen.
          */
         if (params.length < 2) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
@@ -2430,6 +2507,103 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.normal)
+    private static void executeNormal(Command command)
+            throws EvaluationException {
+
+        Expression f = (Expression) command.getParams()[0];
+        HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
+
+        ArrayList normalInfoForGraphicArea = new ArrayList();
+        normalInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_PARAMETRIZATION_OF_NORMAL_SPACE_1"));
+        normalInfoForGraphicArea.add(f);
+        normalInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_PARAMETRIZATION_OF_NORMAL_SPACE_2"));
+
+        for (String var : vars.keySet()) {
+            normalInfoForGraphicArea.add(var + " = ");
+            normalInfoForGraphicArea.add(vars.get(var));
+            normalInfoForGraphicArea.add(", ");
+        }
+        // In der textlichen und in der grafischen Ausgabe das letzte (überflüssige) Komma entfernen.
+        normalInfoForGraphicArea.remove(normalInfoForGraphicArea.size() - 1);
+        normalInfoForGraphicArea.add(":");
+
+        HashMap<String, Expression> normalLineParametrization = AnalysisMethods.getNormalLineParametrization(f.simplify(), vars);
+
+        doPrintOutput(normalInfoForGraphicArea);
+
+        for (String var : normalLineParametrization.keySet()) {
+            doPrintOutput(var + " = ", MathToolUtilities.convertToEditableAbstractExpression(normalLineParametrization.get(var)));
+        }
+        
+        doPrintOutput(Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_NORMAL", NotationLoader.FREE_REAL_PARAMETER_VAR));
+
+//        if (vars.size() == 1) {
+//
+//            String var = "";
+//            // vars enthält in diesem Fall nur eine Variable.
+//            for (String uniqueVar : vars.keySet()) {
+//                var = uniqueVar;
+//            }
+//
+//            // Im Falle einer oder zweier Veränderlichen: den Graphen der Funktion und den Tangentialraum zeichnen.
+//            try {
+//                double[][] tangentPoint = new double[1][2];
+//                tangentPoint[0][0] = vars.get(var).evaluate();
+//                tangentPoint[0][1] = f.replaceVariable(var, vars.get(var)).evaluate();
+//
+//                ArrayList<Expression> exprs = new ArrayList<>();
+//                exprs.add(f);
+//                exprs.add(tangent);
+//                graphicPanel2D.setVarAbsc(var);
+//                graphicPanel2D.setSpecialPoints(tangentPoint);
+//                graphicPanel2D.drawGraphs2D(Variable.create(var).sub(1), Variable.create(var).add(1), exprs);
+//
+//            } catch (EvaluationException e) {
+//                throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
+//            }
+//
+//        } else if (vars.size() == 2) {
+//
+//            Iterator iter = vars.keySet().iterator();
+//            String varOne = (String) iter.next();
+//            String varTwo = (String) iter.next();
+//
+//            /*
+//             Die Variablen varOne und varTwo sind evtl. noch nicht in
+//             alphabetischer Reihenfolge. Dies wird hier nachgeholt. GRUND: Der
+//             Zeichenbereich wird durch vier Zahlen eingegrenzt, welche den
+//             Variablen in ALPHABETISCHER Reihenfolge entsprechen. Die ersten
+//             beiden bilden die Grenzen für die Abszisse, die anderen beiden für
+//             die Ordinate.
+//             */
+//            String varAbsc = varOne;
+//            String varOrd = varTwo;
+//
+//            if (varAbsc.compareTo(varOrd) > 0) {
+//                varAbsc = varTwo;
+//                varOrd = varOne;
+//            }
+//
+//            try {
+//                Expression x_0 = TWO.mult(vars.get(varAbsc).abs()).simplify(simplifyTypesPlot);
+//                Expression y_0 = TWO.mult(vars.get(varOrd).abs()).simplify(simplifyTypesPlot);
+//                if (x_0.equals(ZERO)) {
+//                    x_0 = ONE;
+//                }
+//                if (y_0.equals(ZERO)) {
+//                    y_0 = ONE;
+//                }
+//
+//                graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
+//                graphicPanel3D.drawGraphs3D(MINUS_ONE.mult(x_0), x_0, MINUS_ONE.mult(y_0), y_0, f, tangent);
+//            } catch (EvaluationException e) {
+//                throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
+//            }
+//
+//        }
+    }
+
     @Execute(type = TypeCommand.pi)
     private static void executePi(Command command) throws EvaluationException {
         BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
@@ -3042,7 +3216,7 @@ public abstract class MathCommandCompiler {
         LegendGUI.close();
 
     }
-    
+
     @Execute(type = TypeCommand.plotvectorfield2d)
     private static void executePlotVectorField2D(Command command) throws EvaluationException {
 
@@ -3884,12 +4058,12 @@ public abstract class MathCommandCompiler {
     private static void executeTangent(Command command)
             throws EvaluationException {
 
-        Expression expr = (Expression) command.getParams()[0];
+        Expression f = (Expression) command.getParams()[0];
         HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
 
         ArrayList tangentInfoForGraphicArea = new ArrayList();
         tangentInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
-        tangentInfoForGraphicArea.add(expr);
+        tangentInfoForGraphicArea.add(f);
         tangentInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_2"));
 
         for (String var : vars.keySet()) {
@@ -3901,10 +4075,10 @@ public abstract class MathCommandCompiler {
         tangentInfoForGraphicArea.remove(tangentInfoForGraphicArea.size() - 1);
         tangentInfoForGraphicArea.add(":");
 
-        Expression tangent = AnalysisMethods.getTangentSpace(expr.simplify(), vars);
+        Expression tangent = AnalysisMethods.getTangentSpace(f.simplify(), vars);
 
         doPrintOutput(tangentInfoForGraphicArea);
-        doPrintOutput("Y = ", MathToolUtilities.convertToEditableAbstractExpression(tangent));
+        doPrintOutput(NotationLoader.AXIS_VAR + " = ", MathToolUtilities.convertToEditableAbstractExpression(tangent));
 
         if (vars.size() == 1) {
 
@@ -3918,10 +4092,10 @@ public abstract class MathCommandCompiler {
             try {
                 double[][] tangentPoint = new double[1][2];
                 tangentPoint[0][0] = vars.get(var).evaluate();
-                tangentPoint[0][1] = expr.replaceVariable(var, vars.get(var)).evaluate();
+                tangentPoint[0][1] = f.replaceVariable(var, vars.get(var)).evaluate();
 
                 ArrayList<Expression> exprs = new ArrayList<>();
-                exprs.add(expr);
+                exprs.add(f);
                 exprs.add(tangent);
                 graphicPanel2D.setVarAbsc(var);
                 graphicPanel2D.setSpecialPoints(tangentPoint);
@@ -3964,7 +4138,7 @@ public abstract class MathCommandCompiler {
                 }
 
                 graphicPanel3D.setParameters(varAbsc, varOrd, 150, 200, 30, 30);
-                graphicPanel3D.drawGraphs3D(MINUS_ONE.mult(x_0), x_0, MINUS_ONE.mult(y_0), y_0, expr, tangent);
+                graphicPanel3D.drawGraphs3D(MINUS_ONE.mult(x_0), x_0, MINUS_ONE.mult(y_0), y_0, f, tangent);
             } catch (EvaluationException e) {
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPH_NOT_POSSIBLE_TO_DRAW"));
             }

@@ -416,6 +416,9 @@ public class MathToolController {
     public static int getNumberOfCommasForCommands(String commandName) {
 
         // Sonderfälle
+        if (commandName.equals(TypeCommand.normal.name())) {
+            return 1;
+        }
         if (commandName.equals(TypeCommand.plot2d.name())) {
             return 2;
         }
