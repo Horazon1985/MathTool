@@ -713,18 +713,7 @@ public abstract class MathCommandCompiler {
         HashMap<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
-                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
-        }
-
-        /*
-         Es wird geprüft, ob allen Variablen, welche in der
-         Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
-         wurde.
-         */
-        for (String var : vars) {
-            if (!varsContainedInParams.containsKey(var)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_NORMAL", var));
-            }
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), null));
         }
 
         return new Command(TypeCommand.normal, new Object[]{expr, varsContainedInParams});
@@ -1695,18 +1684,7 @@ public abstract class MathCommandCompiler {
         HashMap<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
-                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>()));
-        }
-
-        /*
-         Es wird geprüft, ob allen Variablen, welche in der
-         Funktionsvorschrift auftauchen, auch eine Koordinate zugewirsen
-         wurde.
-         */
-        for (String var : vars) {
-            if (!varsContainedInParams.containsKey(var)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_VARIABLE_MUST_OCCUR_IN_TANGENT", var));
-            }
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), null));
         }
 
         return new Command(TypeCommand.tangent, new Object[]{expr, varsContainedInParams});
@@ -2535,7 +2513,7 @@ public abstract class MathCommandCompiler {
         for (String var : normalLineParametrization.keySet()) {
             doPrintOutput(var + " = ", MathToolUtilities.convertToEditableAbstractExpression(normalLineParametrization.get(var)));
         }
-        
+
         doPrintOutput(Translator.translateOutputMessage("MCC_IS_FREE_VARIABLE_IN_NORMAL", NotationLoader.FREE_REAL_PARAMETER_VAR));
 
 //        if (vars.size() == 1) {
@@ -4080,6 +4058,18 @@ public abstract class MathCommandCompiler {
         doPrintOutput(tangentInfoForGraphicArea);
         doPrintOutput(NotationLoader.AXIS_VAR + " = ", MathToolUtilities.convertToEditableAbstractExpression(tangent));
 
+        /*
+        Prüfung, ob alle Veränderliche, die in der Funktionsvorschrift auftauchen,
+        auch in den Punktkoordinaten vorkommen. Wenn nicht, werden keine Graphen
+        gezeichnet (da freie Parameter vorkommen).
+         */
+        HashSet<String> varsInFunction = f.getContainedIndeterminates();
+        for (String var : varsInFunction){
+            if (!vars.keySet().contains(var)){
+                return;
+            }
+        }
+        
         if (vars.size() == 1) {
 
             String var = "";
