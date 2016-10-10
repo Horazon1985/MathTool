@@ -54,6 +54,7 @@ import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
+import graphic.GraphicPanelImplicit2D.MarchingSquare;
 import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelImplicit3D.MarchingCube;
 import graphic.GraphicPanelSpherical;
@@ -2689,13 +2690,16 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 6, 7));
         }
 
-        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
+        MarchingSquare[][] implicitGraph2D = NumericalMethods.solveImplicitEquation2D2(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
+        
+//        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
+//                x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
 
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
-        graphicPanelImplicit2D.drawImplicitGraph2D(implicitGraph, x_0, x_1, y_0, y_1);
+        graphicPanelImplicit2D.drawImplicitGraph2D(implicitGraph2D, x_0, x_1, y_0, y_1);
         // Alte Legende schließen
         LegendGUI.close();
 
