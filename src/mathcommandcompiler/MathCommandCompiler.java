@@ -2690,12 +2690,9 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 6, 7));
         }
 
-        MarchingSquare[][] implicitGraph2D = NumericalMethods.solveImplicitEquation2D2(expr, varAbsc, varOrd,
+        MarchingSquare[][] implicitGraph2D = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         
-//        ArrayList<double[]> implicitGraph = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
-//                x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
