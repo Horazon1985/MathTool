@@ -22,13 +22,15 @@ MathTool knows the following console commands:<br><br>
 
 <p style="text-align: center;">u^6+sin(u^4*v^4).</p><br>
 
-<strong>defvars():</strong> Returns the list of all variables with predefined values using command def().<br><br>
+<strong>defvars():</strong> Returns the list of all variables with predefined values.<br><br>
+
+<strong>deffuncs():</strong> Returns the list of all functions defined by the user.<br><br>
 
 <strong>eigenvalues(A):</strong> Returns the eigenvalues of the quadratic matrix A, if they are computable.<br><br>
 
 <strong>eigenvectors(A):</strong> Returns the eigenvectors of the quadratic matrix A, grouped by the corresponding eigenvalues of A, if they are computable.<br><br>
 
-<strong>euler(n):</strong> Returns the first n digits of Eulers constant e. The result is <em>not</em> roundet.<br><br>
+<strong>euler(n):</strong> Returns the first n digits of Eulers constant e. The result is <em>not</em> roundet. For performance reasons, the integer n must not exceed 100000.<br><br>
 
 <em>Example:</em> euler(20) returns<br>
 
@@ -46,7 +48,7 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>normal(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Returns the parametrization of the normal line to the graph of F at the point (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 
-<strong>pi(n):</strong> Returns the first n digits of the constant pi. The result is <em>not</em> roundet.<br><br>
+<strong>pi(n):</strong> Returns the first n digits of the constant pi. The result is <em>not</em> roundet. For performance reasons, the integer n must not exceed 100000.<br><br>
 
 <em>Example:</em> pi(20) returns<br>
 
@@ -66,9 +68,9 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>plotcurve3d([F<sub>1</sub>(t); F<sub>2</sub>(t); F<sub>3</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the curve which is given by the component functions x = F<sub>1</sub>(t), y = F<sub>2</sub>(t) and z = F<sub>3</sub>(t) for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. The zoom factor can attain all values between 0.1 and 10. Sometimes it may happen (if choosing "bad" curves), just as in the case of plane curves, that only a part of the is drawn.<br><br>
 
-<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graph of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
+<strong>plotpolar(F<sub>1</sub>(t), ..., F<sub>n</sub>(t), t, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>, ..., F<sub>n</sub> for t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>, where t is the angle and F<sub>i</sub>(t) is the radius in polar coordinates. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
-<strong>plotcylindrical(F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t), r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t) for r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub> in cylindrical coordinates, where r is the radius und t is the angle. The radius must be non-negative the difference t<sub>2</sub> - t<sub>1</sub> of the angles must be at most 20&#960; because of technical reasons. The zoom factor can attain all values between 0.1 and 10.<br><br>
+<strong>plotcylindrical(F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t), r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>(r, t), ..., F<sub>n</sub>(r, t) for r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub> in cylindrical coordinates, where r is the radius and t is the angle. The radius must be non-negative the difference t<sub>2</sub> - t<sub>1</sub> of the angles must be at most 20&#960; because of technical reasons. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
 <strong>plotspherical(F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v), u, v, u<sub>1</sub>, u<sub>2</sub>, v<sub>1</sub>, v<sub>2</sub>):</strong> Plots the graphs of the functions F<sub>1</sub>(u, v), ..., F<sub>n</sub>(u, v) for u<sub>1</sub> &lt;= u &lt;= u<sub>2</sub> and v<sub>1</sub> &lt;= v &lt;= v<sub>2</sub> in spherical coordinates, where u is the angle in the x, y-plane and v is the angle to the z-axis. The differences u<sub>2</sub> - u<sub>1</sub> and v<sub>2</sub> - v<sub>1</sub> of the angles must be at most 20&#960; because of technical reasons. The zoom factor can attain all values between 0.1 and 10.<br><br>
 
@@ -78,7 +80,7 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Computes the equation of the regression line for the points P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, and also plots it, if possible. The points P<sub>i</sub> must be (after simplifying) of the form [a;b], i.e. they must be (2x1)-matrices.<br><br>
 
-<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functionsl. In these cases, MathTool will not return any (exact) solution.
+<strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functions. In these cases, MathTool will not return any (exact) solution.
 
 <span style="color: #3366ff;"><em>Example:</em></span> Consider the equation x^18 - 3*x^6 - 11 = 0. The command solve(x^18 - 3*x^6 - 11 = 0) returns the solutions
 <p style="text-align: center;">x_1 = ((11/2+117^(1/2)/2)^(1/3)+(11/2-117^(1/2)/2)^(1/3))^(1/6)</p>
@@ -96,6 +98,8 @@ If approximated, these solutions are x<sub>1, 2</sub> ≈ ±1.1777403511345441. 
 <strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, y, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Returns the numerical solution of the differential equation y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> in the interval x_0 &lt;= x &lt;= x<sub>1</sub>. For the numerical computation, the interval [x<sub>0</sub>, x<sub>1</sub>] is subdivided in 1000 subintervals and MathTool returns all 1001 function values in the corresponding points.<br><br>
 
 <em>Example:</em> solvedeq(-y,t,y,2,0,10,1,0) returns the numerical solutions of the differential equation y''(t) = -y(t), y(0) = 1, y'(0) = 0 for 0 &lt;= t &lt;= 10. Here, MathTool returns 1001 values of y(t), hence the increment is 0.01.<br><br>
+
+<strong>table(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong>Returns a table with all possible values of the logical expression F(x<sub>1</sub>, ..., x<sub>n</sub>), depending on the values of the variables x<sub>1</sub>, ..., x<sub>n</sub>. If n is greater than 20, no computation will be performed.
 
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Returns the equation of the tangent space to the graph of F at the point (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Example:</em> tangent(x^3+x/2+3,x=2) returns the following equation:<br>
