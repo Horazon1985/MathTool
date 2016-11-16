@@ -60,7 +60,7 @@ MathTool знает такие команды:<br><br>
 
 <strong>plot3d(F<sub>1</sub>(x, y), ..., F<sub>n</sub>(x, y), x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Строит графики функций F<sub>1</sub>, ..., F<sub>n</sub> в прямоугольнике x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br><br>
 
-<strong>plotimplicit3d(F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z), x, y, z, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>, z<sub>1</sub>, z<sub>2</sub>):</strong> Plots the solution of the equation F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z) in three variables in the cuboid x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>, z<sub>1</sub> &lt;= z &lt;= z<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br>
+<strong>plotimplicit3d(F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z), x, y, z, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>, z<sub>1</sub>, z<sub>2</sub>):</strong> Строит решение уравнения F<sub>1</sub>(x, y, z) = F<sub>2</sub>(x, y, z) в трёх переменных в кубоиде x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub>, y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>, z<sub>1</sub> &lt;= z &lt;= z<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10.<br>
 
 <strong>plotcurve2d([F<sub>1</sub>(t); F<sub>2</sub>(t)], t, t<sub>1</sub>, t<sub>2</sub>):</strong> Строит плоскую кривую, которая параметризированна функциями x = F<sub>1</sub>(t) и y = F<sub>2</sub>(t) для t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Коэффициент масштабирования может принимать все значения между 0.1 и 10. Может так случиться (если вібрать "плохую" кривую), что только одна её часть будет отображена (то есть t<sub>1</sub> &lt;= t &lt;= t' для некоторго t' &lt;= t<sub>2</sub>).<br><br>
 
@@ -96,6 +96,8 @@ MathTool знает такие команды:<br><br>
 <strong>solvediffeq(F(x, y, y', y'', ..., y<sup>(n-1)</sup>), x, y, n, x<sub>0</sub>, x<sub>1</sub>, y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n-1</sub>):</strong> Возвращает числовые решения дифференциального уравнения y<sup>(n)</sup> = F(x, y, y', y'', ..., y<sup>(n-1)</sup>), y(x<sub>0</sub>) = y<sub>0</sub>, ..., y<sup>(n-1)</sup>(x<sub>0</sub>) = y<sub>n-1</sub> на интервале x_0 &lt;= x &lt;= x<sub>1</sub>. Для числовых рассчётов, интервал [x<sub>0</sub>, x<sub>1</sub>] разделяется на 1000 подинтервалов и MathTool возвращает все 1001 значения функции в соответствующих точках.<br><br>
 
 <em>Пример:</em> solvediffeq(-y,t,y,2,0,10,1,0) вернёт числовые решения дифференциального уравнения y''(t) = -y(t), y(0) = 1, y'(0) = 0 для 0 &lt;= t &lt;= 10. Тут MathTool вернет 1001 значение y(t), поскольку прирост равен 0.01.<br><br>
+
+<strong>table(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong>Возвращает таблицу всех возможных значений логического выражения F(x<sub>1</sub>, ..., x<sub>n</sub>), в зависимости от значений переменных x<sub>1</sub>, ..., x<sub>n</sub>. Если n больше 20, то подсчеты проводиться не будут.
 
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Возвращает уравнение касательного пространства к графику F в точке (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Пример:</em> tangent(x^3+x/2+3,x=2) вернёт такое уравнение:<br>
