@@ -44,6 +44,7 @@ import graphic.GraphicPanelPolar;
 import lang.translator.Translator;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import com.sun.jmx.snmp.Enumerated;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelFormula;
@@ -51,6 +52,11 @@ import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import graphic.GraphicPanelVectorField3D;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
@@ -579,7 +585,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanelImplicit2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent) 
+        } else if (c.getTypeCommand().equals(TypeCommand.plot3d) || c.getTypeCommand().equals(TypeCommand.tangent)
                 && ((Expression) c.getParams()[0]).getContainedIndeterminates().size() <= 2 && ((HashMap) c.getParams()[1]).size() == 2) {
             graphicPanel3D.setVisible(true);
             legendLabel.setVisible(true);
@@ -626,7 +632,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
-        } else if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 3 || c.getTypeCommand().equals(TypeCommand.tangent) 
+        } else if (c.getTypeCommand().equals(TypeCommand.solve) && c.getParams().length >= 3 || c.getTypeCommand().equals(TypeCommand.tangent)
                 && ((Expression) c.getParams()[0]).getContainedIndeterminates().size() <= 1 && ((HashMap) c.getParams()[1]).size() == 1) {
             graphicPanel2D.setVisible(true);
             legendLabel.setVisible(true);

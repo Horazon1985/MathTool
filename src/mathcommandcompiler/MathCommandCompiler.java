@@ -2,9 +2,9 @@ package mathcommandcompiler;
 
 import command.Command;
 import command.TypeCommand;
-import abstractexpressions.expression.computation.AnalysisMethods;
-import abstractexpressions.expression.computation.NumericalMethods;
-import abstractexpressions.expression.computation.StatisticMethods;
+import abstractexpressions.expression.computation.AnalysisUtils;
+import abstractexpressions.expression.computation.NumericalUtils;
+import abstractexpressions.expression.computation.StatisticUtils;
 import enums.TypeSimplify;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
@@ -17,9 +17,9 @@ import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.TypeFunction;
 import abstractexpressions.expression.classes.TypeOperator;
 import abstractexpressions.expression.classes.Variable;
-import abstractexpressions.expression.differentialequation.SolveGeneralDifferentialEquationMethods;
-import abstractexpressions.expression.utilities.ExpressionCollection;
-import abstractexpressions.expression.utilities.SimplifyPolynomialMethods;
+import abstractexpressions.expression.differentialequation.SolveGeneralDifferentialEquationUtils;
+import abstractexpressions.expression.basic.ExpressionCollection;
+import abstractexpressions.expression.basic.SimplifyPolynomialUtils;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -38,17 +38,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JTextArea;
-import abstractexpressions.matrixexpression.computation.EigenvaluesEigenvectorsAlgorithms;
-import abstractexpressions.matrixexpression.computation.GaussAlgorithm;
+import abstractexpressions.matrixexpression.computation.EigenvaluesEigenvectorsUtils;
+import abstractexpressions.matrixexpression.computation.GaussAlgorithmUtils;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import mathtool.MathToolGUI;
 import abstractexpressions.matrixexpression.classes.Matrix;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import abstractexpressions.matrixexpression.utilities.MatrixExpressionCollection;
+import abstractexpressions.matrixexpression.basic.MatrixExpressionCollection;
 import operationparser.OperationParser;
-import abstractexpressions.expression.equation.SolveGeneralEquationMethods;
-import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsMethods;
+import abstractexpressions.expression.equation.SolveGeneralEquationUtils;
+import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsUtils;
 import abstractexpressions.output.EditableAbstractExpression;
 import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
@@ -2048,7 +2048,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVALUES_NOT_QUADRATIC"));
         }
 
-        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
+        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsUtils.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
         if (eigenvalues.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_EIGENVALUES_1"),
@@ -2083,7 +2083,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_EIGENVECTORS_NOT_QUADRATIC"));
         }
 
-        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsAlgorithms.getEigenvalues((MatrixExpression) command.getParams()[0]);
+        ExpressionCollection eigenvalues = EigenvaluesEigenvectorsUtils.getEigenvalues((MatrixExpression) command.getParams()[0]);
 
         MatrixExpressionCollection eigenvectors;
         MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
@@ -2097,7 +2097,7 @@ public abstract class MathCommandCompiler {
                 continue;
             }
             // Eigenvektoren berechnen.
-            eigenvectors = EigenvaluesEigenvectorsAlgorithms.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
+            eigenvectors = EigenvaluesEigenvectorsUtils.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
 
             eigenvectorsAsArrayList = new ArrayList();
             eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
@@ -2126,7 +2126,7 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.euler)
     private static void executeEuler(Command command) throws EvaluationException {
-        BigDecimal e = AnalysisMethods.getDigitsOfE((int) command.getParams()[0]);
+        BigDecimal e = AnalysisUtils.getDigitsOfE((int) command.getParams()[0]);
         doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_E", (int) command.getParams()[0]), MathToolUtilities.convertToEditableString(e));
     }
 
@@ -2206,7 +2206,7 @@ public abstract class MathCommandCompiler {
         Expression secondDerivateive = derivative.diff(var);
         Expression secondDerAtZero;
 
-        ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(derivative, ZERO, var);
+        ExpressionCollection zeros = SolveGeneralEquationUtils.solveEquation(derivative, ZERO, var);
         /*
          Wenn ganzzahlige Variablen auftauchen, so müssen sicherheitshalber Klammern ausgelöst werden.
          */
@@ -2360,7 +2360,7 @@ public abstract class MathCommandCompiler {
         Expression secondDerivateive = derivative.diff(var);
         double secondDerAtZero;
 
-        ArrayList<Double> zeros = NumericalMethods.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
+        ArrayList<Double> zeros = NumericalUtils.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
         ArrayList<Double> extremaPoints = new ArrayList<>();
         ArrayList<Double> valuesOfSecondDerivative = new ArrayList<>();
         ArrayList<Double> extremaValues = new ArrayList<>();
@@ -2438,7 +2438,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        MatrixExpressionCollection basisOfKer = GaussAlgorithm.computeKernelOfMatrix((Matrix) matExprSimplified);
+        MatrixExpressionCollection basisOfKer = GaussAlgorithmUtils.computeKernelOfMatrix((Matrix) matExprSimplified);
 
         if (basisOfKer.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_TRIVIAL_KER_1"),
@@ -2507,7 +2507,7 @@ public abstract class MathCommandCompiler {
         normalInfoForGraphicArea.remove(normalInfoForGraphicArea.size() - 1);
         normalInfoForGraphicArea.add(":");
 
-        HashMap<String, Expression> normalLineParametrization = AnalysisMethods.getNormalLineParametrization(f.simplify(), vars);
+        HashMap<String, Expression> normalLineParametrization = AnalysisUtils.getNormalLineParametrization(f.simplify(), vars);
 
         doPrintOutput(normalInfoForGraphicArea);
 
@@ -2585,7 +2585,7 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.pi)
     private static void executePi(Command command) throws EvaluationException {
-        BigDecimal pi = AnalysisMethods.getDigitsOfPi((int) command.getParams()[0]);
+        BigDecimal pi = AnalysisUtils.getDigitsOfPi((int) command.getParams()[0]);
         doPrintOutput(Translator.translateOutputMessage("MCC_DIGITS_OF_PI", (int) command.getParams()[0]), MathToolUtilities.convertToEditableString(pi));
     }
 
@@ -2690,7 +2690,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT2D", 6, 7));
         }
 
-        MarchingSquare[][] implicitGraph2D = NumericalMethods.solveImplicitEquation2D(expr, varAbsc, varOrd,
+        MarchingSquare[][] implicitGraph2D = NumericalUtils.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
         
         // Graphen zeichnen.
@@ -2817,7 +2817,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTIMPLICIT3D", 9, 10));
         }
 
-        MarchingCube[][][] implicitGraph = NumericalMethods.solveImplicitEquation3D(expr, varAbsc, varOrd, varAppl, xStart, xEnd, yStart, yEnd, zStart, zEnd);
+        MarchingCube[][][] implicitGraph = NumericalUtils.solveImplicitEquation3D(expr, varAbsc, varOrd, varAppl, xStart, xEnd, yStart, yEnd, zStart, zEnd);
 
         // Graphen zeichnen.
         graphicPanelImplicit3D.setParameters(varAbsc, varOrd, varAppl, 150, 200, 30, 30);
@@ -3359,8 +3359,8 @@ public abstract class MathCommandCompiler {
 
         try {
 
-            ExpressionCollection regressionLineCoefficients = StatisticMethods.getRegressionLineCoefficients(pts);
-            Expression regressionLine = SimplifyPolynomialMethods.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
+            ExpressionCollection regressionLineCoefficients = StatisticUtils.getRegressionLineCoefficients(pts);
+            Expression regressionLine = SimplifyPolynomialUtils.getPolynomialFromCoefficients(regressionLineCoefficients, "X").simplify();
 
             doPrintOutput(Translator.translateOutputMessage("MCC_REGRESSIONLINE_MESSAGE"),
                     "Y = ", MathToolUtilities.convertToEditableAbstractExpression(regressionLine));
@@ -3375,10 +3375,10 @@ public abstract class MathCommandCompiler {
                 }
             }
 
-            Expression x_0 = StatisticMethods.getMinimum(pts, 0);
-            Expression x_1 = StatisticMethods.getMaximum(pts, 0);
-            Expression y_0 = StatisticMethods.getMinimum(pts, 1);
-            Expression y_1 = StatisticMethods.getMaximum(pts, 1);
+            Expression x_0 = StatisticUtils.getMinimum(pts, 0);
+            Expression x_1 = StatisticUtils.getMaximum(pts, 0);
+            Expression y_0 = StatisticUtils.getMinimum(pts, 1);
+            Expression y_1 = StatisticUtils.getMaximum(pts, 1);
 
             // Validierung der Zeichenbereichsgrenzen.
             double varAbscStart = x_0.evaluate();
@@ -3440,23 +3440,23 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        ExpressionCollection zeros = SolveGeneralEquationMethods.solveEquation(f, g, var);
+        ExpressionCollection zeros = SolveGeneralEquationUtils.solveEquation(f, g, var);
 
         // Falls die Gleichung keine Lösungen besitzt, User informieren.
-        if (zeros == SolveGeneralEquationMethods.NO_SOLUTIONS) {
+        if (zeros == SolveGeneralEquationUtils.NO_SOLUTIONS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATIONS_HAS_NO_SOLUTIONS"));
             return;
         }
 
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
-        if (zeros.isEmpty() && zeros != SolveGeneralEquationMethods.ALL_REALS) {
+        if (zeros.isEmpty() && zeros != SolveGeneralEquationUtils.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_NO_EXACT_SOLUTIONS_OF_EQUATION_FOUND"));
             return;
         }
 
         doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], " :");
-        if (zeros == SolveGeneralEquationMethods.ALL_REALS) {
+        if (zeros == SolveGeneralEquationUtils.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
         } else {
             MultiIndexVariable multiVar;
@@ -3572,7 +3572,7 @@ public abstract class MathCommandCompiler {
 
         }
 
-        ArrayList<Double> zeros = NumericalMethods.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
+        ArrayList<Double> zeros = NumericalUtils.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
         doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], ":");
@@ -3636,17 +3636,17 @@ public abstract class MathCommandCompiler {
         ExpressionCollection solutions;
         try {
             Variable.setDependingOnVariable(varOrd, varAbsc);
-            solutions = SolveGeneralDifferentialEquationMethods.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
+            solutions = SolveGeneralDifferentialEquationUtils.solveDifferentialEquation(exprLeft, exprRight, varAbsc, varOrd);
         } finally {
             Variable.setDependingOnVariable(varOrd, null);
         }
 
         // Falls keine Lösungen ermittelt werden konnten, User informieren.
         if (solutions.isEmpty()) {
-            if (solutions == SolveGeneralDifferentialEquationMethods.ALL_FUNCTIONS) {
+            if (solutions == SolveGeneralDifferentialEquationUtils.ALL_FUNCTIONS) {
                 doPrintOutput(Translator.translateOutputMessage("MCC_ALL_FUNCTIONS"));
                 return;
-            } else if (solutions == SolveGeneralDifferentialEquationMethods.NO_SOLUTIONS) {
+            } else if (solutions == SolveGeneralDifferentialEquationUtils.NO_SOLUTIONS) {
                 doPrintOutput(Translator.translateOutputMessage("MCC_NO_SOLUTIONS"));
                 return;
             }
@@ -3685,7 +3685,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        ArrayList<Variable> integrationConstants = SolveGeneralDifferentialEquationMethods.getListOfFreeIntegrationConstants(solutions);
+        ArrayList<Variable> integrationConstants = SolveGeneralDifferentialEquationUtils.getListOfFreeIntegrationConstants(solutions);
         ArrayList integrationConstantsInfoMessage = new ArrayList();
 
         for (int i = 0; i < integrationConstants.size(); i++) {
@@ -3743,7 +3743,7 @@ public abstract class MathCommandCompiler {
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_SOLVEDIFFEQ", ord, ord - 1));
             }
 
-            double[][] solutionOfDifferentialEquation = NumericalMethods.solveDifferentialEquationByRungeKutta(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
+            double[][] solutionOfDifferentialEquation = NumericalUtils.solveDifferentialEquationByRungeKutta(expr, varAbsc, varOrd, ord, x_0.evaluate(), x_1.evaluate(), startValues, 1000);
 
             // Formulierung und Ausgabe des AWP.
             String formulationOfAWP = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
@@ -3829,13 +3829,13 @@ public abstract class MathCommandCompiler {
             equations[i] = ((Expression[]) params[i])[0].sub(((Expression[]) params[i])[1]).simplify(simplifyTypesSolveSystem);
         }
 
-        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsMethods.solveSystemOfEquations(equations, solutionVars);
+        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsUtils.solveSystemOfEquations(equations, solutionVars);
 
         // Sonderfälle: keine Lösungen, alle reellen Zahlentupel.
-        if (solutions == SolveGeneralSystemOfEquationsMethods.ALL_REALS) {
+        if (solutions == SolveGeneralSystemOfEquationsUtils.ALL_REALS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_ALL_REAL_TUPLES_AS_SOLUTIONS"));
             return;
-        } else if (solutions == SolveGeneralSystemOfEquationsMethods.NO_SOLUTIONS) {
+        } else if (solutions == SolveGeneralSystemOfEquationsUtils.NO_SOLUTIONS) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EQUATION_SYSTEM_HAS_NO_SOLUTIONS"));
             return;
         } else if (solutions.isEmpty()) {
@@ -4054,7 +4054,7 @@ public abstract class MathCommandCompiler {
         tangentInfoForGraphicArea.remove(tangentInfoForGraphicArea.size() - 1);
         tangentInfoForGraphicArea.add(":");
 
-        Expression tangent = AnalysisMethods.getTangentSpace(f.simplify(), vars);
+        Expression tangent = AnalysisUtils.getTangentSpace(f.simplify(), vars);
 
         doPrintOutput(tangentInfoForGraphicArea);
         doPrintOutput(NotationLoader.AXIS_VAR + " = ", MathToolUtilities.convertToEditableAbstractExpression(tangent));
@@ -4162,7 +4162,7 @@ public abstract class MathCommandCompiler {
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_WRONG_DERIVATIVE_ORDER_OCCUR_IN_TAYLORDIFFEQ", ord, ord - 1));
             }
 
-            Expression result = AnalysisMethods.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
+            Expression result = AnalysisUtils.getTaylorPolynomialFromDifferentialEquation(expr, varAbsc, varOrd, ord, x_0, y_0, k);
 
             // Formulierung und Ausgabe des AWP.
             String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;

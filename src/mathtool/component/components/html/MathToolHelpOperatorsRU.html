@@ -4,6 +4,8 @@ MathTool знает такие операторы:<br><br>
 
 <strong>cov([x<sub>1</sub>, y<sub>1</sub>], ..., [x<sub>n</sub>, y<sub>n</sub>]):</strong> Вычисляет ковариацию величин x<sub>1</sub>, ..., x<sub>n</sub> и y<sub>1</sub>, ..., y<sub>n</sub>.<br><br>
 
+<strong>cross(F<sub>1</sub>, ..., F<sub>n-1</sub>):</strong> Вычисляет векторное произведение n-мерных векторов F<sub>1</sub>, ..., F<sub>n-1</sub>.<br><br>
+
 <strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>):</strong> Вычисляет частную производную ∂F/∂x<sub>i</sub> функции F по переменной x<sub>i</sub>.<br><br>
 
 <strong>diff(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>i</sub>, k):</strong> Вычисляет k-ю частную производную ∂<sup>k</sup>F/∂x<sub>i</sub><sup>k</sup> функции F по переменной x<sub>i</sub>.<br><br>
@@ -45,6 +47,12 @@ MathTool знает такие операторы:<br><br>
 <em>Пример:</em> mod(25, 7) возвращает<br>
 
 <p style="text-align: center;">4</p><br>
+
+<strong>modpow(a, b, c):</strong> Если a, b и c целые числа и b &#8805; 0, то он возвращает занчение a<sup>b</sup> mod c.<br><br>
+
+<em>Пример:</em> modpow(3, 2, 7) возвращает<br>
+
+<p style="text-align: center;">2</p><br>
 
 <strong>mu(x<sub>1</sub>, ..., x<sub>n</sub>):</strong> Вычисляет арефметическое среднее величин x<sub>1</sub>, ..., x<sub>n</sub>.<br><br>
 
