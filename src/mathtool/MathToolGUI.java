@@ -130,6 +130,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK";
     private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH";
     private static final String GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY = "GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY";
+    private static final String GUI_GraphicOptionsDialogGUI_SHOW_CURSOR_ON_GRAPH = "GUI_GraphicOptionsDialogGUI_SHOW_CURSOR_ON_GRAPH";
+    private static final String GUI_GraphicOptionsDialogGUI_DO_NOT_SHOW_CURSOR_ON_GRAPH = "GUI_GraphicOptionsDialogGUI_DO_NOT_SHOW_CURSOR_ON_GRAPH";
     private static final String GUI_LegendGUI_CONTROLS = "GUI_LegendGUI_CONTROLS";
     private static final String GUI_LegendGUI_GRAPH = "GUI_LegendGUI_GRAPH";
     private static final String GUI_LegendGUI_PARAMETRIZED_SURFACE = "GUI_LegendGUI_PARAMETRIZED_SURFACE";
@@ -1460,6 +1462,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
             Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK)});
         dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_WHOLE_GRAPH),
             Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_PRESENTATION_OPTION_GRID_ONLY)});
+        dropDownOptions.add(new String[]{Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_SHOW_CURSOR_ON_GRAPH),
+            Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_DO_NOT_SHOW_CURSOR_ON_GRAPH)});
 
         GraphicOptionsDialogGUI graphicOptionsDialogGUI = GraphicOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);

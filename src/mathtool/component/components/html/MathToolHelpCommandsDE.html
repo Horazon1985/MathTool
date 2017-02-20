@@ -97,6 +97,8 @@ Approximiert lauten diese x<sub>1, 2</sub> ≈ ±1.1777403511345441. Letzteres w
 
 <em>Beispiel:</em> solvedeq(-y,t,y,2,0,10,1,0) liefert die numerische L&ouml;sung der Differentialgleichung y''(t) = -y(t), y(0) = 1, y'(0) = 0 im Bereich 0 &lt;= t &lt;= 10. Hierbei werden 1000 Funktionswerte von y(t) ausgegeben; die Schrittweite betr&auml;gt daher 0.01.<br><br>
 
+<strong>table(F(x<sub>1</sub>, ..., x<sub>n</sub>)):</strong>Returns a table with all possible values of the logical expression F(x<sub>1</sub>, ..., x<sub>n</sub>), depending on the values of the variables x<sub>1</sub>, ..., x<sub>n</sub>. If n is greater than 20, no computation will be performed.<br><br>
+
 <strong>tangent(F(x<sub>1</sub>, ..., x<sub>n</sub>), x<sub>1</sub> = a<sub>1</sub>, ..., x<sub>n</sub> = a<sub>n</sub>):</strong> Liefert die Gleichung der Tangentialebene an den Graphen von F im Punkte (x<sub>1</sub>, ..., x<sub>n</sub>) = (a<sub>1</sub>, ..., a<sub>n</sub>).<br><br>
 <em>Beispiel:</em> tangent(x^3+x/2+3,x=2) liefert die folgende Gleichung:<br>
 

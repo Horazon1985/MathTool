@@ -779,10 +779,6 @@ public class MathToolController {
         }
     }
 
-    public static void activateGraphicPanels(Command c) {
-
-    }
-
     /**
      * Gibt zurück, ob input, wenn überhaupt, nur ein gültiger arithmetischer
      * Ausdruck (und kein logischer und kein Matrizenausdruck) sein kann.
