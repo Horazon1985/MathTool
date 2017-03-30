@@ -44,7 +44,6 @@ import graphic.GraphicPanelPolar;
 import lang.translator.Translator;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import com.sun.jmx.snmp.Enumerated;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
 import graphic.GraphicPanelFormula;
@@ -52,12 +51,6 @@ import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-//import graphic.GraphicPanelVectorField3D;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
 import mathtool.component.dialogs.MathToolSaveGraphicDialog;
@@ -187,7 +180,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * MathTool-Log mit allen bisher ausgeführten Befehlen.
      */
-    private static final ArrayList<String> commandList = new ArrayList<>();
+    private static final ArrayList<String> COMMANDS = new ArrayList<>();
 
     // Laufzeitvariablen.
     private static TypeGraphic typeGraphic = TypeGraphic.NONE;
@@ -491,7 +484,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
      * Getter für commandList.
      */
     public static ArrayList<String> getCommandList() {
-        return commandList;
+        return COMMANDS;
     }
 
     /**
@@ -991,8 +984,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
 
                 // Befehl loggen!
-                commandList.add(input);
-                logPosition = commandList.size();
+                COMMANDS.add(input);
+                logPosition = COMMANDS.size();
 
                 /*
                  1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
@@ -1488,7 +1481,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
             case KeyEvent.VK_DOWN:
-                if (logPosition < commandList.size() - 1) {
+                if (logPosition < COMMANDS.size() - 1) {
                     logPosition++;
                 }
                 MathToolController.showLoggedCommand(mathToolTextField, logPosition);
