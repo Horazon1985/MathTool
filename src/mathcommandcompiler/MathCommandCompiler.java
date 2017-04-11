@@ -134,7 +134,6 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelSpherical graphicPanelSpherical;
     private static GraphicPanelSurface graphicPanelSurface;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
-//    private static GraphicPanelVectorField3D graphicPanelVectorField3D;
 
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
@@ -241,9 +240,6 @@ public abstract class MathCommandCompiler {
         graphicPanelVectorField2D = gPVectorField2D;
     }
 
-//    public static void setGraphicPanelVectorField3D(GraphicPanelVectorField3D gPVectorField3D) {
-//        graphicPanelVectorField3D = gPVectorField3D;
-//    }
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
         mathToolGraphicArea = mTGraphicArea;
     }
