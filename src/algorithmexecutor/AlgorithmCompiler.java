@@ -1,14 +1,14 @@
 package algorithmexecutor;
 
 import static algorithmexecutor.enums.ReservedChars.LINE_SEPARATOR;
-import algorithmexecutor.exceptions.AlgorithmParseException;
+import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AlgorithmParser {
+public abstract class AlgorithmCompiler {
     
-    public static List<AlgorithmCommand> parseAlgorithm(String input) throws AlgorithmParseException {
+    public static List<AlgorithmCommand> parseAlgorithm(String input) throws AlgorithmCompileException {
         String[] lines = input.split(String.valueOf(LINE_SEPARATOR.getValue()));
         List<AlgorithmCommand> commands = new ArrayList<>();
         for (String line : lines) {
@@ -17,7 +17,7 @@ public abstract class AlgorithmParser {
         return commands;
     }
     
-    private static AlgorithmCommand parseLine(String line) throws AlgorithmParseException {
+    private static AlgorithmCommand parseLine(String line) throws AlgorithmCompileException {
     
         
         

@@ -1,7 +1,7 @@
 package test.algorithm;
 
-import algorithmexecutor.AlgorithmParser;
-import algorithmexecutor.exceptions.AlgorithmParseException;
+import algorithmexecutor.AlgorithmCompiler;
+import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
