@@ -2,6 +2,7 @@ package algorithmexecutor.enums;
 
 public enum ReservedChars {
 
+    ARGUMENT_SEPARATOR(','),
     LINE_SEPARATOR(';'),
     BEGIN('{'),
     END('}');
