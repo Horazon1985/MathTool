@@ -1,5 +1,6 @@
 package algorithmexecutor;
 
+import abstractexpressions.interfaces.IdentifierValidator;
 import static algorithmexecutor.enums.ReservedChars.LINE_SEPARATOR;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AlgorithmCompiler {
+
+    public final static IdentifierValidator VALIDATOR = new IdentifierValidatorImpl();
     
     public static List<AlgorithmCommand> parseAlgorithm(String input) throws AlgorithmCompileException {
         String[] lines = input.split(String.valueOf(LINE_SEPARATOR.getValue()));
@@ -24,26 +27,5 @@ public abstract class AlgorithmCompiler {
         
         return null;
     }
-    
-    /**
-     * Prüft, ob der Name identifier ein gültiger Bezeichner ist. Gültig
-     * bedeutet, dass er nur aus Groß- und Kleinbuchstaben, Ziffern 0 bis 9 und
-     * dem Unterstrich '_' bestehen darf.
-     */
-    private static boolean isValidIdentifierName(String identifier) {
-        int asciiValue;
-        for (int i = 0; i < identifier.length(); i++) {
-            asciiValue = (int) identifier.charAt(i);
-            if (!(asciiValue >= 97 && asciiValue <= 122 
-                    || asciiValue >= 65 && asciiValue <= 90 
-                    || asciiValue >= 48 && asciiValue <= 57
-                    || asciiValue == 95)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    
     
 }

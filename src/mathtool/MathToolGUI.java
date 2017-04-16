@@ -1051,7 +1051,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  */
                 try {
 
-                    Expression expr = Expression.build(input, null);
+                    Expression expr = Expression.build(input);
 
                     try {
                         Expression exprSimplified = expr.simplify(simplifyTypes);
@@ -1101,7 +1101,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  */
                 try {
 
-                    MatrixExpression matExpr = MatrixExpression.build(input, null);
+                    MatrixExpression matExpr = MatrixExpression.build(input);
 
                     try {
                         MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
@@ -1154,7 +1154,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
                  */
                 try {
-                    LogicalExpression logExpr = LogicalExpression.build(input, null);
+                    LogicalExpression logExpr = LogicalExpression.build(input);
                     LogicalExpression logExprSimplified = logExpr.simplify();
                     MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
                             Translator.translateOutputMessage(GUI_EQUIVALENT_TO),

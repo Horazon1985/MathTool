@@ -20,6 +20,7 @@ import abstractexpressions.expression.classes.Variable;
 import abstractexpressions.expression.differentialequation.SolveGeneralDifferentialEquationUtils;
 import abstractexpressions.expression.basic.ExpressionCollection;
 import abstractexpressions.expression.basic.SimplifyPolynomialUtils;
+import static abstractexpressions.expression.classes.Expression.VALIDATOR;
 import graphic.GraphicArea;
 import graphic.GraphicPanel2D;
 import graphic.GraphicPanel3D;
@@ -478,12 +479,12 @@ public abstract class MathCommandCompiler {
          Beispiel: def(x = 2) liefert: result.name = "def" result.params =
          {"x"} result.left = 2 (als Expression)
          */
-        if (Expression.isValidDerivativeOfVariable(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
+        if (VALIDATOR.isValidIdentifier(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
 
             Expression preciseExpression;
             HashSet<String> vars;
             try {
-                preciseExpression = Expression.build(functionTerm, null);
+                preciseExpression = Expression.build(functionTerm);
                 vars = preciseExpression.getContainedIndeterminates();
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
@@ -503,7 +504,7 @@ public abstract class MathCommandCompiler {
          in einen Ausdruck umzuwandeln.
          */
         try {
-            expr = Expression.build(functionTerm, null);
+            expr = Expression.build(functionTerm);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
         }
@@ -555,7 +556,7 @@ public abstract class MathCommandCompiler {
 
         // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
         for (String functionVar : functionVars) {
-            if (!Expression.isValidDerivativeOfVariable(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
+            if (!VALIDATOR.isValidIdentifier(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_1") + functionVar + Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
             }
         }
@@ -637,13 +638,13 @@ public abstract class MathCommandCompiler {
                 if (expressions.indexOf("=") == 0) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY"));
                 }
-                exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")), null);
+                exprs[i] = Expression.build(expressions.substring(0, expressions.indexOf("=")));
                 expressions = expressions.substring(expressions.indexOf("=") + 1, expressions.length());
             }
             if (expressions.length() == 0) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY"));
             }
-            exprs[n] = Expression.build(expressions, null);
+            exprs[n] = Expression.build(expressions);
             return new Command(TypeCommand.latex, exprs);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX") + e.getMessage());
@@ -667,7 +668,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars;
         Expression expr;
         try {
-            expr = Expression.build(params[0], null);
+            expr = Expression.build(params[0]);
             vars = expr.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_NORMAL") + e.getMessage());
@@ -681,7 +682,7 @@ public abstract class MathCommandCompiler {
             if (!params[i].contains("=")) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_NORMAL", i + 1));
             }
-            if (!Expression.isValidDerivativeOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
+            if (!VALIDATOR.isValidIdentifier(params[i].substring(0, params[i].indexOf("=")))) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_NORMAL", params[i].substring(0, params[i].indexOf("="))));
             }
             try {
@@ -710,7 +711,7 @@ public abstract class MathCommandCompiler {
         HashMap<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
-                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), null));
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
         }
 
         return new Command(TypeCommand.normal, new Object[]{expr, varsContainedInParams});
@@ -733,7 +734,7 @@ public abstract class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 3; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT2D", i + 1));
@@ -753,7 +754,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
+            commandParams[params.length - 2] = Expression.build(params[params.length - 2]);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length - 1));
@@ -763,7 +764,7 @@ public abstract class MathCommandCompiler {
         }
 
         try {
-            commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
+            commandParams[params.length - 1] = Expression.build(params[params.length - 1]);
             ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D", params.length));
@@ -797,8 +798,8 @@ public abstract class MathCommandCompiler {
 
         Expression left, right;
         try {
-            left = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
-            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            left = Expression.build(params[0].substring(0, params[0].indexOf("=")));
+            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1));
             left.addContainedIndeterminates(vars);
             right.addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
@@ -829,7 +830,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 3; i < 7; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT2D", i + 1));
@@ -859,7 +860,7 @@ public abstract class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOT3D", i + 1, e.getMessage()));
@@ -888,7 +889,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOT3D", i + 1));
@@ -923,8 +924,8 @@ public abstract class MathCommandCompiler {
 
         Expression left, right;
         try {
-            left = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
-            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            left = Expression.build(params[0].substring(0, params[0].indexOf("=")));
+            right = Expression.build(params[0].substring(params[0].indexOf("=") + 1));
             left.addContainedIndeterminates(vars);
             right.addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
@@ -960,7 +961,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 4; i < 10; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT3D", i + 1));
@@ -989,7 +990,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
 
         try {
-            commandParams[0] = MatrixExpression.build(params[0], null);
+            commandParams[0] = MatrixExpression.build(params[0]);
             ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTCURVE2D", e.getMessage()));
@@ -1008,7 +1009,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            commandParams[2] = Expression.build(params[2], null);
+            commandParams[2] = Expression.build(params[2]);
             ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 3));
@@ -1018,7 +1019,7 @@ public abstract class MathCommandCompiler {
         }
 
         try {
-            commandParams[3] = Expression.build(params[3], null);
+            commandParams[3] = Expression.build(params[3]);
             ((Expression) commandParams[3]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE2D", 4));
@@ -1046,7 +1047,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
 
         try {
-            commandParams[0] = MatrixExpression.build(params[0], null);
+            commandParams[0] = MatrixExpression.build(params[0]);
             ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTCURVE3D", e.getMessage()));
@@ -1065,7 +1066,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            commandParams[2] = Expression.build(params[2], null);
+            commandParams[2] = Expression.build(params[2]);
             ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 3));
@@ -1075,7 +1076,7 @@ public abstract class MathCommandCompiler {
         }
 
         try {
-            commandParams[3] = Expression.build(params[3], null);
+            commandParams[3] = Expression.build(params[3]);
             ((Expression) commandParams[3]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOTCURVE3D", 4));
@@ -1104,7 +1105,7 @@ public abstract class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTCYLINDRICAL", i + 1, e.getMessage()));
@@ -1117,7 +1118,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivativeOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
+            if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
@@ -1137,7 +1138,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
@@ -1167,7 +1168,7 @@ public abstract class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTSPHERICAL", i + 1, e.getMessage()));
@@ -1180,7 +1181,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivativeOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
+            if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL", i + 1));
             }
             if (varsInParams.contains(params[i])) {
@@ -1200,7 +1201,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSPHERICAL", i + 1));
@@ -1229,7 +1230,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
 
         try {
-            commandParams[0] = MatrixExpression.build(params[0], null);
+            commandParams[0] = MatrixExpression.build(params[0]);
             ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_PLOTSURFACE", 1, e.getMessage()));
@@ -1241,7 +1242,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
-            if (!Expression.isValidDerivativeOfVariable(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
+            if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSURFACE", i + 1));
             }
             if (varsInParams.contains(params[i])) {
@@ -1261,7 +1262,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTSURFACE", i + 1));
@@ -1290,7 +1291,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
 
         try {
-            commandParams[0] = MatrixExpression.build(params[0], null);
+            commandParams[0] = MatrixExpression.build(params[0]);
             ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELD2D", e.getMessage()));
@@ -1318,7 +1319,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> varsInLimits = new HashSet<>();
         for (int i = 3; i < 7; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
                 if (!varsInLimits.isEmpty()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD2D", i + 1));
@@ -1332,65 +1333,6 @@ public abstract class MathCommandCompiler {
 
     }
 
-//    @GetCommand(type = TypeCommand.plotvectorfield3d)
-//    private static Command getCommandPlotVectorField3D(String[] params) throws ExpressionException {
-//
-//        /*
-//         Struktur: plotvectorfield3d(matexpr(x, y, z), x, y, z, x_0, x_1, y_0, y_1, z_0, z_1), matexpr(x, y): 
-//         Matrizenusdruck in zwei Variablen. x_0 < x_1, y_0 < y_1: Grenzen des Zeichenbereichs.
-//         */
-//        if (params.length != 10) {
-//            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELD3D"));
-//        }
-//
-//        Object[] commandParams = new Object[10];
-//        HashSet<String> vars = new HashSet<>();
-//
-//        try {
-//            commandParams[0] = MatrixExpression.build(params[0], null);
-//            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
-//        } catch (ExpressionException e) {
-//            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELD3D", e.getMessage()));
-//        }
-//
-//        for (int i = 1; i < 4; i++) {
-//            if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
-//                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
-//            }
-//        }
-//        for (int i = 1; i < 4; i++) {
-//            for (int j = i + 1; j < 4; j++) {
-//                if (params[1].equals(params[2])) {
-//                    throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELD3D", i + 1, j + 1));
-//                }
-//            }
-//        }
-//
-//        for (int i = 1; i < 4; i++) {
-//            commandParams[i] = params[i];
-//            vars.remove(params[i]);
-//        }
-//
-//        if (!vars.isEmpty()) {
-//            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D", params[1], params[2]));
-//        }
-//
-//        HashSet<String> varsInLimits = new HashSet<>();
-//        for (int i = 4; i < 10; i++) {
-//            try {
-//                commandParams[i] = Expression.build(params[i], null);
-//                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
-//                if (!varsInLimits.isEmpty()) {
-//                    throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
-//                }
-//            } catch (ExpressionException e) {
-//                throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD3D", i + 1));
-//            }
-//        }
-//
-//        return new Command(TypeCommand.plotvectorfield3d, commandParams);
-//
-//    }
     @GetCommand(type = TypeCommand.plotpolar)
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
@@ -1407,7 +1349,7 @@ public abstract class MathCommandCompiler {
 
         for (int i = 0; i < params.length - 3; i++) {
             try {
-                commandParams[i] = Expression.build(params[i], null);
+                commandParams[i] = Expression.build(params[i]);
                 ((Expression) commandParams[i]).addContainedIndeterminates(vars);
             } catch (ExpressionException e) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR", i + 1));
@@ -1427,7 +1369,7 @@ public abstract class MathCommandCompiler {
 
         HashSet<String> varsInLimits = new HashSet<>();
         try {
-            commandParams[params.length - 2] = Expression.build(params[params.length - 2], null);
+            commandParams[params.length - 2] = Expression.build(params[params.length - 2]);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length - 1));
@@ -1437,7 +1379,7 @@ public abstract class MathCommandCompiler {
         }
 
         try {
-            commandParams[params.length - 1] = Expression.build(params[params.length - 1], null);
+            commandParams[params.length - 1] = Expression.build(params[params.length - 1]);
             ((Expression) commandParams[params.length - 1]).addContainedIndeterminates(varsInLimits);
             if (!varsInLimits.isEmpty()) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTPOLAR", params.length));
@@ -1471,11 +1413,14 @@ public abstract class MathCommandCompiler {
 
         String varAbsc = params[1], varOrd = params[2];
         // Beide Variablen dürfen KEINE Apostrophs enthalten. Diese sind hier für Ableitungen resereviert.
-        if (!Expression.isValidVariable(varAbsc)) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_2_PARAMETER_IN_SOLVEDIFFEQ"));
+        if (!Expression.isValidIndeterminate(varAbsc)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_SOLVEDIFFEQ", 2));
         }
-        if (!Expression.isValidVariable(varOrd)) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_3_PARAMETER_IN_SOLVEDIFFEQ"));
+        if (!Expression.isValidIndeterminate(varOrd)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VAR_PARAMETER_IN_SOLVEDIFFEQ", 3));
+        }
+        if (varAbsc.equals(varOrd)) {
+            throw new ExpressionException(Translator.translateOutputMessage("MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_SOLVEDIFFEQ"));
         }
 
         if (!params[0].contains("=")) {
@@ -1488,8 +1433,8 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars = new HashSet<>();
         Expression diffEquationLeft, diffEquationRight;
         try {
-            diffEquationLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")), null);
-            diffEquationRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1), null);
+            diffEquationLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")));
+            diffEquationRight = Expression.build(params[0].substring(params[0].indexOf("=") + 1));
             diffEquationLeft.addContainedIndeterminates(vars);
             diffEquationRight.addContainedIndeterminates(vars);
         } catch (ExpressionException e) {
@@ -1561,7 +1506,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars;
         Expression diffEquation;
         try {
-            diffEquation = Expression.build(params[0], null);
+            diffEquation = Expression.build(params[0]);
             vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_SOLVEDIFFEQ") + e.getMessage());
@@ -1593,7 +1538,7 @@ public abstract class MathCommandCompiler {
         // Prüft, ob die AWP-Daten korrekt sind.
         for (int i = 4; i < ord + 6; i++) {
             try {
-                Expression limit = Expression.build(params[i], null);
+                Expression limit = Expression.build(params[i]);
                 if (!limit.isConstant()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_SOLVEDIFFEQ", i + 1));
                 }
@@ -1638,7 +1583,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars;
         Expression expr;
         try {
-            expr = Expression.build(params[0], null);
+            expr = Expression.build(params[0]);
             vars = expr.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TANGENT") + e.getMessage());
@@ -1652,7 +1597,7 @@ public abstract class MathCommandCompiler {
             if (!params[i].contains("=")) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_TANGENT", i + 1));
             }
-            if (!Expression.isValidDerivativeOfVariable(params[i].substring(0, params[i].indexOf("=")))) {
+            if (!VALIDATOR.isValidIdentifier(params[i].substring(0, params[i].indexOf("=")))) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_TANGENT", params[i].substring(0, params[i].indexOf("="))));
             }
             try {
@@ -1681,7 +1626,7 @@ public abstract class MathCommandCompiler {
         HashMap<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
-                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), null));
+                    Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
         }
 
         return new Command(TypeCommand.tangent, new Object[]{expr, varsContainedInParams});
@@ -1734,7 +1679,7 @@ public abstract class MathCommandCompiler {
         HashSet<String> vars;
         Expression diffEquation;
         try {
-            diffEquation = Expression.build(params[0], null);
+            diffEquation = Expression.build(params[0]);
             vars = diffEquation.getContainedIndeterminates();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_1_PARAMETER_IN_TAYLORDIFFEQ") + e.getMessage());
@@ -1769,7 +1714,7 @@ public abstract class MathCommandCompiler {
         Expression limit;
         for (int i = 4; i < ord + 5; i++) {
             try {
-                limit = Expression.build(params[i], null).simplify();
+                limit = Expression.build(params[i]).simplify();
                 varsInLimits = limit.getContainedIndeterminates();
                 /*
                  Im Folgenden wird geprüft, ob in den Anfangsbedingungen

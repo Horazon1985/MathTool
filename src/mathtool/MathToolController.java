@@ -228,7 +228,7 @@ public class MathToolController {
                 // Variablen laden
                 for (DefinedVar var : definedVars.getDefinedVarList()) {
                     try {
-                        Variable.create(var.getVarname(), Expression.build(var.getValue(), null));
+                        Variable.create(var.getVarname(), Expression.build(var.getValue()));
                     } catch (Exception e) {
                         // Nichts tun, weitere Variablen einlesen.
                     }
@@ -247,7 +247,7 @@ public class MathToolController {
                 for (DefinedFunction function : definedFunctions.getDefinedFunctionList()) {
                     try {
                         arguments = function.getArguments().getArguments();
-                        abstractExpression = Expression.build(function.getFunctionterm(), null);
+                        abstractExpression = Expression.build(function.getFunctionterm());
                         vars = abstractExpression.getContainedIndeterminates();
                         /*
                          Wenn f als Argumente die Variablen U_1, U_2, ... enthält,
@@ -328,13 +328,13 @@ public class MathToolController {
             }
 
             try {
-                Expression.build(s, null);
+                Expression.build(s);
             } catch (ExpressionException eExpr) {
                 try {
-                    LogicalExpression.build(s, null);
+                    LogicalExpression.build(s);
                 } catch (ExpressionException eLogExpr) {
                     try {
-                        MatrixExpression.build(s, null);
+                        MatrixExpression.build(s);
                     } catch (ExpressionException eMatExpr) {
                         mathToolTextField.setForeground(Color.red);
                         mathToolTextField.setToolTipText(eMatExpr.getMessage());
