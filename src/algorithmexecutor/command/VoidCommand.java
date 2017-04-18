@@ -19,5 +19,10 @@ public class VoidCommand extends AlgorithmCommand {
     public Identifier[] getIdentifiers() {
         return identifiers;
     }
+
+    @Override
+    public void execute() {
+        
+    }
     
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class AlgorithmCompiler {
 
     public final static IdentifierValidator VALIDATOR = new IdentifierValidatorImpl();
-    
+
     public static List<AlgorithmCommand> parseAlgorithm(String input) throws AlgorithmCompileException {
         String[] lines = input.split(String.valueOf(LINE_SEPARATOR.getValue()));
         List<AlgorithmCommand> commands = new ArrayList<>();
@@ -19,13 +19,39 @@ public abstract class AlgorithmCompiler {
         }
         return commands;
     }
-    
+
     private static AlgorithmCommand parseLine(String line) throws AlgorithmCompileException {
-    
-        
-        
-        
+
         return null;
     }
-    
+
+    public static String preprocessAlgorithm(String input) {
+        String outputFormatted = input;
+        while (outputFormatted.contains("  ")) {
+            outputFormatted = outputFormatted.replaceAll("  ", " ");
+        }
+        while (outputFormatted.contains(", ")) {
+            outputFormatted = outputFormatted.replaceAll(", ", ",");
+        }
+        while (outputFormatted.contains("; ")) {
+            outputFormatted = outputFormatted.replaceAll("; ", ";");
+        }
+        while (outputFormatted.contains(" ;")) {
+            outputFormatted = outputFormatted.replaceAll(" ;", ";");
+        }
+        while (outputFormatted.contains(" {")) {
+            outputFormatted = outputFormatted.replaceAll(" \\{", "\\{");
+        }
+        while (outputFormatted.contains("{ ")) {
+            outputFormatted = outputFormatted.replaceAll("\\{ ", "\\{");
+        }
+        while (outputFormatted.contains(" }")) {
+            outputFormatted = outputFormatted.replaceAll(" \\}", "\\}");
+        }
+        while (outputFormatted.contains("} ")) {
+            outputFormatted = outputFormatted.replaceAll("\\} ", "\\}");
+        }
+        return outputFormatted;
+    }
+
 }

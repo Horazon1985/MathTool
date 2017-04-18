@@ -1,4 +1,4 @@
-package algorithmexecutor.utils;
+package algorithmexecutor.model;
 
 import algorithmexecutor.enums.IdentifierTypes;
 

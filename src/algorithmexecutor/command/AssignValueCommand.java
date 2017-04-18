@@ -24,6 +24,12 @@ public class AssignValueCommand extends AlgorithmCommand {
     public Identifier getIdentifierSrc() {
         return identifierSrc;
     }
+
+    @Override
+    public void execute() {
+
+
+    }
     
     
 }

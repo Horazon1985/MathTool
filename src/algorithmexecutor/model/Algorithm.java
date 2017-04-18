@@ -1,4 +1,4 @@
-package algorithmexecutor.utils;
+package algorithmexecutor.model;
 
 import algorithmexecutor.command.AlgorithmCommand;
 import java.util.List;
@@ -18,14 +18,30 @@ public class Algorithm {
     }
 
     public String getSignature() {
-        String signature = this.name + "(";
-        for (int i = 0; i < this.inputParameters.length; i++) {
-            signature += this.inputParameters[i].getType();
-            if (i < this.inputParameters.length - 1) {
+        String signature = this.getName() + "(";
+        for (int i = 0; i < this.getInputParameters().length; i++) {
+            signature += this.getInputParameters()[i].getType();
+            if (i < this.getInputParameters().length - 1) {
                 signature += ",";
             }
         }   
         return signature + ")";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public InputOutputParameter[] getInputParameters() {
+        return inputParameters;
+    }
+
+    public InputOutputParameter getOutputParameter() {
+        return outputParameter;
+    }
+
+    public List<AlgorithmCommand> getCommands() {
+        return commands;
     }
     
 }
