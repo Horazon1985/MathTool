@@ -3,5 +3,7 @@ package algorithmexecutor.exceptions;
 public abstract class ExecutionExecptionTexts {
     
     public static final String MAIN_NOT_FOUND = "MAIN_NOT_FOUND";
+    public static final String ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET = "ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET";
+    public static final String NO_SUCH_COMMAND = "NO_SUCH_COMMAND";
     
 }
