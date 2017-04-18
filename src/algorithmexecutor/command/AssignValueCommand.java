@@ -1,5 +1,6 @@
 package algorithmexecutor.command;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
@@ -9,19 +10,23 @@ import algorithmexecutor.model.Algorithm;
 public class AssignValueCommand extends AlgorithmCommand {
     
     private final Identifier identifierSrc;
-    private final Identifier identifierTarget;
+    private final AbstractExpression targetExpression;
     
-    public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, Identifier identifierTarget) throws AlgorithmCompileException {
+    public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         super(algorithm);
-        if (identifierSrc.getType() != identifierTarget.getType()) {
+        if (areTypesCompatible(identifierSrc, targetExpression)) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
-        this.identifierTarget = identifierTarget;
+        this.targetExpression = targetExpression;
+    }
+    
+    private boolean areTypesCompatible(Identifier identifierSrc, AbstractExpression targetExpression) {
+        return true;
     }
 
-    public Identifier getIdentifierTarget() {
-        return identifierTarget;
+    public AbstractExpression getIdentifierTarget() {
+        return targetExpression;
     }
 
     public Identifier getIdentifierSrc() {
