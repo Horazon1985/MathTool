@@ -1,6 +1,5 @@
 package algorithmexecutor.command;
 
-import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 

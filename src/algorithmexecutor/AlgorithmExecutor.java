@@ -4,6 +4,7 @@ import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
+import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import exceptions.EvaluationException;
@@ -24,13 +25,12 @@ public abstract class AlgorithmExecutor {
      *
      * @throws AlgorithmExecutionException
      */
-    public static void executeAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException, EvaluationException {
+    public static Identifier executeAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException, EvaluationException {
         // Alle (lokalen) Variablen und Parameter aus dem Speicher entfernen.
         MEMORY_MAP.clear();
         Algorithm mainAlg = getMainAlgorithm(algorithms);
-        for (AlgorithmCommand c : mainAlg.getCommands()) {
-            c.execute();
-        }
+        Identifier result = mainAlg.execute();
+        return result;
     }
 
     /**

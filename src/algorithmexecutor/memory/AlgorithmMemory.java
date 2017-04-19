@@ -15,17 +15,17 @@ public class AlgorithmMemory {
     public AlgorithmMemory() {
         this.memory = new HashSet<>();
     }
-    
+
     public AlgorithmMemory(List<Identifier> identifiers) {
         this.memory = new HashSet<>();
         this.memory.addAll(identifiers);
     }
-    
+
     public AlgorithmMemory(Identifier[] identifiers) {
         this.memory = new HashSet<>();
         this.memory.addAll(Arrays.asList(identifiers));
     }
-    
+
     public Set<Identifier> getMemory() {
         return this.memory;
     }
@@ -66,7 +66,9 @@ public class AlgorithmMemory {
         Während der Laufzeit kann es zu keinen Namensclashs kommen,
         da der Algorithmus zuvor bereits kompiliert wurde
          */
-        this.memory.add(identifier);
+        if (!this.memory.contains(identifier)) {
+            this.memory.add(identifier);
+        }
     }
 
     public void removeFromMemory(Identifier identifier) {

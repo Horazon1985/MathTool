@@ -23,7 +23,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         super(algorithm);
-        if (areTypesCompatible(identifierSrc, targetExpression)) {
+        if (!areTypesCompatible(identifierSrc, targetExpression)) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
@@ -49,6 +49,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         checkForUnknownIdentifier(alg, varsInTargetExpr);
         AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
         this.identifierSrc.setValue(targetExprSimplified);
+        AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return this.identifierSrc;
     }
 
@@ -95,7 +96,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             return ((LogicalExpression) targetExprSimplified).simplify();
         }
         return ((MatrixExpression) targetExprSimplified).simplify();
-
+        
     }
 
 }

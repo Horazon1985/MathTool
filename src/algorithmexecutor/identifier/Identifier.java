@@ -52,6 +52,11 @@ public class Identifier {
         final Identifier other = (Identifier) obj;
         return Objects.equals(this.name, other.name);
     }
+    
+    @Override
+    public String toString() {
+        return "Identifier[type = " + this.type + ", name = " + this.name + ", value = " + this.value + "]";
+    }
 
     
 }

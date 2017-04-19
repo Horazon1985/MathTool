@@ -5,6 +5,7 @@ import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
+import exceptions.EvaluationException;
 
 public class VoidCommand extends AlgorithmCommand {
     
@@ -37,7 +38,7 @@ public class VoidCommand extends AlgorithmCommand {
     }
 
     @Override
-    public Identifier execute() throws AlgorithmExecutionException {
+    public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         for (Algorithm alg : AlgorithmCompiler.STORED_ALGORITHMS) {
             if (alg.getSignature().equals(getSignature()) && alg.getOutputParameter() == null) {
                 alg.execute();

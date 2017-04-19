@@ -25,4 +25,15 @@ public enum IdentifierTypes {
         return MATRIX_EXPRESSION;
     }
 
+    @Override
+    public String toString() {
+        if (this == EXPRESSION) {
+            return "expression";
+        }
+        if (this == EXPRESSION) {
+            return "logical expression";
+        }
+        return "matrix expression";
+    }
+
 }

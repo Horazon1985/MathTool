@@ -23,4 +23,11 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "RETURN_TYPE_EXPECTED">
+        <German>Ein Rückgabewert wird erwartet.</German>
+        <English>Return value expected.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    
 </objects>
