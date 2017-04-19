@@ -4,6 +4,7 @@ import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
+import exceptions.EvaluationException;
 import java.util.List;
 
 public class Algorithm {
@@ -47,7 +48,7 @@ public class Algorithm {
         return commands;
     }
     
-    public Identifier execute() throws AlgorithmExecutionException {
+    public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
         for (Identifier inputParameter : this.inputParameters) {
             if (inputParameter.getValue() == null) {

@@ -1,5 +1,6 @@
 package algorithmexecutor.identifier;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.enums.IdentifierTypes;
 import java.util.Objects;
 
@@ -7,7 +8,7 @@ public class Identifier {
 
     private final IdentifierTypes type;
     private final String name;
-    private Object value;
+    private AbstractExpression value;
     
     public Identifier(IdentifierTypes type, String name) {
         this.type = type;
@@ -22,11 +23,11 @@ public class Identifier {
         return name;
     }
     
-    public Object getValue() {
+    public AbstractExpression getValue() {
         return value;
     }
     
-    public void setValue(Object value) {
+    public void setValue(AbstractExpression value) {
         this.value = value;
     }
 

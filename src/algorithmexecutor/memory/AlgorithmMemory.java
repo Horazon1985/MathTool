@@ -3,12 +3,32 @@ package algorithmexecutor.memory;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class MainAlgorithmMemory {
+public class AlgorithmMemory {
 
-    private final Set<Identifier> memory = new HashSet<>();
+    private final Set<Identifier> memory;
+
+    public AlgorithmMemory() {
+        this.memory = new HashSet<>();
+    }
+    
+    public AlgorithmMemory(List<Identifier> identifiers) {
+        this.memory = new HashSet<>();
+        this.memory.addAll(identifiers);
+    }
+    
+    public AlgorithmMemory(Identifier[] identifiers) {
+        this.memory = new HashSet<>();
+        this.memory.addAll(Arrays.asList(identifiers));
+    }
+    
+    public Set<Identifier> getMemory() {
+        return this.memory;
+    }
 
     public boolean containsIdentifier(Identifier identifier) {
         /*
@@ -17,6 +37,15 @@ public class MainAlgorithmMemory {
         enthält.
          */
         return this.memory.contains(identifier);
+    }
+
+    public boolean containsIdentifierWithGivenName(String identifierName) {
+        for (Identifier identifier : this.memory) {
+            if (identifier.getName().equals(identifierName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clearMemory() {

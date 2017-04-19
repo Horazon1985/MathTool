@@ -3,6 +3,7 @@ package algorithmexecutor.command;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
+import exceptions.EvaluationException;
 
 public abstract class AlgorithmCommand {
     
@@ -16,6 +17,6 @@ public abstract class AlgorithmCommand {
         return algorithm;
     }
     
-    public abstract Identifier execute() throws AlgorithmExecutionException;
+    public abstract Identifier execute() throws AlgorithmExecutionException, EvaluationException;
     
 }

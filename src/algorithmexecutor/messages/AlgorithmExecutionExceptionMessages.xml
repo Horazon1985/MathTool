@@ -17,4 +17,10 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "UNKNOWS_IDENTIFIER">
+        <German>Unbekanntes Symbol: [0].</German>
+        <English>Unknows identifier: [0].</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
 </objects>
