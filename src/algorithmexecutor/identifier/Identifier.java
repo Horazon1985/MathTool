@@ -57,6 +57,12 @@ public class Identifier {
     public String toString() {
         return "Identifier[type = " + this.type + ", name = " + this.name + ", value = " + this.value + "]";
     }
+    
+    public Identifier createIdentifier() {
+    
+    
+        return null;
+    }
 
     
 }

@@ -72,12 +72,15 @@ public class Algorithm {
         Identifier resultIdentifier = null;
 
         int commandIndex = 0;
-        while (!isLastCommand(commandIndex)) {
+        while (true) {
             resultIdentifier = this.commands.get(commandIndex).execute();
             if (this.commands.get(commandIndex) instanceof ReturnCommand) {
                 return resultIdentifier;
             } else {
                 resultIdentifier = null;
+            }
+            if (isLastCommand(commandIndex)) {
+                break;
             }
             commandIndex = getNextCommandIndex(commandIndex);
         }
