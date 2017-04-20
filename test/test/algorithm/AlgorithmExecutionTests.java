@@ -92,6 +92,39 @@ public class AlgorithmExecutionTests {
         }
     }
     
+    @Test
+    public void executAlgorithmCallingAnotherAlgorithmTest() {
+        List<AlgorithmCommand> commandsMain = new ArrayList<>();
+        List<AlgorithmCommand> commandsComputeGgt = new ArrayList<>();
+        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commandsMain);
+        
+        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{}, null, commandsMain);
+        
+        try {
+            Identifier idX = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
+            AlgorithmCommand command = new AssignValueCommand(mainAlg, idX, Expression.build("2+5"));
+            commandsMain.add(command);
+            Identifier idY = Identifier.createIdentifier(mainAlg, "y", IdentifierTypes.MATRIX_EXPRESSION);
+            command = new AssignValueCommand(mainAlg, idY, MatrixExpression.build("[0,1;3,x]"));
+            commandsMain.add(command);
+            command = new ReturnCommand(mainAlg, idY);
+            commandsMain.add(command);
+        } catch (ExpressionException | AlgorithmCompileException ex) {
+            fail();
+        }
+        
+        List<Algorithm> algorithms = new ArrayList<>();
+        algorithms.add(mainAlg);
+        try {
+            Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
+            assertTrue(result.getType() == IdentifierTypes.MATRIX_EXPRESSION);
+            assertTrue(result.getName().equals("y"));
+            assertTrue(((MatrixExpression) result.getValue()).equals(MatrixExpression.build("[0,1;3,7]")));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+    
     
 
 }

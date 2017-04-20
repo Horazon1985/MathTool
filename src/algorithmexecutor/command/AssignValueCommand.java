@@ -20,6 +20,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
+    private final Algorithm targetAlgorithm;
 
     public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         super(algorithm);
@@ -28,10 +29,25 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
+        this.targetAlgorithm = null;
+    }
+
+    public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
+        super(algorithm);
+        if (!areTypesCompatible(identifierSrc, targetAlgorithm.getOutputParameter())) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
+        }
+        this.identifierSrc = identifierSrc;
+        this.targetExpression = null;
+        this.targetAlgorithm = targetAlgorithm;
     }
 
     private boolean areTypesCompatible(Identifier identifierSrc, AbstractExpression targetExpression) {
         return identifierSrc.getType().isSameOrGeneralTypeOf(IdentifierTypes.identifierTypeOf(targetExpression));
+    }
+
+    private boolean areTypesCompatible(Identifier identifierSrc, Identifier identifierTarget) {
+        return identifierSrc.getType().isSameOrGeneralTypeOf(identifierTarget.getType());
     }
 
     public AbstractExpression getIdentifierTarget() {
@@ -46,14 +62,21 @@ public class AssignValueCommand extends AlgorithmCommand {
     public String toString() {
         return "AssignValueCommand[identifierSrc = " + this.identifierSrc + ", targetExpression = " + this.targetExpression + "]";
     }
-    
+
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         Algorithm alg = getAlgorithm();
         Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
         checkForUnknownIdentifier(alg, varsInTargetExpr);
-        AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
-        this.identifierSrc.setValue(targetExprSimplified);
+
+        if (this.targetExpression != null) {
+            AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
+            this.identifierSrc.setValue(targetExprSimplified);
+        } else {
+            AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
+            this.identifierSrc.setValue(targetExprSimplified);
+        }
+
         AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return this.identifierSrc;
     }
@@ -101,7 +124,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             return ((LogicalExpression) targetExprSimplified).simplify();
         }
         return ((MatrixExpression) targetExprSimplified).simplify();
-        
+
     }
 
 }
