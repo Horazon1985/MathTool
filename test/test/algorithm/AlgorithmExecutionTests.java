@@ -63,6 +63,33 @@ public class AlgorithmExecutionTests {
         }
     }
     
+    @Test
+    public void executeAnotherSimpleMainAlgorithmTest() {
+        List<AlgorithmCommand> commands = new ArrayList<>();
+        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
+        
+        try {
+            Identifier id = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
+            AlgorithmCommand command = new AssignValueCommand(mainAlg, id, Expression.build("2+5"));
+            commands.add(command);
+            command = new ReturnCommand(mainAlg, id);
+            commands.add(command);
+        } catch (ExpressionException | AlgorithmCompileException ex) {
+            fail();
+        }
+        
+        List<Algorithm> algorithms = new ArrayList<>();
+        algorithms.add(mainAlg);
+        try {
+            Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("x"));
+            assertTrue(((Expression) result.getValue()).equals(new Constant(7)));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+    
     
 
 }
