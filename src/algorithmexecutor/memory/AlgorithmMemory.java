@@ -3,49 +3,38 @@ package algorithmexecutor.memory;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class AlgorithmMemory {
 
-    private final Set<Identifier> memory;
+    private final Map<String, Identifier> memory;
 
     public AlgorithmMemory() {
-        this.memory = new HashSet<>();
+        this.memory = new HashMap<>();
     }
 
     public AlgorithmMemory(List<Identifier> identifiers) {
-        this.memory = new HashSet<>();
-        this.memory.addAll(identifiers);
+        this();
+        for (Identifier identifier : identifiers) {
+            this.memory.put(identifier.getName(), identifier);
+        }
     }
 
     public AlgorithmMemory(Identifier[] identifiers) {
-        this.memory = new HashSet<>();
-        this.memory.addAll(Arrays.asList(identifiers));
+        this();
+        for (Identifier identifier : identifiers) {
+            this.memory.put(identifier.getName(), identifier);
+        }
     }
 
-    public Set<Identifier> getMemory() {
+    public Map<String, Identifier> getMemory() {
         return this.memory;
     }
 
-    public boolean containsIdentifier(Identifier identifier) {
-        /*
-        Da equals() in identifier die Attribute type und value nicht einbezieht,
-        wird also nur überprüft, ob memory einen Identifier mit demselben Namen 
-        enthält.
-         */
-        return this.memory.contains(identifier);
-    }
-
-    public boolean containsIdentifierWithGivenName(String identifierName) {
-        for (Identifier identifier : this.memory) {
-            if (identifier.getName().equals(identifierName)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean containsIdentifier(String identifierName) {
+        return this.memory.get(identifierName) != null;
     }
 
     public void clearMemory() {
@@ -53,12 +42,11 @@ public class AlgorithmMemory {
     }
 
     public void addToMemoryInCompileTime(Identifier identifier) throws AlgorithmCompileException {
-        if (!this.memory.contains(identifier)) {
-            this.memory.add(identifier);
-        } else {
+        if (this.memory.get(identifier.getName()) != null) {
             // Identifier existiert bereits!
             throw new AlgorithmCompileException(CompileExceptionTexts.IDENTIFIER_ALREADY_DEFINED);
         }
+        this.memory.put(identifier.getName(), identifier);
     }
 
     public void addToMemoryInRuntime(Identifier identifier) {
@@ -66,13 +54,11 @@ public class AlgorithmMemory {
         Während der Laufzeit kann es zu keinen Namensclashs kommen,
         da der Algorithmus zuvor bereits kompiliert wurde
          */
-        if (!this.memory.contains(identifier)) {
-            this.memory.add(identifier);
-        }
+        this.memory.put(identifier.getName(), identifier);
     }
 
     public void removeFromMemory(Identifier identifier) {
-        this.memory.remove(identifier);
+        this.memory.remove(identifier.getName());
     }
 
 }

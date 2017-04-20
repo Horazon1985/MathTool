@@ -25,6 +25,11 @@ public class VoidCommand extends AlgorithmCommand {
     public Identifier[] getIdentifiers() {
         return identifiers;
     }
+
+    @Override
+    public String toString() {
+        return "VoidCommand[name = " + this.name + ", identifiers = " + this.identifiers + "]";
+    }
     
     public String getSignature() {
         String signature = this.name + "(";

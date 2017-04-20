@@ -23,6 +23,8 @@ public class Algorithm {
         this.inputParameters = inputParameters;
         this.outputParameter = outputParameter;
         this.commands = commands;
+        // Speicher für Identifier allokieren.
+        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory());
     }
 
     public String getSignature() {
@@ -84,6 +86,7 @@ public class Algorithm {
             }
             commandIndex = getNextCommandIndex(commandIndex);
         }
+        AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
         return resultIdentifier;
     }
 

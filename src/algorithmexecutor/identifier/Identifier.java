@@ -1,7 +1,9 @@
 package algorithmexecutor.identifier;
 
 import abstractexpressions.interfaces.AbstractExpression;
+import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.model.Algorithm;
 import java.util.Objects;
 
 public class Identifier {
@@ -10,9 +12,15 @@ public class Identifier {
     private final String name;
     private AbstractExpression value;
     
-    public Identifier(IdentifierTypes type, String name) {
+    private Identifier(IdentifierTypes type, String name) {
         this.type = type;
         this.name = name;
+    }
+
+    private Identifier(IdentifierTypes type, String name, AbstractExpression value) {
+        this.type = type;
+        this.name = name;
+        this.value = value;
     }
 
     public IdentifierTypes getType() {
@@ -58,10 +66,18 @@ public class Identifier {
         return "Identifier[type = " + this.type + ", name = " + this.name + ", value = " + this.value + "]";
     }
     
-    public Identifier createIdentifier() {
-    
-    
-        return null;
+    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type) {
+        if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
+            return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
+        }
+        return new Identifier(type, identifierName);
+    }
+
+    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type, AbstractExpression value) {
+        if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
+            return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
+        }
+        return new Identifier(type, identifierName, value);
     }
 
     

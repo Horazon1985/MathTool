@@ -11,6 +11,11 @@ public class ReturnCommand extends AlgorithmCommand {
         super(algorithm);
         this.identifier = identifier;
     }
+
+    @Override
+    public String toString() {
+        return "ReturnCommand[identifier = " + this.identifier + "]";
+    }
     
     @Override
     public Identifier execute() {

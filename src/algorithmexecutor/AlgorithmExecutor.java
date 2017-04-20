@@ -1,6 +1,5 @@
 package algorithmexecutor;
 
-import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;

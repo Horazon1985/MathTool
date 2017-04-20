@@ -31,10 +31,6 @@ public class AlgorithmExecutionTests {
         try {
             Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
             assertTrue(result == null);
-        } catch (AlgorithmExecutionException ex) {
-            fail();
-        } catch (EvaluationException ex) {
-            fail();
         } catch (Exception ex) {
             fail();
         }
@@ -46,7 +42,7 @@ public class AlgorithmExecutionTests {
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
         
         try {
-            Identifier id = new Identifier(IdentifierTypes.EXPRESSION, "x");
+            Identifier id = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
             AlgorithmCommand command = new AssignValueCommand(mainAlg, id, Expression.build("2+5"));
             commands.add(command);
             command = new ReturnCommand(mainAlg, id);
@@ -62,11 +58,7 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
             assertTrue(result.getName().equals("x"));
             assertTrue(((Expression) result.getValue()).equals(new Constant(7)));
-        } catch (AlgorithmExecutionException ex) {
-            fail();
-        } catch (EvaluationException ex) {
-            fail();
-        } catch (Exception ex) {
+        } catch (Exception e) {
             fail();
         }
     }
