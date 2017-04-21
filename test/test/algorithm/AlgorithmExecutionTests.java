@@ -2,6 +2,9 @@ package test.algorithm;
 
 import abstractexpressions.expression.classes.Constant;
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Operator;
+import abstractexpressions.expression.classes.TypeOperator;
+import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
@@ -39,7 +42,7 @@ public class AlgorithmExecutionTests {
     public void executeSimpleMainAlgorithmTest() {
         List<AlgorithmCommand> commands = new ArrayList<>();
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
-        
+
         try {
             Identifier id = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
             AlgorithmCommand command = new AssignValueCommand(mainAlg, id, Expression.build("2+5"));
@@ -49,7 +52,7 @@ public class AlgorithmExecutionTests {
         } catch (ExpressionException | AlgorithmCompileException ex) {
             fail();
         }
-        
+
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
@@ -61,12 +64,12 @@ public class AlgorithmExecutionTests {
             fail();
         }
     }
-    
+
     @Test
     public void executeAnotherSimpleMainAlgorithmTest() {
         List<AlgorithmCommand> commands = new ArrayList<>();
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
-        
+
         try {
             Identifier idX = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
             AlgorithmCommand command = new AssignValueCommand(mainAlg, idX, Expression.build("2+5"));
@@ -79,7 +82,7 @@ public class AlgorithmExecutionTests {
         } catch (ExpressionException | AlgorithmCompileException ex) {
             fail();
         }
-        
+
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
@@ -91,40 +94,49 @@ public class AlgorithmExecutionTests {
             fail();
         }
     }
-    
+
     @Test
     public void executAlgorithmCallingAnotherAlgorithmTest() {
         List<AlgorithmCommand> commandsMain = new ArrayList<>();
         List<AlgorithmCommand> commandsComputeGgt = new ArrayList<>();
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commandsMain);
-        
-        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{}, null, commandsMain);
-        
+
+        Identifier idA = Identifier.createIdentifier(mainAlg, "a", IdentifierTypes.EXPRESSION);
+        Identifier idB = Identifier.createIdentifier(mainAlg, "b", IdentifierTypes.EXPRESSION);
+        Identifier idGgt = Identifier.createIdentifier(mainAlg, "ggt", IdentifierTypes.EXPRESSION);
+        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, idGgt, commandsComputeGgt);
+
+        Identifier idResult = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
+
         try {
-            Identifier idX = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
-            AlgorithmCommand command = new AssignValueCommand(mainAlg, idX, Expression.build("2+5"));
+            AlgorithmCommand command = new AssignValueCommand(mainAlg, idA, Expression.build("15"));
             commandsMain.add(command);
-            Identifier idY = Identifier.createIdentifier(mainAlg, "y", IdentifierTypes.MATRIX_EXPRESSION);
-            command = new AssignValueCommand(mainAlg, idY, MatrixExpression.build("[0,1;3,x]"));
+            command = new AssignValueCommand(mainAlg, idB, Expression.build("25"));
             commandsMain.add(command);
-            command = new ReturnCommand(mainAlg, idY);
+            command = new AssignValueCommand(mainAlg, idGgt, calledAlg);
             commandsMain.add(command);
+            command = new ReturnCommand(mainAlg, idGgt);
+            commandsMain.add(command);
+
+            command = new AssignValueCommand(calledAlg, idResult, Expression.build("gcd(a,b)"));
+            commandsComputeGgt.add(command);
+            command = new ReturnCommand(calledAlg, idResult);
+            commandsComputeGgt.add(command);
+
         } catch (ExpressionException | AlgorithmCompileException ex) {
             fail();
         }
-        
+
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
             Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
-            assertTrue(result.getType() == IdentifierTypes.MATRIX_EXPRESSION);
-            assertTrue(result.getName().equals("y"));
-            assertTrue(((MatrixExpression) result.getValue()).equals(MatrixExpression.build("[0,1;3,7]")));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("ggt"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("5")));
         } catch (Exception e) {
             fail();
         }
     }
-    
-    
 
 }

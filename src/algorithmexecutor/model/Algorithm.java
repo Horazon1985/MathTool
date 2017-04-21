@@ -1,5 +1,9 @@
 package algorithmexecutor.model;
 
+import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Variable;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
+import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.ControllStructure;
@@ -10,6 +14,7 @@ import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
 import java.util.List;
+import java.util.Map;
 
 public class Algorithm {
 
@@ -24,7 +29,7 @@ public class Algorithm {
         this.outputParameter = outputParameter;
         this.commands = commands;
         // Speicher für Identifier allokieren.
-        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory());
+        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(inputParameters));
     }
 
     public String getSignature() {
@@ -63,14 +68,13 @@ public class Algorithm {
                 throw new AlgorithmExecutionException(ExecutionExecptionTexts.RETURN_TYPE_EXPECTED);
             }
         }
-        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory());
+        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.getInputParameters()));
 
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
-        for (Identifier inputParameter : this.inputParameters) {
-            if (inputParameter.getValue() == null) {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
-            }
-        }
+        checkForIdentifierWithoutValues();
+        // Variablenwerte erneut setzen.
+        refreshVariableValues();
+        
         Identifier resultIdentifier = null;
 
         int commandIndex = 0;
@@ -88,6 +92,25 @@ public class Algorithm {
         }
         AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
         return resultIdentifier;
+    }
+
+    private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {
+        for (Identifier inputParameter : this.inputParameters) {
+            if (inputParameter.getValue() == null) {
+                throw new AlgorithmExecutionException(ExecutionExecptionTexts.ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
+            }
+        }
+    }
+
+    private void refreshVariableValues() {
+        Map<String, Identifier> memory = AlgorithmExecutor.getMemoryMap().get(this).getMemory();
+        for (String var : memory.keySet()) {
+            if (memory.get(var).getValue() instanceof Expression) {
+                Variable.setPreciseExpression(memory.get(var).getName(), (Expression) memory.get(var).getValue());
+            } else if (memory.get(var).getValue() instanceof LogicalExpression) {
+                LogicalVariable.setValue(memory.get(var).getName(), ((LogicalExpression) memory.get(var).getValue()).evaluate());
+            }
+        }
     }
 
     private boolean isLastCommand(int i) {

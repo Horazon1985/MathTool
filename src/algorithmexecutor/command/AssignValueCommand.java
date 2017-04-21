@@ -1,6 +1,7 @@
 package algorithmexecutor.command;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Operator;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
@@ -14,6 +15,7 @@ import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AssignValueCommand extends AlgorithmCommand {
@@ -60,25 +62,37 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        return "AssignValueCommand[identifierSrc = " + this.identifierSrc + ", targetExpression = " + this.targetExpression + "]";
+        return "AssignValueCommand[identifierSrc = " + this.identifierSrc
+                + ", targetExpression = " + this.targetExpression
+                + ", targetAlgorithm = " + this.targetAlgorithm.getSignature() + "]";
     }
 
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         Algorithm alg = getAlgorithm();
-        Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
-        checkForUnknownIdentifier(alg, varsInTargetExpr);
 
         if (this.targetExpression != null) {
+            Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
+            checkForUnknownIdentifier(alg, varsInTargetExpr);
             AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
             this.identifierSrc.setValue(targetExprSimplified);
         } else {
+            Set<String> varsInTargetExpr = getVarsFromAlgorithmParameters(this.targetAlgorithm);
+            checkForUnknownIdentifier(alg, varsInTargetExpr);
             AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
             this.identifierSrc.setValue(targetExprSimplified);
         }
 
         AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return this.identifierSrc;
+    }
+
+    private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
+        Set<String> varsInAlgorithmSignature = new HashSet<>();
+        for (Identifier identifier : alg.getInputParameters()) {
+            varsInAlgorithmSignature.addAll(identifier.getValue().getContainedIndeterminates());
+        }
+        return varsInAlgorithmSignature;
     }
 
     private void checkForUnknownIdentifier(Algorithm alg, Set<String> varsInTargetExpr) throws AlgorithmExecutionException {
@@ -92,6 +106,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private AbstractExpression simplifyTargetExpression(Algorithm alg) throws EvaluationException {
         AbstractExpression targetExprSimplified;
+
         if (this.targetExpression instanceof Expression) {
             Expression exprSimplified = (Expression) this.targetExpression;
             for (Identifier identifier : AlgorithmExecutor.getMemoryMap().get(alg).getMemory().values()) {
