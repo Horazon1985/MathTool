@@ -7,12 +7,12 @@ import exceptions.EvaluationException;
 
 public abstract class AlgorithmCommand {
     
-    protected final Algorithm algorithm;
+    protected Algorithm algorithm;
 
-    public AlgorithmCommand(Algorithm algorithm) {
+    public void setAlgorithm(Algorithm algorithm) {
         this.algorithm = algorithm;
     }
-
+    
     public Algorithm getAlgorithm() {
         return algorithm;
     }

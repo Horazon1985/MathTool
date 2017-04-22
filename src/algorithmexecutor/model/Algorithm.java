@@ -13,6 +13,7 @@ import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,10 @@ public class Algorithm {
         this.commands = commands;
         // Speicher für Identifier allokieren.
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(inputParameters));
+    }
+
+    public Algorithm(String name, Identifier[] inputParameters, Identifier outputParameter) {
+        this(name, inputParameters, outputParameter, new ArrayList<AlgorithmCommand>());
     }
 
     public String getSignature() {
@@ -59,6 +64,11 @@ public class Algorithm {
         return commands;
     }
 
+    public void appendCommand(AlgorithmCommand command) {
+        command.setAlgorithm(this);
+        this.commands.add(command);
+    }
+    
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         // Leeren Algorithmus nur im void-Fall akzeptieren.
         if (this.commands.isEmpty()) {

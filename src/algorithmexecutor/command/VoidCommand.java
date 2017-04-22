@@ -12,8 +12,7 @@ public class VoidCommand extends AlgorithmCommand {
     private final String name;
     private final Identifier[] identifiers;
     
-    public VoidCommand(Algorithm algorithm, String name, Identifier... identifiers) {
-        super(algorithm);
+    public VoidCommand(String name, Identifier... identifiers) {
         this.name = name;
         this.identifiers = identifiers;
     }

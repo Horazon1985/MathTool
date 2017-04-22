@@ -24,8 +24,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     private final AbstractExpression targetExpression;
     private final Algorithm targetAlgorithm;
 
-    public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
-        super(algorithm);
+    public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetExpression)) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
@@ -34,8 +33,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         this.targetAlgorithm = null;
     }
 
-    public AssignValueCommand(Algorithm algorithm, Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
-        super(algorithm);
+    public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetAlgorithm.getOutputParameter())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
