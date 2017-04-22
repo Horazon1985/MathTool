@@ -60,9 +60,13 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        return "AssignValueCommand[identifierSrc = " + this.identifierSrc
-                + ", targetExpression = " + this.targetExpression
-                + ", targetAlgorithm = " + this.targetAlgorithm.getSignature() + "]";
+        String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc
+                + ", targetExpression = " + this.targetExpression;
+        if (this.targetAlgorithm != null) {
+            return command + ", targetAlgorithm = " + this.targetAlgorithm.getSignature() + "]";
+        }
+        return command + "]";
+
     }
 
     @Override

@@ -64,6 +64,26 @@ public class Algorithm {
         return commands;
     }
 
+    @Override
+    public String toString() {
+        String algorithm = "";
+        if (this.outputParameter != null) {
+            algorithm += this.outputParameter.getType() + " ";
+        }
+        algorithm += this.name + "(";
+        for (int i = 0; i < this.inputParameters.length; i++) {
+            algorithm += this.inputParameters[i].getType() + " " + this.inputParameters[i].getName();
+            if (i < this.inputParameters.length - 1) {
+                algorithm += ", ";
+            }
+        }
+        algorithm += ") {\n";
+        for (AlgorithmCommand c : this.commands) {
+            algorithm += c.toString() + "; \n";
+        }
+        return algorithm + "}";
+    }
+    
     public void appendCommand(AlgorithmCommand command) {
         command.setAlgorithm(this);
         this.commands.add(command);

@@ -46,7 +46,7 @@ public class AlgorithmExecutionTests {
         } catch (ExpressionException | AlgorithmCompileException ex) {
             fail();
         }
-
+        
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
