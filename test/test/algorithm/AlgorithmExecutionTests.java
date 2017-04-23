@@ -30,7 +30,7 @@ public class AlgorithmExecutionTests {
         try {
             Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
             assertTrue(result == null);
-        } catch (Exception ex) {
+        } catch (Exception e) {
             fail();
         }
     }

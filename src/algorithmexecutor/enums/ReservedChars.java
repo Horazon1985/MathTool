@@ -5,7 +5,9 @@ public enum ReservedChars {
     ARGUMENT_SEPARATOR(','),
     LINE_SEPARATOR(';'),
     BEGIN('{'),
-    END('}');
+    END('}'),
+    OPEN_BRACKET('('),
+    CLOSE_BRACKET(')');
     
     private final char value;
     

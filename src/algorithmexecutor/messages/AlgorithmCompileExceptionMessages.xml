@@ -11,4 +11,10 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "UNKNOWN_ERROR">
+        <German>Ungbekannter Fehler.</German>
+        <English>Unknown error.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
 </objects>
