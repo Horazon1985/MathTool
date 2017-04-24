@@ -8,6 +8,7 @@ import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.ControllStructure;
 import algorithmexecutor.command.ReturnCommand;
+import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
@@ -21,20 +22,20 @@ public class Algorithm {
 
     private final String name;
     private final Identifier[] inputParameters;
-    private final Identifier outputParameter;
+    private final IdentifierTypes returnType;
     private final List<AlgorithmCommand> commands;
 
-    public Algorithm(String name, Identifier[] inputParameters, Identifier outputParameter, List<AlgorithmCommand> commands) {
+    public Algorithm(String name, Identifier[] inputParameters, IdentifierTypes returnType, List<AlgorithmCommand> commands) {
         this.name = name;
         this.inputParameters = inputParameters;
-        this.outputParameter = outputParameter;
+        this.returnType = returnType;
         this.commands = commands;
         // Speicher für Identifier allokieren.
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(inputParameters));
     }
 
-    public Algorithm(String name, Identifier[] inputParameters, Identifier outputParameter) {
-        this(name, inputParameters, outputParameter, new ArrayList<AlgorithmCommand>());
+    public Algorithm(String name, Identifier[] inputParameters, IdentifierTypes returnType) {
+        this(name, inputParameters, returnType, new ArrayList<AlgorithmCommand>());
     }
 
     public String getSignature() {
@@ -56,8 +57,8 @@ public class Algorithm {
         return inputParameters;
     }
 
-    public Identifier getOutputParameter() {
-        return outputParameter;
+    public IdentifierTypes getReturnType() {
+        return returnType;
     }
 
     public List<AlgorithmCommand> getCommands() {
@@ -67,8 +68,8 @@ public class Algorithm {
     @Override
     public String toString() {
         String algorithm = "";
-        if (this.outputParameter != null) {
-            algorithm += this.outputParameter.getType() + " ";
+        if (this.returnType != null) {
+            algorithm += this.returnType + " ";
         }
         algorithm += this.name + "(";
         for (int i = 0; i < this.inputParameters.length; i++) {
@@ -92,7 +93,7 @@ public class Algorithm {
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         // Leeren Algorithmus nur im void-Fall akzeptieren.
         if (this.commands.isEmpty()) {
-            if (this.outputParameter == null) {
+            if (this.returnType == null) {
                 return null;
             } else {
                 throw new AlgorithmExecutionException(ExecutionExecptionTexts.RETURN_TYPE_EXPECTED);

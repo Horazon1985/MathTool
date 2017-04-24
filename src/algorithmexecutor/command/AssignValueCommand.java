@@ -25,7 +25,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     private final Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
-        if (!areTypesCompatible(identifierSrc, targetExpression)) {
+        if (!areTypesCompatible(identifierSrc, IdentifierTypes.identifierTypeOf(targetExpression))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
@@ -34,7 +34,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     }
 
     public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
-        if (!areTypesCompatible(identifierSrc, targetAlgorithm.getOutputParameter())) {
+        if (!areTypesCompatible(identifierSrc, targetAlgorithm.getReturnType())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
@@ -42,8 +42,8 @@ public class AssignValueCommand extends AlgorithmCommand {
         this.targetAlgorithm = targetAlgorithm;
     }
 
-    private boolean areTypesCompatible(Identifier identifierSrc, AbstractExpression targetExpression) {
-        return identifierSrc.getType().isSameOrGeneralTypeOf(IdentifierTypes.identifierTypeOf(targetExpression));
+    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierTypes targetType) {
+        return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 
     private boolean areTypesCompatible(Identifier identifierSrc, Identifier identifierTarget) {

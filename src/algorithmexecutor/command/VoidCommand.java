@@ -44,7 +44,7 @@ public class VoidCommand extends AlgorithmCommand {
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         for (Algorithm alg : AlgorithmCompiler.STORED_ALGORITHMS) {
-            if (alg.getSignature().equals(getSignature()) && alg.getOutputParameter() == null) {
+            if (alg.getSignature().equals(getSignature()) && alg.getReturnType() == null) {
                 alg.execute();
                 return null;
             }

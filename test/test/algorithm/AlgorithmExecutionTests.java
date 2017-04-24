@@ -95,7 +95,7 @@ public class AlgorithmExecutionTests {
         Identifier idA = Identifier.createIdentifier(mainAlg, "a", IdentifierTypes.EXPRESSION);
         Identifier idB = Identifier.createIdentifier(mainAlg, "b", IdentifierTypes.EXPRESSION);
         Identifier idGgt = Identifier.createIdentifier(mainAlg, "ggt", IdentifierTypes.EXPRESSION);
-        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, idGgt, commandsComputeGgt);
+        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, IdentifierTypes.EXPRESSION, commandsComputeGgt);
 
         Identifier idResult = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
 

@@ -4,8 +4,10 @@ import abstractexpressions.interfaces.IdentifierValidator;
 import static algorithmexecutor.enums.ReservedChars.LINE_SEPARATOR;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
+import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
+import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,23 @@ public abstract class AlgorithmCompiler {
         }
 
         // Rückgabewert und Signatur des Algorithmus parsen.
+        
+        while (input.startsWith(" ")) {
+            input = input.substring(1);
+        }
+        
+        IdentifierTypes returnType = null;
+        for (IdentifierTypes type : IdentifierTypes.values()) {
+            if (input.startsWith(type.toString())) {
+                returnType = type;
+            }
+        }
+        
+        Identifier returnIdentifier = null;
+        if (returnType != null) {
+            returnIdentifier = Identifier.createIdentifier(null, "x", returnType);
+        } 
+        
 
 
 
