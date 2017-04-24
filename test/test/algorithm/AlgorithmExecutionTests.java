@@ -23,8 +23,7 @@ public class AlgorithmExecutionTests {
 
     @Test
     public void executeEmptyMainAlgorithmTest() {
-        List<AlgorithmCommand> commands = new ArrayList<>();
-        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
+        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
@@ -61,8 +60,7 @@ public class AlgorithmExecutionTests {
 
     @Test
     public void executeAnotherSimpleMainAlgorithmTest() {
-        List<AlgorithmCommand> commands = new ArrayList<>();
-        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commands);
+        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
 
         try {
             Identifier idX = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
@@ -88,14 +86,12 @@ public class AlgorithmExecutionTests {
 
     @Test
     public void executAlgorithmCallingAnotherAlgorithmTest() {
-        List<AlgorithmCommand> commandsMain = new ArrayList<>();
-        List<AlgorithmCommand> commandsComputeGgt = new ArrayList<>();
-        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null, commandsMain);
+        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
 
         Identifier idA = Identifier.createIdentifier(mainAlg, "a", IdentifierTypes.EXPRESSION);
         Identifier idB = Identifier.createIdentifier(mainAlg, "b", IdentifierTypes.EXPRESSION);
         Identifier idGgt = Identifier.createIdentifier(mainAlg, "ggt", IdentifierTypes.EXPRESSION);
-        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, IdentifierTypes.EXPRESSION, commandsComputeGgt);
+        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, IdentifierTypes.EXPRESSION);
 
         Identifier idResult = Identifier.createIdentifier(mainAlg, "x", IdentifierTypes.EXPRESSION);
 
