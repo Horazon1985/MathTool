@@ -4,7 +4,9 @@ import abstractexpressions.interfaces.IdentifierValidator;
 import static algorithmexecutor.enums.ReservedChars.LINE_SEPARATOR;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
+import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
@@ -102,13 +104,22 @@ public abstract class AlgorithmCompiler {
         Algorithm alg = new Algorithm(algName, parameters, returnType);
 
         indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
-        int indexEndParameters = indexBeginParameters + 1;
-        
+        int indexEndParameters = input.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
+
+        // Algorithmusnamen und Parameter inkl. Klammern beseitigen
         input = input.substring(indexEndParameters + 1, input.length());
-        String[] lines = input.split(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()));
+
+        if (!input.startsWith(String.valueOf(ReservedChars.BEGIN.getValue())) || !input.endsWith(String.valueOf(ReservedChars.END.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
+        input = input.substring(1, input.length() - 1);
         
+        List<String> lines = splitBySeparator(input);
+
         for (String line : lines) {
-            alg.appendCommand(parseLine(line));
+            alg.appendCommand(parseLine(line, memory));
         }
         return alg;
     }
@@ -274,38 +285,82 @@ public abstract class AlgorithmCompiler {
         return false;
     }
 
-    private static AlgorithmCommand parseLine(String line) throws AlgorithmCompileException {
+    private static List<String> splitBySeparator(String input) {
+        List<String> lines = new ArrayList<>();
+        int bracketCounter = 0;
+        int lastSeparator = -1;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() && bracketCounter == 0) {
+                lines.add(input.substring(lastSeparator + 1, i - 1));
+            }
+        }
+        return lines;
+    }
+
+    private static AlgorithmCommand parseLine(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
 
         return null;
     }
 
+    private static AlgorithmCommand parseAssignValueCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+
+        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
+    private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+
+        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
+    private static AlgorithmCommand parseControllStructure(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+
+        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
+    private static AlgorithmCommand parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+        if (line.startsWith(Keywords.RETURN.getValue() + " ")) {
+            if (line.equals(Keywords.RETURN.getValue() + ReservedChars.LINE_SEPARATOR)) {
+                return new ReturnCommand(null);
+            }
+            String identifierCandidate = line.substring((Keywords.RETURN.getValue() + " ").length());
+            if (memory.getMemory().get(identifierCandidate) == null) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
+            return new ReturnCommand(memory.getMemory().get(identifierCandidate));
+        }
+        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
     public static String preprocessAlgorithm(String input) {
         String outputFormatted = input;
-        while (outputFormatted.contains("  ")) {
-            outputFormatted = outputFormatted.replaceAll("  ", " ");
-        }
-        while (outputFormatted.contains(", ")) {
-            outputFormatted = outputFormatted.replaceAll(", ", ",");
-        }
-        while (outputFormatted.contains("; ")) {
-            outputFormatted = outputFormatted.replaceAll("; ", ";");
-        }
-        while (outputFormatted.contains(" ;")) {
-            outputFormatted = outputFormatted.replaceAll(" ;", ";");
-        }
-        while (outputFormatted.contains(" {")) {
-            outputFormatted = outputFormatted.replaceAll(" \\{", "\\{");
-        }
-        while (outputFormatted.contains("{ ")) {
-            outputFormatted = outputFormatted.replaceAll("\\{ ", "\\{");
-        }
-        while (outputFormatted.contains(" }")) {
-            outputFormatted = outputFormatted.replaceAll(" \\}", "\\}");
-        }
-        while (outputFormatted.contains("} ")) {
-            outputFormatted = outputFormatted.replaceAll("\\} ", "\\}");
-        }
+        outputFormatted = replaceRepeatedly(outputFormatted, "  ", " ");
+        outputFormatted = replaceRepeatedly(outputFormatted, ", ", ",");
+        outputFormatted = replaceRepeatedly(outputFormatted, " ,", ",");
+        outputFormatted = replaceRepeatedly(outputFormatted, "; ", ";");
+        outputFormatted = replaceRepeatedly(outputFormatted, " ;", ";");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\{", "\\{");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\{ ", "\\{");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\}", "\\}");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\} ", "\\}");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\(", "\\(");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\( ", "\\(");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\)", "\\)");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\) ", "\\)");
         return outputFormatted;
+    }
+
+    private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
+        String result = input;
+        do {
+            input = result;
+            result = result.replaceAll(toReplace, replaceBy);
+        } while (!result.equals(input));
+        return result;
     }
 
 }
