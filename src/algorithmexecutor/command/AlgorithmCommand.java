@@ -17,6 +17,22 @@ public abstract class AlgorithmCommand {
         return algorithm;
     }
     
+    public boolean isAssignValueCommand() {
+        return this instanceof AssignValueCommand;
+    }
+    
+    public boolean isVoidCommand() {
+        return this instanceof VoidCommand;
+    }
+    
+    public boolean isControllStructure() {
+        return this instanceof ControllStructure;
+    }
+    
+    public boolean isReturnCommand() {
+        return this instanceof ReturnCommand;
+    }
+    
     public abstract Identifier execute() throws AlgorithmExecutionException, EvaluationException;
     
 }
