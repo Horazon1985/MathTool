@@ -60,22 +60,24 @@ public abstract class AlgorithmCompiler {
 
     public static String preprocessAlgorithm(String input) {
         String outputFormatted = input;
-        outputFormatted = replaceRepeatedly(outputFormatted, "  ", " ");
-        outputFormatted = replaceRepeatedly(outputFormatted, ", ", ",");
-        outputFormatted = replaceRepeatedly(outputFormatted, " ,", ",");
-        outputFormatted = replaceRepeatedly(outputFormatted, "; ", ";");
-        outputFormatted = replaceRepeatedly(outputFormatted, " ;", ";");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\{", "\\{");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\{ ", "\\{");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\}", "\\}");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\} ", "\\}");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\(", "\\(");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\( ", "\\(");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\)", "\\)");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\) ", "\\)");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "  ", " ");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, ",", ", ", " ,");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, ";", "; ", " ;");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\{", " \\{", "\\{ ");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\}", " \\}", "\\} ");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\(", " \\(", "\\( ");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\)", " \\)", "\\) ");
         return outputFormatted;
     }
 
+    private static String replaceAllRepeatedly(String input, String replaceBy, String... toReplace) {
+        String result = input;
+        for (String s : toReplace) {
+            result = replaceRepeatedly(input, s, replaceBy);
+        }
+        return result;
+    }
+    
     private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
         String result = input;
         do {
@@ -124,6 +126,9 @@ public abstract class AlgorithmCompiler {
         AlgorithmMemory memory = new AlgorithmMemory();
 
         Identifier[] parameters = getIdentifiersFromParameterStrings(parametersAsStrings, memory);
+
+        // Algorithmusparameter zum Variablenpool hinzufügen.
+        addParametersToMemoryInCompileTime(parameters, memory);
 
         String signature = algName + ReservedChars.OPEN_BRACKET.getValue();
         for (int i = 0; i < parameters.length; i++) {
@@ -312,11 +317,18 @@ public abstract class AlgorithmCompiler {
             if (memory.containsIdentifier(parameterName)) {
                 throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
             }
-            memory.addToMemoryInCompileTime(Identifier.createIdentifier(null, parameterName, parameterType));
+            resultIdentifiers[i] = Identifier.createIdentifier(parameterName, parameterType);
 
         }
         return resultIdentifiers;
     }
+    
+    private static void addParametersToMemoryInCompileTime(Identifier[] parameters, AlgorithmMemory memory) throws AlgorithmCompileException {
+        for (Identifier parameter : parameters) {
+            memory.addToMemoryInCompileTime(parameter);
+        }
+    }
+    
 
     private static boolean containsAlgorithmWithSameSignature(String signature) {
         for (Algorithm alg : STORED_ALGORITHMS) {

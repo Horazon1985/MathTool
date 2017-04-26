@@ -1,5 +1,7 @@
 package algorithmexecutor;
 
+import algorithmexecutor.command.AlgorithmCommand;
+import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
@@ -49,6 +51,19 @@ public abstract class AlgorithmExecutor {
             }
         }
         throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
+    }
+    
+    public static Identifier executeBlock(List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
+        Identifier resultIdentifier = null;
+        for (int i = 0; i < commands.size(); i++) {
+            resultIdentifier = commands.get(i).execute();
+            if (commands.get(i) instanceof ReturnCommand) {
+                return resultIdentifier;
+            } else {
+                resultIdentifier = null;
+            }
+        }
+        return resultIdentifier;
     }
 
 }

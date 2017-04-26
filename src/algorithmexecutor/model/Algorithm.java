@@ -83,12 +83,12 @@ public class Algorithm {
         }
         return algorithm + "}";
     }
-    
+
     public void appendCommand(AlgorithmCommand command) {
         command.setAlgorithm(this);
         this.commands.add(command);
     }
-    
+
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         // Leeren Algorithmus nur im void-Fall akzeptieren.
         if (this.commands.isEmpty()) {
@@ -104,18 +104,10 @@ public class Algorithm {
         checkForIdentifierWithoutValues();
         // Variablenwerte erneut setzen.
         refreshVariableValues();
-        
-        Identifier resultIdentifier = null;
 
-        for (int i = 0; i < this.commands.size(); i++) {
-            resultIdentifier = this.commands.get(i).execute();
-            if (this.commands.get(i) instanceof ReturnCommand) {
-                return resultIdentifier;
-            } else {
-                resultIdentifier = null;
-            }
-        }
-        
+        Identifier resultIdentifier = AlgorithmExecutor.executeBlock(this.commands);
+
+        // Nach Ausführung des Algorithmus: Lokale Variablen wieder löschen.
         AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
         return resultIdentifier;
     }
@@ -137,13 +129,6 @@ public class Algorithm {
                 LogicalVariable.setValue(memory.get(var).getName(), ((LogicalExpression) memory.get(var).getValue()).evaluate());
             }
         }
-    }
-
-    private boolean isLastCommand(int i) {
-        if (i < 0 || i >= this.commands.size()) {
-            return true;
-        }
-        return this.commands.get(i) instanceof ReturnCommand;
     }
 
 }

@@ -65,6 +65,10 @@ public class Identifier {
     public String toString() {
         return "Identifier[type = " + this.type + ", name = " + this.name + ", value = " + this.value + "]";
     }
+
+    public static Identifier createIdentifier(String identifierName, IdentifierTypes type) {
+        return new Identifier(type, identifierName);
+    }
     
     public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type) {
         if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
