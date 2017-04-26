@@ -6,7 +6,7 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.ControllStructure;
+import algorithmexecutor.command.ControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
@@ -152,7 +152,7 @@ public class Algorithm {
     }
 
     private int getNextCommandIndex(int i) {
-        if (this.commands.get(i) instanceof ControllStructure) {
+        if (this.commands.get(i) instanceof ControlStructure) {
             // TO DO.
             return i + 1;
         }

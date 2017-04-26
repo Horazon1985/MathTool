@@ -26,7 +26,7 @@ public abstract class AlgorithmCommand {
     }
     
     public boolean isControllStructure() {
-        return this instanceof ControllStructure;
+        return this instanceof ControlStructure;
     }
     
     public boolean isReturnCommand() {

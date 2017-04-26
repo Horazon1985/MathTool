@@ -3,6 +3,8 @@ package algorithmexecutor;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
@@ -33,6 +35,9 @@ public abstract class AlgorithmCompiler {
             return;
         }
 
+        // Formatierung.
+        input = preprocessAlgorithm(input);
+
         int bracketCounter = 0;
         boolean beginPassed = false;
         int lastEndOfAlgorithm = -1;
@@ -51,6 +56,33 @@ public abstract class AlgorithmCompiler {
             }
         }
 
+    }
+
+    public static String preprocessAlgorithm(String input) {
+        String outputFormatted = input;
+        outputFormatted = replaceRepeatedly(outputFormatted, "  ", " ");
+        outputFormatted = replaceRepeatedly(outputFormatted, ", ", ",");
+        outputFormatted = replaceRepeatedly(outputFormatted, " ,", ",");
+        outputFormatted = replaceRepeatedly(outputFormatted, "; ", ";");
+        outputFormatted = replaceRepeatedly(outputFormatted, " ;", ";");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\{", "\\{");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\{ ", "\\{");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\}", "\\}");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\} ", "\\}");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\(", "\\(");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\( ", "\\(");
+        outputFormatted = replaceRepeatedly(outputFormatted, " \\)", "\\)");
+        outputFormatted = replaceRepeatedly(outputFormatted, "\\) ", "\\)");
+        return outputFormatted;
+    }
+
+    private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
+        String result = input;
+        do {
+            input = result;
+            result = result.replaceAll(toReplace, replaceBy);
+        } while (!result.equals(input));
+        return result;
     }
 
     public static Algorithm parseAlgorithm(String input) throws AlgorithmCompileException {
@@ -127,6 +159,10 @@ public abstract class AlgorithmCompiler {
         for (String line : lines) {
             alg.appendCommand(parseLine(line, memory, alg));
         }
+
+        // Plausibilitätschecks.
+        checkAlgorithmForPlausibility(alg);
+
         return alg;
     }
 
@@ -361,40 +397,64 @@ public abstract class AlgorithmCompiler {
             type = memory.getMemory().get(identifierName).getType();
         }
 
+        // Rechte Seite behandeln.
         if (type == IdentifierTypes.EXPRESSION) {
 
-            // Rechte Seite behandeln.
+            // Fall: Arithmetischer / Analytischer Ausdruck.
             try {
                 Expression expr = Expression.build(assignment[1], VALIDATOR);
                 Set<String> vars = expr.getContainedIndeterminates();
                 if (!areIdentifiersAllDefined(vars, memory)) {
                     throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
                 }
-                if (!areIdentifiersOfCorrectType(vars, memory)) {
+                if (!areIdentifiersOfCorrectType(type, vars, memory)) {
                     throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
                 }
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, expr);
-
             } catch (ExpressionException e) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
             }
 
         } else if (type == IdentifierTypes.LOGICAL_EXPRESSION) {
 
-            
-            
-            
-            
-        } else {
+            // Fall: Logischer Ausdruck.
+            try {
+                LogicalExpression logExpr = LogicalExpression.build(assignment[1], VALIDATOR);
+                Set<String> vars = logExpr.getContainedIndeterminates();
+                if (!areIdentifiersAllDefined(vars, memory)) {
+                    throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+                }
+                if (!areIdentifiersOfCorrectType(type, vars, memory)) {
+                    throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+                }
+                Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
+                memory.getMemory().put(identifierName, identifier);
+                return new AssignValueCommand(identifier, logExpr);
+            } catch (ExpressionException e) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
 
-            
-            
-            
-            
         }
 
-        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        // Fall: Matrizenausdruck.
+        try {
+            MatrixExpression matExpr = MatrixExpression.build(assignment[1], VALIDATOR, VALIDATOR);
+            Set<String> vars = matExpr.getContainedIndeterminates();
+            if (!areIdentifiersAllDefined(vars, memory)) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
+            if (!areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, vars, memory)) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
+            Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
+            memory.getMemory().put(identifierName, identifier);
+            return new AssignValueCommand(identifier, matExpr);
+        } catch (ExpressionException e) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
     }
 
     private static boolean areIdentifiersAllDefined(Set<String> vars, AlgorithmMemory memory) {
@@ -406,9 +466,9 @@ public abstract class AlgorithmCompiler {
         return true;
     }
 
-    private static boolean areIdentifiersOfCorrectType(Set<String> vars, AlgorithmMemory memory) {
+    private static boolean areIdentifiersOfCorrectType(IdentifierTypes type, Set<String> vars, AlgorithmMemory memory) {
         for (String var : vars) {
-            if (memory.getMemory().get(var).getType() != IdentifierTypes.EXPRESSION) {
+            if (memory.getMemory().get(var).getType() != type) {
                 return false;
             }
         }
@@ -439,31 +499,25 @@ public abstract class AlgorithmCompiler {
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
 
-    public static String preprocessAlgorithm(String input) {
-        String outputFormatted = input;
-        outputFormatted = replaceRepeatedly(outputFormatted, "  ", " ");
-        outputFormatted = replaceRepeatedly(outputFormatted, ", ", ",");
-        outputFormatted = replaceRepeatedly(outputFormatted, " ,", ",");
-        outputFormatted = replaceRepeatedly(outputFormatted, "; ", ";");
-        outputFormatted = replaceRepeatedly(outputFormatted, " ;", ";");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\{", "\\{");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\{ ", "\\{");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\}", "\\}");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\} ", "\\}");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\(", "\\(");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\( ", "\\(");
-        outputFormatted = replaceRepeatedly(outputFormatted, " \\)", "\\)");
-        outputFormatted = replaceRepeatedly(outputFormatted, "\\) ", "\\)");
-        return outputFormatted;
+    private static void checkAlgorithmForPlausibility(Algorithm alg) throws AlgorithmCompileException {
+        // 1. Prüfung, ob es bei Void-Algorithmen keine zurückgegebenen Objekte gibt.
+        checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(alg);
+        // 2. Prüfung, ob es bei Algorithmen mit Rückgabewerten immer Rückgaben mit korrektem Typ gibt.
+        checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(alg);
+        // 3. Prüfung, ob es bei (beliebigen) Algorithmen keinen Code hinter einem Return gibt.
+        checkIfAlgorithmContainsNoDeadCode(alg);
     }
 
-    private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
-        String result = input;
-        do {
-            input = result;
-            result = result.replaceAll(toReplace, replaceBy);
-        } while (!result.equals(input));
-        return result;
+    private static void checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(Algorithm alg) throws AlgorithmCompileException {
+
+    }
+
+    private static void checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(Algorithm alg) throws AlgorithmCompileException {
+
+    }
+
+    private static void checkIfAlgorithmContainsNoDeadCode(Algorithm alg) throws AlgorithmCompileException {
+
     }
 
 }
