@@ -60,7 +60,7 @@ public abstract class AlgorithmCompiler {
 
     public static String preprocessAlgorithm(String input) {
         String outputFormatted = input;
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "  ", " ");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "  ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ",", ", ", " ,");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ";", "; ", " ;");
         outputFormatted = replaceAllRepeatedly(outputFormatted, "\\{", " \\{", "\\{ ");
@@ -73,7 +73,7 @@ public abstract class AlgorithmCompiler {
     private static String replaceAllRepeatedly(String input, String replaceBy, String... toReplace) {
         String result = input;
         for (String s : toReplace) {
-            result = replaceRepeatedly(input, s, replaceBy);
+            result = replaceRepeatedly(result, s, replaceBy);
         }
         return result;
     }
