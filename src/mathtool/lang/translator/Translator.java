@@ -26,6 +26,10 @@ public abstract class Translator {
                 //messages/LangGUI.xml
             } else if (exceptionId.substring(0, 3).equals("MCC")) {
                 langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangMathCommandCompiler.xml");
+            } else if (exceptionId.substring(0, 3).equals("AC")) {
+                langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmCompileExceptionMessages.xml");
+            } else if (exceptionId.substring(0, 3).equals("AE")) {
+                langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmExecutionExceptionMessages.xml");
             } else {
                 // Datei für unbekannten Fehler öffnen.
                 langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangUndefinedError.xml");
