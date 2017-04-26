@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import lang.translator.Translator;
+import mathtool.lang.translator.Translator;
 
 /**
  * Vereinfachungsoptionen. Singletonklasse.

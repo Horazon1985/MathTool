@@ -6,7 +6,7 @@ import graphic.GraphicPanel3D;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
-import lang.translator.Translator;
+import mathtool.lang.translator.Translator;
 import mathtool.component.templates.MathToolOptionComponentTemplate;
 
 public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTemplate {

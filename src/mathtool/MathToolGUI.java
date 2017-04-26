@@ -41,7 +41,6 @@ import graphic.GraphicPanelCurves2D;
 import graphic.GraphicPanelCurves3D;
 import graphic.GraphicPanelImplicit2D;
 import graphic.GraphicPanelPolar;
-import lang.translator.Translator;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import exceptions.CancellationException;
@@ -65,6 +64,7 @@ import mathtool.component.components.GraphicOptionsDialogGUI;
 import mathtool.component.components.OutputDetailsGUI;
 import mathtool.utilities.MathToolUtilities;
 import mathcommandcompiler.MathCommandCompiler;
+import mathtool.lang.translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 

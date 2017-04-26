@@ -109,6 +109,11 @@ public class Algorithm {
         Identifier resultIdentifier = null;
 
         int commandIndex = 0;
+        
+        
+        
+        
+        // TO DO.
         while (true) {
             resultIdentifier = this.commands.get(commandIndex).execute();
             if (this.commands.get(commandIndex) instanceof ReturnCommand) {
@@ -119,7 +124,7 @@ public class Algorithm {
             if (isLastCommand(commandIndex)) {
                 break;
             }
-            commandIndex = getNextCommandIndex(commandIndex);
+            commandIndex++;
         }
         AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
         return resultIdentifier;
@@ -149,14 +154,6 @@ public class Algorithm {
             return true;
         }
         return this.commands.get(i) instanceof ReturnCommand;
-    }
-
-    private int getNextCommandIndex(int i) {
-        if (this.commands.get(i) instanceof ControlStructure) {
-            // TO DO.
-            return i + 1;
-        }
-        return i + 1;
     }
 
 }

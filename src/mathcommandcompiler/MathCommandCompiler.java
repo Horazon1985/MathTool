@@ -61,15 +61,14 @@ import graphic.GraphicPanelImplicit3D.MarchingCube;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
-//import graphic.GraphicPanelVectorField3D;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import notations.NotationLoader;
-import lang.translator.Translator;
 import mathtool.annotations.Execute;
 import mathtool.annotations.GetCommand;
 import mathtool.component.components.LegendGUI;
+import mathtool.lang.translator.Translator;
 import mathtool.utilities.MathToolUtilities;
 
 public abstract class MathCommandCompiler {

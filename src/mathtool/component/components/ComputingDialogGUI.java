@@ -1,6 +1,5 @@
 package mathtool.component.components;
 
-import lang.translator.Translator;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -8,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import javax.swing.SwingWorker;
+import mathtool.lang.translator.Translator;
 
 public class ComputingDialogGUI extends JDialog {
 

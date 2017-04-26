@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import lang.translator.Translator;
+import mathtool.lang.translator.Translator;
 
 public abstract class MathToolOptionComponentTemplate extends JDialog {
 

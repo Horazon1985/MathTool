@@ -1,7 +1,7 @@
 package mathtool.component.components;
 
 import abstractexpressions.interfaces.AbstractExpression;
-import lang.translator.Translator;
+import mathtool.lang.translator.Translator;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import javax.swing.ImageIcon;

@@ -11,7 +11,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import lang.translator.Translator;
+import mathtool.lang.translator.Translator;
 
 public abstract class MathToolInfoComponentTemplate extends JDialog {
 

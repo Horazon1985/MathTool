@@ -51,6 +51,7 @@ import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolConfig;
+import mathtool.lang.translator.Translator;
 import mathtool.session.SessionLoader;
 import mathtool.session.classes.DefinedFunction;
 import mathtool.session.classes.DefinedFunctions;
@@ -59,7 +60,6 @@ import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
 import notations.NotationLoader;
 import operationparser.ParseResultPattern;
-import lang.translator.Translator;
 
 public class MathToolController {
 
