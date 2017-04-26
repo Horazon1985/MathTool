@@ -6,7 +6,6 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.ControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
@@ -108,24 +107,15 @@ public class Algorithm {
         
         Identifier resultIdentifier = null;
 
-        int commandIndex = 0;
-        
-        
-        
-        
-        // TO DO.
-        while (true) {
-            resultIdentifier = this.commands.get(commandIndex).execute();
-            if (this.commands.get(commandIndex) instanceof ReturnCommand) {
+        for (int i = 0; i < this.commands.size(); i++) {
+            resultIdentifier = this.commands.get(i).execute();
+            if (this.commands.get(i) instanceof ReturnCommand) {
                 return resultIdentifier;
             } else {
                 resultIdentifier = null;
             }
-            if (isLastCommand(commandIndex)) {
-                break;
-            }
-            commandIndex++;
         }
+        
         AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
         return resultIdentifier;
     }
