@@ -56,4 +56,14 @@ public class AlgorithmParseTests {
         }
     }
 
+    @Test
+    public void parseSimpleAlgorithmWithIfElseTest() {
+        String input = "expression main(){expression a=3;expression b=5;if(a==3){return a;}else{return b;};}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+        } catch (AlgorithmCompileException ex) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
 }
