@@ -6,7 +6,6 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;

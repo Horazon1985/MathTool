@@ -8,11 +8,15 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
+import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
+import algorithmexecutor.command.condition.BooleanCondition;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
+import algorithmexecutor.exceptions.BlockCompileException;
+import algorithmexecutor.exceptions.BooleanConditionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
@@ -77,7 +81,7 @@ public abstract class AlgorithmCompiler {
         }
         return result;
     }
-    
+
     private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
         String result = input;
         do {
@@ -322,13 +326,12 @@ public abstract class AlgorithmCompiler {
         }
         return resultIdentifiers;
     }
-    
+
     private static void addParametersToMemoryInCompileTime(Identifier[] parameters, AlgorithmMemory memory) throws AlgorithmCompileException {
         for (Identifier parameter : parameters) {
             memory.addToMemoryInCompileTime(parameter);
         }
     }
-    
 
     private static boolean containsAlgorithmWithSameSignature(String signature) {
         for (Algorithm alg : STORED_ALGORITHMS) {
@@ -363,11 +366,11 @@ public abstract class AlgorithmCompiler {
         } catch (AlgorithmCompileException e) {
         }
         try {
-            return parseVoidCommand(line, memory);
+            return parseVoidCommand(line, memory, alg);
         } catch (AlgorithmCompileException e) {
         }
         try {
-            return parseControllStructure(line, memory);
+            return parseControllStructure(line, memory, alg);
         } catch (AlgorithmCompileException e) {
         }
         try {
@@ -487,14 +490,111 @@ public abstract class AlgorithmCompiler {
         return true;
     }
 
-    private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+    private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
 
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
 
-    private static AlgorithmCommand parseControllStructure(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
-
+    private static AlgorithmCommand parseControllStructure(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+        // If-Else-Block
+        try {
+            return parseIfElseControlStructure(line, memory, alg);
+        } catch (BooleanConditionException e) {
+            // Es ist zwar eine If-Else-Struktur, aber die Bedingung kann nicht kompiliert werden.
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        } catch (BlockCompileException e) {
+            /* 
+            Es ist zwar eine If-Else-Struktur mit korrekter Bedingung, aber der 
+            innere Block kann nicht kompiliert werden.
+             */
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        } catch (AlgorithmCompileException e) {
+        }
+        // For-Block
+        // While-Block
+        // Do-While-Block
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
+    private static AlgorithmCommand parseIfElseControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
+            throws AlgorithmCompileException, BooleanConditionException, BlockCompileException {
+
+        if (!line.startsWith(Keywords.IF.getValue() + ReservedChars.BEGIN)) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        int endOfBooleanCondition = line.indexOf(ReservedChars.END.getValue());
+        if (endOfBooleanCondition < 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.BEGIN).length(), endOfBooleanCondition);
+        BooleanCondition condition = BooleanCondition.build(booleanConditionString);
+
+        // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
+        if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
+                || !line.contains(String.valueOf(ReservedChars.END.getValue()))
+                || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        // Block im If-Teil kompilieren.
+        int bracketCounter = 0;
+        int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
+        int endBlockPosition = -1;
+        for (int i = line.indexOf(ReservedChars.BEGIN.getValue()); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endBlockPosition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        List<AlgorithmCommand> commandsIfPart = parseBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        IfElseControlStructure ifElseControlStructure = new IfElseControlStructure(condition, commandsIfPart);
+
+        // Block im Else-Teil kompilieren, falls vorhanden.
+        if (endBlockPosition == line.length() - 1) {
+            // Kein Else-Teil vorhanden.
+            return ifElseControlStructure;
+        }
+        
+        String restLine = line.substring(endBlockPosition + 1);
+        if (!restLine.startsWith(Keywords.ELSE.getValue() + ReservedChars.BEGIN.getValue())) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        
+        bracketCounter = 0;
+        beginBlockPosition = restLine.indexOf(ReservedChars.BEGIN.getValue()) + 1;
+        endBlockPosition = -1;
+        for (int i = restLine.indexOf(ReservedChars.BEGIN.getValue()); i < restLine.length(); i++) {
+            if (restLine.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (restLine.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endBlockPosition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        if (endBlockPosition != restLine.length() - 1) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        
+        List<AlgorithmCommand> commandsElsePart = parseBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        ifElseControlStructure.setCommandsElsePart(commandsElsePart);
+
+        return ifElseControlStructure;
     }
 
     private static AlgorithmCommand parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
@@ -509,6 +609,15 @@ public abstract class AlgorithmCompiler {
             return new ReturnCommand(memory.getMemory().get(returnValueCandidate));
         }
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+    }
+
+    private static List<AlgorithmCommand> parseBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+        String[] lines = input.split(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()));
+        List<AlgorithmCommand> commands = new ArrayList<>();
+        for (String line : lines) {
+            commands.add(parseLine(line, memory, alg));
+        }
+        return commands;
     }
 
     private static void checkAlgorithmForPlausibility(Algorithm alg) throws AlgorithmCompileException {

@@ -10,16 +10,17 @@ import java.util.List;
 
 public class IfElseControlStructure extends ControlStructure {
 
-    private BooleanCondition condition;
-    private final List<AlgorithmCommand> commandsIfPart = new ArrayList<>();
-    private final List<AlgorithmCommand> commandsElsePart = new ArrayList<>();
+    private final BooleanCondition condition;
+    private final List<AlgorithmCommand> commandsIfPart;
+    private List<AlgorithmCommand> commandsElsePart = new ArrayList<>();
 
-    public void appendCommandInIfPart(AlgorithmCommand command) {
-        this.commandsIfPart.add(command);
+    public IfElseControlStructure(BooleanCondition condition, List<AlgorithmCommand> commandsIfPart) {
+        this.condition = condition;
+        this.commandsIfPart = commandsIfPart;
     }
-
-    public void appendCommandInElsePart(AlgorithmCommand command) {
-        this.commandsElsePart.add(command);
+    
+    public void setCommandsElsePart(List<AlgorithmCommand> commands) {
+        this.commandsElsePart = commands;
     }
 
     @Override
