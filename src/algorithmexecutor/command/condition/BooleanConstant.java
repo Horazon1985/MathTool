@@ -1,6 +1,8 @@
 package algorithmexecutor.command.condition;
 
-public class BooleanConstant extends BooleanCondition {
+import java.util.Set;
+
+public class BooleanConstant extends BooleanExpression {
 
     private final boolean value;
     
@@ -11,6 +13,10 @@ public class BooleanConstant extends BooleanCondition {
     @Override
     public boolean evaluate() {
         return value;
+    }
+
+    @Override
+    public void addContainedIdentifier(Set<String> vars) {
     }
     
 }

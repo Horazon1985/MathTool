@@ -1,11 +1,13 @@
 package algorithmexecutor.command.condition;
 
-public class BooleanBinaryOperation extends BooleanCondition {
+import java.util.Set;
 
-    private final BooleanCondition left, right;
+public class BooleanBinaryOperation extends BooleanExpression {
+
+    private final BooleanExpression left, right;
     private final BooleanBinaryOperationType type;
 
-    public BooleanBinaryOperation(BooleanCondition left, BooleanCondition right, BooleanBinaryOperationType type) {
+    public BooleanBinaryOperation(BooleanExpression left, BooleanExpression right, BooleanBinaryOperationType type) {
         this.left = left;
         this.right = right;
         this.type = type;
@@ -15,11 +17,11 @@ public class BooleanBinaryOperation extends BooleanCondition {
         return this.type;
     }
 
-    public BooleanCondition getLeft() {
+    public BooleanExpression getLeft() {
         return this.left;
     }
 
-    public BooleanCondition getRight() {
+    public BooleanExpression getRight() {
         return this.right;
     }
 
@@ -33,6 +35,12 @@ public class BooleanBinaryOperation extends BooleanCondition {
             default:
                 return this.left.evaluate() == this.right.evaluate();
         }
+    }
+
+    @Override
+    public void addContainedIdentifier(Set<String> vars) {
+        this.left.addContainedIdentifier(vars);
+        this.right.addContainedIdentifier(vars);
     }
 
 }

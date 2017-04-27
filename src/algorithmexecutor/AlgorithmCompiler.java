@@ -1,22 +1,20 @@
 package algorithmexecutor;
 
 import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
-import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
-import algorithmexecutor.command.condition.BooleanCondition;
+import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.BlockCompileException;
-import algorithmexecutor.exceptions.BooleanConditionException;
+import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
@@ -390,8 +388,8 @@ public abstract class AlgorithmCompiler {
         IdentifierTypes type = null;
         if (assignment[0].startsWith(IdentifierTypes.EXPRESSION.toString() + " ")) {
             type = IdentifierTypes.EXPRESSION;
-        } else if (assignment[0].startsWith(IdentifierTypes.LOGICAL_EXPRESSION.toString() + " ")) {
-            type = IdentifierTypes.LOGICAL_EXPRESSION;
+        } else if (assignment[0].startsWith(IdentifierTypes.BOOLEAN_EXPRESSION.toString() + " ")) {
+            type = IdentifierTypes.BOOLEAN_EXPRESSION;
         } else if (assignment[0].startsWith(IdentifierTypes.MATRIX_EXPRESSION.toString() + " ")) {
             type = IdentifierTypes.MATRIX_EXPRESSION;
         }
@@ -432,12 +430,12 @@ public abstract class AlgorithmCompiler {
                 throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
             }
 
-        } else if (type == IdentifierTypes.LOGICAL_EXPRESSION) {
+        } else if (type == IdentifierTypes.BOOLEAN_EXPRESSION) {
 
-            // Fall: Logischer Ausdruck.
+            // Fall: boolscher Ausdruck.
             try {
-                LogicalExpression logExpr = LogicalExpression.build(assignment[1], VALIDATOR);
-                Set<String> vars = logExpr.getContainedIndeterminates();
+                BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR, alg);
+                Set<String> vars = boolExpr.getContainedIndeterminates();
                 if (!areIdentifiersAllDefined(vars, memory)) {
                     throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
                 }
@@ -446,8 +444,8 @@ public abstract class AlgorithmCompiler {
                 }
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
-                return new AssignValueCommand(identifier, logExpr);
-            } catch (ExpressionException e) {
+                return new AssignValueCommand(identifier, boolExpr);
+            } catch (BooleanExpressionException e) {
                 throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
             }
 
@@ -499,7 +497,7 @@ public abstract class AlgorithmCompiler {
         // If-Else-Block
         try {
             return parseIfElseControlStructure(line, memory, alg);
-        } catch (BooleanConditionException e) {
+        } catch (BooleanExpressionException e) {
             // Es ist zwar eine If-Else-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         } catch (BlockCompileException e) {
@@ -517,7 +515,7 @@ public abstract class AlgorithmCompiler {
     }
 
     private static AlgorithmCommand parseIfElseControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
-            throws AlgorithmCompileException, BooleanConditionException, BlockCompileException {
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException {
 
         if (!line.startsWith(Keywords.IF.getValue() + ReservedChars.BEGIN)) {
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
@@ -529,7 +527,7 @@ public abstract class AlgorithmCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.BEGIN).length(), endOfBooleanCondition);
-        BooleanCondition condition = BooleanCondition.build(booleanConditionString);
+        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, alg);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))

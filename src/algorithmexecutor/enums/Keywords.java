@@ -5,6 +5,8 @@ public enum Keywords {
     ALGORITHM("algorithm"),
     MAIN("main"),
     NULL("null"),
+    FALSE("false"),
+    TRUE("true"),
     RETURN("return"),
     BREAK("break"),
     CONTINUE("continue"),

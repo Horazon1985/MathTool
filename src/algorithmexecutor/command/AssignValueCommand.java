@@ -13,6 +13,7 @@ import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
+import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
+    private final BooleanExpression booleanExpression;
     private final Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
@@ -30,6 +32,17 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
+        this.booleanExpression = null;
+        this.targetAlgorithm = null;
+    }
+
+    public AssignValueCommand(Identifier identifierSrc, BooleanExpression booleanExpression) throws AlgorithmCompileException {
+        if (!areTypesCompatible(identifierSrc, IdentifierTypes.BOOLEAN_EXPRESSION)) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
+        }
+        this.identifierSrc = identifierSrc;
+        this.targetExpression = null;
+        this.booleanExpression = booleanExpression;
         this.targetAlgorithm = null;
     }
 
@@ -39,6 +52,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
+        this.booleanExpression = null;
         this.targetAlgorithm = targetAlgorithm;
     }
 

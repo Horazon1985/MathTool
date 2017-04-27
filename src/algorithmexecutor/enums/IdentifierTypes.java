@@ -6,7 +6,7 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 
 public enum IdentifierTypes {
 
-    EXPRESSION, LOGICAL_EXPRESSION, MATRIX_EXPRESSION;
+    EXPRESSION, BOOLEAN_EXPRESSION, MATRIX_EXPRESSION;
 
     public boolean isSameOrGeneralTypeOf(IdentifierTypes type) {
         if (this == EXPRESSION && (type == EXPRESSION || type == MATRIX_EXPRESSION)) {
@@ -20,7 +20,7 @@ public enum IdentifierTypes {
             return EXPRESSION;
         }
         if (abstrExpr instanceof LogicalExpression) {
-            return LOGICAL_EXPRESSION;
+            return BOOLEAN_EXPRESSION;
         }
         return MATRIX_EXPRESSION;
     }
@@ -31,7 +31,7 @@ public enum IdentifierTypes {
             return "expression";
         }
         if (this == EXPRESSION) {
-            return "logical expression";
+            return "boolean expression";
         }
         return "matrix expression";
     }

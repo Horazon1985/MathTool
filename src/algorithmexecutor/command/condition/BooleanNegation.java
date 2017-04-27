@@ -1,16 +1,23 @@
 package algorithmexecutor.command.condition;
 
-public class BooleanNegation extends BooleanCondition {
+import java.util.Set;
 
-    private final boolean argument;
+public class BooleanNegation extends BooleanExpression {
+
+    private final BooleanExpression argument;
     
-    public BooleanNegation(boolean argument) {
+    public BooleanNegation(BooleanExpression argument) {
         this.argument = argument;
     }
     
     @Override
     public boolean evaluate() {
-        return !this.argument;
+        return !this.argument.evaluate();
+    }
+
+    @Override
+    public void addContainedIdentifier(Set<String> vars) {
+        this.argument.addContainedIdentifier(vars);
     }
     
 }

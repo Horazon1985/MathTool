@@ -1,19 +1,16 @@
 package algorithmexecutor.enums;
 
-public enum Operators {
+public enum ComparingOperators {
 
-    DEFINE("="),
-    EQUALS("=="),
     NOT_EQUALS("!="),
-    CONCAT("+"),
-    MODULO("%"),
-    NOT("!"),
-    AND("&"),
-    OR("|");
+    GREATER(">"),
+    GREATER_OR_EQUALS(">="),
+    SMALLER("<"),
+    SMALLER_OR_EQUALS("<=");
     
     private final String value;
     
-    Operators(String value){
+    ComparingOperators(String value){
         this.value = value;
     }
     
