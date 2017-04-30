@@ -19,4 +19,9 @@ public class BooleanConstant extends BooleanExpression {
     public void addContainedIdentifier(Set<String> vars) {
     }
     
+    @Override
+    public String toString() {
+        return String.valueOf(this.value);
+    }
+    
 }

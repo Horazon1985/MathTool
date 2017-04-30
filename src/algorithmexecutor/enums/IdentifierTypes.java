@@ -30,7 +30,7 @@ public enum IdentifierTypes {
         if (this == EXPRESSION) {
             return "expression";
         }
-        if (this == EXPRESSION) {
+        if (this == BOOLEAN_EXPRESSION) {
             return "boolean expression";
         }
         return "matrix expression";

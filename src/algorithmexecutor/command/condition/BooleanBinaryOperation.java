@@ -1,5 +1,6 @@
 package algorithmexecutor.command.condition;
 
+import algorithmexecutor.enums.ComparingOperators;
 import java.util.Set;
 
 public class BooleanBinaryOperation extends BooleanExpression {
@@ -41,6 +42,49 @@ public class BooleanBinaryOperation extends BooleanExpression {
     public void addContainedIdentifier(Set<String> vars) {
         this.left.addContainedIdentifier(vars);
         this.right.addContainedIdentifier(vars);
+    }
+
+    @Override
+    public String toString() {
+        if (this.type.equals(BooleanBinaryOperationType.EQUIVALENCE)) {
+            return this.left.toString() + ComparingOperators.EQUALS.getValue() + this.right.toString();
+        } else if (this.type.equals(BooleanBinaryOperationType.OR)) {
+
+            String leftAsText, rightAsText;
+
+            if (this.left.isEquiv()) {
+                leftAsText = "(" + this.left.toString() + ")";
+            } else {
+                leftAsText = this.left.toString();
+            }
+
+            if (this.right.isEquiv()) {
+                rightAsText = "(" + this.right.toString() + ")";
+            } else {
+                rightAsText = this.right.toString();
+            }
+
+            return leftAsText + "|" + rightAsText;
+
+        }
+
+        // Fall: AND.
+        String leftAsText, rightAsText;
+
+        if (this.left instanceof BooleanBinaryOperation && (this.left.isEquiv() || this.left.isOr() || this.left.isBuildingBlock())) {
+            leftAsText = "(" + this.left.toString() + ")";
+        } else {
+            leftAsText = this.left.toString();
+        }
+
+        if (this.right instanceof BooleanBinaryOperation && (this.right.isEquiv() || this.right.isOr() || this.right.isBuildingBlock())) {
+            rightAsText = "(" + this.right.toString() + ")";
+        } else {
+            rightAsText = this.right.toString();
+        }
+
+        return leftAsText + "&" + rightAsText;
+
     }
 
 }

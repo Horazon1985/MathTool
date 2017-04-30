@@ -517,16 +517,16 @@ public abstract class AlgorithmCompiler {
     private static AlgorithmCommand parseIfElseControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
             throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException {
 
-        if (!line.startsWith(Keywords.IF.getValue() + ReservedChars.BEGIN)) {
+        if (!line.startsWith(Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
 
-        int endOfBooleanCondition = line.indexOf(ReservedChars.END.getValue());
+        int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
         if (endOfBooleanCondition < 0) {
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
 
-        String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.BEGIN).length(), endOfBooleanCondition);
+        String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
         BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, alg);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.

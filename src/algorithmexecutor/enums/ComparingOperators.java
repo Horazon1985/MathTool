@@ -2,6 +2,7 @@ package algorithmexecutor.enums;
 
 public enum ComparingOperators {
 
+    EQUALS("=="),
     NOT_EQUALS("!="),
     GREATER(">"),
     GREATER_OR_EQUALS(">="),
@@ -15,6 +16,13 @@ public enum ComparingOperators {
     }
     
     public String getValue() {
+        return this.value;
+    }
+    
+    public String getConvertedValue() {
+        if (this == EQUALS) {
+            return "~";
+        }
         return this.value;
     }
     

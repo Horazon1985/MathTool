@@ -3,8 +3,6 @@ package algorithmexecutor.enums;
 public enum Operators {
 
     DEFINE("="),
-    EQUALS("=="),
-    NOT_EQUALS("!="),
     CONCAT("+"),
     MODULO("%"),
     NOT("!"),

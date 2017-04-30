@@ -81,4 +81,12 @@ public class BooleanBuildingBlock extends BooleanExpression {
         }
     }
 
+    @Override
+    public String toString() {
+        if (this.identifierWithLogicalExpression != null) {
+            return this.identifierWithLogicalExpression.getValue().toString();
+        }
+        return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
+    }
+    
 }
