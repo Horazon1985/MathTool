@@ -119,7 +119,7 @@ public abstract class BooleanExpression {
             }
         }
 
-        // Aufteilung, falls eine Elementaroperation (?, |, &) vorliegt
+        // Aufteilung, falls eine Elementaroperation (~, |, &) vorliegt
         if (priority <= 2) {
             String inputLeft = input.substring(0, breakpoint);
             String inputRight = input.substring(breakpoint + 1, inputLength);
