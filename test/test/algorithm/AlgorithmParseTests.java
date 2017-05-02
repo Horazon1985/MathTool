@@ -90,17 +90,17 @@ public class AlgorithmParseTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierTypes.MATRIX_EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 3);
-//            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
-//            assertTrue(alg.getCommands().get(1).isAssignValueCommand());
-//            assertTrue(alg.getCommands().get(2).isIfElseControllStructure());
-//            assertEquals(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsIfPart().size(), 1);
-//            assertTrue(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsIfPart().get(0).isReturnCommand());
-//            assertEquals(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsElsePart().size(), 1);
-//            assertTrue(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsElsePart().get(0).isReturnCommand());
+            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(2).isIfElseControllStructure());
+            assertEquals(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsIfPart().size(), 1);
+            assertTrue(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsIfPart().get(0).isReturnCommand());
+            assertEquals(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsElsePart().size(), 1);
+            assertTrue(((IfElseControlStructure) alg.getCommands().get(2)).getCommandsElsePart().get(0).isReturnCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
