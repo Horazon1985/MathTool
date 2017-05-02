@@ -1,6 +1,7 @@
 package algorithmexecutor.command.condition;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.identifier.Identifier;
 import exceptions.EvaluationException;
@@ -11,6 +12,8 @@ public class BooleanBuildingBlock extends BooleanExpression {
     private final Identifier identifierWithLogicalExpression;
     private final Expression left;
     private final Expression right;
+    private final MatrixExpression matLeft;
+    private final MatrixExpression matRight;
     private final ComparingOperators comparingOperator;
 
     /* 
@@ -21,6 +24,8 @@ public class BooleanBuildingBlock extends BooleanExpression {
         this.identifierWithLogicalExpression = identifierWithLogicalExpression;
         this.left = null;
         this.right = null;
+        this.matLeft = null;
+        this.matRight = null;
         this.comparingOperator = null;
     }
 
@@ -28,7 +33,18 @@ public class BooleanBuildingBlock extends BooleanExpression {
         this.identifierWithLogicalExpression = null;
         this.left = left;
         this.right = right;
+        this.matLeft = null;
+        this.matRight = null;
         this.comparingOperator = comparingOperator;
+    }
+
+    public BooleanBuildingBlock(MatrixExpression matLeft, MatrixExpression matRight) {
+        this.identifierWithLogicalExpression = null;
+        this.left = null;
+        this.right = null;
+        this.matLeft = matLeft;
+        this.matRight = matRight;
+        this.comparingOperator = ComparingOperators.EQUALS;
     }
 
     @Override

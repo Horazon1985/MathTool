@@ -636,7 +636,7 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void checkIfAlgorithmContainsNoDeadCode(Algorithm alg) throws AlgorithmCompileException {
-
+        CompilerUtils.checkForUnreachableCodeInBlock(alg.getCommands());
     }
 
 }

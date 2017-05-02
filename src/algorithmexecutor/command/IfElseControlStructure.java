@@ -18,6 +18,18 @@ public class IfElseControlStructure extends ControlStructure {
         this.condition = condition;
         this.commandsIfPart = commandsIfPart;
     }
+
+    public BooleanExpression getCondition() {
+        return condition;
+    }
+
+    public List<AlgorithmCommand> getCommandsIfPart() {
+        return commandsIfPart;
+    }
+
+    public List<AlgorithmCommand> getCommandsElsePart() {
+        return commandsElsePart;
+    }
     
     public void setCommandsElsePart(List<AlgorithmCommand> commands) {
         this.commandsElsePart = commands;

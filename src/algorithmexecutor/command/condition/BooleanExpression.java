@@ -2,6 +2,7 @@ package algorithmexecutor.command.condition;
 
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.IdentifierValidator;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
@@ -94,13 +95,21 @@ public abstract class BooleanExpression {
                 comparisonType = ComparingOperators.SMALLER_OR_EQUALS;
             }
             if (comparisonType != null) {
+                // Es kommt genau ein Vergleichsoperator in input vor.
+                String[] comparison = input.split(comparisonType.getConvertedValue());
                 /* 
                 Operatoren wie ">=", ">", ... machen nur bei gewöhnlichen 
                 Ausdrücken Sinn. "==" dagegen macht auch bei Matrizenausdrücken Sinn.
-                */
-                
-                // Es kommt genau ein Vergleichsoperator in input vor.
-                String[] comparison = input.split(comparisonType.getConvertedValue());
+                 */
+                if (comparisonType.getConvertedValue().equals(ComparingOperators.EQUALS.getConvertedValue())) {
+                    try {
+                        MatrixExpression matExprLeft = MatrixExpression.build(comparison[0], validator, validator);
+                        MatrixExpression matExprRight = MatrixExpression.build(comparison[1], validator, validator);
+                        return new BooleanBuildingBlock(matExprLeft, matExprRight);
+                    } catch (ExpressionException e) {
+                    }
+                }
+
                 try {
                     Expression exprLeft = Expression.build(comparison[0], validator);
                     Expression exprRight = Expression.build(comparison[1], validator);
@@ -150,7 +159,6 @@ public abstract class BooleanExpression {
             return build(input.substring(1, inputLength - 1), validator, alg);
         }
 
-
         // Falls der Ausdruck eine logische Konstante ist (false, true)
         if (priority == 4) {
             if (input.equals(Keywords.FALSE.getValue())) {
@@ -179,11 +187,11 @@ public abstract class BooleanExpression {
         }
         return convertedInput;
     }
-    
+
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {
         return input.contains(op.getConvertedValue()) && input.length() - input.replaceAll(op.getConvertedValue(), "").length() == 1;
     }
-    
+
     public Set<String> getContainedIndeterminates() {
         Set<String> vars = new HashSet<>();
         addContainedIdentifier(vars);
@@ -195,17 +203,17 @@ public abstract class BooleanExpression {
     public boolean isEquiv() {
         return this instanceof BooleanBinaryOperation && ((BooleanBinaryOperation) this).getType().equals(BooleanBinaryOperationType.EQUIVALENCE);
     }
-    
+
     public boolean isOr() {
         return this instanceof BooleanBinaryOperation && ((BooleanBinaryOperation) this).getType().equals(BooleanBinaryOperationType.OR);
     }
-    
+
     public boolean isAnd() {
         return this instanceof BooleanBinaryOperation && ((BooleanBinaryOperation) this).getType().equals(BooleanBinaryOperationType.AND);
     }
-    
+
     public boolean isBuildingBlock() {
         return this instanceof BooleanBuildingBlock;
     }
-    
+
 }

@@ -29,6 +29,10 @@ public abstract class AlgorithmCommand {
         return this instanceof ControlStructure;
     }
     
+    public boolean isIfElseControllStructure() {
+        return this instanceof IfElseControlStructure;
+    }
+    
     public boolean isReturnCommand() {
         return this instanceof ReturnCommand;
     }
