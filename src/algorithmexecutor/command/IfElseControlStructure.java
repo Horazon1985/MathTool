@@ -30,7 +30,7 @@ public class IfElseControlStructure extends ControlStructure {
     public List<AlgorithmCommand> getCommandsElsePart() {
         return commandsElsePart;
     }
-    
+
     public void setCommandsElsePart(List<AlgorithmCommand> commands) {
         this.commandsElsePart = commands;
     }
@@ -41,6 +41,21 @@ public class IfElseControlStructure extends ControlStructure {
             return AlgorithmExecutor.executeBlock(this.commandsIfPart);
         }
         return AlgorithmExecutor.executeBlock(this.commandsElsePart);
+    }
+
+    @Override
+    public String toString() {
+        String ifElseCommandString = "if (" + this.condition.toString() + ") {";
+        for (AlgorithmCommand c : this.commandsIfPart) {
+            ifElseCommandString += c.toString() + "; \n";
+        }
+        if (this.commandsElsePart.isEmpty()) {
+            ifElseCommandString += "} else {";
+            for (AlgorithmCommand c : this.commandsElsePart) {
+                ifElseCommandString += c.toString() + "; \n";
+            }
+        }
+        return ifElseCommandString + "}";
     }
 
 }
