@@ -343,14 +343,19 @@ public abstract class AlgorithmCompiler {
     private static List<String> splitBySeparator(String input) {
         List<String> lines = new ArrayList<>();
         int bracketCounter = 0;
+        int squareBracketCounter = 0;
         int lastSeparator = -1;
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
                 bracketCounter++;
             } else if (input.charAt(i) == ReservedChars.END.getValue()) {
                 bracketCounter--;
+            } else if (input.charAt(i) == ReservedChars.BEGIN_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.END_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter--;
             }
-            if (input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() && bracketCounter == 0) {
+            if (input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() && bracketCounter == 0 && squareBracketCounter == 0) {
                 lines.add(input.substring(lastSeparator + 1, i));
                 lastSeparator = i;
             }

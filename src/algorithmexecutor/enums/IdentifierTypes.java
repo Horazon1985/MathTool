@@ -31,9 +31,9 @@ public enum IdentifierTypes {
             return "expression";
         }
         if (this == BOOLEAN_EXPRESSION) {
-            return "boolean expression";
+            return "booleanexpression";
         }
-        return "matrix expression";
+        return "matrixexpression";
     }
 
 }
