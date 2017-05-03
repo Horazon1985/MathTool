@@ -172,8 +172,10 @@ public abstract class BooleanExpression {
         // Falls der Ausdruck eine Variable ist
         if (priority == 4) {
             if (validator.isValidIdentifier(input)) {
-                Identifier identifierWithLogicalExpression = Identifier.createIdentifier(alg, input, IdentifierTypes.BOOLEAN_EXPRESSION);
-                return new BooleanBuildingBlock(identifierWithLogicalExpression);
+                // TO DO! Überarbeiten.
+                return BooleanVariable.create(input);
+//                Identifier identifierWithLogicalExpression = Identifier.createIdentifier(alg, input, IdentifierTypes.BOOLEAN_EXPRESSION);
+//                return new BooleanBuildingBlock(identifierWithLogicalExpression);
             }
         }
 
@@ -214,6 +216,22 @@ public abstract class BooleanExpression {
 
     public boolean isBuildingBlock() {
         return this instanceof BooleanBuildingBlock;
+    }
+    
+    public BooleanExpression not() {
+        return new BooleanNegation(this);
+    }
+
+    public BooleanExpression equiv(BooleanExpression boolExpr) {
+        return new BooleanBinaryOperation(this, boolExpr, BooleanBinaryOperationType.EQUIVALENCE);
+    }
+
+    public BooleanExpression or(BooleanExpression boolExpr) {
+        return new BooleanBinaryOperation(this, boolExpr, BooleanBinaryOperationType.OR);
+    }
+
+    public BooleanExpression and(BooleanExpression boolExpr) {
+        return new BooleanBinaryOperation(this, boolExpr, BooleanBinaryOperationType.AND);
     }
 
 }

@@ -9,7 +9,8 @@ import java.util.Set;
 
 public class BooleanBuildingBlock extends BooleanExpression {
 
-    private final Identifier identifierWithLogicalExpression;
+//    private final Identifier identifierWithLogicalExpression;
+    private final BooleanExpression booleanExpression;
     private final Expression left;
     private final Expression right;
     private final MatrixExpression matLeft;
@@ -20,8 +21,8 @@ public class BooleanBuildingBlock extends BooleanExpression {
     Ein elementarer logischer Baustein ist entweder ein Identifier mit einem 
     logischer Ausdruck oder ein Vergleich von Ausdrücken.
      */
-    public BooleanBuildingBlock(Identifier identifierWithLogicalExpression) {
-        this.identifierWithLogicalExpression = identifierWithLogicalExpression;
+    public BooleanBuildingBlock(BooleanExpression booleanExpression) {
+        this.booleanExpression = booleanExpression;
         this.left = null;
         this.right = null;
         this.matLeft = null;
@@ -30,7 +31,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
     }
 
     public BooleanBuildingBlock(Expression left, Expression right, ComparingOperators comparingOperator) {
-        this.identifierWithLogicalExpression = null;
+        this.booleanExpression = null;
         this.left = left;
         this.right = right;
         this.matLeft = null;
@@ -39,7 +40,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
     }
 
     public BooleanBuildingBlock(MatrixExpression matLeft, MatrixExpression matRight) {
-        this.identifierWithLogicalExpression = null;
+        this.booleanExpression = null;
         this.left = null;
         this.right = null;
         this.matLeft = matLeft;
@@ -50,37 +51,70 @@ public class BooleanBuildingBlock extends BooleanExpression {
     @Override
     public boolean evaluate() {
         if (isBooleanIdentifier()) {
-
+            return this.booleanExpression.evaluate();
         } else if (isComparisonOfExpressions()) {
             /* 
-            Wenn Arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
+            Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
             sondern der Vergleich liefert stets 'false'
              */
             try {
                 double valueLeft = this.left.evaluate();
                 double valueRight = this.right.evaluate();
                 switch (this.comparingOperator) {
+                    case EQUALS:
+                        if (this.left.equivalent(this.right)) {
+                            return true;
+                        } else if (this.left.getContainedIndeterminates().isEmpty() && this.right.getContainedIndeterminates().isEmpty()) {
+                            return valueLeft == valueRight;
+                        }
+                        break;
                     case NOT_EQUALS:
-                        return valueLeft != valueRight;
+                        return !new BooleanBuildingBlock(this.left, this.right, ComparingOperators.EQUALS).evaluate();
                     case GREATER:
-                        return valueLeft > valueRight;
+                        if (this.left.getContainedIndeterminates().isEmpty() && this.right.getContainedIndeterminates().isEmpty()) {
+                            return valueLeft > valueRight;
+                        }
+                        break;
                     case GREATER_OR_EQUALS:
-                        return valueLeft >= valueRight;
+                        if (this.left.getContainedIndeterminates().isEmpty() && this.right.getContainedIndeterminates().isEmpty()) {
+                            return valueLeft >= valueRight;
+                        }
+                        break;
                     case SMALLER:
-                        return valueLeft < valueRight;
+                        if (this.left.getContainedIndeterminates().isEmpty() && this.right.getContainedIndeterminates().isEmpty()) {
+                            return valueLeft < valueRight;
+                        }
+                        break;
                     case SMALLER_OR_EQUALS:
-                        return valueLeft <= valueRight;
+                        if (this.left.getContainedIndeterminates().isEmpty() && this.right.getContainedIndeterminates().isEmpty()) {
+                            return valueLeft <= valueRight;
+                        }
+                        break;
                 }
             } catch (EvaluationException e) {
-                return false;
             }
+            return false;
         }
-        // Sollte nie vorkommen.
+        /* 
+        Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
+        sondern der Vergleich liefert stets 'false'
+         */
+        try {
+            MatrixExpression matValueLeft = this.matLeft.evaluate();
+            MatrixExpression matValueRight = this.matRight.evaluate();
+            switch (this.comparingOperator) {
+                case EQUALS:
+                    return matValueLeft.equivalent(matValueRight);
+                case NOT_EQUALS:
+                    return !matValueLeft.equivalent(matValueRight);
+            }
+        } catch (EvaluationException e) {
+        }
         return false;
     }
 
     private boolean isBooleanIdentifier() {
-        return this.identifierWithLogicalExpression != null;
+        return this.booleanExpression != null;
     }
 
     private boolean isComparisonOfExpressions() {
@@ -90,19 +124,24 @@ public class BooleanBuildingBlock extends BooleanExpression {
     @Override
     public void addContainedIdentifier(Set<String> vars) {
         if (isBooleanIdentifier()) {
-            vars.add(this.identifierWithLogicalExpression.getName());
+            vars.addAll(this.booleanExpression.getContainedIndeterminates());
         } else if (isComparisonOfExpressions()) {
             vars.addAll(this.left.getContainedIndeterminates());
             vars.addAll(this.right.getContainedIndeterminates());
+        } else {
+            vars.addAll(this.matLeft.getContainedIndeterminates());
+            vars.addAll(this.matRight.getContainedIndeterminates());
         }
     }
 
     @Override
     public String toString() {
-        if (this.identifierWithLogicalExpression != null) {
-            return this.identifierWithLogicalExpression.getValue().toString();
+        if (this.booleanExpression != null) {
+            return this.booleanExpression.toString();
+        } else if (this.left != null && this.right != null) {
+            return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
         }
-        return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
+        return this.matLeft.toString() + " " + this.comparingOperator.getValue() + " " + this.matRight.toString();
     }
-    
+
 }
