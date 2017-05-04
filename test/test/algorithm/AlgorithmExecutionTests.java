@@ -3,6 +3,7 @@ package test.algorithm;
 import abstractexpressions.expression.classes.Constant;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
@@ -14,6 +15,7 @@ import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -68,7 +70,7 @@ public class AlgorithmExecutionTests {
             mainAlg.appendCommand(new AssignValueCommand(idX, Expression.build("2+5")));
             mainAlg.appendCommand(new AssignValueCommand(idY, MatrixExpression.build("[0,1;3,x]")));
             mainAlg.appendCommand(new ReturnCommand(idY));
-        } catch (ExpressionException | AlgorithmCompileException ex) {
+        } catch (ExpressionException | AlgorithmCompileException e) {
             fail();
         }
 
@@ -103,7 +105,7 @@ public class AlgorithmExecutionTests {
 
             calledAlg.appendCommand(new AssignValueCommand(idResult, Expression.build("gcd(a,b)")));
             calledAlg.appendCommand(new ReturnCommand(idResult));
-        } catch (ExpressionException | AlgorithmCompileException ex) {
+        } catch (ExpressionException | AlgorithmCompileException e) {
             fail();
         }
 
@@ -118,5 +120,21 @@ public class AlgorithmExecutionTests {
             fail();
         }
     }
+    
+    @Test
+    public void executeAlgorithmWithIfElseControlStructureTest() {
+        String input = "expression main(){expression a=exp(1);if(a>2){return a;};a=a+1;return a;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+        } catch (AlgorithmCompileException e) {
+            fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+    
 
 }

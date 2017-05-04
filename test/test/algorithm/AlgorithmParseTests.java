@@ -107,11 +107,21 @@ public class AlgorithmParseTests {
     }
 
     @Test
+    public void parseAlgorithmWithCompileErrorCodeTest() {
+        String input = "main(){expression a=exp(1)}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz fehlerhaftem Code kompiliert.");
+        } catch (AlgorithmCompileException e) {
+        }
+    }
+    
+    @Test
     public void parseAlgorithmWithUnreachableCodeTest() {
         String input = "expression main(){expression a=exp(1);if(a>2){return a;expression b=a+5;};}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            fail("Der Algorithmus " + input + " wurde trotz unerreichbarem Code compiliert.");
+            fail("Der Algorithmus " + input + " wurde trotz unerreichbarem Code kompiliert.");
         } catch (AlgorithmCompileException e) {
         }
     }

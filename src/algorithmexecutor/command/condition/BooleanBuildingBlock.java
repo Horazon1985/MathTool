@@ -1,15 +1,18 @@
 package algorithmexecutor.command.condition;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.interfaces.AbstractExpression;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.Algorithm;
 import exceptions.EvaluationException;
 import java.util.Set;
 
 public class BooleanBuildingBlock extends BooleanExpression {
 
-//    private final Identifier identifierWithLogicalExpression;
     private final BooleanExpression booleanExpression;
     private final Expression left;
     private final Expression right;
@@ -142,6 +145,25 @@ public class BooleanBuildingBlock extends BooleanExpression {
             return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
         }
         return this.matLeft.toString() + " " + this.comparingOperator.getValue() + " " + this.matRight.toString();
+    }
+
+    private static AbstractExpression insertIdentifierValues(AbstractExpression abstrExpr, Algorithm alg) {
+        Set<String> vars = abstrExpr.getContainedIndeterminates();
+        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        if (memory != null) {
+            for (String var : vars) {
+                if (abstrExpr instanceof Expression && memory.getMemory().get(var).getValue() instanceof Expression) {
+                    abstrExpr = ((Expression) abstrExpr).replaceVariable(var, (Expression) memory.getMemory().get(var).getValue());
+                } else if (abstrExpr instanceof LogicalExpression && memory.getMemory().get(var).getValue() instanceof LogicalExpression) {
+                    abstrExpr = ((LogicalExpression) abstrExpr).replaceVariable(var, (LogicalExpression) memory.getMemory().get(var).getValue());
+                } else if (abstrExpr instanceof MatrixExpression && memory.getMemory().get(var).getValue() instanceof Expression) {
+                    abstrExpr = ((MatrixExpression) abstrExpr).replaceVariable(var, (Expression) memory.getMemory().get(var).getValue());
+                } else if (abstrExpr instanceof MatrixExpression && memory.getMemory().get(var).getValue() instanceof MatrixExpression) {
+                    abstrExpr = ((MatrixExpression) abstrExpr).replaceMatrixVariable(var, (MatrixExpression) memory.getMemory().get(var).getValue());
+                }
+            }
+        }
+        return abstrExpr;
     }
 
 }

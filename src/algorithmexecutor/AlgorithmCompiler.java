@@ -503,6 +503,10 @@ public abstract class AlgorithmCompiler {
 
     private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
 
+        
+        
+        
+        
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
 

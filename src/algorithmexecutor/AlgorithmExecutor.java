@@ -25,6 +25,7 @@ public abstract class AlgorithmExecutor {
      * Hauptmethode zur Ausführung eines MathTool-Algorithmus.
      *
      * @throws AlgorithmExecutionException
+     * @throws EvaluationException
      */
     public static Identifier executeAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException, EvaluationException {
         // Alle (lokalen) Variablen und Parameter aus dem Speicher entfernen.
