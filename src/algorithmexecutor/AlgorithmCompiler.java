@@ -161,6 +161,14 @@ public abstract class AlgorithmCompiler {
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
 
+        if (!input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
+            /*
+            Bei der Aufsplittung nach ';' wird nicht geprüft, on die letzte Zeile
+            mit ';' endet. Dies wird hierdurch gewährleistet.
+            */
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        
         List<String> lines = splitBySeparator(input);
 
         for (String line : lines) {

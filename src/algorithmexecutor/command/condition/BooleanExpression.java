@@ -4,13 +4,11 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import exceptions.ExpressionException;
 import java.util.HashSet;
@@ -25,7 +23,7 @@ public abstract class BooleanExpression {
         input = convertOperators(input.replaceAll(" ", "").toLowerCase());
 
         /*
-         Prioritäten: ?: 0, |: 1, &: 2, !: 3, Vergleiche, Boolsche Konstante oder Variable: 4.
+         Prioritäten: |: 0, &: 1, !: 2, ~: 3, Vergleiche, Boolsche Konstante oder Variable: 4.
          */
         int priority = 4;
         int breakpoint = -1;
@@ -55,18 +53,18 @@ public abstract class BooleanExpression {
             if (bracketCounter != 0) {
                 continue;
             }
-            // Aufteilungspunkt finden; zunächst wird nach ~, |, &, ! gesucht 
+            // Aufteilungspunkt finden; zunächst wird nach |, &, !, ~ gesucht 
             // breakpoint gibt den Index in formula an, wo die Formel aufgespalten werden soll.
-            if (currentChar.equals(ComparingOperators.EQUALS.getConvertedValue()) && priority > 0) {
+             if (currentChar.equals(Operators.OR.getValue()) && priority > 1) {
                 priority = 0;
                 breakpoint = inputLength - i;
-            } else if (currentChar.equals(Operators.OR.getValue()) && priority > 1) {
+            } else if (currentChar.equals(Operators.AND.getValue()) && priority > 2) {
                 priority = 1;
                 breakpoint = inputLength - i;
-            } else if (currentChar.equals(Operators.AND.getValue()) && priority > 2) {
+            } else if (currentChar.equals(Operators.NOT.getValue()) && priority > 3) {
                 priority = 2;
                 breakpoint = inputLength - i;
-            } else if (currentChar.equals(Operators.NOT.getValue()) && priority > 3) {
+            } else if (currentChar.equals(ComparingOperators.EQUALS.getConvertedValue()) && priority > 0) {
                 priority = 3;
                 breakpoint = inputLength - i;
             }
@@ -76,8 +74,43 @@ public abstract class BooleanExpression {
             throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
 
+        // Aufteilung, falls eine Elementaroperation (|, &, !) vorliegt
+        if (priority <= 2) {
+            String inputLeft = input.substring(0, breakpoint);
+            String inputRight = input.substring(breakpoint + 1, inputLength);
+
+            if (inputLeft.equals("") && priority != 1) {
+                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
+            if (inputRight.equals("")) {
+                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+            }
+
+            switch (priority) {
+                case 0:
+                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.EQUIVALENCE);
+                case 1:
+                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.OR);
+                case 2:
+                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.AND);
+                default:    //Passiert zwar nicht, aber trotzdem!
+                    return null;
+            }
+        }
+        
+        if (priority == 2 && breakpoint == 0) {
+            /*
+             Falls eine Negation vorliegt, dann muss breakpoint == 0 sein.
+             Falls formula von der Form !xyz... ist, dann soll xyz... gelesen
+             werden und dann die entsprechende Negation zurückgegeben
+             werden.
+             */
+            String inputLeft = input.substring(1, inputLength);
+            return new BooleanNegation(build(inputLeft, validator, alg));
+        }
+
         // Der folgende Fall wird zuerst behandelt: "==" als Vergleich zwischen zwei (Matrizen-)Ausdrücken.
-        if (priority == 0) {
+        if (priority >= 3) {
             /* 
             Falls der Ausdruck ein Vergleich von Ausdrücken (Instanzen von Expression) ist.
             WICHTIG: Verglichen wird stets mit der Methode equivalent().
@@ -118,41 +151,7 @@ public abstract class BooleanExpression {
                 }
             }
         }
-
-        // Aufteilung, falls eine Elementaroperation (~, |, &) vorliegt
-        if (priority <= 2) {
-            String inputLeft = input.substring(0, breakpoint);
-            String inputRight = input.substring(breakpoint + 1, inputLength);
-
-            if (inputLeft.equals("") && priority != 1) {
-                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
-            }
-            if (inputRight.equals("")) {
-                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
-            }
-
-            switch (priority) {
-                case 0:
-                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.EQUIVALENCE);
-                case 1:
-                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.OR);
-                case 2:
-                    return new BooleanBinaryOperation(build(inputLeft, validator, alg), build(inputRight, validator, alg), BooleanBinaryOperationType.AND);
-                default:    //Passiert zwar nicht, aber trotzdem!
-                    return null;
-            }
-        }
-        if (priority == 3 && breakpoint == 0) {
-            /*
-             Falls eine Negation vorliegt, dann muss breakpoint == 0 sein.
-             Falls formula von der Form !xyz... ist, dann soll xyz... gelesen
-             werden und dann die entsprechende Negation zurückgegeben
-             werden.
-             */
-            String inputLeft = input.substring(1, inputLength);
-            return new BooleanNegation(build(inputLeft, validator, alg));
-        }
-
+        
         // Falls kein binärer Operator und die Formel die Form (...) hat -> Klammern beseitigen
         if (priority == 4 && input.substring(0, 1).equals(ReservedChars.OPEN_BRACKET.getValue())
                 && input.substring(inputLength - 1, inputLength).equals(ReservedChars.CLOSE_BRACKET.getValue())) {

@@ -105,5 +105,16 @@ public class AlgorithmParseTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
+
+    @Test
+    public void parseAlgorithmWithUnreachableCodeTest() {
+        String input = "expression main(){expression a=exp(1);if(a>2){return a;expression b=a+5;};}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz unerreichbarem Code compiliert.");
+        } catch (AlgorithmCompileException e) {
+        }
+    }
+
     
 }
