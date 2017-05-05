@@ -8,15 +8,18 @@ import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
 import algorithmexecutor.command.ReturnCommand;
+import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
+import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
@@ -47,7 +50,7 @@ public class AlgorithmExecutionTests {
         } catch (ExpressionException | AlgorithmCompileException ex) {
             fail();
         }
-        
+
         List<Algorithm> algorithms = new ArrayList<>();
         algorithms.add(mainAlg);
         try {
@@ -120,7 +123,7 @@ public class AlgorithmExecutionTests {
             fail();
         }
     }
-    
+
     @Test
     public void executeAlgorithmWithIfElseControlStructureTest() {
         String input = "expression main(){expression a=exp(1);if(a>2){return a;};a=a+1;return a;}";
@@ -137,7 +140,7 @@ public class AlgorithmExecutionTests {
         } catch (Exception e) {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
-        
+
         input = "expression main(){expression a=exp(1);expression b=7;if(a>b){return a;};a=a+1;return a;}";
         alg = null;
         try {
@@ -152,7 +155,7 @@ public class AlgorithmExecutionTests {
         } catch (Exception e) {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
-        
+
         input = "expression main(){expression a=exp(1);if(a>2){a=a+1;expression b=2;};return a;}";
         alg = null;
         try {
@@ -168,6 +171,23 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
     }
-    
+
+    @Test
+    public void executeAlgorithmWithWhileControlStructureTest() {
+        String input = "expression main(){expression a = 1;while(a<6){a = 2*a;};return a;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("8")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
 
 }

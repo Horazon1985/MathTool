@@ -25,12 +25,16 @@ public abstract class AlgorithmCommand {
         return this instanceof VoidCommand;
     }
     
-    public boolean isControllStructure() {
+    public boolean isControlStructure() {
         return this instanceof ControlStructure;
     }
     
-    public boolean isIfElseControllStructure() {
+    public boolean isIfElseControlStructure() {
         return this instanceof IfElseControlStructure;
+    }
+    
+    public boolean isWhileControlStructure() {
+        return this instanceof WhileControlStructure;
     }
     
     public boolean isReturnCommand() {

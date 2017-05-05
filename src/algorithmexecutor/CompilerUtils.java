@@ -18,9 +18,9 @@ public class CompilerUtils {
             if (commands.get(i).isReturnCommand() && i < commands.size() - 1) {
                 throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
             }
-            if (commands.get(i).isControllStructure()) {
+            if (commands.get(i).isControlStructure()) {
                 // If-Else-Kontrollstruktur
-                if (commands.get(i).isIfElseControllStructure()) {
+                if (commands.get(i).isIfElseControlStructure()) {
                     checkForUnreachableCodeInIfElseBlock((IfElseControlStructure) commands.get(i));
                     if (doBothPartsContainReturnStatementInIfElseBlock((IfElseControlStructure) commands.get(i)) && i < commands.size() - 1) {
                         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);

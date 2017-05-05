@@ -8,6 +8,7 @@ import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
+import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
@@ -65,6 +66,7 @@ public abstract class AlgorithmCompiler {
         outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "  ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ",", ", ", " ,");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ";", "; ", " ;");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, "=", " =", "= ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, "\\{", " \\{", "\\{ ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, "\\}", " \\}", "\\} ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, "\\(", " \\(", "\\( ");
@@ -161,22 +163,27 @@ public abstract class AlgorithmCompiler {
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
 
+        if (input.isEmpty()) {
+            return alg;
+        }
+        
+        // Der Algorithmus muss auf ';' enden, wenn dieser nichtleer ist.
         if (!input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
             /*
             Bei der Aufsplittung nach ';' wird nicht geprüft, on die letzte Zeile
             mit ';' endet. Dies wird hierdurch gewährleistet.
-            */
+             */
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
-        
+
         List<String> lines = splitBySeparator(input);
 
         List<AlgorithmCommand> commands = new ArrayList<>();
-        
+
         for (String line : lines) {
             commands.add(parseLine(line, memory, alg));
         }
-        
+
         // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
         alg.appendCommands(commands);
 
@@ -452,7 +459,7 @@ public abstract class AlgorithmCompiler {
 
             // Fall: boolscher Ausdruck.
             try {
-                BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR, alg);
+                BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR);
                 Set<String> vars = boolExpr.getContainedIndeterminates();
                 if (!areIdentifiersAllDefined(vars, memory)) {
                     throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
@@ -508,10 +515,6 @@ public abstract class AlgorithmCompiler {
 
     private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
 
-        
-        
-        
-        
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
 
@@ -532,6 +535,19 @@ public abstract class AlgorithmCompiler {
         }
         // For-Block
         // While-Block
+        try {
+            return parseWhileControlStructure(line, memory, alg);
+        } catch (BooleanExpressionException e) {
+            // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        } catch (BlockCompileException e) {
+            /* 
+            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der 
+            innere Block kann nicht kompiliert werden.
+             */
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        } catch (AlgorithmCompileException e) {
+        }
         // Do-While-Block
         throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
@@ -549,7 +565,7 @@ public abstract class AlgorithmCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
-        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, alg);
+        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
@@ -584,12 +600,12 @@ public abstract class AlgorithmCompiler {
             // Kein Else-Teil vorhanden.
             return ifElseControlStructure;
         }
-        
+
         String restLine = line.substring(endBlockPosition + 1);
         if (!restLine.startsWith(Keywords.ELSE.getValue() + ReservedChars.BEGIN.getValue())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
-        
+
         bracketCounter = 0;
         beginBlockPosition = restLine.indexOf(ReservedChars.BEGIN.getValue()) + 1;
         endBlockPosition = -1;
@@ -610,11 +626,63 @@ public abstract class AlgorithmCompiler {
         if (endBlockPosition != restLine.length() - 1) {
             throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
         }
-        
+
         List<AlgorithmCommand> commandsElsePart = parseBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
         ifElseControlStructure.setCommandsElsePart(commandsElsePart);
 
         return ifElseControlStructure;
+    }
+
+    private static AlgorithmCommand parseWhileControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException {
+
+        if (!line.startsWith(Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
+        if (endOfBooleanCondition < 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        String booleanConditionString = line.substring((Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
+        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR);
+
+        // Prüfung, ob line mit "while(boolsche Bedingung){ ..." beginnt.
+        if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
+                || !line.contains(String.valueOf(ReservedChars.END.getValue()))
+                || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+
+        // Block im While-Teil kompilieren.
+        int bracketCounter = 0;
+        int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
+        int endBlockPosition = -1;
+        for (int i = line.indexOf(ReservedChars.BEGIN.getValue()); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endBlockPosition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        }
+        List<AlgorithmCommand> commandsWhilePart = parseBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        WhileControlStructure whileControlStructure = new WhileControlStructure(condition, commandsWhilePart);
+
+        // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
+        if (endBlockPosition == line.length() - 1) {
+            // Kein Else-Teil vorhanden.
+            return whileControlStructure;
+        }
+
+        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
     }
 
     private static AlgorithmCommand parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {

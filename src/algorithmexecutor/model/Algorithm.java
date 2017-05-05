@@ -96,8 +96,8 @@ public class Algorithm {
     private void appendCommands(List<AlgorithmCommand> commands, boolean topLevel) {
         for (AlgorithmCommand c : commands) {
             c.setAlgorithm(this);
-            if (c.isControllStructure()) {
-                if (c.isIfElseControllStructure()) {
+            if (c.isControlStructure()) {
+                if (c.isIfElseControlStructure()) {
                     IfElseControlStructure ifElseCommand = (IfElseControlStructure) c;
                     appendCommands(ifElseCommand.getCommandsIfPart(), false);
                     appendCommands(ifElseCommand.getCommandsElsePart(), false);

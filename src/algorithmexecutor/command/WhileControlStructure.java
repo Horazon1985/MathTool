@@ -6,9 +6,7 @@ import algorithmexecutor.CompilerUtils;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +24,7 @@ public class WhileControlStructure extends ControlStructure {
         return condition;
     }
 
-    public List<AlgorithmCommand> getCommandsIfPart() {
+    public List<AlgorithmCommand> getCommands() {
         return commands;
     }
 
