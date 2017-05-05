@@ -123,7 +123,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
 
     private static AbstractExpression replaceVarsByIdentifierValues(AbstractExpression abstrExpr, Map<String, AbstractExpression> valuesMap) {
         // TO DO: Falsche Ermittlung von vars!
-        Set<String> vars = abstrExpr.getContainedIndeterminates();
+        Set<String> vars = abstrExpr.getContainedVars();
         for (String var : vars) {
             if (abstrExpr instanceof Expression && valuesMap.get(var) instanceof Expression) {
                 abstrExpr = ((Expression) abstrExpr).replaceVariable(var, (Expression) valuesMap.get(var));
