@@ -194,6 +194,18 @@
         <Ukrainian>Опції графіки</Ukrainian>
         <Russian>Опции графики</Russian>
     </object>
+    <object id = "GUI_TOOLS">
+        <German>Werkzeuge</German>
+        <English>Tools</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_ALGORITHMS">
+        <German>Algorithmencompiler</German>
+        <English>Algorithm compiler</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <!-- DevelopersDialogGUI -->    
     <object id = "GUI_DevelopersDialogGUI_ABOUT">
         <German>Über MathTool</German>

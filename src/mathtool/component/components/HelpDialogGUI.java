@@ -15,10 +15,10 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
     
     private static HelpDialogGUI instance = null;
 
-    private HelpDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    private HelpDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
-        super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
+        super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight,
                 GUI_HelpDialogGUI_HELP, "icons/HelpLogo.png",
                 null, null, null, menuCaptions, fileNames);
 

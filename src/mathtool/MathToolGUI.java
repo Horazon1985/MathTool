@@ -64,6 +64,7 @@ import mathtool.component.components.GraphicOptionsDialogGUI;
 import mathtool.component.components.OutputDetailsGUI;
 import mathtool.utilities.MathToolUtilities;
 import mathcommandcompiler.MathCommandCompiler;
+import mathtool.component.components.MathToolAlgorithmsGUI;
 import mathtool.lang.translator.Translator;
 
 public class MathToolGUI extends JFrame implements MouseListener {
@@ -89,6 +90,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_MENU_OPTIONS = "GUI_MENU_OPTIONS";
     private static final String GUI_MENU_OUTPUT_OPTIONS = "GUI_MENU_OUTPUT_OPTIONS";
     private static final String GUI_MENU_GRAPHIC_OPTIONS = "GUI_MENU_GRAPHIC_OPTIONS";
+    private static final String GUI_TOOLS = "GUI_TOOLS";
+    private static final String GUI_ALGORITHMS = "GUI_ALGORITHMS";
     private static final String GUI_APPROX = "GUI_APPROX";
     private static final String GUI_LATEX_CODE = "GUI_LATEX_CODE";
     private static final String GUI_CLEAR = "GUI_CLEAR";
@@ -649,6 +652,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu2 = new javax.swing.JMenu();
         inputButton = new javax.swing.JButton();
         latexButton = new javax.swing.JButton();
         approxButton = new javax.swing.JButton();
@@ -675,6 +679,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
         menuItemOutputOptions = new javax.swing.JMenuItem();
         menuItemGraphicOptions = new javax.swing.JMenuItem();
         menuItemAbout = new javax.swing.JMenuItem();
+        menuTools = new javax.swing.JMenu();
+        menuItemAlgorithms = new javax.swing.JMenuItem();
+
+        jMenu2.setText("jMenu2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MathTool - Mathematical Tool for Analysis, Algebra and Numerical Computation");
@@ -782,6 +790,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         mathToolMenuBar.add(menuFile);
 
         menuMathTool.setText("MathTool");
+        menuMathTool.setName(""); // NOI18N
 
         menuItemHelp.setText("Hilfe");
         menuItemHelp.addActionListener(new java.awt.event.ActionListener() {
@@ -879,6 +888,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         mathToolMenuBar.add(menuMathTool);
 
+        menuTools.setText("Werkzeuge");
+
+        menuItemAlgorithms.setText("Algorithmenkompiler");
+        menuItemAlgorithms.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAlgorithmsActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemAlgorithms);
+
+        mathToolMenuBar.add(menuTools);
+
         setJMenuBar(mathToolMenuBar);
 
         pack();
@@ -911,7 +932,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions.put(menuItemOptionsMenu, GUI_MENU_OPTIONS);
         componentCaptions.put(menuItemOutputOptions, GUI_MENU_OUTPUT_OPTIONS);
         componentCaptions.put(menuItemGraphicOptions, GUI_MENU_GRAPHIC_OPTIONS);
-
+        componentCaptions.put(menuTools, GUI_TOOLS);
+        componentCaptions.put(menuItemAlgorithms, GUI_ALGORITHMS);
         // Buttons
         componentCaptions.put(approxButton, GUI_APPROX);
         componentCaptions.put(latexButton, GUI_LATEX_CODE);
@@ -1464,6 +1486,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
 
+    private void menuItemAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAlgorithmsActionPerformed
+        String algorithmsTitle = Translator.translateOutputMessage(GUI_ALGORITHMS);
+        
+        MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getHeight(),
+                algorithmsTitle);
+        
+        mathToolAlgorithmsGUI.setVisible(true);
+
+    }//GEN-LAST:event_menuItemAlgorithmsActionPerformed
+
     /**
      * Key-Steuerung für die MathToolGUI.
      */
@@ -1761,10 +1793,12 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JButton clearButton;
     private javax.swing.JComboBox commandChoice;
     private javax.swing.JButton inputButton;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JButton latexButton;
     private javax.swing.JMenuBar mathToolMenuBar;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemAbout;
+    private javax.swing.JMenuItem menuItemAlgorithms;
     private javax.swing.JMenuItem menuItemGraphicOptions;
     private javax.swing.JMenuItem menuItemHelp;
     private javax.swing.JMenuItem menuItemLanguageEnglish;
@@ -1781,6 +1815,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private javax.swing.JMenuItem menuItemRepresentationText;
     private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JMenu menuMathTool;
+    private javax.swing.JMenu menuTools;
     private javax.swing.JComboBox operatorChoice;
     // End of variables declaration//GEN-END:variables
 
