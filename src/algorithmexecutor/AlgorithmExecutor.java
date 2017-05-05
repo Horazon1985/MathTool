@@ -58,10 +58,12 @@ public abstract class AlgorithmExecutor {
         Identifier resultIdentifier = null;
         for (int i = 0; i < commands.size(); i++) {
             resultIdentifier = commands.get(i).execute();
-            if (commands.get(i) instanceof ReturnCommand) {
+            /*
+            Nur Return-Befehle geben echte Identifier zurück. Alle anderen
+            Befehle geben null zurück.
+             */
+            if (resultIdentifier != null) {
                 return resultIdentifier;
-            } else {
-                resultIdentifier = null;
             }
         }
         return resultIdentifier;

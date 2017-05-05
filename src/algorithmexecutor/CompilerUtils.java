@@ -1,10 +1,15 @@
 package algorithmexecutor;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
+import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.Algorithm;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CompilerUtils {
 
@@ -49,4 +54,13 @@ public class CompilerUtils {
         return ifPartContainsReturnStatement && elsePartContainsReturnStatement;
     }
 
+    public static Map<String, AbstractExpression> extractValuesOfIdentifiers(Algorithm alg) {
+        Map<String, AbstractExpression> valuesMap = new HashMap<>();
+        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        for (String identifierName : memory.getMemory().keySet()) {
+            valuesMap.put(identifierName, memory.getMemory().get(identifierName).getValue());
+        }
+        return valuesMap;
+    }
+    
 }

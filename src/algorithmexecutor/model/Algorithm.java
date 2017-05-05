@@ -6,6 +6,7 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
+import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
@@ -86,6 +87,26 @@ public class Algorithm {
     public void appendCommand(AlgorithmCommand command) {
         command.setAlgorithm(this);
         this.commands.add(command);
+    }
+
+    public void appendCommands(List<AlgorithmCommand> commands) {
+        appendCommands(commands, true);
+    }
+
+    private void appendCommands(List<AlgorithmCommand> commands, boolean topLevel) {
+        for (AlgorithmCommand c : commands) {
+            c.setAlgorithm(this);
+            if (c.isControllStructure()) {
+                if (c.isIfElseControllStructure()) {
+                    IfElseControlStructure ifElseCommand = (IfElseControlStructure) c;
+                    appendCommands(ifElseCommand.getCommandsIfPart(), false);
+                    appendCommands(ifElseCommand.getCommandsElsePart(), false);
+                }
+            }
+            if (topLevel) {
+                this.commands.add(c);
+            }
+        }
     }
 
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {

@@ -1,12 +1,17 @@
 package algorithmexecutor.command;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.AlgorithmExecutor;
+import algorithmexecutor.CompilerUtils;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IfElseControlStructure extends ControlStructure {
 
@@ -37,19 +42,20 @@ public class IfElseControlStructure extends ControlStructure {
 
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
-        if (this.condition.evaluate()) {
+        Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(getAlgorithm());
+        if (this.condition.evaluate(valuesMap)) {
             return AlgorithmExecutor.executeBlock(this.commandsIfPart);
         }
         return AlgorithmExecutor.executeBlock(this.commandsElsePart);
     }
-
+    
     @Override
     public String toString() {
         String ifElseCommandString = "if (" + this.condition.toString() + ") {";
         for (AlgorithmCommand c : this.commandsIfPart) {
             ifElseCommandString += c.toString() + "; \n";
         }
-        if (this.commandsElsePart.isEmpty()) {
+        if (!this.commandsElsePart.isEmpty()) {
             ifElseCommandString += "} else {";
             for (AlgorithmCommand c : this.commandsElsePart) {
                 ifElseCommandString += c.toString() + "; \n";

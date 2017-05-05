@@ -1,5 +1,6 @@
 package algorithmexecutor.command.condition;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class BooleanVariable extends BooleanExpression {
     }
 
     @Override
-    public boolean evaluate() {
+    public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         return this.value;
     }
 

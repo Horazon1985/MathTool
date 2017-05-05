@@ -60,10 +60,6 @@ public class AssignValueCommand extends AlgorithmCommand {
         return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 
-    private boolean areTypesCompatible(Identifier identifierSrc, Identifier identifierTarget) {
-        return identifierSrc.getType().isSameOrGeneralTypeOf(identifierTarget.getType());
-    }
-
     public AbstractExpression getIdentifierTarget() {
         return this.targetExpression;
     }
@@ -100,7 +96,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
 
         AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
-        return this.identifierSrc;
+        return null;
     }
 
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {

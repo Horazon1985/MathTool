@@ -1,6 +1,8 @@
 package algorithmexecutor.command.condition;
 
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.enums.Operators;
+import java.util.Map;
 import java.util.Set;
 
 public class BooleanNegation extends BooleanExpression {
@@ -12,8 +14,8 @@ public class BooleanNegation extends BooleanExpression {
     }
 
     @Override
-    public boolean evaluate() {
-        return !this.argument.evaluate();
+    public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
+        return !this.argument.evaluate(valuesMap);
     }
 
     @Override

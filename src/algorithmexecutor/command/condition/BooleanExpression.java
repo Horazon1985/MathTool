@@ -1,6 +1,7 @@
 package algorithmexecutor.command.condition;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.enums.ComparingOperators;
@@ -12,11 +13,12 @@ import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.model.Algorithm;
 import exceptions.ExpressionException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class BooleanExpression {
 
-    public abstract boolean evaluate();
+    public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
     public static BooleanExpression build(String input, IdentifierValidator validator, Algorithm alg) throws BooleanExpressionException {
 

@@ -171,9 +171,14 @@ public abstract class AlgorithmCompiler {
         
         List<String> lines = splitBySeparator(input);
 
+        List<AlgorithmCommand> commands = new ArrayList<>();
+        
         for (String line : lines) {
-            alg.appendCommand(parseLine(line, memory, alg));
+            commands.add(parseLine(line, memory, alg));
         }
+        
+        // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
+        alg.appendCommands(commands);
 
         // Plausibilitätschecks.
         checkAlgorithmForPlausibility(alg);

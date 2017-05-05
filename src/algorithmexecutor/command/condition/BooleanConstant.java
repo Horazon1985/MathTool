@@ -1,5 +1,7 @@
 package algorithmexecutor.command.condition;
 
+import abstractexpressions.interfaces.AbstractExpression;
+import java.util.Map;
 import java.util.Set;
 
 public class BooleanConstant extends BooleanExpression {
@@ -11,7 +13,7 @@ public class BooleanConstant extends BooleanExpression {
     }
     
     @Override
-    public boolean evaluate() {
+    public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         return value;
     }
 

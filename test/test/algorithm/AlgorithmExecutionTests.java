@@ -128,7 +128,40 @@ public class AlgorithmExecutionTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("exp(1)")));
+        } catch (AlgorithmCompileException e) {
+            fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+        
+        input = "expression main(){expression a=exp(1);expression b=7;if(a>b){return a;};a=a+1;return a;}";
+        alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("1+exp(1)")));
+        } catch (AlgorithmCompileException e) {
+            fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+        
+        input = "expression main(){expression a=exp(1);if(a>2){a=a+1;expression b=2;};return a;}";
+        alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("1+exp(1)")));
         } catch (AlgorithmCompileException e) {
             fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
         } catch (Exception e) {
