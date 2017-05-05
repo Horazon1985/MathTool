@@ -34,6 +34,8 @@ public class WhileControlStructure extends ControlStructure {
         Identifier result = null;
         while (this.condition.evaluate(valuesMap)) {
             result = AlgorithmExecutor.executeBlock(this.commands);
+            // Identifierwerte aktualisieren.
+            valuesMap = CompilerUtils.extractValuesOfIdentifiers(getAlgorithm());
             if (result != null) {
                 return result;
             }

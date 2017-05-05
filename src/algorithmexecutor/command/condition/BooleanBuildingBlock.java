@@ -4,10 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.memory.AlgorithmMemory;
-import algorithmexecutor.model.Algorithm;
 import exceptions.EvaluationException;
 import java.util.Map;
 import java.util.Set;
@@ -125,6 +122,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
     }
 
     private static AbstractExpression replaceVarsByIdentifierValues(AbstractExpression abstrExpr, Map<String, AbstractExpression> valuesMap) {
+        // TO DO: Falsche Ermittlung von vars!
         Set<String> vars = abstrExpr.getContainedIndeterminates();
         for (String var : vars) {
             if (abstrExpr instanceof Expression && valuesMap.get(var) instanceof Expression) {

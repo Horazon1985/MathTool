@@ -4,9 +4,12 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.expression.classes.Variable;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.logicalexpression.classes.LogicalVariable;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.IfElseControlStructure;
+import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
@@ -101,6 +104,9 @@ public class Algorithm {
                     IfElseControlStructure ifElseCommand = (IfElseControlStructure) c;
                     appendCommands(ifElseCommand.getCommandsIfPart(), false);
                     appendCommands(ifElseCommand.getCommandsElsePart(), false);
+                } else if (c.isWhileControlStructure()) {
+                    WhileControlStructure ifElseCommand = (WhileControlStructure) c;
+                    appendCommands(ifElseCommand.getCommands(), false);
                 }
             }
             if (topLevel) {
@@ -118,7 +124,7 @@ public class Algorithm {
                 throw new AlgorithmExecutionException(ExecutionExecptionTexts.RETURN_TYPE_EXPECTED);
             }
         }
-        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.getInputParameters()));
+        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
 
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
         checkForIdentifierWithoutValues();
@@ -147,6 +153,8 @@ public class Algorithm {
                 Variable.setPreciseExpression(memory.get(var).getName(), (Expression) memory.get(var).getValue());
             } else if (memory.get(var).getValue() instanceof LogicalExpression) {
                 LogicalVariable.setValue(memory.get(var).getName(), ((LogicalExpression) memory.get(var).getValue()).evaluate());
+            } else if (memory.get(var).getValue() instanceof MatrixExpression) {
+                MatrixVariable.setValue(memory.get(var).getName(), (MatrixExpression) memory.get(var).getValue());
             }
         }
     }

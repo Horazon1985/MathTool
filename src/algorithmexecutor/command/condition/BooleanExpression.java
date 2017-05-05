@@ -10,7 +10,6 @@ import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.model.Algorithm;
 import exceptions.ExpressionException;
 import java.util.HashSet;
 import java.util.Map;
