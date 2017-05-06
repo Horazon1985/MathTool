@@ -1,11 +1,13 @@
 package mathtool.component.components;
 
+import algorithmexecutor.enums.Keywords;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
@@ -65,8 +67,11 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             this.algorithmEditor = new JEditorPane();
             add(this.algorithmEditor);
-            this.algorithmEditor.setBounds(10, 180, this.getWidth() - 20, this.getHeight() - 400);
+            this.algorithmEditor.setContentType("text/html; charset=UTF-8");
+            this.algorithmEditor.setBounds(20, 180, this.getWidth() - 40, this.getHeight() - 400);
             this.algorithmEditor.setVisible(true);
+            this.algorithmEditor.setBorder(new LineBorder(Color.black,1));
+            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){}");
             
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
@@ -75,6 +80,14 @@ public class MathToolAlgorithmsGUI extends JDialog {
         } catch (Exception e) {
         }
 
+    }
+    
+    private String getCodeWithBoldKeywords(String code) {
+        String codeFormatted = code;
+        for (Keywords keyword : Keywords.values()) {
+            codeFormatted = codeFormatted.replaceAll(keyword.getValue(), "<b><font color=\"blue\">" + keyword.getValue() + "</font></b>");
+        }
+        return codeFormatted;
     }
 
 }

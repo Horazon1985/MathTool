@@ -2,7 +2,6 @@ package algorithmexecutor.enums;
 
 public enum Keywords {
     
-    ALGORITHM("algorithm"),
     MAIN("main"),
     NULL("null"),
     FALSE("false"),

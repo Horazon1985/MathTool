@@ -197,14 +197,14 @@
     <object id = "GUI_TOOLS">
         <German>Werkzeuge</German>
         <English>Tools</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Засоби</Ukrainian>
+        <Russian>Инструменты</Russian>
     </object>
     <object id = "GUI_ALGORITHMS">
         <German>Algorithmencompiler</German>
         <English>Algorithm compiler</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Компілятор алгорітмів</Ukrainian>
+        <Russian>Компилятор алгоритмов</Russian>
     </object>
     <!-- DevelopersDialogGUI -->    
     <object id = "GUI_DevelopersDialogGUI_ABOUT">
