@@ -477,4 +477,23 @@
         <Ukrainian>Вираз [0]:</Ukrainian>
         <Russian>Выражение [0]:</Russian>
     </object>
+    <!-- MathToolAlgorithmsGUI -->    
+    <object id = "GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM">
+        <German>Neuen Algorithmus hinzufügen</German>
+        <English>Add new algorithm</English>
+        <Ukrainian>Додати новий алгоритм</Ukrainian>
+        <Russian>Добавить новый алгоритм</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_RUN">
+        <German>Ausführen</German>
+        <English>Run</English>
+        <Ukrainian>Запустити</Ukrainian>
+        <Russian>Запустить</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_DEBUG">
+        <German>Debuggen</German>
+        <English>Debug</English>
+        <Ukrainian>Дебаг</Ukrainian>
+        <Russian>Дебаг</Russian>
+    </object>
 </objects>

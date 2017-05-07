@@ -1,8 +1,17 @@
 package mathtool.component.components;
 
+import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.enums.Keywords;
+import algorithmexecutor.exceptions.AlgorithmCompileException;
+import algorithmexecutor.exceptions.AlgorithmExecutionException;
+import exceptions.EvaluationException;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -16,10 +25,19 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JLabel headerLabel;
     private ImageIcon headerImage;
 
-    private final int stub = 20;
+    private JButton addAlgorithmButton;
+    private JButton runButton;
+    private JButton debugButton;
+
+    private final int STUB = 20;
+    private final int PADDING = 20;
 
     private JEditorPane algorithmEditor;
-    
+
+    private static final String GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM";
+    private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
+    private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
+
     private static MathToolAlgorithmsGUI instance = null;
 
     public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiHeight, String titleID) {
@@ -57,22 +75,50 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 this.headerPanel.add(this.headerLabel);
                 this.headerPanel.setBounds(0, -5, this.headerImage.getIconWidth(), this.headerImage.getIconHeight());
                 this.headerPanel.setVisible(true);
-                currentComponentLevel = this.stub + this.headerImage.getIconHeight() - 5;
+                currentComponentLevel = this.STUB + this.headerImage.getIconHeight() - 5;
             } else {
                 this.headerLabel = new JLabel();
-                currentComponentLevel = this.stub;
+                currentComponentLevel = this.STUB;
             }
-            
+
             setBounds(mathtoolGuiX, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
             this.algorithmEditor = new JEditorPane();
             add(this.algorithmEditor);
             this.algorithmEditor.setContentType("text/html; charset=UTF-8");
-            this.algorithmEditor.setBounds(20, 180, this.getWidth() - 40, this.getHeight() - 400);
+            this.algorithmEditor.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 400);
             this.algorithmEditor.setVisible(true);
-            this.algorithmEditor.setBorder(new LineBorder(Color.black,1));
-            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){}");
+            this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
+            currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
             
+            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = 4; return x;}");
+
+            this.addAlgorithmButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM));
+            add(this.addAlgorithmButton);
+            this.addAlgorithmButton.setBounds(PADDING, currentComponentLevel, 200, 30);
+
+            this.runButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN));
+            add(this.runButton);
+            this.runButton.setBounds(2 * PADDING + 200, currentComponentLevel, 200, 30);
+
+            this.debugButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_DEBUG));
+            add(this.debugButton);
+            this.debugButton.setBounds(3 * PADDING + 400, currentComponentLevel, 200, 30);
+
+            this.runButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    String algString = algorithmEditor.getText();
+                    try {
+                        AlgorithmCompiler.parseAlgorithmFile(algString);
+                        algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.STORED_ALGORITHMS);
+                    } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
+                        // TO DO.
+                    }
+
+                }
+            });
+
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
@@ -81,7 +127,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
         }
 
     }
-    
+
     private String getCodeWithBoldKeywords(String code) {
         String codeFormatted = code;
         for (Keywords keyword : Keywords.values()) {
