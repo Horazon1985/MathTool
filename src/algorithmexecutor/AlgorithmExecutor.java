@@ -38,9 +38,14 @@ public abstract class AlgorithmExecutor {
         try {
             mainAlg = CompilerUtils.getMainAlgorithm(algorithms);
 
-            AlgorithmOutputPrinter.printStartAlgorithmData(mainAlg);
+            AlgorithmOutputPrinter.clearOutput();
+            AlgorithmOutputPrinter.printStartAlgorithmData();
 
             Identifier result = mainAlg.execute();
+            
+            AlgorithmOutputPrinter.printOutput(mainAlg, result);
+            AlgorithmOutputPrinter.printEndAlgorithmData();
+            
             return result;
         } catch (AlgorithmCompileException e) {
             throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
