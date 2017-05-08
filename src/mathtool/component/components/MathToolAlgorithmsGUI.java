@@ -1,5 +1,6 @@
 package mathtool.component.components;
 
+import org.jsoup.parser.Parser;
 import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
@@ -127,8 +128,10 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     String algString = getPlainCode(algorithmEditor.getText());
+                    String algStringWithoutUTF8 = org.jsoup.parser.Parser.unescapeEntities(algString, false);
+                    
                     try {
-                        AlgorithmCompiler.parseAlgorithmFile(algString);
+                        AlgorithmCompiler.parseAlgorithmFile(algStringWithoutUTF8);
                         algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.STORED_ALGORITHMS);
                     } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                         // TO DO.
