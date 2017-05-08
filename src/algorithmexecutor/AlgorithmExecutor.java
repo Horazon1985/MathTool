@@ -1,16 +1,21 @@
 package algorithmexecutor;
 
 import algorithmexecutor.command.AlgorithmCommand;
+import algorithmexecutor.command.AssignValueCommand;
 import algorithmexecutor.enums.Keywords;
+import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class AlgorithmExecutor {
 
@@ -29,9 +34,18 @@ public abstract class AlgorithmExecutor {
     public static Identifier executeAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException, EvaluationException {
         // Alle (lokalen) Variablen und Parameter aus dem Speicher entfernen.
         MEMORY_MAP.clear();
-        Algorithm mainAlg = getMainAlgorithm(algorithms);
-        Identifier result = mainAlg.execute();
-        return result;
+
+        Algorithm mainAlg;
+        try {
+            mainAlg = CompilerUtils.getMainAlgorithm(algorithms);
+            
+            AlgorithmOutputPrinter.printStartAlgorithmData(mainAlg);
+            
+            Identifier result = mainAlg.execute();
+            return result;
+        } catch (AlgorithmCompileException e) {
+            throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
+        }
     }
 
     /**
@@ -52,20 +66,44 @@ public abstract class AlgorithmExecutor {
         }
         throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
     }
-    
+
     public static Identifier executeBlock(List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
+        AlgorithmMemory scopeMemory = new AlgorithmMemory();
         Identifier resultIdentifier = null;
-        for (int i = 0; i < commands.size(); i++) {
-            resultIdentifier = commands.get(i).execute();
+        Algorithm alg = null;
+        for (AlgorithmCommand command : commands) {
+            // Zuerst: Zugehörigen Algorithmus ermitteln.
+            if (alg == null) {
+                alg = command.getAlgorithm();
+            }
+            resultIdentifier = command.execute();
+
+            /* 
+            Den neuen Identifier sowohl zum globalen, als auch zum lokalen Identifierpool
+            hinzufügen. Am Ende der Ausführung des Blocks dann alle Identifier, welche
+            nur im Block deklariert wurden, wieder aus dem globalen Pool entfernen.
+             */
+            if (command.isAssignValueCommand()) {
+                scopeMemory.addToMemoryInRuntime(((AssignValueCommand) command).getIdentifierSrc());
+            }
+
             /*
             Nur Return-Befehle geben echte Identifier zurück. Alle anderen
             Befehle geben null zurück.
              */
             if (resultIdentifier != null) {
+                removeLocalIdentifiersFromMemory(alg, scopeMemory);
                 return resultIdentifier;
             }
         }
+        removeLocalIdentifiersFromMemory(alg, scopeMemory);
         return resultIdentifier;
+    }
+
+    private static void removeLocalIdentifiersFromMemory(Algorithm alg, AlgorithmMemory scopeMemory) {
+        for (String identifierName : scopeMemory.getMemory().keySet()) {
+            MEMORY_MAP.get(alg).getMemory().remove(identifierName);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package test.algorithm;
 
 import algorithmexecutor.AlgorithmCompiler;
+import algorithmexecutor.CompilerUtils;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierTypes;
@@ -16,7 +17,7 @@ public class AlgorithmCompileTests {
     @Test
     public void preprocessMainTest() {
         String input = "main() {expression    a =     sin( 5)  ;   a = a+   5  ;   }   ";
-        String outputFormatted = AlgorithmCompiler.preprocessAlgorithm(input);
+        String outputFormatted = CompilerUtils.preprocessAlgorithm(input);
         String outputFormattedExpected = "main(){expression a=sin(5);a=a+ 5;}";
         assertTrue(outputFormatted.equals(outputFormattedExpected));
     }
@@ -24,7 +25,7 @@ public class AlgorithmCompileTests {
     @Test
     public void preprocessAlgorithmTest() {
         String input = "alg(expression   a   ,  expression b) {return  a  ;   }   ";
-        String outputFormatted = AlgorithmCompiler.preprocessAlgorithm(input);
+        String outputFormatted = CompilerUtils.preprocessAlgorithm(input);
         String outputFormattedExpected = "alg(expression a,expression b){return a;}";
         assertTrue(outputFormatted.equals(outputFormattedExpected));
     }

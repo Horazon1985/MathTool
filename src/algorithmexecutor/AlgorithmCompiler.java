@@ -39,7 +39,7 @@ public abstract class AlgorithmCompiler {
         }
 
         // Formatierung.
-        input = preprocessAlgorithm(input);
+        input = CompilerUtils.preprocessAlgorithm(input);
 
         int bracketCounter = 0;
         boolean beginPassed = false;
@@ -58,37 +58,12 @@ public abstract class AlgorithmCompiler {
                 lastEndOfAlgorithm = i;
             }
         }
+        
+        // Prüfung, ob ein Main-Algorithmus existiert.
+        CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
+        // Prüfung, ob ein Main-Algorithmus parameterlos ist.
+        CompilerUtils.checkIfMainAlgorithmContainsNoParameters(CompilerUtils.getMainAlgorithm(STORED_ALGORITHMS));
 
-    }
-
-    public static String preprocessAlgorithm(String input) {
-        String outputFormatted = input;
-        outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "  ");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, ",", ", ", " ,");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, ";", "; ", " ;");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "=", " =", "= ");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\{", " \\{", "\\{ ");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\}", " \\}", "\\} ");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\(", " \\(", "\\( ");
-        outputFormatted = replaceAllRepeatedly(outputFormatted, "\\)", " \\)", "\\) ");
-        return outputFormatted;
-    }
-
-    private static String replaceAllRepeatedly(String input, String replaceBy, String... toReplace) {
-        String result = input;
-        for (String s : toReplace) {
-            result = replaceRepeatedly(result, s, replaceBy);
-        }
-        return result;
-    }
-
-    private static String replaceRepeatedly(String input, String toReplace, String replaceBy) {
-        String result = input;
-        do {
-            input = result;
-            result = result.replaceAll(toReplace, replaceBy);
-        } while (!result.equals(input));
-        return result;
     }
 
     public static Algorithm parseAlgorithm(String input) throws AlgorithmCompileException {
@@ -715,6 +690,10 @@ public abstract class AlgorithmCompiler {
         checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(alg);
         // 3. Prüfung, ob es bei (beliebigen) Algorithmen keinen Code hinter einem Return gibt.
         checkIfAlgorithmContainsNoDeadCode(alg);
+    }
+
+    private static void checkIfMainAlgorithmContainsNoParameters(Algorithm alg) throws AlgorithmCompileException {
+        CompilerUtils.checkIfMainAlgorithmContainsNoParameters(alg);
     }
 
     private static void checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(Algorithm alg) throws AlgorithmCompileException {

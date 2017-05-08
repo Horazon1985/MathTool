@@ -4,6 +4,7 @@ import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
+import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.border.LineBorder;
 import mathtool.lang.translator.Translator;
 
@@ -33,6 +35,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private final int PADDING = 20;
 
     private JEditorPane algorithmEditor;
+    private JTextPane outputArea;
 
     private static final String GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
@@ -83,16 +86,33 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             setBounds(mathtoolGuiX, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
+            // Algorithmeneditor definieren.
             this.algorithmEditor = new JEditorPane();
             add(this.algorithmEditor);
             this.algorithmEditor.setContentType("text/html; charset=UTF-8");
-            this.algorithmEditor.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 400);
+            this.algorithmEditor.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
             currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
-            
+
             this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = 4; return x;}");
 
+            // Algorithmeneditor definieren.
+            this.outputArea = new JTextPane();
+            add(this.outputArea);
+            this.outputArea.setContentType("text/html; charset=UTF-8");
+            this.outputArea.setBounds(PADDING, currentComponentLevel, this.getWidth() - 2 * PADDING, 200);
+            this.outputArea.setVisible(true);
+            this.outputArea.setEditable(false);
+            this.outputArea.setBorder(new LineBorder(Color.black, 1));
+            currentComponentLevel += this.outputArea.getHeight() + STUB;
+
+            // outputArea als Ausgabe deklarieren.
+            AlgorithmOutputPrinter.setOutputArea(this.outputArea);
+
+            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = 4; return x;}");
+
+            // Buttons definieren.
             this.addAlgorithmButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM));
             add(this.addAlgorithmButton);
             this.addAlgorithmButton.setBounds(PADDING, currentComponentLevel, 200, 30);
@@ -108,7 +128,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.runButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    String algString = algorithmEditor.getText();
+                    String algString = getPlainCode(algorithmEditor.getText());
                     try {
                         AlgorithmCompiler.parseAlgorithmFile(algString);
                         algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.STORED_ALGORITHMS);
@@ -126,6 +146,20 @@ public class MathToolAlgorithmsGUI extends JDialog {
         } catch (Exception e) {
         }
 
+    }
+
+    private String getPlainCode(String HtmlCode) {
+        String code = HtmlCode;
+        String modifiedCode = code;
+        String tag;
+        do {
+            code = modifiedCode;
+            if (modifiedCode.contains("<")) {
+                tag = modifiedCode.substring(modifiedCode.indexOf("<"), modifiedCode.indexOf(">") + 1);
+                modifiedCode = modifiedCode.replaceAll(tag, "");
+            }
+        } while (modifiedCode.length() < code.length());
+        return code;
     }
 
     private String getCodeWithBoldKeywords(String code) {
