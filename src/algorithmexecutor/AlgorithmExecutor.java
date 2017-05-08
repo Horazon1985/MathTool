@@ -11,11 +11,10 @@ import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class AlgorithmExecutor {
 
@@ -38,9 +37,9 @@ public abstract class AlgorithmExecutor {
         Algorithm mainAlg;
         try {
             mainAlg = CompilerUtils.getMainAlgorithm(algorithms);
-            
+
             AlgorithmOutputPrinter.printStartAlgorithmData(mainAlg);
-            
+
             Identifier result = mainAlg.execute();
             return result;
         } catch (AlgorithmCompileException e) {
@@ -69,12 +68,17 @@ public abstract class AlgorithmExecutor {
 
     public static Identifier executeBlock(List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
         AlgorithmMemory scopeMemory = new AlgorithmMemory();
+        AlgorithmMemory memoryBeforBlockExecution = null;
         Identifier resultIdentifier = null;
         Algorithm alg = null;
         for (AlgorithmCommand command : commands) {
             // Zuerst: Zugehörigen Algorithmus ermitteln.
             if (alg == null) {
                 alg = command.getAlgorithm();
+            }
+            // Sobald der Algorithmus feststeht: Variablen vor der Blockausführung ermitteln.
+            if (alg != null && memoryBeforBlockExecution == null) {
+                memoryBeforBlockExecution = getAlgorithmMemoryBeforeExecution(alg);
             }
             resultIdentifier = command.execute();
 
@@ -92,17 +96,25 @@ public abstract class AlgorithmExecutor {
             Befehle geben null zurück.
              */
             if (resultIdentifier != null) {
-                removeLocalIdentifiersFromMemory(alg, scopeMemory);
+                removeLocalIdentifiersFromMemory(alg, scopeMemory, memoryBeforBlockExecution);
                 return resultIdentifier;
             }
         }
-        removeLocalIdentifiersFromMemory(alg, scopeMemory);
+        removeLocalIdentifiersFromMemory(alg, scopeMemory, memoryBeforBlockExecution);
         return resultIdentifier;
     }
 
-    private static void removeLocalIdentifiersFromMemory(Algorithm alg, AlgorithmMemory scopeMemory) {
+    private static AlgorithmMemory getAlgorithmMemoryBeforeExecution(Algorithm alg) {
+        List<Identifier> identifiers = new ArrayList<>();
+        identifiers.addAll(MEMORY_MAP.get(alg).getMemory().values());
+        return new AlgorithmMemory(identifiers);
+    }
+
+    private static void removeLocalIdentifiersFromMemory(Algorithm alg, AlgorithmMemory scopeMemory, AlgorithmMemory memoryBeforeBlockExecution) {
         for (String identifierName : scopeMemory.getMemory().keySet()) {
-            MEMORY_MAP.get(alg).getMemory().remove(identifierName);
+            if (memoryBeforeBlockExecution == null || !memoryBeforeBlockExecution.containsIdentifier(identifierName)) {
+                MEMORY_MAP.get(alg).getMemory().remove(identifierName);
+            }
         }
     }
 
