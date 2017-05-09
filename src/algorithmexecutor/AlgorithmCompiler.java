@@ -58,7 +58,7 @@ public abstract class AlgorithmCompiler {
                 lastEndOfAlgorithm = i;
             }
         }
-        
+
         // Prüfung, ob ein Main-Algorithmus existiert.
         CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
         // Prüfung, ob ein Main-Algorithmus parameterlos ist.
@@ -123,44 +123,28 @@ public abstract class AlgorithmCompiler {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
 
-        // Einzelne Befehlszeilen parsen;
         Algorithm alg = new Algorithm(algName, parameters, returnType);
 
         int indexEndParameters = input.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
 
-        // Algorithmusnamen und Parameter inkl. Klammern beseitigen
+        /* 
+        Algorithmusnamen und Parameter inkl. Klammern beseitigen. Es bleibt nur 
+        noch ein String der Form "{...;...;...}" übrig.
+         */
         input = input.substring(indexEndParameters + 1, input.length());
-
+        // input muss mit "{" beginnen und auf "}" enden.
         if (!input.startsWith(String.valueOf(ReservedChars.BEGIN.getValue())) || !input.endsWith(String.valueOf(ReservedChars.END.getValue()))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
-
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
 
-        if (input.isEmpty()) {
-            return alg;
+        if (!input.isEmpty()) {
+            // Alle Zeilen innerhalb des Algorithmus kompilieren.
+            List<AlgorithmCommand> commands = parseBlock(input, memory, alg);
+            // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
+            alg.appendCommands(commands);
         }
-        
-        // Der Algorithmus muss auf ';' enden, wenn dieser nichtleer ist.
-        if (!input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
-            /*
-            Bei der Aufsplittung nach ';' wird nicht geprüft, on die letzte Zeile
-            mit ';' endet. Dies wird hierdurch gewährleistet.
-             */
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-        }
-
-        List<String> lines = splitBySeparator(input);
-
-        List<AlgorithmCommand> commands = new ArrayList<>();
-
-        for (String line : lines) {
-            commands.add(parseLine(line, memory, alg));
-        }
-
-        // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
-        alg.appendCommands(commands);
 
         // Plausibilitätschecks.
         checkAlgorithmForPlausibility(alg);
@@ -675,7 +659,44 @@ public abstract class AlgorithmCompiler {
     }
 
     private static List<AlgorithmCommand> parseBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
-        String[] lines = input.split(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()));
+        if (!input.isEmpty() && !input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+
+        List<String> linesAsList = new ArrayList<>();
+        // Block im While-Teil kompilieren.
+        int bracketCounter = 0;
+        int squareBracketCounter = 0;
+        int beginBlockPosition = 0;
+        int endBlockPosition = -1;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            } else if (input.charAt(i) == ReservedChars.BEGIN_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.END_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter--;
+            }
+            if (bracketCounter == 0 && squareBracketCounter == 0 && input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()) {
+                endBlockPosition = i;
+                linesAsList.add(input.substring(beginBlockPosition, endBlockPosition));
+                beginBlockPosition = i + 1;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+        if (squareBracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+        if (endBlockPosition != input.length() - 1) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+
+        String[] lines = linesAsList.toArray(new String[linesAsList.size()]);
+
         List<AlgorithmCommand> commands = new ArrayList<>();
         for (String line : lines) {
             commands.add(parseLine(line, memory, alg));
