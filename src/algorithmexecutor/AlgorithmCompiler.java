@@ -139,6 +139,8 @@ public abstract class AlgorithmCompiler {
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
 
+        input = putSeparatorAfterBlockEnding(input);
+
         if (!input.isEmpty()) {
             // Alle Zeilen innerhalb des Algorithmus kompilieren.
             List<AlgorithmCommand> commands = parseBlock(input, memory, alg);
@@ -319,27 +321,8 @@ public abstract class AlgorithmCompiler {
         return false;
     }
 
-    private static List<String> splitBySeparator(String input) {
-        List<String> lines = new ArrayList<>();
-        int bracketCounter = 0;
-        int squareBracketCounter = 0;
-        int lastSeparator = -1;
-        for (int i = 0; i < input.length(); i++) {
-            if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
-                bracketCounter++;
-            } else if (input.charAt(i) == ReservedChars.END.getValue()) {
-                bracketCounter--;
-            } else if (input.charAt(i) == ReservedChars.BEGIN_SQUARE_BRACKET.getValue()) {
-                squareBracketCounter++;
-            } else if (input.charAt(i) == ReservedChars.END_SQUARE_BRACKET.getValue()) {
-                squareBracketCounter--;
-            }
-            if (input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() && bracketCounter == 0 && squareBracketCounter == 0) {
-                lines.add(input.substring(lastSeparator + 1, i));
-                lastSeparator = i;
-            }
-        }
-        return lines;
+    private static String putSeparatorAfterBlockEnding(String input) {
+        return input.replaceAll("\\}", "\\};");
     }
 
     private static AlgorithmCommand parseLine(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
@@ -699,7 +682,9 @@ public abstract class AlgorithmCompiler {
 
         List<AlgorithmCommand> commands = new ArrayList<>();
         for (String line : lines) {
-            commands.add(parseLine(line, memory, alg));
+            if (!line.isEmpty()) {
+                commands.add(parseLine(line, memory, alg));
+            }
         }
         return commands;
     }
