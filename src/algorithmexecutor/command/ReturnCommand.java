@@ -10,6 +10,10 @@ public class ReturnCommand extends AlgorithmCommand {
         this.identifier = identifier;
     }
 
+    public Identifier getIdentifier() {
+        return identifier;
+    }
+
     @Override
     public String toString() {
         return "ReturnCommand[identifier = " + this.identifier + "]";

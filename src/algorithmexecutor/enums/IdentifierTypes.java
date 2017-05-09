@@ -9,7 +9,7 @@ public enum IdentifierTypes {
     EXPRESSION, BOOLEAN_EXPRESSION, MATRIX_EXPRESSION;
 
     public boolean isSameOrGeneralTypeOf(IdentifierTypes type) {
-        if (this == EXPRESSION && (type == EXPRESSION || type == MATRIX_EXPRESSION)) {
+        if (type == EXPRESSION && (this == EXPRESSION || this == MATRIX_EXPRESSION)) {
             return true;
         }
         return this == type;

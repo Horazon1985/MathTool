@@ -143,7 +143,7 @@ public abstract class AlgorithmCompiler {
 
         if (!input.isEmpty()) {
             // Alle Zeilen innerhalb des Algorithmus kompilieren.
-            List<AlgorithmCommand> commands = parseBlock(input, memory, alg);
+            List<AlgorithmCommand> commands = parseConnectedBlock(input, memory, alg);
             // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
             alg.appendCommands(commands);
         }
@@ -322,7 +322,12 @@ public abstract class AlgorithmCompiler {
     }
 
     private static String putSeparatorAfterBlockEnding(String input) {
-        return input.replaceAll("\\}", "\\};");
+        String inputWithSeparators = input.replaceAll("\\}", "\\};");
+        // Ausnahme: if (...) {...} else {...}: Semikolon zwischen dem if- und dem else-Block entfernen.
+        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.ELSE.getValue(), "\\}" + Keywords.ELSE.getValue());
+        // Ausnahme: do {...} while (...): Semikolon zwischen dem do-Block und dem while entfernen.
+        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.WHILE.getValue(), "\\}" + Keywords.ELSE.getValue());
+        return inputWithSeparators;
     }
 
     private static AlgorithmCommand parseLine(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
@@ -534,7 +539,7 @@ public abstract class AlgorithmCompiler {
         if (bracketCounter > 0) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
-        List<AlgorithmCommand> commandsIfPart = parseBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        List<AlgorithmCommand> commandsIfPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
         IfElseControlStructure ifElseControlStructure = new IfElseControlStructure(condition, commandsIfPart);
 
         // Block im Else-Teil kompilieren, falls vorhanden.
@@ -569,7 +574,7 @@ public abstract class AlgorithmCompiler {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
 
-        List<AlgorithmCommand> commandsElsePart = parseBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        List<AlgorithmCommand> commandsElsePart = parseConnectedBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
         ifElseControlStructure.setCommandsElsePart(commandsElsePart);
 
         return ifElseControlStructure;
@@ -615,7 +620,7 @@ public abstract class AlgorithmCompiler {
         if (bracketCounter > 0) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
-        List<AlgorithmCommand> commandsWhilePart = parseBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        List<AlgorithmCommand> commandsWhilePart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
         WhileControlStructure whileControlStructure = new WhileControlStructure(condition, commandsWhilePart);
 
         // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
@@ -641,7 +646,7 @@ public abstract class AlgorithmCompiler {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    private static List<AlgorithmCommand> parseBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+    private static List<AlgorithmCommand> parseConnectedBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
         if (!input.isEmpty() && !input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
@@ -690,11 +695,13 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void checkAlgorithmForPlausibility(Algorithm alg) throws AlgorithmCompileException {
-        // 1. Prüfung, ob es bei Void-Algorithmen keine zurückgegebenen Objekte gibt.
+        // Prüfung, ob der Main-Algorithmen keine Parameter enthält.
+        checkIfMainAlgorithmContainsNoParameters(alg);
+        // Prüfung, ob es bei Void-Algorithmen keine zurückgegebenen Objekte gibt.
         checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(alg);
-        // 2. Prüfung, ob es bei Algorithmen mit Rückgabewerten immer Rückgaben mit korrektem Typ gibt.
+        // Prüfung, ob es bei Algorithmen mit Rückgabewerten immer Rückgaben mit korrektem Typ gibt.
         checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(alg);
-        // 3. Prüfung, ob es bei (beliebigen) Algorithmen keinen Code hinter einem Return gibt.
+        // Prüfung, ob es bei (beliebigen) Algorithmen keinen Code hinter einem Return gibt.
         checkIfAlgorithmContainsNoDeadCode(alg);
     }
 
@@ -703,11 +710,13 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(Algorithm alg) throws AlgorithmCompileException {
-
+        if (alg.getReturnType() == null) {
+            CompilerUtils.checkForOnlySimpleReturns(alg.getCommands());
+        }
     }
 
     private static void checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(Algorithm alg) throws AlgorithmCompileException {
-
+        CompilerUtils.checkForCorrectReturnType(alg.getCommands(), alg.getReturnType());
     }
 
     private static void checkIfAlgorithmContainsNoDeadCode(Algorithm alg) throws AlgorithmCompileException {

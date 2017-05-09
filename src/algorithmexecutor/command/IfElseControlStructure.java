@@ -7,6 +7,7 @@ import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.identifier.Identifier;
 import exceptions.EvaluationException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class IfElseControlStructure extends ControlStructure {
     public IfElseControlStructure(BooleanExpression condition, List<AlgorithmCommand> commandsIfPart) {
         this.condition = condition;
         this.commandsIfPart = commandsIfPart;
+        this.commandBlocks = (List<AlgorithmCommand>[]) Array.newInstance(new ArrayList<>().getClass(), 2);
+        this.commandBlocks[0] = commandsIfPart;
+        this.commandBlocks[1] = this.commandsElsePart;
     }
 
     public BooleanExpression getCondition() {
@@ -36,6 +40,7 @@ public class IfElseControlStructure extends ControlStructure {
 
     public void setCommandsElsePart(List<AlgorithmCommand> commands) {
         this.commandsElsePart = commands;
+        this.commandBlocks[1] = commandsElsePart;
     }
 
     @Override
