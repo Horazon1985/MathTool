@@ -70,13 +70,13 @@ public abstract class AlgorithmCompiler {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_A_BEGIN);
         }
         if (input.indexOf(ReservedChars.CLOSE_BRACKET.getValue()) < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_AN_END);
         }
         if (indexBeginParameters > input.indexOf(ReservedChars.CLOSE_BRACKET.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_END_BEFORE_BEGIN);
         }
 
         // Rückgabewert und Signatur des Algorithmus parsen.
@@ -120,7 +120,7 @@ public abstract class AlgorithmCompiler {
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS);
         }
 
         Algorithm alg = new Algorithm(algName, parameters, returnType);
@@ -133,8 +133,11 @@ public abstract class AlgorithmCompiler {
          */
         input = input.substring(indexEndParameters + 1, input.length());
         // input muss mit "{" beginnen und auf "}" enden.
-        if (!input.startsWith(String.valueOf(ReservedChars.BEGIN.getValue())) || !input.endsWith(String.valueOf(ReservedChars.END.getValue()))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        if (!input.startsWith(String.valueOf(ReservedChars.BEGIN.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_MUST_START_WITH_BEGIN);
+        }
+        if (!input.endsWith(String.valueOf(ReservedChars.END.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_MUST_END_WITH_END);
         }
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
@@ -176,26 +179,26 @@ public abstract class AlgorithmCompiler {
         input = input.replaceAll(" ", "");
 
         String[] result = new String[2];
-        int i = input.indexOf("(");
+        int i = input.indexOf(String.valueOf(ReservedChars.OPEN_BRACKET.getValue()));
         if (i == -1) {
             // Um zu verhindern, dass es eine IndexOutOfBoundsException gibt.
             i = 0;
         }
         result[0] = input.substring(0, i);
 
-        //Wenn der Befehl leer ist -> Fehler.
+        // Wenn der Befehl leer ist -> Fehler.
         if (result[0].length() == 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_HAS_NO_NAME);
         }
 
-        //Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...)).
+        // Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...)).
         if (result[0].length() > input.length() - 2) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM);
         }
 
-        //Wenn am Ende nicht ")" steht.
-        if (!input.substring(input.length() - 1, input.length()).equals(")")) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        // Wenn am Ende nicht ")" steht.
+        if (!input.substring(input.length() - 1, input.length()).equals(String.valueOf(ReservedChars.CLOSE_BRACKET.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET);
         }
 
         result[1] = input.substring(result[0].length() + 1, input.length() - 1);

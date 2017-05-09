@@ -2,6 +2,8 @@ package mathtool.lang.translator;
 
 import abstractexpressions.expression.classes.Expression;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -11,6 +13,15 @@ import org.w3c.dom.NodeList;
 
 public abstract class Translator {
 
+    private static final Map<String, String> RESOURCES = new HashMap<>();
+
+    static {
+        RESOURCES.put("GUI", "mathtool/lang/messages/LangGUI.xml");
+        RESOURCES.put("MCC", "mathtool/lang/messages/LangMathCommandCompiler.xml");
+        RESOURCES.put("AC", "algorithmexecutor/messages/AlgorithmCompileExceptionMessages.xml");
+        RESOURCES.put("AE", "algorithmexecutor/messages/AlgorithmExecutionExceptionMessages.xml");
+    }
+
     /**
      * Gibt eine Meldung entsprechend der exceptionId und der eingestellten
      * Sprache zurück.
@@ -19,16 +30,14 @@ public abstract class Translator {
 
         // Die entsprechende XML-Datei öffnen.
         try {
-            URL langFile;
-            if (exceptionId.startsWith("GUI")) {
-                langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangGUI.xml");
-            } else if (exceptionId.startsWith("MCC")) {
-                langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangMathCommandCompiler.xml");
-            } else if (exceptionId.startsWith("AC")) {
-                langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmCompileExceptionMessages.xml");
-            } else if (exceptionId.startsWith("AE")) {
-                langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmExecutionExceptionMessages.xml");
-            } else {
+            URL langFile = null;
+            for (String key : RESOURCES.keySet()) {
+                if (exceptionId.startsWith(key)) {
+                    langFile = ClassLoader.getSystemResource(RESOURCES.get(key));
+                    break;
+                }
+            }
+            if (langFile == null) {
                 // Datei für unbekannten Fehler öffnen.
                 langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangUndefinedError.xml");
             }
