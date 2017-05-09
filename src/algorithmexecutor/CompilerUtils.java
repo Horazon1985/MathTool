@@ -69,7 +69,7 @@ public class CompilerUtils {
                 return;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
     public static Algorithm getMainAlgorithm(List<Algorithm> algorithms) throws AlgorithmCompileException {
@@ -78,26 +78,26 @@ public class CompilerUtils {
                 return alg;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
     
     public static void checkIfMainAlgorithmContainsNoParameters(Algorithm alg) throws AlgorithmCompileException {
         if (alg.getName().equals(Keywords.MAIN.getValue()) && alg.getInputParameters().length != 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
     }
 
     public static void checkForUnreachableCodeInBlock(List<AlgorithmCommand> commands) throws AlgorithmCompileException {
         for (int i = 0; i < commands.size(); i++) {
             if (commands.get(i).isReturnCommand() && i < commands.size() - 1) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             if (commands.get(i).isControlStructure()) {
                 // If-Else-Kontrollstruktur
                 if (commands.get(i).isIfElseControlStructure()) {
                     checkForUnreachableCodeInIfElseBlock((IfElseControlStructure) commands.get(i));
                     if (doBothPartsContainReturnStatementInIfElseBlock((IfElseControlStructure) commands.get(i)) && i < commands.size() - 1) {
-                        throw new AlgorithmCompileException(CompileExceptionTexts.UNKNOWN_ERROR);
+                        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
                     }
                 } else if (commands.get(i).isWhileControlStructure()) {
                     checkForUnreachableCodeInBlock(((WhileControlStructure) commands.get(i)).getCommands());

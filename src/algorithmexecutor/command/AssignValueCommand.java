@@ -28,7 +28,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, IdentifierTypes.identifierTypeOf(targetExpression))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
@@ -38,7 +38,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Identifier identifierSrc, BooleanExpression booleanExpression) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, IdentifierTypes.BOOLEAN_EXPRESSION)) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
@@ -48,7 +48,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetAlgorithm.getReturnType())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.INCOMPATIBEL_TYPES);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;

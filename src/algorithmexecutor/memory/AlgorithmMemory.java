@@ -44,7 +44,7 @@ public class AlgorithmMemory {
     public void addToMemoryInCompileTime(Identifier identifier) throws AlgorithmCompileException {
         if (this.memory.get(identifier.getName()) != null) {
             // Identifier existiert bereits!
-            throw new AlgorithmCompileException(CompileExceptionTexts.IDENTIFIER_ALREADY_DEFINED);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
         }
         this.memory.put(identifier.getName(), identifier);
     }

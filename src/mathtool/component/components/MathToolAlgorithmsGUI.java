@@ -129,12 +129,18 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 public void actionPerformed(ActionEvent ae) {
                     String algString = getPlainCode(algorithmEditor.getText());
                     String algStringWithoutUTF8 = org.jsoup.parser.Parser.unescapeEntities(algString, false);
-                    
+
                     try {
+                        AlgorithmOutputPrinter.clearOutput();
+                        AlgorithmOutputPrinter.printStartParsingAlgorithms();
                         AlgorithmCompiler.parseAlgorithmFile(algStringWithoutUTF8);
+                        AlgorithmOutputPrinter.printEndParsingAlgorithms();
+
+                        AlgorithmOutputPrinter.printStartAlgorithmData();
                         algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.STORED_ALGORITHMS);
+                        AlgorithmOutputPrinter.printEndAlgorithmData();
                     } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
-                        // TO DO.
+                        AlgorithmOutputPrinter.printException(e);
                     }
 
                 }

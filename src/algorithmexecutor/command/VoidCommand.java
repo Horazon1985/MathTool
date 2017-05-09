@@ -49,7 +49,7 @@ public class VoidCommand extends AlgorithmCommand {
                 return null;
             }
         }
-        throw new AlgorithmExecutionException(ExecutionExecptionTexts.NO_SUCH_COMMAND);
+        throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_NO_SUCH_COMMAND);
     }
     
 }

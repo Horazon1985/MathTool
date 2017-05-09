@@ -37,18 +37,11 @@ public abstract class AlgorithmExecutor {
         Algorithm mainAlg;
         try {
             mainAlg = CompilerUtils.getMainAlgorithm(algorithms);
-
-            AlgorithmOutputPrinter.clearOutput();
-            AlgorithmOutputPrinter.printStartAlgorithmData();
-
             Identifier result = mainAlg.execute();
-            
             AlgorithmOutputPrinter.printOutput(mainAlg, result);
-            AlgorithmOutputPrinter.printEndAlgorithmData();
-            
             return result;
         } catch (AlgorithmCompileException e) {
-            throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
+            throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_MAIN_NOT_FOUND);
         }
     }
 
@@ -68,7 +61,7 @@ public abstract class AlgorithmExecutor {
                 return alg;
             }
         }
-        throw new AlgorithmExecutionException(ExecutionExecptionTexts.MAIN_NOT_FOUND);
+        throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_MAIN_NOT_FOUND);
     }
 
     public static Identifier executeBlock(List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {

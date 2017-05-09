@@ -33,7 +33,7 @@ public abstract class BooleanExpression {
         String currentChar;
 
         if (input.equals("")) {
-            throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+            throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
 
         for (int i = 1; i <= inputLength - 1; i++) {
@@ -41,7 +41,7 @@ public abstract class BooleanExpression {
 
             // Öffnende und schließende Klammern zählen.
             if (currentChar.equals("(") && bracketCounter == 0) {
-                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
 
             if (currentChar.equals(")")) {
@@ -72,7 +72,7 @@ public abstract class BooleanExpression {
         }
 
         if (bracketCounter > 0) {
-            throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+            throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
 
         // Aufteilung, falls eine Elementaroperation (|, &, !) vorliegt
@@ -81,10 +81,10 @@ public abstract class BooleanExpression {
             String inputRight = input.substring(breakpoint + 1, inputLength);
 
             if (inputLeft.equals("") && priority != 1) {
-                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             if (inputRight.equals("")) {
-                throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
 
             switch (priority) {
@@ -176,7 +176,7 @@ public abstract class BooleanExpression {
             }
         }
 
-        throw new BooleanExpressionException(CompileExceptionTexts.UNKNOWN_ERROR);
+        throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
     private static String convertOperators(String input) {

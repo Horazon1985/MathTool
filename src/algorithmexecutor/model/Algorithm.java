@@ -121,7 +121,7 @@ public class Algorithm {
             if (this.returnType == null) {
                 return null;
             } else {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.RETURN_TYPE_EXPECTED);
+                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_AE_RETURN_TYPE_EXPECTED);
             }
         }
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
@@ -141,7 +141,7 @@ public class Algorithm {
     private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {
         for (Identifier inputParameter : this.inputParameters) {
             if (inputParameter.getValue() == null) {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
+                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
             }
         }
     }

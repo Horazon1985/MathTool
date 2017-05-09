@@ -1,18 +1,18 @@
 <objects>
-    <object id = "IDENTIFIER_ALREADY_DECLARED">
+    <object id = "AC_IDENTIFIER_ALREADY_DECLARED">
         <German>Identifier {0} ist bereits deklariert.</German>
         <English>Identifier {0} is already declared.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
-    <object id = "INCOMPATIBLE_TYPES">
+    <object id = "AC_INCOMPATIBLE_TYPES">
         <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
         <English>Incompatible types: {0} cannot be converted to {1}.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
-    <object id = "UNKNOWN_ERROR">
-        <German>Ungbekannter Fehler.</German>
+    <object id = "AC_UNKNOWN_ERROR">
+        <German>Unbekannter Fehler.</German>
         <English>Unknown error.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>

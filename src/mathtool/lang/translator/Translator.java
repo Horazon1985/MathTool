@@ -1,7 +1,6 @@
 package mathtool.lang.translator;
 
 import abstractexpressions.expression.classes.Expression;
-import java.io.File;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,14 +20,13 @@ public abstract class Translator {
         // Die entsprechende XML-Datei öffnen.
         try {
             URL langFile;
-            if (exceptionId.substring(0, 3).equals("GUI")) {
+            if (exceptionId.startsWith("GUI")) {
                 langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangGUI.xml");
-                //messages/LangGUI.xml
-            } else if (exceptionId.substring(0, 3).equals("MCC")) {
+            } else if (exceptionId.startsWith("MCC")) {
                 langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangMathCommandCompiler.xml");
-            } else if (exceptionId.substring(0, 3).equals("AC")) {
+            } else if (exceptionId.startsWith("AC")) {
                 langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmCompileExceptionMessages.xml");
-            } else if (exceptionId.substring(0, 3).equals("AE")) {
+            } else if (exceptionId.startsWith("AE")) {
                 langFile = ClassLoader.getSystemResource("algorithmexecutor/messages/AlgorithmExecutionExceptionMessages.xml");
             } else {
                 // Datei für unbekannten Fehler öffnen.

@@ -21,6 +21,25 @@ public abstract class AlgorithmOutputPrinter {
         outputArea.setText("");
     }
 
+    private static void println(StyledDocument doc, SimpleAttributeSet keyWord, String line) {
+        try {
+            doc.insertString(doc.getLength(), withDate(line + "\n"), keyWord);
+        } catch (Exception e) {
+        }
+    }
+
+    public static void printStartParsingAlgorithms() {
+        StyledDocument doc = outputArea.getStyledDocument();
+        SimpleAttributeSet keyWord = new SimpleAttributeSet();
+        println(doc, keyWord, "Start parsing algorithms");
+    }
+
+    public static void printEndParsingAlgorithms() {
+        StyledDocument doc = outputArea.getStyledDocument();
+        SimpleAttributeSet keyWord = new SimpleAttributeSet();
+        println(doc, keyWord, "Parsing algorithms successful");
+    }
+    
     public static void printStartAlgorithmData() {
 //        outputArea.setText(withDate("Start algorithm execution."));
         StyledDocument doc = outputArea.getStyledDocument();
@@ -32,7 +51,7 @@ public abstract class AlgorithmOutputPrinter {
 //        StyleConstants.setBold(keyWord, true);
 
         try {
-            doc.insertString(0, withDate("Start algorithm execution \n"), keyWord);
+            println(doc, keyWord, "Start algorithm execution");
 //            doc.insertString(0, "Start of text\n", null);
 //            doc.insertString(doc.getLength(), "\nEnd of text", keyWord);
         } catch (Exception e) {
@@ -47,7 +66,7 @@ public abstract class AlgorithmOutputPrinter {
         } catch (Exception e) {
         }
     }
-    
+
     public static void printEndAlgorithmData() {
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
@@ -57,6 +76,12 @@ public abstract class AlgorithmOutputPrinter {
         }
     }
 
+    public static void printException(Exception e) {
+        StyledDocument doc = outputArea.getStyledDocument();
+        SimpleAttributeSet keyWord = new SimpleAttributeSet();
+        println(doc, keyWord, "Exception occurred: " + e.getMessage());
+    }
+    
     private static String withDate(String s) {
         Date now = new Date();
 //        return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + ": " + s;
