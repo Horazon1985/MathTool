@@ -10,6 +10,7 @@ import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.command.condition.BooleanExpression;
+import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
@@ -17,6 +18,9 @@ import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.BlockCompileException;
 import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
+import algorithmexecutor.exceptions.NotDesiredCommandException;
+import algorithmexecutor.exceptions.ParseAssignValueException;
+import algorithmexecutor.exceptions.ParseReturnException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
@@ -355,26 +359,35 @@ public abstract class AlgorithmCompiler {
     private static AlgorithmCommand parseLine(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
         try {
             return parseAssignValueCommand(line, memory, alg);
-        } catch (AlgorithmCompileException e) {
+        } catch (ParseAssignValueException e) {
+            throw e;
+        } catch (NotDesiredCommandException e) {
         }
+        
         try {
             return parseVoidCommand(line, memory, alg);
-        } catch (AlgorithmCompileException e) {
+        } catch (NotDesiredCommandException e) {
         }
+        
         try {
             return parseControllStructure(line, memory, alg);
-        } catch (AlgorithmCompileException e) {
+        } catch (NotDesiredCommandException e) {
         }
+        
         try {
             return parseReturnCommand(line, memory);
-        } catch (AlgorithmCompileException e) {
+        } catch (ParseReturnException e) {
+            throw e;
+        } catch (NotDesiredCommandException e) {
         }
+        
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    private static AlgorithmCommand parseAssignValueCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
-        if (!line.contains(Operators.DEFINE.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+    private static AlgorithmCommand parseAssignValueCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+        // Erste Prüfung, ob es sich definitiv nicht um eine Zuweisung handelt.
+        if (!isAssignValueCommandIfValid(line)) {
+            throw new NotDesiredCommandException();
         }
         String[] assignment = line.split(Operators.DEFINE.getValue());
 
@@ -390,16 +403,21 @@ public abstract class AlgorithmCompiler {
 
         String identifierName;
         if (type != null) {
-            // Prüfung, ob dieser Identifier bereits existiert.
+
             identifierName = assignment[0].substring((type.toString() + " ").length(), assignment[0].length());
+            // Prüfung, ob dieser Identifier gültigen Namen besitzt.
+            if (!VALIDATOR.isValidIdentifier(identifierName)) {
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
+            }
+            // Prüfung, ob dieser Identifier bereits existiert.
             if (memory.containsIdentifier(identifierName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
         } else {
             identifierName = assignment[0];
             // Prüfung, ob dieser Identifier bereits existiert.
             if (!memory.containsIdentifier(identifierName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             type = memory.getMemory().get(identifierName).getType();
         }
@@ -412,16 +430,16 @@ public abstract class AlgorithmCompiler {
                 Expression expr = Expression.build(assignment[1], VALIDATOR);
                 Set<String> vars = expr.getContainedIndeterminates();
                 if (!areIdentifiersAllDefined(vars, memory)) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
                 }
                 if (!areIdentifiersOfCorrectType(type, vars, memory)) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
                 }
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, expr);
             } catch (ExpressionException e) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
 
         } else if (type == IdentifierTypes.BOOLEAN_EXPRESSION) {
@@ -431,16 +449,16 @@ public abstract class AlgorithmCompiler {
                 BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR);
                 Set<String> vars = boolExpr.getContainedIndeterminates();
                 if (!areIdentifiersAllDefined(vars, memory)) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
                 }
                 if (!areIdentifiersOfCorrectType(type, vars, memory)) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
                 }
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, boolExpr);
             } catch (BooleanExpressionException e) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
 
         }
@@ -450,20 +468,45 @@ public abstract class AlgorithmCompiler {
             MatrixExpression matExpr = MatrixExpression.build(assignment[1], VALIDATOR, VALIDATOR);
             Set<String> vars = matExpr.getContainedIndeterminates();
             if (!areIdentifiersAllDefined(vars, memory)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             if (!areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, vars, memory)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
             memory.getMemory().put(identifierName, identifier);
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
 
     }
 
+    private static boolean isAssignValueCommandIfValid(String line) {
+        /*
+        Prüfung, ob line einen Vergleichsoperator enthält, welcher "=" enthält.
+        Im positiven Fall kann es keine Zuweisung mehr sein, sondern höchstens eine
+        Kontrollstruktur.
+        */
+        for (ComparingOperators op : ComparingOperators.getOperatorsContainingEqualsSign()) {
+            if (line.contains(op.getValue())) {
+                return false;
+            }
+        }
+        int bracketCounter = 0;
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0 && String.valueOf(line.charAt(i)).equals(Operators.DEFINE.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private static boolean areIdentifiersAllDefined(Set<String> vars, AlgorithmMemory memory) {
         for (String var : vars) {
             if (!memory.getMemory().containsKey(var) || memory.getMemory().get(var).getType() != IdentifierTypes.EXPRESSION) {
@@ -482,12 +525,12 @@ public abstract class AlgorithmCompiler {
         return true;
     }
 
-    private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+    private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
 
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new NotDesiredCommandException();
     }
 
-    private static AlgorithmCommand parseControllStructure(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+    private static AlgorithmCommand parseControllStructure(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
         // If-Else-Block
         try {
             return parseIfElseControlStructure(line, memory, alg);
@@ -500,7 +543,7 @@ public abstract class AlgorithmCompiler {
             innere Block kann nicht kompiliert werden.
              */
             throw new AlgorithmCompileException(e);
-        } catch (AlgorithmCompileException e) {
+        } catch (NotDesiredCommandException e) {
         }
         // For-Block
         // While-Block
@@ -515,17 +558,17 @@ public abstract class AlgorithmCompiler {
             innere Block kann nicht kompiliert werden.
              */
             throw new AlgorithmCompileException(e);
-        } catch (AlgorithmCompileException e) {
+        } catch (NotDesiredCommandException e) {
         }
         // Do-While-Block
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new NotDesiredCommandException();
     }
 
     private static AlgorithmCommand parseIfElseControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
-            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException {
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException, NotDesiredCommandException {
 
         if (!line.startsWith(Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new NotDesiredCommandException();
         }
 
         int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
@@ -603,10 +646,10 @@ public abstract class AlgorithmCompiler {
     }
 
     private static AlgorithmCommand parseWhileControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
-            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException {
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException, NotDesiredCommandException {
 
         if (!line.startsWith(Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new NotDesiredCommandException();
         }
 
         int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
@@ -654,14 +697,14 @@ public abstract class AlgorithmCompiler {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    private static AlgorithmCommand parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException {
+    private static AlgorithmCommand parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException, NotDesiredCommandException {
         if (line.startsWith(Keywords.RETURN.getValue() + " ")) {
             if (line.equals(Keywords.RETURN.getValue() + ReservedChars.LINE_SEPARATOR)) {
                 return new ReturnCommand(null);
             }
             String returnValueCandidate = line.substring((Keywords.RETURN.getValue() + " ").length());
             if (memory.getMemory().get(returnValueCandidate) == null) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new NotDesiredCommandException();
             }
             return new ReturnCommand(memory.getMemory().get(returnValueCandidate));
         }

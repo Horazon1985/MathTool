@@ -128,7 +128,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     String algString = getPlainCode(algorithmEditor.getText());
-                    String algStringWithoutUTF8 = org.jsoup.parser.Parser.unescapeEntities(algString, false);
+                    String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
 
                     try {
                         AlgorithmOutputPrinter.clearOutput();
