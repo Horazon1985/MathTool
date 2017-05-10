@@ -59,6 +59,13 @@ public abstract class AlgorithmCompiler {
             }
         }
 
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
+        }
+        if (bracketCounter < 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+        }
+
         // Prüfung, ob ein Main-Algorithmus existiert.
         CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
         // Prüfung, ob ein Main-Algorithmus parameterlos ist.
@@ -91,7 +98,7 @@ public abstract class AlgorithmCompiler {
             }
         }
 
-        // Signator ermitteln.
+        // Signatur ermitteln.
         if (returnType != null) {
             input = input.substring(returnType.toString().length());
         }
@@ -106,22 +113,15 @@ public abstract class AlgorithmCompiler {
 
         Identifier[] parameters = getIdentifiersFromParameterStrings(parametersAsStrings, memory);
 
-        // Algorithmusparameter zum Variablenpool hinzufügen.
-        addParametersToMemoryInCompileTime(parameters, memory);
-
-        String signature = algName + ReservedChars.OPEN_BRACKET.getValue();
-        for (int i = 0; i < parameters.length; i++) {
-            signature += parameters[i].getType();
-            if (i < parameters.length - 1) {
-                signature += ",";
-            }
-        }
-        signature += ReservedChars.CLOSE_BRACKET.getValue();
+        String signature = getSignature(algName, parameters);
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
         }
+
+        // Algorithmusparameter zum Variablenpool hinzufügen.
+        addParametersToMemoryInCompileTime(parameters, memory);
 
         Algorithm alg = new Algorithm(algName, parameters, returnType);
 
@@ -217,7 +217,7 @@ public abstract class AlgorithmCompiler {
      */
     private static String[] getParameters(String input) throws AlgorithmCompileException {
 
-        //Falls Parameterstring leer ist -> Fertig
+        // Falls Parameterstring leer ist -> Fertig
         if (input.isEmpty()) {
             return new String[0];
         }
@@ -232,32 +232,29 @@ public abstract class AlgorithmCompiler {
         int bracketCounter = 0;
         int squareBracketCounter = 0;
         String currentChar;
-        //Jetzt werden die einzelnen Parameter ausgelesen
+        // Jetzt werden die einzelnen Parameter ausgelesen
         for (int i = 0; i < input.length(); i++) {
 
             currentChar = input.substring(i, i + 1);
-            if (currentChar.equals("(")) {
+            if (currentChar.equals(ReservedChars.OPEN_BRACKET.getValue())) {
                 bracketCounter++;
-            }
-            if (currentChar.equals(")")) {
+            } else if (currentChar.equals(ReservedChars.CLOSE_BRACKET.getValue())) {
                 bracketCounter--;
-            }
-            if (currentChar.equals("[")) {
+            } else if (currentChar.equals(ReservedChars.OPEN_SQUARE_BRACKET.getValue())) {
                 squareBracketCounter++;
-            }
-            if (currentChar.equals("]")) {
+            } else if (currentChar.equals(ReservedChars.CLOSE_SQUARE_BRACKET.getValue())) {
                 squareBracketCounter--;
             }
-            if (bracketCounter == 0 && squareBracketCounter == 0 && currentChar.equals(",")) {
+            if (bracketCounter == 0 && squareBracketCounter == 0 && currentChar.equals(ReservedChars.ARGUMENT_SEPARATOR.getValue())) {
                 if (input.substring(startPositionOfCurrentParameter, i).isEmpty()) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_EXPECTED);
                 }
                 resultParameters.add(input.substring(startPositionOfCurrentParameter, i));
                 startPositionOfCurrentParameter = i + 1;
             }
             if (i == input.length() - 1) {
                 if (startPositionOfCurrentParameter == input.length()) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_EXPECTED);
                 }
                 resultParameters.add(input.substring(startPositionOfCurrentParameter, input.length()));
             }
@@ -265,7 +262,18 @@ public abstract class AlgorithmCompiler {
         }
 
         if (bracketCounter != 0 || squareBracketCounter != 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            if (bracketCounter > 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            }
+            if (bracketCounter < 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.OPEN_BRACKET.getValue());
+            }
+            if (squareBracketCounter > 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET.getValue());
+            }
+            if (squareBracketCounter < 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.OPEN_SQUARE_BRACKET.getValue());
+            }
         }
 
         String[] resultParametersAsArray = new String[resultParameters.size()];
@@ -291,17 +299,17 @@ public abstract class AlgorithmCompiler {
                 }
             }
             if (parameterType == null) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, parameterStrings[i]);
             }
             parameterName = parameterStrings[i].substring((parameterType.toString() + " ").length());
 
             // Validierung des Parameternamen.
             if (!VALIDATOR.isValidIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
             }
             // Prüfung auf doppelte Deklaration.
             if (memory.containsIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
             }
             resultIdentifiers[i] = Identifier.createIdentifier(parameterName, parameterType);
 
@@ -313,6 +321,17 @@ public abstract class AlgorithmCompiler {
         for (Identifier parameter : parameters) {
             memory.addToMemoryInCompileTime(parameter);
         }
+    }
+
+    private static String getSignature(String algName, Identifier[] parameters) {
+        String signature = algName + ReservedChars.OPEN_BRACKET.getValue();
+        for (int i = 0; i < parameters.length; i++) {
+            signature += parameters[i].getType();
+            if (i < parameters.length - 1) {
+                signature += ",";
+            }
+        }
+        return signature + ReservedChars.CLOSE_BRACKET.getValue();
     }
 
     private static boolean containsAlgorithmWithSameSignature(String signature) {
@@ -665,9 +684,9 @@ public abstract class AlgorithmCompiler {
                 bracketCounter++;
             } else if (input.charAt(i) == ReservedChars.END.getValue()) {
                 bracketCounter--;
-            } else if (input.charAt(i) == ReservedChars.BEGIN_SQUARE_BRACKET.getValue()) {
+            } else if (input.charAt(i) == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter++;
-            } else if (input.charAt(i) == ReservedChars.END_SQUARE_BRACKET.getValue()) {
+            } else if (input.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter--;
             }
             if (bracketCounter == 0 && squareBracketCounter == 0 && input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()) {

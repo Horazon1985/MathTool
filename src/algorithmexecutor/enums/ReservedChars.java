@@ -6,8 +6,8 @@ public enum ReservedChars {
     LINE_SEPARATOR(';'),
     BEGIN('{'),
     END('}'),
-    BEGIN_SQUARE_BRACKET('['),
-    END_SQUARE_BRACKET(']'),
+    OPEN_SQUARE_BRACKET('['),
+    CLOSE_SQUARE_BRACKET(']'),
     OPEN_BRACKET('('),
     CLOSE_BRACKET(')');
     

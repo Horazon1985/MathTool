@@ -1,16 +1,95 @@
 <objects>
     <object id = "AC_IDENTIFIER_ALREADY_DECLARED">
-        <German>Identifier {0} ist bereits deklariert.</German>
-        <English>Identifier {0} is already declared.</English>
+        <German>Identifier [0] ist bereits deklariert.</German>
+        <English>Identifier [0] is already declared.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_INCOMPATIBLE_TYPES">
+        <German>Inkompatible Typen: [0] kann nicht zu [1] konvertiert werden.</German>
+        <English>Incompatible types: [0] cannot be converted to [1].</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_FILE_MUST_CONTAIN_A_BEGIN">
+        <German>Die definierten Algorithmen müssen mindestens einen Algorithmusbeginn ('{') enthalten.</German>
+        <English>Declared algorithms must contain at least one beginning character ('{').</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_FILE_MUST_CONTAIN_AN_END">
+        <German>Die definierten Algorithmen müssen mindestens einen Algorithmusende ('}') enthalten.</German>
+        <English>Declared algorithms must contain at least one ending character ('}').</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_END_BEFORE_BEGIN">
+        <German>Block- oder Algoritmusende ('}') vor einem Beginn ('}').</German>
+        <German>Block- oder algoritm end ('}') occurs before a beginning ('}').</German>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ALGORITHM_ALREADY_EXISTS">
+        <German>Algorithmus mit Signatur [0] existiert bereits.</German>
+        <German>Algorithm with signature [0] already exists.</German>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ALGORITHM_MUST_START_WITH_BEGIN">
         <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
         <English>Incompatible types: {0} cannot be converted to {1}.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "AC_ALGORITHM_MUST_END_WITH_END">
+        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
+        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ALGORITHM_HAS_NO_NAME">
+        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
+        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM">
+        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
+        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET">
+        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
+        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_IDENTIFIER_EXPECTED">
+        <German>Identifier erwartet.</German>
+        <English>Identifier expected.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_BRACKET_EXPECTED">
+        <German>Klammer erwartet: [0].</German>
+        <English>Bracket expected: [0].</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_CANNOT_FIND_SYMBOL">
+        <German>Kann Symbol nicht finden: [0].</German>
+        <English>Cannot find symbol: [0].</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_ILLEGAL_CHARACTER">
+        <German>Illegales Zeiches.</German>
+        <English>Illegal character.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>
         <English>Unknown error.</English>
