@@ -89,6 +89,12 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "AC_COMMAND_COUND_NOT_BE_PARSED">
+        <German>Der Befehl [0] konnte nicht geparst werden.</German>
+        <English>Command [0] could not be parsed.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <object id = "AC_BRACKET_MISSING">
         <German>Klammer fehlt: [0].</German>
         <English>Bracket missing: [0].</English>
@@ -104,6 +110,12 @@
     <object id = "AC_KEYWORD_EXPECTED">
         <German>Schlüsselwort '[0]' erwartet.</German>
         <English>Key word '[0]' expected.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_MISSING_LINE_SEPARATOR">
+        <German>Befehl muss mit '[0]' enden.</German>
+        <English>Command must end with '[0]'.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>

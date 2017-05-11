@@ -85,7 +85,7 @@ public abstract class AlgorithmOutputPrinter {
     }
 
     public static void printOutput(Algorithm alg, Identifier identifier) {
-        if (outputArea == null) {
+        if (outputArea == null || identifier == null) {
             return;
         }
         StyledDocument doc = outputArea.getStyledDocument();

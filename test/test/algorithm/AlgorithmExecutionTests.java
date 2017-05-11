@@ -12,16 +12,30 @@ import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.JTextPane;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlgorithmExecutionTests {
 
+    @BeforeClass
+    public static void init() {
+        AlgorithmOutputPrinter.setOutputArea(new JTextPane());
+    }
+    
+    @Before
+    public void teardown() {
+        AlgorithmOutputPrinter.clearOutput();
+    }
+    
     @Test
     public void executeEmptyMainAlgorithmTest() {
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
