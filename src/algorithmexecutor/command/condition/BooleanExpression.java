@@ -191,7 +191,7 @@ public abstract class BooleanExpression {
         return input.contains(op.getConvertedValue()) && input.length() - input.replaceAll(op.getConvertedValue(), "").length() == 1;
     }
 
-    public Set<String> getContainedIndeterminates() {
+    public Set<String> getContainedVars() {
         Set<String> vars = new HashSet<>();
         addContainedIdentifier(vars);
         return vars;

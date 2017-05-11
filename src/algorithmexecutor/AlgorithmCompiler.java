@@ -363,24 +363,24 @@ public abstract class AlgorithmCompiler {
             throw e;
         } catch (NotDesiredCommandException e) {
         }
-        
+
         try {
             return parseVoidCommand(line, memory, alg);
         } catch (NotDesiredCommandException e) {
         }
-        
+
         try {
             return parseControllStructure(line, memory, alg);
         } catch (NotDesiredCommandException e) {
         }
-        
+
         try {
             return parseReturnCommand(line, memory);
         } catch (ParseReturnException e) {
             throw e;
         } catch (NotDesiredCommandException e) {
         }
-        
+
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
@@ -411,13 +411,13 @@ public abstract class AlgorithmCompiler {
             }
             // Prüfung, ob dieser Identifier bereits existiert.
             if (memory.containsIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
             }
         } else {
             identifierName = assignment[0];
             // Prüfung, ob dieser Identifier bereits existiert.
             if (!memory.containsIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
             }
             type = memory.getMemory().get(identifierName).getType();
         }
@@ -428,18 +428,14 @@ public abstract class AlgorithmCompiler {
             // Fall: Arithmetischer / Analytischer Ausdruck.
             try {
                 Expression expr = Expression.build(assignment[1], VALIDATOR);
-                Set<String> vars = expr.getContainedIndeterminates();
-                if (!areIdentifiersAllDefined(vars, memory)) {
-                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-                }
-                if (!areIdentifiersOfCorrectType(type, vars, memory)) {
-                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-                }
+                Set<String> vars = expr.getContainedVars();
+                checkIfAllIdentifiersAreDefined(vars, memory);
+                areIdentifiersOfCorrectType(type, vars, memory);
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, expr);
             } catch (ExpressionException e) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(e);
             }
 
         } else if (type == IdentifierTypes.BOOLEAN_EXPRESSION) {
@@ -447,13 +443,9 @@ public abstract class AlgorithmCompiler {
             // Fall: boolscher Ausdruck.
             try {
                 BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR);
-                Set<String> vars = boolExpr.getContainedIndeterminates();
-                if (!areIdentifiersAllDefined(vars, memory)) {
-                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-                }
-                if (!areIdentifiersOfCorrectType(type, vars, memory)) {
-                    throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-                }
+                Set<String> vars = boolExpr.getContainedVars();
+                checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), memory);
+                areIdentifiersOfCorrectType(type, vars, memory);
                 Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, boolExpr);
@@ -466,18 +458,14 @@ public abstract class AlgorithmCompiler {
         // Fall: Matrizenausdruck.
         try {
             MatrixExpression matExpr = MatrixExpression.build(assignment[1], VALIDATOR, VALIDATOR);
-            Set<String> vars = matExpr.getContainedIndeterminates();
-            if (!areIdentifiersAllDefined(vars, memory)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-            }
-            if (!areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, vars, memory)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-            }
+            checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), memory);
+            areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, matExpr.getContainedExpressionVars(), memory);
+            areIdentifiersOfCorrectType(IdentifierTypes.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), memory);
             Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
             memory.getMemory().put(identifierName, identifier);
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
-            throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseAssignValueException(e);
         }
 
     }
@@ -487,7 +475,7 @@ public abstract class AlgorithmCompiler {
         Prüfung, ob line einen Vergleichsoperator enthält, welcher "=" enthält.
         Im positiven Fall kann es keine Zuweisung mehr sein, sondern höchstens eine
         Kontrollstruktur.
-        */
+         */
         for (ComparingOperators op : ComparingOperators.getOperatorsContainingEqualsSign()) {
             if (line.contains(op.getValue())) {
                 return false;
@@ -506,27 +494,29 @@ public abstract class AlgorithmCompiler {
         }
         return false;
     }
-    
-    private static boolean areIdentifiersAllDefined(Set<String> vars, AlgorithmMemory memory) {
+
+    private static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (!memory.getMemory().containsKey(var) || memory.getMemory().get(var).getType() != IdentifierTypes.EXPRESSION) {
-                return false;
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
             }
         }
-        return true;
     }
 
-    private static boolean areIdentifiersOfCorrectType(IdentifierTypes type, Set<String> vars, AlgorithmMemory memory) {
+    private static void areIdentifiersOfCorrectType(IdentifierTypes type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (memory.getMemory().get(var).getType() != type) {
-                return false;
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES, memory.getMemory().get(var).getType(), type);
             }
         }
-        return true;
     }
 
     private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
-
+        
+        
+        
+        
+        
         throw new NotDesiredCommandException();
     }
 
