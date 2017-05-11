@@ -20,6 +20,7 @@ import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.exceptions.NotDesiredCommandException;
 import algorithmexecutor.exceptions.ParseAssignValueException;
+import algorithmexecutor.exceptions.ParseControlStructureException;
 import algorithmexecutor.exceptions.ParseReturnException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
@@ -190,7 +191,7 @@ public abstract class AlgorithmCompiler {
         }
         result[0] = input.substring(0, i);
 
-        // Wenn der Befehl leer ist -> Fehler.
+        // Wenn der Algorithmusname leer ist -> Fehler.
         if (result[0].length() == 0) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_HAS_NO_NAME);
         }
@@ -371,6 +372,8 @@ public abstract class AlgorithmCompiler {
 
         try {
             return parseControllStructure(line, memory, alg);
+        } catch (ParseControlStructureException e) {
+            throw e;
         } catch (NotDesiredCommandException e) {
         }
 
@@ -524,6 +527,8 @@ public abstract class AlgorithmCompiler {
         // If-Else-Block
         try {
             return parseIfElseControlStructure(line, memory, alg);
+        } catch (ParseControlStructureException e) {
+            throw e;
         } catch (BooleanExpressionException e) {
             // Es ist zwar eine If-Else-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
@@ -539,6 +544,8 @@ public abstract class AlgorithmCompiler {
         // While-Block
         try {
             return parseWhileControlStructure(line, memory, alg);
+        } catch (ParseControlStructureException e) {
+            throw e;
         } catch (BooleanExpressionException e) {
             // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
@@ -563,7 +570,7 @@ public abstract class AlgorithmCompiler {
 
         int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
         if (endOfBooleanCondition < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_MISSING, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
@@ -573,7 +580,8 @@ public abstract class AlgorithmCompiler {
         if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
                 || !line.contains(String.valueOf(ReservedChars.END.getValue()))
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END, 
+                    ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
         // Block im If-Teil kompilieren.
@@ -592,8 +600,9 @@ public abstract class AlgorithmCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
+        
         List<AlgorithmCommand> commandsIfPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
         IfElseControlStructure ifElseControlStructure = new IfElseControlStructure(condition, commandsIfPart);
 
@@ -605,7 +614,7 @@ public abstract class AlgorithmCompiler {
 
         String restLine = line.substring(endBlockPosition + 1);
         if (!restLine.startsWith(Keywords.ELSE.getValue() + ReservedChars.BEGIN.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_KEYWORD_EXPECTED, Keywords.ELSE.getValue());
         }
 
         bracketCounter = 0;
@@ -623,10 +632,10 @@ public abstract class AlgorithmCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (endBlockPosition != restLine.length() - 1) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
         }
 
         List<AlgorithmCommand> commandsElsePart = parseConnectedBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
