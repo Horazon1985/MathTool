@@ -1,7 +1,6 @@
 package algorithmexecutor.command;
 
 import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.expression.classes.Operator;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
@@ -60,7 +59,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 
-    public AbstractExpression getIdentifierTarget() {
+    public AbstractExpression getTargetExpression() {
         return this.targetExpression;
     }
 
@@ -71,7 +70,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     @Override
     public String toString() {
         String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc
-                + ", targetExpression = " + this.targetExpression;
+                + ", targetExpression = " + this.targetExpression + ", booleanExpression = " + this.booleanExpression;
         if (this.targetAlgorithm != null) {
             return command + ", targetAlgorithm = " + this.targetAlgorithm.getSignature() + "]";
         }
