@@ -21,6 +21,10 @@ public abstract class AlgorithmCommand {
         return this instanceof AssignValueCommand;
     }
     
+    public boolean isDeclareIDentifierCommand() {
+        return this instanceof DeclareIdentifierCommand;
+    }
+    
     public boolean isVoidCommand() {
         return this instanceof VoidCommand;
     }

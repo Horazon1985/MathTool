@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JTextPane;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -182,6 +183,25 @@ public class AlgorithmExecutionTests {
         }
     }
 
+    @Test
+    public void executeAlgorithmWithIdentifierDeclarationAndIfElseTest() {
+        String input = "expression main(){expression a=2;expression b;if(a==1){b=7;}else{b=13;}return b;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierTypes.EXPRESSION);
+            assertTrue(result.getName().equals("b"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("13")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+    
+    
     @Test
     public void executeAlgorithmWithWhileControlStructureTest() {
         String input = "expression main(){expression a = 1;while(a<6){a = 2*a;};return a;}";

@@ -17,6 +17,14 @@ public class BooleanBuildingBlock extends BooleanExpression {
     private final MatrixExpression matRight;
     private final ComparingOperators comparingOperator;
 
+    public BooleanBuildingBlock(Expression left, Expression right, MatrixExpression matLeft, MatrixExpression matRight, ComparingOperators comparingOperator) {
+        this.left = left;
+        this.right = right;
+        this.matLeft = matLeft;
+        this.matRight = matRight;
+        this.comparingOperator = comparingOperator;
+    }
+
     public BooleanBuildingBlock(Expression left, Expression right, ComparingOperators comparingOperator) {
         this.left = left;
         this.right = right;

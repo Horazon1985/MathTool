@@ -411,7 +411,9 @@ public abstract class AlgorithmCompiler {
         if (memory.containsIdentifier(identifierName)) {
             throw new ParseAssignValueException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
         }
-        return new DeclareIdentifierCommand(Identifier.createIdentifier(alg, identifierName, type), alg);
+        Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
+        memory.getMemory().put(identifierName, identifier);
+        return new DeclareIdentifierCommand(identifier, alg);
     }
 
     private static IdentifierTypes getTypeIfIsValidDeclareIdentifierCommand(String line) {

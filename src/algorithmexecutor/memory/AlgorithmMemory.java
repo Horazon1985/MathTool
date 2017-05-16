@@ -52,7 +52,7 @@ public class AlgorithmMemory {
     public void addToMemoryInRuntime(Identifier identifier) {
         /*
         Während der Laufzeit kann es zu keinen Namensclashs kommen,
-        da der Algorithmus zuvor bereits kompiliert wurde
+        da der Algorithmus zuvor bereits kompiliert wurde.
          */
         this.memory.put(identifier.getName(), identifier);
     }

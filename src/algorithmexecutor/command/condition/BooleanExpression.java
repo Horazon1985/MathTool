@@ -56,7 +56,7 @@ public abstract class BooleanExpression {
             }
             // Aufteilungspunkt finden; zunächst wird nach |, &, !, ~ gesucht 
             // breakpoint gibt den Index in formula an, wo die Formel aufgespalten werden soll.
-             if (currentChar.equals(Operators.OR.getValue()) && priority > 1) {
+            if (currentChar.equals(Operators.OR.getValue()) && priority > 1) {
                 priority = 0;
                 breakpoint = inputLength - i;
             } else if (currentChar.equals(Operators.AND.getValue()) && priority > 2) {
@@ -98,7 +98,7 @@ public abstract class BooleanExpression {
                     return null;
             }
         }
-        
+
         if (priority == 2 && breakpoint == 0) {
             /*
              Falls eine Negation vorliegt, dann muss breakpoint == 0 sein.
@@ -135,24 +135,29 @@ public abstract class BooleanExpression {
                 Operatoren wie ">=", ">", ... machen nur bei gewöhnlichen 
                 Ausdrücken Sinn. "==" dagegen macht auch bei Matrizenausdrücken Sinn.
                  */
-                if (comparisonType.getConvertedValue().equals(ComparingOperators.EQUALS.getConvertedValue())) {
-                    try {
-                        MatrixExpression matExprLeft = MatrixExpression.build(comparison[0], validator, validator);
-                        MatrixExpression matExprRight = MatrixExpression.build(comparison[1], validator, validator);
-                        return new BooleanBuildingBlock(matExprLeft, matExprRight);
-                    } catch (ExpressionException e) {
-                    }
-                }
-
+                MatrixExpression matExprLeft = null;
+                MatrixExpression matExprRight = null;
+                Expression exprLeft = null;
+                Expression exprRight = null;
+                
                 try {
-                    Expression exprLeft = Expression.build(comparison[0], validator);
-                    Expression exprRight = Expression.build(comparison[1], validator);
-                    return new BooleanBuildingBlock(exprLeft, exprRight, comparisonType);
+                    matExprLeft = MatrixExpression.build(comparison[0], validator, validator);
+                    matExprRight = MatrixExpression.build(comparison[1], validator, validator);
                 } catch (ExpressionException e) {
                 }
+                try {
+                    exprLeft = Expression.build(comparison[0], validator);
+                    exprRight = Expression.build(comparison[1], validator);
+                } catch (ExpressionException e) {
+                }
+                
+                if (exprLeft != null && exprRight != null || matExprLeft != null && matExprRight != null) {
+                    return new BooleanBuildingBlock(exprLeft, exprRight, matExprLeft, matExprRight, comparisonType);
+                }
+                
             }
         }
-        
+
         // Falls kein binärer Operator und die Formel die Form (...) hat -> Klammern beseitigen
         if (priority == 4 && input.substring(0, 1).equals(ReservedChars.OPEN_BRACKET.getValue())
                 && input.substring(inputLength - 1, inputLength).equals(ReservedChars.CLOSE_BRACKET.getValue())) {
@@ -214,7 +219,7 @@ public abstract class BooleanExpression {
     public boolean isBuildingBlock() {
         return this instanceof BooleanBuildingBlock;
     }
-    
+
     public BooleanExpression not() {
         return new BooleanNegation(this);
     }
