@@ -5,7 +5,6 @@ import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.ControlStructure;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
-import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
@@ -21,8 +20,7 @@ public class CompilerUtils {
 
     public static String preprocessAlgorithm(String input) {
         String outputFormatted = input;
-
-        outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "\n");
+        outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "\n", "\t");
         outputFormatted = removeLeadingWhitespaces(outputFormatted);
         outputFormatted = removeEndingWhitespaces(outputFormatted);
         outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "  ");
@@ -39,6 +37,9 @@ public class CompilerUtils {
     private static String removeLeadingWhitespaces(String input) {
         while (input.startsWith(" ")) {
             input = input.substring(1);
+        }
+        while (input.endsWith(" ")) {
+            input = input.substring(0, input.length() - 1);
         }
         return input;
     }

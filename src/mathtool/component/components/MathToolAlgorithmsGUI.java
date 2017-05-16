@@ -94,9 +94,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
             currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
 
-            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = 4; return x;}");
+            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = int(t^2,t,0,1); <b><font color=\"blue\">return</font></b> x;}");
 
-            // Algorithmeneditor definieren.
             this.outputArea = new JTextPane();
             add(this.outputArea);
             this.outputArea.setContentType("text/html; charset=UTF-8");
@@ -108,8 +107,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             // outputArea als Ausgabe deklarieren.
             AlgorithmOutputPrinter.setOutputArea(this.outputArea);
-
-            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = int(t^2,t,0,1); <b><font color=\"blue\">return</font></b> x;}");
 
             // Buttons definieren.
             this.addAlgorithmButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM));

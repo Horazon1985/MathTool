@@ -6,6 +6,7 @@ import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
+import algorithmexecutor.command.DeclareIdentifierCommand;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.command.WhileControlStructure;
@@ -18,6 +19,7 @@ import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.BlockCompileException;
 import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
+import algorithmexecutor.exceptions.DeclareIdentifierException;
 import algorithmexecutor.exceptions.NotDesiredCommandException;
 import algorithmexecutor.exceptions.ParseAssignValueException;
 import algorithmexecutor.exceptions.ParseControlStructureException;
@@ -366,6 +368,13 @@ public abstract class AlgorithmCompiler {
         }
 
         try {
+            return parseDeclareIdentifierCommand(line, memory, alg);
+        } catch (ParseAssignValueException e) {
+            throw e;
+        } catch (NotDesiredCommandException e) {
+        }
+
+        try {
             return parseVoidCommand(line, memory, alg);
         } catch (NotDesiredCommandException e) {
         }
@@ -385,6 +394,33 @@ public abstract class AlgorithmCompiler {
         }
 
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_COMMAND_COUND_NOT_BE_PARSED, line);
+    }
+
+    private static AlgorithmCommand parseDeclareIdentifierCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+        // Typ ermitteln. Dieser ist != null, wenn es sich definitiv um eine Identifierdeklaration handelt.
+        IdentifierTypes type = getTypeIfIsValidDeclareIdentifierCommand(line);
+        if (type == null) {
+            throw new NotDesiredCommandException();
+        }
+
+        String identifierName = line.substring(type.toString().length() + 1);
+        if (!VALIDATOR.isValidIdentifier(identifierName)) {
+            throw new DeclareIdentifierException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
+        }
+        // Prüfung, ob dieser Identifier bereits existiert.
+        if (memory.containsIdentifier(identifierName)) {
+            throw new ParseAssignValueException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
+        }
+        return new DeclareIdentifierCommand(Identifier.createIdentifier(alg, identifierName, type), alg);
+    }
+
+    private static IdentifierTypes getTypeIfIsValidDeclareIdentifierCommand(String line) {
+        for (IdentifierTypes type : IdentifierTypes.values()) {
+            if (line.startsWith(type.toString() + " ")) {
+                return type;
+            }
+        }
+        return null;
     }
 
     private static AlgorithmCommand parseAssignValueCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
