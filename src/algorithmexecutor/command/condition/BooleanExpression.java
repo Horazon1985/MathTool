@@ -4,6 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecutor.IdentifierConditionValidator;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
@@ -19,7 +20,8 @@ public abstract class BooleanExpression {
 
     public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
-    public static BooleanExpression build(String input, IdentifierValidator validator) throws BooleanExpressionException {
+    public static BooleanExpression build(String input, IdentifierValidator validator, IdentifierConditionValidator conditionValidator, 
+            Map<String, AbstractExpression> valuesMap) throws BooleanExpressionException {
 
         input = convertOperators(input.replaceAll(" ", "").toLowerCase());
 
@@ -89,11 +91,14 @@ public abstract class BooleanExpression {
 
             switch (priority) {
                 case 0:
-                    return new BooleanBinaryOperation(build(inputLeft, validator), build(inputRight, validator), BooleanBinaryOperationType.EQUIVALENCE);
+                    return new BooleanBinaryOperation(build(inputLeft, validator, conditionValidator, valuesMap), 
+                            build(inputRight, validator, conditionValidator, valuesMap), BooleanBinaryOperationType.EQUIVALENCE);
                 case 1:
-                    return new BooleanBinaryOperation(build(inputLeft, validator), build(inputRight, validator), BooleanBinaryOperationType.OR);
+                    return new BooleanBinaryOperation(build(inputLeft, validator, conditionValidator, valuesMap), 
+                            build(inputRight, validator, conditionValidator, valuesMap), BooleanBinaryOperationType.OR);
                 case 2:
-                    return new BooleanBinaryOperation(build(inputLeft, validator), build(inputRight, validator), BooleanBinaryOperationType.AND);
+                    return new BooleanBinaryOperation(build(inputLeft, validator, conditionValidator, valuesMap), 
+                            build(inputRight, validator, conditionValidator, valuesMap), BooleanBinaryOperationType.AND);
                 default:    //Passiert zwar nicht, aber trotzdem!
                     return null;
             }
@@ -107,7 +112,7 @@ public abstract class BooleanExpression {
              werden.
              */
             String inputLeft = input.substring(1, inputLength);
-            return new BooleanNegation(build(inputLeft, validator));
+            return new BooleanNegation(build(inputLeft, validator, conditionValidator, valuesMap));
         }
 
         // Der folgende Fall wird zuerst behandelt: "==" als Vergleich zwischen zwei (Matrizen-)Ausdrücken.
@@ -161,7 +166,7 @@ public abstract class BooleanExpression {
         // Falls kein binärer Operator und die Formel die Form (...) hat -> Klammern beseitigen
         if (priority == 4 && input.substring(0, 1).equals(ReservedChars.OPEN_BRACKET.getValue())
                 && input.substring(inputLength - 1, inputLength).equals(ReservedChars.CLOSE_BRACKET.getValue())) {
-            return build(input.substring(1, inputLength - 1), validator);
+            return build(input.substring(1, inputLength - 1), validator, conditionValidator, valuesMap);
         }
 
         // Falls der Ausdruck eine logische Konstante ist (false, true)

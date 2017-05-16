@@ -1,10 +1,11 @@
 package algorithmexecutor;
 
-import abstractexpressions.interfaces.IdentifierValidator;
+import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.enums.Keywords;
 import java.math.BigInteger;
+import java.util.Map;
 
-public class IdentifierValidatorImpl implements IdentifierValidator {
+public class IdentifierConditionValidatorImpl implements IdentifierConditionValidator {
 
     /**
      * Prüft, ob der Name identifier ein gültiger Bezeichner ist. Gültig
@@ -37,6 +38,11 @@ public class IdentifierValidatorImpl implements IdentifierValidator {
         } catch (NumberFormatException e) {
             return true;
         }
+    }
+
+    @Override
+    public boolean isValidIdentifier(String identifierName, Map<String, AbstractExpression> valuesMap) {
+        return valuesMap.containsKey(identifierName);
     }
 
 }

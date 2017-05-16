@@ -93,7 +93,7 @@ public abstract class AlgorithmExecutor {
             Nur Return-Befehle geben echte Identifier zurück. Alle anderen
             Befehle geben null zurück.
              */
-            if (resultIdentifier != null) {
+            if (command.isReturnCommand() || resultIdentifier != null) {
                 removeLocalIdentifiersFromMemory(alg, scopeMemory, memoryBeforBlockExecution);
                 return resultIdentifier;
             }
