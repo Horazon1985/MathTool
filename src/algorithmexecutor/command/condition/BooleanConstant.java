@@ -13,6 +13,19 @@ public class BooleanConstant extends BooleanExpression {
     }
     
     @Override
+    public boolean contains(String var) {
+        return false;
+    }
+
+    @Override
+    public void addContainedVars(Set<String> vars) {
+    }
+
+    @Override
+    public void addContainedIndeterminates(Set<String> vars) {
+    }
+
+    @Override
     public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         return value;
     }

@@ -11,34 +11,31 @@ import java.util.Set;
 
 public class BooleanBuildingBlock extends BooleanExpression {
 
-    private final Expression left;
-    private final Expression right;
-    private final MatrixExpression matLeft;
-    private final MatrixExpression matRight;
+    private final AbstractExpression left;
+    private final AbstractExpression right;
     private final ComparingOperators comparingOperator;
 
-    public BooleanBuildingBlock(Expression left, Expression right, MatrixExpression matLeft, MatrixExpression matRight, ComparingOperators comparingOperator) {
+    public BooleanBuildingBlock(AbstractExpression left, AbstractExpression right, ComparingOperators comparingOperator) {
         this.left = left;
         this.right = right;
-        this.matLeft = matLeft;
-        this.matRight = matRight;
         this.comparingOperator = comparingOperator;
     }
 
-    public BooleanBuildingBlock(Expression left, Expression right, ComparingOperators comparingOperator) {
-        this.left = left;
-        this.right = right;
-        this.matLeft = null;
-        this.matRight = null;
-        this.comparingOperator = comparingOperator;
+    @Override
+    public boolean contains(String var) {
+        return this.left.contains(var) && this.right.contains(var);
     }
 
-    public BooleanBuildingBlock(MatrixExpression matLeft, MatrixExpression matRight) {
-        this.left = null;
-        this.right = null;
-        this.matLeft = matLeft;
-        this.matRight = matRight;
-        this.comparingOperator = ComparingOperators.EQUALS;
+    @Override
+    public void addContainedVars(Set<String> vars) {
+        this.left.addContainedVars(vars);
+        this.right.addContainedVars(vars);
+    }
+
+    @Override
+    public void addContainedIndeterminates(Set<String> vars) {
+        this.left.addContainedIndeterminates(vars);
+        this.right.addContainedIndeterminates(vars);
     }
 
     @Override
@@ -87,46 +84,58 @@ public class BooleanBuildingBlock extends BooleanExpression {
             } catch (EvaluationException e) {
             }
             return false;
-        }
-        /* 
-        Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
-        sondern der Vergleich liefert stets 'false'
-         */
-        try {
-            MatrixExpression matValueLeft = this.matLeft.evaluate();
-            MatrixExpression matValueRight = this.matRight.evaluate();
+        } else if (isComparisonOfMatrixExpressions()) {
+            /* 
+            Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
+            sondern der Vergleich liefert stets 'false'
+             */
+            try {
+                MatrixExpression matValueLeft = ((MatrixExpression) this.left).evaluate();
+                MatrixExpression matValueRight = ((MatrixExpression) this.left).evaluate();
+                switch (this.comparingOperator) {
+                    case EQUALS:
+                        return matValueLeft.equivalent(matValueRight);
+                    case NOT_EQUALS:
+                        return !matValueLeft.equivalent(matValueRight);
+                }
+            } catch (EvaluationException e) {
+            }
+            return false;
+        } else if (isComparisonOfBooleanExpressions()) {
+            boolean boolValueLeft = ((BooleanExpression) this.left).evaluate(valuesMap);
+            boolean boolValueRight = ((BooleanExpression) this.left).evaluate(valuesMap);
             switch (this.comparingOperator) {
                 case EQUALS:
-                    return matValueLeft.equivalent(matValueRight);
+                    return boolValueLeft == boolValueRight;
                 case NOT_EQUALS:
-                    return !matValueLeft.equivalent(matValueRight);
+                    return boolValueLeft != boolValueRight;
             }
-        } catch (EvaluationException e) {
         }
+
         return false;
     }
 
     private boolean isComparisonOfExpressions() {
-        return this.left != null && this.right != null && this.comparingOperator != null;
+        return this.left instanceof Expression && this.right instanceof Expression && this.comparingOperator != null;
+    }
+
+    private boolean isComparisonOfMatrixExpressions() {
+        return this.left instanceof MatrixExpression && this.right instanceof MatrixExpression && this.comparingOperator != null;
+    }
+
+    private boolean isComparisonOfBooleanExpressions() {
+        return this.left instanceof BooleanExpression && this.right instanceof BooleanExpression && this.comparingOperator != null;
     }
 
     @Override
     public void addContainedIdentifier(Set<String> vars) {
-        if (isComparisonOfExpressions()) {
-            vars.addAll(this.left.getContainedIndeterminates());
-            vars.addAll(this.right.getContainedIndeterminates());
-        } else {
-            vars.addAll(this.matLeft.getContainedIndeterminates());
-            vars.addAll(this.matRight.getContainedIndeterminates());
-        }
+        vars.addAll(this.left.getContainedIndeterminates());
+        vars.addAll(this.right.getContainedIndeterminates());
     }
 
     @Override
     public String toString() {
-        if (this.left != null && this.right != null) {
-            return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
-        }
-        return this.matLeft.toString() + " " + this.comparingOperator.getValue() + " " + this.matRight.toString();
+        return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
     }
 
     private static AbstractExpression replaceVarsByIdentifierValues(AbstractExpression abstrExpr, Map<String, AbstractExpression> valuesMap) {

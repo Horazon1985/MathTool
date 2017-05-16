@@ -16,10 +16,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BooleanExpression {
+public abstract class BooleanExpression implements AbstractExpression {
 
     public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
+    @Override
+    public Set<String> getContainedVars() {
+        Set<String> vars = new HashSet<>();
+        addContainedVars(vars);
+        return vars;
+    }
+    
+    @Override
+    public Set<String> getContainedIndeterminates() {
+        Set<String> vars = new HashSet<>();
+        addContainedIndeterminates(vars);
+        return vars;
+    }
+    
     public static BooleanExpression build(String input, IdentifierValidator validator, IdentifierConditionValidator conditionValidator, 
             Map<String, AbstractExpression> valuesMap) throws BooleanExpressionException {
 
@@ -115,12 +129,8 @@ public abstract class BooleanExpression {
             return new BooleanNegation(build(inputLeft, validator, conditionValidator, valuesMap));
         }
 
-        // Der folgende Fall wird zuerst behandelt: "==" als Vergleich zwischen zwei (Matrizen-)Ausdrücken.
         if (priority >= 3) {
-            /* 
-            Falls der Ausdruck ein Vergleich von Ausdrücken (Instanzen von Expression) ist.
-            WICHTIG: Verglichen wird stets mit der Methode equivalent().
-             */
+            // WICHTIG: Verglichen wird bei (Matrizen-) Ausdrücken stets mit der Methode equivalent().
             ComparingOperators comparisonType = null;
             if (containsOperatorExactlyOneTime(input, ComparingOperators.EQUALS)) {
                 comparisonType = ComparingOperators.EQUALS;
@@ -133,6 +143,7 @@ public abstract class BooleanExpression {
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.SMALLER_OR_EQUALS)) {
                 comparisonType = ComparingOperators.SMALLER_OR_EQUALS;
             }
+            
             if (comparisonType != null) {
                 // Es kommt genau ein Vergleichsoperator in input vor.
                 String[] comparison = input.split(comparisonType.getConvertedValue());
@@ -140,25 +151,22 @@ public abstract class BooleanExpression {
                 Operatoren wie ">=", ">", ... machen nur bei gewöhnlichen 
                 Ausdrücken Sinn. "==" dagegen macht auch bei Matrizenausdrücken Sinn.
                  */
-                MatrixExpression matExprLeft = null;
-                MatrixExpression matExprRight = null;
-                Expression exprLeft = null;
-                Expression exprRight = null;
+                AbstractExpression left = null, right = null;
                 
-                try {
-                    matExprLeft = MatrixExpression.build(comparison[0], validator, validator);
-                    matExprRight = MatrixExpression.build(comparison[1], validator, validator);
-                } catch (ExpressionException e) {
-                }
-                try {
-                    exprLeft = Expression.build(comparison[0], validator);
-                    exprRight = Expression.build(comparison[1], validator);
-                } catch (ExpressionException e) {
-                }
-                
-                if (exprLeft != null && exprRight != null || matExprLeft != null && matExprRight != null) {
-                    return new BooleanBuildingBlock(exprLeft, exprRight, matExprLeft, matExprRight, comparisonType);
-                }
+//                try {
+//                    matExprLeft = MatrixExpression.build(comparison[0], validator, validator);
+//                    matExprRight = MatrixExpression.build(comparison[1], validator, validator);
+//                } catch (ExpressionException e) {
+//                }
+//                try {
+//                    exprLeft = Expression.build(comparison[0], validator);
+//                    exprRight = Expression.build(comparison[1], validator);
+//                } catch (ExpressionException e) {
+//                }
+//                
+//                if (exprLeft != null && exprRight != null || matExprLeft != null && matExprRight != null) {
+//                    return new BooleanBuildingBlock(null, null, exprLeft, exprRight, matExprLeft, matExprRight, comparisonType);
+//                }
                 
             }
         }
@@ -199,12 +207,6 @@ public abstract class BooleanExpression {
 
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {
         return input.contains(op.getConvertedValue()) && input.length() - input.replaceAll(op.getConvertedValue(), "").length() == 1;
-    }
-
-    public Set<String> getContainedVars() {
-        Set<String> vars = new HashSet<>();
-        addContainedIdentifier(vars);
-        return vars;
     }
 
     public abstract void addContainedIdentifier(Set<String> vars);

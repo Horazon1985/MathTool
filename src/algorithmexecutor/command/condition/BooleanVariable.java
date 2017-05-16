@@ -61,6 +61,21 @@ public class BooleanVariable extends BooleanExpression {
     }
 
     @Override
+    public boolean contains(String var) {
+        return this.name.equals(var);
+    }
+
+    @Override
+    public void addContainedVars(Set<String> vars) {
+        vars.add(this.name);
+    }
+
+    @Override
+    public void addContainedIndeterminates(Set<String> vars) {
+        vars.add(this.name);
+    }
+
+    @Override
     public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         return this.value;
     }

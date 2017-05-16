@@ -64,6 +64,7 @@ import graphic.GraphicPanelVectorField2D;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 import notations.NotationLoader;
 import mathtool.annotations.Execute;
 import mathtool.annotations.GetCommand;
@@ -481,7 +482,7 @@ public abstract class MathCommandCompiler {
         if (VALIDATOR.isValidIdentifier(functionNameAndArguments) && !Expression.isPI(functionNameAndArguments)) {
 
             Expression preciseExpression;
-            HashSet<String> vars;
+            Set<String> vars;
             try {
                 preciseExpression = Expression.build(functionTerm);
                 vars = preciseExpression.getContainedIndeterminates();
@@ -508,7 +509,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_EXPRESSION_ON_RIGHT_SIDE") + e.getMessage());
         }
 
-        HashSet<String> vars = expr.getContainedIndeterminates();
+        Set<String> vars = expr.getContainedIndeterminates();
 
         /*
          WICHTIG! Falls expr bereits vom Benutzer vordefinierte Funktionen
@@ -664,7 +665,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_NORMAL"));
         }
 
-        HashSet<String> vars;
+        Set<String> vars;
         Expression expr;
         try {
             expr = Expression.build(params[0]);
@@ -751,7 +752,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT2D", params[params.length - 3]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         try {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2]);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
@@ -789,7 +790,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[7];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         if (!params[0].contains("=")) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT2D_MUST_BE_A_VALID_EQUATION"));
@@ -826,7 +827,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTIMPLICIT2D", params[1], params[2]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = 3; i < 7; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -855,7 +856,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[params.length];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
@@ -885,7 +886,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOT3D", params[params.length - 6], params[params.length - 5]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -915,7 +916,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[10];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         if (!params[0].contains("=")) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT3D_MUST_BE_A_VALID_EQUATION"));
@@ -957,7 +958,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTIMPLICIT3D", params[1], params[2], params[3]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = 4; i < 10; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -986,7 +987,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[4];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         try {
             commandParams[0] = MatrixExpression.build(params[0]);
@@ -1006,7 +1007,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTCURVE2D", params[1]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         try {
             commandParams[2] = Expression.build(params[2]);
             ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
@@ -1043,7 +1044,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[4];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         try {
             commandParams[0] = MatrixExpression.build(params[0]);
@@ -1063,7 +1064,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTCURVE3D", params[1]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         try {
             commandParams[2] = Expression.build(params[2]);
             ((Expression) commandParams[2]).addContainedIndeterminates(varsInLimits);
@@ -1100,7 +1101,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[params.length];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
@@ -1115,7 +1116,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTCYLINDRICAL", vars.size()));
         }
 
-        HashSet<String> varsInParams = new HashSet<>();
+        Set<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
             if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTCYLINDRICAL", i + 1));
@@ -1134,7 +1135,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -1163,7 +1164,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[params.length];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 6; i++) {
             try {
@@ -1178,7 +1179,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSPHERICAL", vars.size()));
         }
 
-        HashSet<String> varsInParams = new HashSet<>();
+        Set<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
             if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSPHERICAL", i + 1));
@@ -1197,7 +1198,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -1226,7 +1227,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[7];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         try {
             commandParams[0] = MatrixExpression.build(params[0]);
@@ -1239,7 +1240,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTSURFACE", vars.size()));
         }
 
-        HashSet<String> varsInParams = new HashSet<>();
+        Set<String> varsInParams = new HashSet<>();
         for (int i = params.length - 6; i < params.length - 4; i++) {
             if (!VALIDATOR.isValidIdentifier(params[i]) || Variable.getVariablesWithPredefinedValues().contains(params[i])) {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_VARIABLE_PARAMETER_IN_PLOTSURFACE", i + 1));
@@ -1258,7 +1259,7 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = params.length - 4; i < params.length; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -1287,7 +1288,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[7];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         try {
             commandParams[0] = MatrixExpression.build(params[0]);
@@ -1315,7 +1316,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D", params[1], params[2]));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         for (int i = 3; i < 7; i++) {
             try {
                 commandParams[i] = Expression.build(params[i]);
@@ -1344,7 +1345,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[params.length];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 3; i++) {
             try {
@@ -1366,7 +1367,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_VARIABLES_IN_PLOTPOLAR", vars.size()));
         }
 
-        HashSet<String> varsInLimits = new HashSet<>();
+        Set<String> varsInLimits = new HashSet<>();
         try {
             commandParams[params.length - 2] = Expression.build(params[params.length - 2]);
             ((Expression) commandParams[params.length - 2]).addContainedIndeterminates(varsInLimits);
@@ -1429,7 +1430,7 @@ public abstract class MathCommandCompiler {
         /*
          Prüft, ob es sich um eine korrekte DGL handelt.
          */
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         Expression diffEquationLeft, diffEquationRight;
         try {
             diffEquationLeft = Expression.build(params[0].substring(0, params[0].indexOf("=")));
@@ -1502,7 +1503,7 @@ public abstract class MathCommandCompiler {
          darf in einer DGL der Ordnung 3 nicht y''', y'''' etc. auf der
          rechten Seite auftreten.
          */
-        HashSet<String> vars;
+        Set<String> vars;
         Expression diffEquation;
         try {
             diffEquation = Expression.build(params[0]);
@@ -1579,7 +1580,7 @@ public abstract class MathCommandCompiler {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_ENOUGH_PARAMETERS_IN_TANGENT"));
         }
 
-        HashSet<String> vars;
+        Set<String> vars;
         Expression expr;
         try {
             expr = Expression.build(params[0]);
@@ -1675,7 +1676,7 @@ public abstract class MathCommandCompiler {
          darf in einer DGL der Ordnung 3 nicht y''', y'''' etc. auf der
          rechten Seite auftreten.
          */
-        HashSet<String> vars;
+        Set<String> vars;
         Expression diffEquation;
         try {
             diffEquation = Expression.build(params[0]);
@@ -1709,7 +1710,7 @@ public abstract class MathCommandCompiler {
         }
 
         // Prüft, ob die AWP-Daten korrekt sind.
-        HashSet<String> varsInLimits;
+        Set<String> varsInLimits;
         Expression limit;
         for (int i = 4; i < ord + 5; i++) {
             try {
@@ -1860,7 +1861,7 @@ public abstract class MathCommandCompiler {
     private static void executeCCNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CCNF", logExpr));
@@ -1874,7 +1875,7 @@ public abstract class MathCommandCompiler {
     private static void executeCDNF(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         logExpr.addContainedVars(vars);
         if (vars.size() > 20) {
             throw new EvaluationException(Translator.translateOutputMessage("MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF", logExpr));
@@ -1969,7 +1970,7 @@ public abstract class MathCommandCompiler {
 
     @Execute(type = TypeCommand.defvars)
     public static void executeDefVars(Command command) {
-        HashSet<String> vars = Variable.getVariablesWithPredefinedValues();
+        Set<String> vars = Variable.getVariablesWithPredefinedValues();
         if (!vars.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_LIST_OF_VARIABLES"));
             for (String var : vars) {
@@ -2249,7 +2250,7 @@ public abstract class MathCommandCompiler {
      * ganzzahligen Werten (also eine Variable der Form K_1, K_2, ...) enthält.
      */
     private static boolean expressionContainsIntegerVariables(Expression expr) {
-        HashSet<String> vars = expr.getContainedIndeterminates();
+        Set<String> vars = expr.getContainedIndeterminates();
         for (String var : vars) {
             if (var.startsWith(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_") && !var.contains("'")) {
                 return true;
@@ -3361,7 +3362,7 @@ public abstract class MathCommandCompiler {
     private static void executeSolveAlgebraic(Command command)
             throws EvaluationException {
 
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         Expression f = ((Expression[]) command.getParams()[0])[0];
         Expression g = ((Expression[]) command.getParams()[0])[1];
 
@@ -3460,7 +3461,7 @@ public abstract class MathCommandCompiler {
     private static void executeSolveNumeric(Command command)
             throws EvaluationException {
 
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         Expression f = ((Expression[]) command.getParams()[0])[0];
         Expression g = ((Expression[]) command.getParams()[0])[1];
 
@@ -3891,7 +3892,7 @@ public abstract class MathCommandCompiler {
     private static void executeTable(Command command) throws EvaluationException {
 
         LogicalExpression logExpr = (LogicalExpression) command.getParams()[0];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
         logExpr.addContainedIndeterminates(vars);
         int numberOfVars = vars.size();
         if (numberOfVars > 20) {
@@ -4004,7 +4005,7 @@ public abstract class MathCommandCompiler {
         auch in den Punktkoordinaten vorkommen. Wenn nicht, werden keine Graphen
         gezeichnet (da freie Parameter vorkommen).
          */
-        HashSet<String> varsInFunction = f.getContainedIndeterminates();
+        Set<String> varsInFunction = f.getContainedIndeterminates();
         for (String var : varsInFunction){
             if (!vars.keySet().contains(var)){
                 return;
@@ -4186,7 +4187,7 @@ public abstract class MathCommandCompiler {
          führen. Daher besser ein neues HashSet mit den Funktionsnamen definieren und
          erst DANN zu iterieren.
          */
-        HashSet<String> functionNames = new HashSet<>(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet());
+        Set<String> functionNames = new HashSet<>(SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet());
 
         for (String f : functionNames) {
             abstractExpressions.remove(f);
@@ -4221,7 +4222,7 @@ public abstract class MathCommandCompiler {
      */
     private static boolean doesExpressionContainDerivativesOfTooHighOrder(Expression expr, String varOrd, int ord) {
 
-        HashSet<String> vars = expr.getContainedIndeterminates();
+        Set<String> vars = expr.getContainedIndeterminates();
         int numberOfPrimesInVar;
         for (String var : vars) {
             numberOfPrimesInVar = 0;

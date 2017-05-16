@@ -40,6 +40,8 @@ public class BooleanBinaryOperation extends BooleanExpression {
         }
     }
 
+    
+    
     @Override
     public void addContainedIdentifier(Set<String> vars) {
         this.left.addContainedIdentifier(vars);
@@ -87,6 +89,23 @@ public class BooleanBinaryOperation extends BooleanExpression {
 
         return leftAsText + "&" + rightAsText;
 
+    }
+
+    @Override
+    public boolean contains(String var) {
+        return this.left.contains(var) && this.right.contains(var);
+    }
+
+    @Override
+    public void addContainedVars(Set<String> vars) {
+        this.left.addContainedVars(vars);
+        this.right.addContainedVars(vars);
+    }
+
+    @Override
+    public void addContainedIndeterminates(Set<String> vars) {
+        this.left.addContainedIndeterminates(vars);
+        this.right.addContainedIndeterminates(vars);
     }
 
 }

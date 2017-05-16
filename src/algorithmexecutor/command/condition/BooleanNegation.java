@@ -14,6 +14,21 @@ public class BooleanNegation extends BooleanExpression {
     }
 
     @Override
+    public boolean contains(String var) {
+        return this.argument.contains(var);
+    }
+
+    @Override
+    public void addContainedVars(Set<String> vars) {
+        this.argument.addContainedVars(vars);
+    }
+
+    @Override
+    public void addContainedIndeterminates(Set<String> vars) {
+        this.argument.addContainedIndeterminates(vars);
+    }
+
+    @Override
     public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         return !this.argument.evaluate(valuesMap);
     }

@@ -46,6 +46,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
@@ -243,7 +244,7 @@ public class MathToolController {
                 SelfDefinedFunction f;
                 List<String> arguments;
                 Expression abstractExpression;
-                HashSet<String> vars;
+                Set<String> vars;
                 for (DefinedFunction function : definedFunctions.getDefinedFunctionList()) {
                     try {
                         arguments = function.getArguments().getArguments();
