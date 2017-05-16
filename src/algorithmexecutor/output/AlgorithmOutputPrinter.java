@@ -9,17 +9,19 @@ import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.transaction.TransactionRequiredException;
+import mathtool.lang.translator.Translator;
 
 public abstract class AlgorithmOutputPrinter {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
 
-    private static final String GUI_START_COMPILING_ALGORITHM = "GUI_START_COMPILING_ALGORITHM";
-    private static final String GUI_COMPILING_ALGORITHM_SUCCESSFUL = "GUI_COMPILING_ALGORITHM_SUCCESSFUL";
-    private static final String GUI_START_EXECUTING_ALGORITHM = "GUI_START_EXECUTING_ALGORITHM";
-    private static final String GUI_OUTPUT_OF_ALGORITHM = "GUI_OUTPUT_OF_ALGORITHM";
-    private static final String GUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL = "GUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL";
-    private static final String GUI_EXCEPTION_IN_ALGORITHM_OCCURRED = "GUI_EXCEPTION_IN_ALGORITHM_OCCURRED";
+    private static final String GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM";
+    private static final String GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL = "GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL";
+    private static final String GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM = "GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM";
+    private static final String GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM = "GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM";
+    private static final String GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL";
+    private static final String GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED";
     
     private static JTextPane outputArea;
 
@@ -51,7 +53,7 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, "Start parsing algorithms");
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM));
     }
 
     public static void printEndParsingAlgorithms() {
@@ -60,7 +62,7 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, "Parsing algorithms successful");
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL));
     }
 
     public static void printStartAlgorithmData() {
@@ -76,7 +78,7 @@ public abstract class AlgorithmOutputPrinter {
 //        StyleConstants.setBackground(keyWord, Color.YELLOW);
 //        StyleConstants.setBold(keyWord, true);
 
-        println(doc, keyWord, "Start algorithm execution");
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM));
         try {
 //            doc.insertString(0, "Start of text\n", null);
 //            doc.insertString(doc.getLength(), "\nEnd of text", keyWord);
@@ -90,7 +92,7 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, "Output of algorithm " + alg.getName() + ": " + identifier.getValue());
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM, alg.getName(), identifier.getValue()));
     }
 
     public static void printEndAlgorithmData() {
@@ -99,7 +101,7 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, "Terminate algorithm execution");
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL));
     }
 
     public static void printException(Exception e) {
@@ -108,7 +110,7 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, "Exception occurred: " + e.getMessage());
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED, e.getMessage()));
     }
 
     private static String withDate(String s) {

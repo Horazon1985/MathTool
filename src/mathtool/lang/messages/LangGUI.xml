@@ -496,4 +496,41 @@
         <Ukrainian>Дебаг</Ukrainian>
         <Russian>Дебаг</Russian>
     </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM">
+        <German>Kompiliere Algoirithmus ...</German>
+        <English>Start compiling algorithm ...</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL">
+        <German>Kompilieren des Algorithmus erfolgreich.</German>
+        <English>Compiling algorithm successful.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM">
+        <German>Starte Ausführung des Algoirithmus ...</German>
+        <English>Start executing algorithm ...</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM">
+        <German>Ausgabe des Algorithmus [0]: [1]</German>
+        <English>Output of algorithm [0]: [1]</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL">
+        <German>Ausführung des Algorithmus erfolgreich.</German>
+        <English>Execution of algorithm successful.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED">
+        <German>Folgender Fehler trat im Algorithmus auf: [0]</German>
+        <English>Following exception ocurred in algorithm: [0]</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    
 </objects>
