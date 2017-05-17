@@ -67,7 +67,7 @@ public class CompilerUtils {
         } while (!result.equals(input));
         return result;
     }
-
+    
     public static void checkIfMainAlgorithmExists(List<Algorithm> algorithms) throws AlgorithmCompileException {
         for (Algorithm alg : algorithms) {
             if (alg.getName().equals(Keywords.MAIN.getValue())) {

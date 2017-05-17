@@ -1,7 +1,6 @@
 package algorithmexecutor;
 
 import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
@@ -466,6 +465,7 @@ public abstract class AlgorithmCompiler {
         }
 
         // Rechte Seite behandeln.
+        Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
         if (type == IdentifierTypes.EXPRESSION) {
 
             // Fall: Arithmetischer / Analytischer Ausdruck.
@@ -474,11 +474,15 @@ public abstract class AlgorithmCompiler {
                 Set<String> vars = expr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(vars, memory);
                 areIdentifiersOfCorrectType(type, vars, memory);
-                Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, expr);
             } catch (ExpressionException e) {
-                throw new ParseAssignValueException(e);
+                try {
+                    Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
+                    return new AssignValueCommand(identifier, calledAlg);
+                } catch (ParseAssignValueException ex) {
+                    throw ex;
+                }
             }
 
         } else if (type == IdentifierTypes.BOOLEAN_EXPRESSION) {
@@ -490,11 +494,15 @@ public abstract class AlgorithmCompiler {
                 Set<String> vars = boolExpr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), memory);
                 areIdentifiersOfCorrectType(type, vars, memory);
-                Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, boolExpr);
             } catch (BooleanExpressionException e) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                try {
+                    Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
+                    return new AssignValueCommand(identifier, calledAlg);
+                } catch (ParseAssignValueException ex) {
+                    throw ex;
+                }
             }
 
         }
@@ -505,11 +513,15 @@ public abstract class AlgorithmCompiler {
             checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), memory);
             areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, matExpr.getContainedExpressionVars(), memory);
             areIdentifiersOfCorrectType(IdentifierTypes.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), memory);
-            Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
             memory.getMemory().put(identifierName, identifier);
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
-            throw new ParseAssignValueException(e);
+            try {
+                Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
+                return new AssignValueCommand(identifier, calledAlg);
+            } catch (ParseAssignValueException ex) {
+                throw ex;
+            }
         }
 
     }
@@ -555,6 +567,55 @@ public abstract class AlgorithmCompiler {
         }
     }
 
+    private static Algorithm parseAlgorithmCall(String input, AlgorithmMemory memory, IdentifierTypes returnType) throws ParseAssignValueException {
+        try {
+            String[] algNameAndParams = getAlgorithmNameAndParameters(input);
+            String algName = algNameAndParams[0];
+            String[] params = getAlgorithmNameAndParameters(algNameAndParams[1]);
+            // Prüfung, ob ein Algorithmus mit diesem Namen bekannt ist.
+            List<Algorithm> algorithmInStorageCandidates = new ArrayList<>();
+            for (Algorithm alg : STORED_ALGORITHMS) {
+                if (alg.getName().equals(algName) && alg.getInputParameters().length == params.length) {
+                    algorithmInStorageCandidates.add(alg);
+                    break;
+                }
+            }
+
+            // Prüfung, ob alle Parameter gültige Identifier sind.
+            for (String param : params) {
+                if (memory.getMemory().get(param) == null) {
+                    throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
+                }
+            }
+
+            // Prüfung auf Signatur.
+            Algorithm algorithmInStorage = null;
+            for (Algorithm alg : algorithmInStorageCandidates) {
+                for (int i = 0; i < alg.getInputParameters().length; i++) {
+                    if (!alg.getInputParameters()[i].getType().equals(memory.getMemory().get(params[i]).getType())) {
+                        break;
+                    } else if (i == alg.getInputParameters().length - 1) {
+                        algorithmInStorage = alg;
+                    }
+                }
+                if (algorithmInStorage != null) {
+                    break;
+                }
+            }
+            if (algorithmInStorage == null) {
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
+            }
+            // Prüfung, ob Rückgabewert korrekt ist.
+            if (!algorithmInStorage.getReturnType().equals(returnType)) {
+                // TODO: Fehlermeldung korrigieren.
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            }
+            return algorithmInStorage;
+        } catch (AlgorithmCompileException e) {
+            throw new ParseAssignValueException(e);
+        }
+    }
+
     private static AlgorithmCommand parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
 
         throw new NotDesiredCommandException();
@@ -566,16 +627,14 @@ public abstract class AlgorithmCompiler {
             return parseIfElseControlStructure(line, memory, alg);
         } catch (ParseControlStructureException e) {
             throw e;
-        } catch (BooleanExpressionException e) {
+        } catch (BooleanExpressionException | BlockCompileException e) {
             // Es ist zwar eine If-Else-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
-        } catch (BlockCompileException e) {
-            /* 
-            Es ist zwar eine If-Else-Struktur mit korrekter Bedingung, aber der 
+        } catch (NotDesiredCommandException e) {
+            /*
+            Es ist zwar eine If-Else-Struktur mit korrekter Bedingung, aber der
             innere Block kann nicht kompiliert werden.
              */
-            throw new AlgorithmCompileException(e);
-        } catch (NotDesiredCommandException e) {
         }
         // For-Block
         // While-Block
@@ -583,16 +642,14 @@ public abstract class AlgorithmCompiler {
             return parseWhileControlStructure(line, memory, alg);
         } catch (ParseControlStructureException e) {
             throw e;
-        } catch (BooleanExpressionException e) {
+        } catch (BooleanExpressionException | BlockCompileException e) {
             // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
-        } catch (BlockCompileException e) {
-            /* 
-            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der 
+        } catch (NotDesiredCommandException e) {
+            /*
+            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der
             innere Block kann nicht kompiliert werden.
              */
-            throw new AlgorithmCompileException(e);
-        } catch (NotDesiredCommandException e) {
         }
         // Do-While-Block
         throw new NotDesiredCommandException();
