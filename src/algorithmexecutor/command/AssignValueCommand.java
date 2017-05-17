@@ -22,7 +22,8 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
-    private final Algorithm targetAlgorithm;
+    private String targetAlgorithmSignature;
+    private Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, IdentifierTypes.identifierTypeOf(targetExpression))) {

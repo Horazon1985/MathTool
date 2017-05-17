@@ -7,11 +7,13 @@ import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierTypes;
 import algorithmexecutor.enums.Keywords;
+import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,138 @@ public class CompilerUtils {
             result = result.replaceAll(toReplace, replaceBy);
         } while (!result.equals(input));
         return result;
+    }
+    
+    public static String getSignature(String algName, Identifier[] parameters) {
+        String signature = algName + ReservedChars.OPEN_BRACKET.getValue();
+        for (int i = 0; i < parameters.length; i++) {
+            signature += parameters[i].getType();
+            if (i < parameters.length - 1) {
+                signature += ",";
+            }
+        }
+        return signature + ReservedChars.CLOSE_BRACKET.getValue();
+    }
+    
+    /**
+     * Der Algorithmusname und die Parameter in der Befehlsklammer werden
+     * ausgelesen und zurückgegeben.<br>
+     * BEISPIEL: input = alg(expression x, expression y). Zurückgegeben wird ein
+     * array der Länge zwei: im 0. Eintrag steht der String "alg", im 1. der
+     * String "expression x, expression y".
+     *
+     * @throws AlgorithmCompileException
+     */
+    public static String[] getAlgorithmNameAndParameters(String input) throws AlgorithmCompileException {
+
+        // Leerzeichen beseitigen
+        input = input.replaceAll(" ", "");
+
+        String[] result = new String[2];
+        int i = input.indexOf(String.valueOf(ReservedChars.OPEN_BRACKET.getValue()));
+        if (i == -1) {
+            // Um zu verhindern, dass es eine IndexOutOfBoundsException gibt.
+            i = 0;
+        }
+        result[0] = input.substring(0, i);
+
+        // Wenn der Algorithmusname leer ist -> Fehler.
+        if (result[0].length() == 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_HAS_NO_NAME);
+        }
+
+        // Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...)).
+        if (result[0].length() > input.length() - 2) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM);
+        }
+
+        // Wenn am Ende nicht ")" steht.
+        if (!input.substring(input.length() - 1, input.length()).equals(String.valueOf(ReservedChars.CLOSE_BRACKET.getValue()))) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET);
+        }
+
+        result[1] = input.substring(result[0].length() + 1, input.length() - 1);
+
+        return result;
+
+    }
+
+    /**
+     * Input: String input, in der NUR die Parameter (getrennt durch ein Komma)
+     * stehen. Beispiel input = "expression x, expression y". Parameter sind
+     * dann {expression x, expression y}. Nach einem eingelesenen Komma, welches
+     * NICHT von runden Klammern umgeben ist, werden die Parameter getrennt.
+     *
+     * @throws AlgorithmCompileException
+     */
+    public static String[] getParameters(String input) throws AlgorithmCompileException {
+
+        // Falls Parameterstring leer ist -> Fertig
+        if (input.isEmpty()) {
+            return new String[0];
+        }
+
+        ArrayList<String> resultParameters = new ArrayList<>();
+        int startPositionOfCurrentParameter = 0;
+
+        /*
+         Differenz zwischen der Anzahl der öffnenden und der der schließenden
+         Klammern (bracketCounter == 0 am Ende -> alles ok).
+         */
+        int bracketCounter = 0;
+        int squareBracketCounter = 0;
+        String currentChar;
+        // Jetzt werden die einzelnen Parameter ausgelesen
+        for (int i = 0; i < input.length(); i++) {
+
+            currentChar = input.substring(i, i + 1);
+            if (currentChar.equals(ReservedChars.OPEN_BRACKET.getValue())) {
+                bracketCounter++;
+            } else if (currentChar.equals(ReservedChars.CLOSE_BRACKET.getValue())) {
+                bracketCounter--;
+            } else if (currentChar.equals(ReservedChars.OPEN_SQUARE_BRACKET.getValue())) {
+                squareBracketCounter++;
+            } else if (currentChar.equals(ReservedChars.CLOSE_SQUARE_BRACKET.getValue())) {
+                squareBracketCounter--;
+            }
+            if (bracketCounter == 0 && squareBracketCounter == 0 && currentChar.equals(ReservedChars.ARGUMENT_SEPARATOR.getValue())) {
+                if (input.substring(startPositionOfCurrentParameter, i).isEmpty()) {
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_EXPECTED);
+                }
+                resultParameters.add(input.substring(startPositionOfCurrentParameter, i));
+                startPositionOfCurrentParameter = i + 1;
+            }
+            if (i == input.length() - 1) {
+                if (startPositionOfCurrentParameter == input.length()) {
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_EXPECTED);
+                }
+                resultParameters.add(input.substring(startPositionOfCurrentParameter, input.length()));
+            }
+
+        }
+
+        if (bracketCounter != 0 || squareBracketCounter != 0) {
+            if (bracketCounter > 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            }
+            if (bracketCounter < 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.OPEN_BRACKET.getValue());
+            }
+            if (squareBracketCounter > 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET.getValue());
+            }
+            if (squareBracketCounter < 0) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.OPEN_SQUARE_BRACKET.getValue());
+            }
+        }
+
+        String[] resultParametersAsArray = new String[resultParameters.size()];
+        for (int i = 0; i < resultParameters.size(); i++) {
+            resultParametersAsArray[i] = resultParameters.get(i);
+        }
+
+        return resultParametersAsArray;
+
     }
     
     public static void checkIfMainAlgorithmExists(List<Algorithm> algorithms) throws AlgorithmCompileException {

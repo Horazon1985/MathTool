@@ -148,6 +148,45 @@ public class AlgorithmCompileTests {
     }
     
     @Test
+    public void parseAlgorithmCallingAnotherAlgorithmTest() {
+        String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
+                + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
+            
+            Algorithm mainAlg;
+            Algorithm ggtAlg;
+            if (AlgorithmCompiler.STORED_ALGORITHMS.get(0).getName().equals("main")) {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+                ggtAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+            } else {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+                ggtAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            }
+
+            // Prüfung für den Hauptalgorithmus "main".
+            assertEquals(mainAlg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
+            
+            // Prüfung für den aufgerufenen Algorithmus "computeggt".
+            assertEquals(ggtAlg.getName(), "computeggt");
+            assertEquals(ggtAlg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(ggtAlg.getInputParameters().length, 2);
+            assertEquals(ggtAlg.getCommands().size(), 2);
+            assertTrue(ggtAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(ggtAlg.getCommands().get(1).isReturnCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
+    @Test
     public void parseAlgorithmWithCompileErrorCodeTest() {
         String input = "main(){expression a=exp(1)}";
         try {
