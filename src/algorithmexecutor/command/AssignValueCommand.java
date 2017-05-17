@@ -65,13 +65,28 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     }
 
+    private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
+        Set<String> varsInAlgorithmSignature = new HashSet<>();
+        for (Identifier identifier : alg.getInputParameters()) {
+            varsInAlgorithmSignature.addAll(identifier.getValue().getContainedIndeterminates());
+        }
+        return varsInAlgorithmSignature;
+    }
+
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         Algorithm alg = getAlgorithm();
-        Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
-        checkForUnknownIdentifier(alg, varsInTargetExpr);
-        AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
-        this.identifierSrc.setValue(targetExprSimplified);
+        if (this.targetExpression != null) {
+            Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
+            checkForUnknownIdentifier(alg, varsInTargetExpr);
+            AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
+            this.identifierSrc.setValue(targetExprSimplified);
+        } else {
+            Set<String> varsInTargetExpr = getVarsFromAlgorithmParameters(this.targetAlgorithm);
+            checkForUnknownIdentifier(alg, varsInTargetExpr);
+            AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
+            this.identifierSrc.setValue(targetExprSimplified);
+        }
         AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return null;
     }
