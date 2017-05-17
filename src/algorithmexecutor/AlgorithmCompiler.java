@@ -38,8 +38,6 @@ public abstract class AlgorithmCompiler {
 
     public final static IdentifierValidator VALIDATOR = new IdentifierValidatorImpl();
 
-    public final static IdentifierConditionValidator VALIDATOR_CONDITIONS = new IdentifierConditionValidatorImpl();
-
     public final static List<Algorithm> STORED_ALGORITHMS = new ArrayList<>();
 
     public static void parseAlgorithmFile(String input) throws AlgorithmCompileException {
@@ -487,8 +485,8 @@ public abstract class AlgorithmCompiler {
 
             // Fall: boolscher Ausdruck.
             try {
-                Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(alg);
-                BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR, VALIDATOR_CONDITIONS, valuesMap);
+                Map<String, IdentifierTypes> valuesMap = CompilerUtils.extractTypesOfMemory(memory);
+                BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR, valuesMap);
                 Set<String> vars = boolExpr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), memory);
                 areIdentifiersOfCorrectType(type, vars, memory);
@@ -613,8 +611,8 @@ public abstract class AlgorithmCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
-        Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(alg);
-        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, VALIDATOR_CONDITIONS, valuesMap);
+        Map<String, IdentifierTypes> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
@@ -697,8 +695,8 @@ public abstract class AlgorithmCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
-        Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(alg);
-        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, VALIDATOR_CONDITIONS, valuesMap);
+        Map<String, IdentifierTypes> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "while(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))

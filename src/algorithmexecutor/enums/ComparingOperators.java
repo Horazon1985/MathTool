@@ -26,6 +26,9 @@ public enum ComparingOperators {
         if (this == EQUALS) {
             return "~";
         }
+        if (this == NOT_EQUALS) {
+            return "#";
+        }
         return this.value;
     }
     

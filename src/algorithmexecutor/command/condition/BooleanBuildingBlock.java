@@ -84,6 +84,20 @@ public class BooleanBuildingBlock extends BooleanExpression {
             } catch (EvaluationException e) {
             }
             return false;
+        } else if (isComparisonOfLogicalExpressions()) {
+            /* 
+            Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
+            sondern der Vergleich liefert stets 'false'
+             */
+            boolean logValueLeft = ((LogicalExpression) this.left).evaluate();
+            boolean logValueRight = ((LogicalExpression) this.left).evaluate();
+            switch (this.comparingOperator) {
+                case EQUALS:
+                    return logValueLeft == logValueRight;
+                case NOT_EQUALS:
+                    return logValueLeft != logValueRight;
+            }
+            return false;
         } else if (isComparisonOfMatrixExpressions()) {
             /* 
             Wenn arithmetische Fehler auftreten, dann werden diese nicht geworfen, 
@@ -117,6 +131,10 @@ public class BooleanBuildingBlock extends BooleanExpression {
 
     private boolean isComparisonOfExpressions() {
         return this.left instanceof Expression && this.right instanceof Expression && this.comparingOperator != null;
+    }
+
+    private boolean isComparisonOfLogicalExpressions() {
+        return this.left instanceof LogicalExpression && this.right instanceof LogicalExpression && this.comparingOperator != null;
     }
 
     private boolean isComparisonOfMatrixExpressions() {

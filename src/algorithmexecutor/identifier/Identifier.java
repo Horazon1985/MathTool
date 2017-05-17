@@ -14,7 +14,6 @@ public class Identifier {
     private final IdentifierTypes type;
     private final String name;
     private AbstractExpression value;
-    private BooleanExpression booleanExpression;
     
     private Identifier(IdentifierTypes type, String name) {
         this.type = type;
@@ -48,23 +47,6 @@ public class Identifier {
         }
     }
 
-    private Identifier(IdentifierTypes type, String name, BooleanExpression booleanExpression) {
-        this.type = type;
-        this.name = name;
-        this.booleanExpression = booleanExpression;
-    }
-
-    private Identifier(Algorithm alg, IdentifierTypes type, String name, BooleanExpression booleanExpression) {
-        this.type = type;
-        this.name = name;
-        this.booleanExpression = booleanExpression;
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
-        if (memory == null) {
-            memory = new AlgorithmMemory(Collections.singletonList(createIdentifier(alg, name, type)));
-            AlgorithmExecutor.getMemoryMap().put(alg, memory);
-        }
-    }
-
     public IdentifierTypes getType() {
         return type;
     }
@@ -79,21 +61,14 @@ public class Identifier {
     
     public void setValue(AbstractExpression value) {
         this.value = value;
-        this.booleanExpression = null;
-    }
-
-    public void setBooleanExpression(BooleanExpression booleanExpression) {
-        this.booleanExpression = booleanExpression;
-        this.value = null;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.type);
-        hash = 29 * hash + Objects.hashCode(this.name);
-        hash = 29 * hash + Objects.hashCode(this.value);
-        hash = 29 * hash + Objects.hashCode(this.booleanExpression);
+        hash = 97 * hash + Objects.hashCode(this.type);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.value);
         return hash;
     }
 
@@ -115,16 +90,13 @@ public class Identifier {
         if (this.type != other.type) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
-            return false;
-        }
-        return Objects.equals(this.booleanExpression, other.booleanExpression);
+        return Objects.equals(this.value, other.value);
     }
     
     @Override
     public String toString() {
         return "Identifier[type = " + this.type + ", name = " + this.name 
-                + ", value = " + this.value + ", boolean expression = " + this.booleanExpression + "]";
+                + ", value = " + this.value + "]";
     }
 
     public static Identifier createIdentifier(String identifierName, IdentifierTypes type) {

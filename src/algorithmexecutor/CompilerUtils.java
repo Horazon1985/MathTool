@@ -170,4 +170,12 @@ public class CompilerUtils {
         return valuesMap;
     }
 
+    public static Map<String, IdentifierTypes> extractTypesOfMemory(AlgorithmMemory memory) {
+        Map<String, IdentifierTypes> valuesMap = new HashMap<>();
+        for (String identifierName : memory.getMemory().keySet()) {
+            valuesMap.put(identifierName, memory.getMemory().get(identifierName).getType());
+        }
+        return valuesMap;
+    }
+
 }
