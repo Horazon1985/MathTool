@@ -1,0 +1,73 @@
+package algorithmexecutor.model;
+
+import algorithmexecutor.enums.IdentifierTypes;
+import java.util.Arrays;
+import java.util.Objects;
+
+public class Signature {
+
+    private final String name;
+    private final IdentifierTypes[] parameterTypes;
+    private final IdentifierTypes returnType;
+
+    public Signature(IdentifierTypes returnType, String name, IdentifierTypes[] parameterTypes) {
+        this.name = name;
+        this.parameterTypes = parameterTypes;
+        this.returnType = returnType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public IdentifierTypes[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public IdentifierTypes getReturnType() {
+        return returnType;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.name);
+        hash = 41 * hash + Arrays.deepHashCode(this.parameterTypes);
+        hash = 41 * hash + Objects.hashCode(this.returnType);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Signature other = (Signature) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Arrays.deepEquals(this.parameterTypes, other.parameterTypes)) {
+            return false;
+        }
+        return this.returnType == other.returnType;
+    }
+
+    @Override
+    public String toString() {
+        String signature = this.returnType + " " + this.name + "(";
+        for (int i = 0; i < this.parameterTypes.length; i++) {
+            signature += this.parameterTypes[i];
+            if (i < this.parameterTypes.length - 1) {
+                signature += ",";
+            }
+        }
+        return signature + ")";
+    }
+    
+}

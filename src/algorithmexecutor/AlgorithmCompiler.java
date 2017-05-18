@@ -27,8 +27,10 @@ import algorithmexecutor.exceptions.ParseReturnException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.Signature;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,10 +41,10 @@ public abstract class AlgorithmCompiler {
 
     public final static List<Algorithm> STORED_ALGORITHMS = new ArrayList<>();
 
-    public final static List<String> STORED_ALGORITHMS_SIGNATURES = new ArrayList<>();
+    private final static List<Signature> STORED_ALGORITHM_SIGNATURES = new ArrayList<>();
 
     private static void parseAlgorithmSignatures(String input) throws AlgorithmCompileException {
-        STORED_ALGORITHMS_SIGNATURES.clear();
+        STORED_ALGORITHM_SIGNATURES.clear();
 
         if (input.isEmpty()) {
             return;
@@ -60,7 +62,7 @@ public abstract class AlgorithmCompiler {
                 bracketCounter--;
             }
             if (bracketCounter == 0 && beginPassed) {
-                STORED_ALGORITHMS_SIGNATURES.add(parseAlgorithmSignature(input.substring(lastEndOfAlgorithm + 1, i + 1)));
+                STORED_ALGORITHM_SIGNATURES.add(parseAlgorithmSignature(input.substring(lastEndOfAlgorithm + 1, i + 1)));
                 beginPassed = false;
                 lastEndOfAlgorithm = i;
             }
@@ -73,14 +75,14 @@ public abstract class AlgorithmCompiler {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
-        // Prüfung, ob ein Main-Algorithmus existiert.
-        CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
-        // Prüfung, ob ein Main-Algorithmus parameterlos ist.
-        CompilerUtils.checkIfMainAlgorithmContainsNoParameters(CompilerUtils.getMainAlgorithm(STORED_ALGORITHMS));
+        // Prüfung, ob die Signatur des Main-Algorithmus existiert.
+        CompilerUtils.checkIfMainAlgorithmSignatureExists(STORED_ALGORITHM_SIGNATURES);
+        // Prüfung, ob die Signatur ein Main-Algorithmus parameterlos ist.
+        CompilerUtils.checkIfMainAlgorithmSignatureContainsNoParameters(CompilerUtils.getMainAlgorithmSignature(STORED_ALGORITHM_SIGNATURES));
 
     }
 
-    private static String parseAlgorithmSignature(String input) throws AlgorithmCompileException {
+    private static Signature parseAlgorithmSignature(String input) throws AlgorithmCompileException {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {
@@ -109,13 +111,13 @@ public abstract class AlgorithmCompiler {
 
         Identifier[] parameters = getIdentifiersFromParameterStrings(parametersAsStrings, memory);
 
-        String signature = CompilerUtils.getSignature(algName, parameters);
+        Signature signature = CompilerUtils.getSignature(returnType, algName, parameters);
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
         }
-        
+
         return signature;
 
     }
@@ -133,7 +135,7 @@ public abstract class AlgorithmCompiler {
         /* 
         Sämtliche Signaturen ermitteln, damit alle vorhandenen Algorithmennamen 
         bekannt sind, auch wenn diese Compilerfehler enthalten.
-        */
+         */
         parseAlgorithmSignatures(input);
 
         int bracketCounter = 0;
@@ -197,7 +199,7 @@ public abstract class AlgorithmCompiler {
 
         Identifier[] parameters = getIdentifiersFromParameterStrings(parametersAsStrings, memory);
 
-        String signature = CompilerUtils.getSignature(algName, parameters);
+        Signature signature = CompilerUtils.getSignature(returnType, algName, parameters);
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
@@ -279,9 +281,22 @@ public abstract class AlgorithmCompiler {
         }
     }
 
-    private static boolean containsAlgorithmWithSameSignature(String signature) {
+    private static boolean containsAlgorithmSignatureWithSameSignature(Signature signature) {
+        for (Signature sgn : STORED_ALGORITHM_SIGNATURES) {
+            if (sgn.getName().equals(signature.getName())
+                    && Arrays.deepEquals(sgn.getParameterTypes(), signature.getParameterTypes())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsAlgorithmWithSameSignature(Signature signature) {
+        Signature algSignature;
         for (Algorithm alg : STORED_ALGORITHMS) {
-            if (alg.getSignature().equals(signature)) {
+            algSignature = CompilerUtils.getSignature(alg.getReturnType(), alg.getName(), alg.getInputParameters());
+            if (algSignature.getName().equals(signature.getName())
+                    && Arrays.deepEquals(algSignature.getParameterTypes(), signature.getParameterTypes())) {
                 return true;
             }
         }
@@ -415,8 +430,8 @@ public abstract class AlgorithmCompiler {
                 return new AssignValueCommand(identifier, expr);
             } catch (ExpressionException e) {
                 try {
-                    Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
-                    return new AssignValueCommand(identifier, calledAlg);
+                    Signature calledAlgSignature = getSignatureFromAlgorithmCall(assignment[1], memory, type);
+                    return new AssignValueCommand(identifier, calledAlgSignature);
                 } catch (ParseAssignValueException ex) {
                     throw ex;
                 }
@@ -434,12 +449,13 @@ public abstract class AlgorithmCompiler {
                 memory.getMemory().put(identifierName, identifier);
                 return new AssignValueCommand(identifier, boolExpr);
             } catch (BooleanExpressionException e) {
-                try {
-                    Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
-                    return new AssignValueCommand(identifier, calledAlg);
-                } catch (ParseAssignValueException ex) {
-                    throw ex;
-                }
+                throw new ParseAssignValueException(e);
+//                try {
+//                    Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
+//                    return new AssignValueCommand(identifier, calledAlg);
+//                } catch (ParseAssignValueException ex) {
+//                    throw ex;
+//                }
             }
 
         }
@@ -453,12 +469,13 @@ public abstract class AlgorithmCompiler {
             memory.getMemory().put(identifierName, identifier);
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
-            try {
-                Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
-                return new AssignValueCommand(identifier, calledAlg);
-            } catch (ParseAssignValueException ex) {
-                throw ex;
-            }
+            throw new ParseAssignValueException(e);
+//            try {
+//                Algorithm calledAlg = parseAlgorithmCall(assignment[1], memory, type);
+//                return new AssignValueCommand(identifier, calledAlg);
+//            } catch (ParseAssignValueException ex) {
+//                throw ex;
+//            }
         }
 
     }
@@ -548,6 +565,46 @@ public abstract class AlgorithmCompiler {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
             return algorithmInStorage;
+        } catch (AlgorithmCompileException e) {
+            throw new ParseAssignValueException(e);
+        }
+    }
+
+    private static Signature getSignatureFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierTypes returnType) throws ParseAssignValueException {
+        try {
+            String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
+            String algName = algNameAndParams[0];
+            String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
+
+            // Prüfung, ob ein Algorithmus mit diesem Namen bekannt ist.
+            Signature algorithmCandidate = null;
+            boolean candidateFound;
+            for (Signature signature : STORED_ALGORITHM_SIGNATURES) {
+                if (signature.getName().equals(algName) && signature.getParameterTypes().length == params.length) {
+                    candidateFound = true;
+                    for (int i = 0; i < params.length; i++) {
+                        if (memory.getMemory().get(params[i]) == null
+                                || !memory.getMemory().get(params[i]).getType().equals(signature.getParameterTypes()[i])) {
+                            candidateFound = false;
+                        }
+                    }
+                    if (candidateFound) {
+                        // Alle Parameter sind damit automatisch gültige Bezeichner sind.
+                        algorithmCandidate = signature;
+                        break;
+                    }
+                }
+            }
+            if (algorithmCandidate == null) {
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
+            }
+
+            // Prüfung, ob Rückgabewert korrekt ist.
+            if (!algorithmCandidate.getReturnType().equals(returnType)) {
+                // TODO: Fehlermeldung korrigieren.
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            }
+            return algorithmCandidate;
         } catch (AlgorithmCompileException e) {
             throw new ParseAssignValueException(e);
         }

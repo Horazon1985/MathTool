@@ -1,7 +1,7 @@
 <objects>
     <object id = "AC_IDENTIFIER_ALREADY_DECLARED">
-        <German>Identifier [0] ist bereits deklariert.</German>
-        <English>Identifier [0] is already declared.</English>
+        <German>Bezeichner [0] existiert bereits.</German>
+        <English>Identifier [0] already exists.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
@@ -66,7 +66,7 @@
         <Russian>???</Russian>
     </object>
     <object id = "AC_IDENTIFIER_EXPECTED">
-        <German>Identifier erwartet.</German>
+        <German>Bezeichner erwartet.</German>
         <English>Identifier expected.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>

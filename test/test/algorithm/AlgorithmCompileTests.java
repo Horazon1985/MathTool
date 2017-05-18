@@ -151,8 +151,8 @@ public class AlgorithmCompileTests {
     public void parseAlgorithmCallingAnotherAlgorithmTest() {
         String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
                 + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
-//        try {
-//            AlgorithmCompiler.parseAlgorithmFile(input);
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
 //            assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
 //            
 //            Algorithm mainAlg;
@@ -181,9 +181,9 @@ public class AlgorithmCompileTests {
 //            assertEquals(ggtAlg.getCommands().size(), 2);
 //            assertTrue(ggtAlg.getCommands().get(0).isAssignValueCommand());
 //            assertTrue(ggtAlg.getCommands().get(1).isReturnCommand());
-//        } catch (AlgorithmCompileException e) {
-//            fail(input + " konnte nicht geparst werden.");
-//        }
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
     }
     
     @Test

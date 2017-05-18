@@ -121,7 +121,7 @@ public class Algorithm {
             if (this.returnType == null) {
                 return null;
             } else {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_AE_RETURN_TYPE_EXPECTED);
+                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_RETURN_TYPE_EXPECTED);
             }
         }
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));

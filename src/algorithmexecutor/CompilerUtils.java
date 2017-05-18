@@ -13,6 +13,7 @@ import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.Signature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,15 +71,12 @@ public class CompilerUtils {
         return result;
     }
     
-    public static String getSignature(String algName, Identifier[] parameters) {
-        String signature = algName + ReservedChars.OPEN_BRACKET.getValue();
+    public static Signature getSignature(IdentifierTypes returnType, String algName, Identifier[] parameters) {
+        IdentifierTypes[] types = new IdentifierTypes[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            signature += parameters[i].getType();
-            if (i < parameters.length - 1) {
-                signature += ",";
-            }
+            types[i] = parameters[i].getType();
         }
-        return signature + ReservedChars.CLOSE_BRACKET.getValue();
+        return new Signature(returnType, algName, types);
     }
     
     /**
@@ -93,7 +91,7 @@ public class CompilerUtils {
     public static String[] getAlgorithmNameAndParameters(String input) throws AlgorithmCompileException {
 
         // Leerzeichen beseitigen
-        input = input.replaceAll(" ", "");
+        input = CompilerUtils.removeLeadingWhitespaces(input);
 
         String[] result = new String[2];
         int i = input.indexOf(String.valueOf(ReservedChars.OPEN_BRACKET.getValue()));
@@ -148,21 +146,21 @@ public class CompilerUtils {
          */
         int bracketCounter = 0;
         int squareBracketCounter = 0;
-        String currentChar;
+        char currentChar;
         // Jetzt werden die einzelnen Parameter ausgelesen
         for (int i = 0; i < input.length(); i++) {
 
-            currentChar = input.substring(i, i + 1);
-            if (currentChar.equals(ReservedChars.OPEN_BRACKET.getValue())) {
+            currentChar = input.charAt(i);
+            if (currentChar == ReservedChars.OPEN_BRACKET.getValue()) {
                 bracketCounter++;
-            } else if (currentChar.equals(ReservedChars.CLOSE_BRACKET.getValue())) {
+            } else if (currentChar == ReservedChars.CLOSE_BRACKET.getValue()) {
                 bracketCounter--;
-            } else if (currentChar.equals(ReservedChars.OPEN_SQUARE_BRACKET.getValue())) {
+            } else if (currentChar == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter++;
-            } else if (currentChar.equals(ReservedChars.CLOSE_SQUARE_BRACKET.getValue())) {
+            } else if (currentChar == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter--;
             }
-            if (bracketCounter == 0 && squareBracketCounter == 0 && currentChar.equals(ReservedChars.ARGUMENT_SEPARATOR.getValue())) {
+            if (bracketCounter == 0 && squareBracketCounter == 0 && currentChar == ReservedChars.ARGUMENT_SEPARATOR.getValue()) {
                 if (input.substring(startPositionOfCurrentParameter, i).isEmpty()) {
                     throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_EXPECTED);
                 }
@@ -213,10 +211,28 @@ public class CompilerUtils {
         return returnType;
     }
     
+    public static void checkIfMainAlgorithmSignatureExists(List<Signature> signatures) throws AlgorithmCompileException {
+        for (Signature sgn : signatures) {
+            if (sgn.getName().equals(Keywords.MAIN.getValue())) {
+                return;
+            }
+        }
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+    }
+
     public static void checkIfMainAlgorithmExists(List<Algorithm> algorithms) throws AlgorithmCompileException {
         for (Algorithm alg : algorithms) {
             if (alg.getName().equals(Keywords.MAIN.getValue())) {
                 return;
+            }
+        }
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+    }
+
+    public static Signature getMainAlgorithmSignature(List<Signature> signatures) throws AlgorithmCompileException {
+        for (Signature sgn : signatures) {
+            if (sgn.getName().equals(Keywords.MAIN.getValue())) {
+                return sgn;
             }
         }
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
@@ -231,8 +247,14 @@ public class CompilerUtils {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    public static void checkIfMainAlgorithmContainsNoParameters(Algorithm alg) throws AlgorithmCompileException {
-        if (alg.getName().equals(Keywords.MAIN.getValue()) && alg.getInputParameters().length != 0) {
+    public static void checkIfMainAlgorithmSignatureContainsNoParameters(Signature mainAlgSignature) throws AlgorithmCompileException {
+        if (mainAlgSignature.getName().equals(Keywords.MAIN.getValue()) && mainAlgSignature.getParameterTypes().length != 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+    }
+
+    public static void checkIfMainAlgorithmContainsNoParameters(Algorithm mainAlg) throws AlgorithmCompileException {
+        if (mainAlg.getName().equals(Keywords.MAIN.getValue()) && mainAlg.getInputParameters().length != 0) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
         }
     }

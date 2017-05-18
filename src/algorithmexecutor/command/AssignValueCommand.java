@@ -14,6 +14,7 @@ import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.Signature;
 import exceptions.EvaluationException;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
-    private String targetAlgorithmSignature;
+    private Signature targetAlgorithmSignature;
     private Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
@@ -32,6 +33,15 @@ public class AssignValueCommand extends AlgorithmCommand {
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
         this.targetAlgorithm = null;
+    }
+
+    public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature) throws AlgorithmCompileException {
+        if (!areTypesCompatible(identifierSrc, targetAlgorithmSignature.getReturnType())) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
+        }
+        this.identifierSrc = identifierSrc;
+        this.targetExpression = null;
+        this.targetAlgorithmSignature = targetAlgorithmSignature;
     }
 
     public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
@@ -96,7 +106,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
         for (String var : varsInTargetExpr) {
             if (!memory.containsIdentifier(var)) {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.UNKNOWS_IDENTIFIER);
+                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_UNKNOWN_IDENTIFIER);
             }
         }
     }
