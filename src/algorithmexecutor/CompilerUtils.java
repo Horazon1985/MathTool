@@ -202,6 +202,17 @@ public class CompilerUtils {
 
     }
     
+    public static IdentifierTypes getReturnTypeFromAlgorithmDeclaration(String input) {
+        IdentifierTypes returnType = null;
+        for (IdentifierTypes type : IdentifierTypes.values()) {
+            if (input.startsWith(type.toString())) {
+                returnType = type;
+                break;
+            }
+        }
+        return returnType;
+    }
+    
     public static void checkIfMainAlgorithmExists(List<Algorithm> algorithms) throws AlgorithmCompileException {
         for (Algorithm alg : algorithms) {
             if (alg.getName().equals(Keywords.MAIN.getValue())) {

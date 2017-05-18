@@ -48,9 +48,6 @@ public abstract class AlgorithmCompiler {
             return;
         }
 
-        // Formatierung.
-        input = CompilerUtils.preprocessAlgorithm(input);
-
         int bracketCounter = 0;
         boolean beginPassed = false;
         int lastEndOfAlgorithm = -1;
@@ -63,8 +60,7 @@ public abstract class AlgorithmCompiler {
                 bracketCounter--;
             }
             if (bracketCounter == 0 && beginPassed) {
-
-//                STORED_ALGORITHMS_SIGNATURES.add(parseAlgorithm(input.substring(lastEndOfAlgorithm + 1, i + 1)));
+                STORED_ALGORITHMS_SIGNATURES.add(parseAlgorithmSignature(input.substring(lastEndOfAlgorithm + 1, i + 1)));
                 beginPassed = false;
                 lastEndOfAlgorithm = i;
             }
@@ -84,7 +80,7 @@ public abstract class AlgorithmCompiler {
 
     }
 
-    public static String parseAlgorithmSignature(String input) throws AlgorithmCompileException {
+    private static String parseAlgorithmSignature(String input) throws AlgorithmCompileException {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {
@@ -97,23 +93,12 @@ public abstract class AlgorithmCompiler {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_END_BEFORE_BEGIN);
         }
 
-        // Rückgabewert und Signatur des Algorithmus parsen.
-        input = removeLeadingWhitespaces(input);
-
-        // Rückgabewert ermitteln.
-        IdentifierTypes returnType = null;
-        for (IdentifierTypes type : IdentifierTypes.values()) {
-            if (input.startsWith(type.toString())) {
-                returnType = type;
-                break;
-            }
-        }
-
+        // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
+        IdentifierTypes returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
         // Signatur ermitteln.
         if (returnType != null) {
             input = input.substring(returnType.toString().length());
         }
-        input = removeLeadingWhitespaces(input);
         String candidateForSignature = input.substring(0, input.indexOf(ReservedChars.BEGIN.getValue()));
 
         String[] algNameAndParameters = CompilerUtils.getAlgorithmNameAndParameters(candidateForSignature);
@@ -127,9 +112,9 @@ public abstract class AlgorithmCompiler {
         String signature = CompilerUtils.getSignature(algName, parameters);
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
-//        if (containsAlgorithmWithSameSignature(signature)) {
-//            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
-//        }
+        if (containsAlgorithmWithSameSignature(signature)) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
+        }
         
         return signature;
 
@@ -144,6 +129,12 @@ public abstract class AlgorithmCompiler {
 
         // Formatierung.
         input = CompilerUtils.preprocessAlgorithm(input);
+
+        /* 
+        Sämtliche Signaturen ermitteln, damit alle vorhandenen Algorithmennamen 
+        bekannt sind, auch wenn diese Compilerfehler enthalten.
+        */
+        parseAlgorithmSignatures(input);
 
         int bracketCounter = 0;
         boolean beginPassed = false;
@@ -190,23 +181,12 @@ public abstract class AlgorithmCompiler {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_END_BEFORE_BEGIN);
         }
 
-        // Rückgabewert und Signatur des Algorithmus parsen.
-        input = removeLeadingWhitespaces(input);
-
-        // Rückgabewert ermitteln.
-        IdentifierTypes returnType = null;
-        for (IdentifierTypes type : IdentifierTypes.values()) {
-            if (input.startsWith(type.toString())) {
-                returnType = type;
-                break;
-            }
-        }
-
+        // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
+        IdentifierTypes returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
         // Signatur ermitteln.
         if (returnType != null) {
             input = input.substring(returnType.toString().length());
         }
-        input = removeLeadingWhitespaces(input);
         String candidateForSignature = input.substring(0, input.indexOf(ReservedChars.BEGIN.getValue()));
 
         String[] algNameAndParameters = CompilerUtils.getAlgorithmNameAndParameters(candidateForSignature);
@@ -259,13 +239,6 @@ public abstract class AlgorithmCompiler {
         checkAlgorithmForPlausibility(alg);
 
         return alg;
-    }
-
-    private static String removeLeadingWhitespaces(String input) {
-        while (input.startsWith(" ")) {
-            input = input.substring(1);
-        }
-        return input;
     }
 
     private static Identifier[] getIdentifiersFromParameterStrings(String[] parameterStrings, AlgorithmMemory memory) throws AlgorithmCompileException {
