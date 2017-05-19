@@ -5,7 +5,7 @@ import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.ControlStructure;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
@@ -70,15 +70,15 @@ public class CompilerUtils {
         } while (!result.equals(input));
         return result;
     }
-    
-    public static Signature getSignature(IdentifierTypes returnType, String algName, Identifier[] parameters) {
-        IdentifierTypes[] types = new IdentifierTypes[parameters.length];
+
+    public static Signature getSignature(IdentifierType returnType, String algName, Identifier[] parameters) {
+        IdentifierType[] types = new IdentifierType[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             types[i] = parameters[i].getType();
         }
         return new Signature(returnType, algName, types);
     }
-    
+
     /**
      * Der Algorithmusname und die Parameter in der Befehlsklammer werden
      * ausgelesen und zurückgegeben.<br>
@@ -199,10 +199,10 @@ public class CompilerUtils {
         return resultParametersAsArray;
 
     }
-    
-    public static IdentifierTypes getReturnTypeFromAlgorithmDeclaration(String input) {
-        IdentifierTypes returnType = null;
-        for (IdentifierTypes type : IdentifierTypes.values()) {
+
+    public static IdentifierType getReturnTypeFromAlgorithmDeclaration(String input) {
+        IdentifierType returnType = null;
+        for (IdentifierType type : IdentifierType.values()) {
             if (input.startsWith(type.toString())) {
                 returnType = type;
                 break;
@@ -210,7 +210,7 @@ public class CompilerUtils {
         }
         return returnType;
     }
-    
+
     public static void checkIfMainAlgorithmSignatureExists(List<Signature> signatures) throws AlgorithmCompileException {
         for (Signature sgn : signatures) {
             if (sgn.getName().equals(Keywords.MAIN.getValue())) {
@@ -272,7 +272,30 @@ public class CompilerUtils {
         }
     }
 
-    public static void checkForCorrectReturnType(List<AlgorithmCommand> commands, IdentifierTypes returnType) throws AlgorithmCompileException {
+    public static void checkForContainingReturnCommand(List<AlgorithmCommand> commands, IdentifierType returnType) throws AlgorithmCompileException {
+        if (returnType == null) {
+            return;
+        }
+        if (commands.isEmpty()) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        }
+        AlgorithmCommand lastCommand = commands.get(commands.size() - 1);
+        if (!lastCommand.isReturnCommand()) {
+            /* 
+            Nur bei If-Else-Kontrollstrukturen müssen beide Blöcke einen Return-Befehl 
+            am Ende haben. In allen anderen Fällen wird ein Fehler geworfen.
+             */
+            if (!lastCommand.isIfElseControlStructure()) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            }
+            List<AlgorithmCommand> commandsIfPart = ((IfElseControlStructure) lastCommand).getCommandsIfPart();
+            List<AlgorithmCommand> commandsElsePart = ((IfElseControlStructure) lastCommand).getCommandsElsePart();
+            checkForContainingReturnCommand(commandsIfPart, null);
+            checkForContainingReturnCommand(commandsElsePart, null);
+        }
+    }
+
+    public static void checkForCorrectReturnType(List<AlgorithmCommand> commands, IdentifierType returnType) throws AlgorithmCompileException {
         Identifier returnIdentifier;
         for (int i = 0; i < commands.size(); i++) {
             if (commands.get(i).isReturnCommand() && ((ReturnCommand) commands.get(i)).getIdentifier() != null) {
@@ -337,8 +360,8 @@ public class CompilerUtils {
         return valuesMap;
     }
 
-    public static Map<String, IdentifierTypes> extractTypesOfMemory(AlgorithmMemory memory) {
-        Map<String, IdentifierTypes> valuesMap = new HashMap<>();
+    public static Map<String, IdentifierType> extractTypesOfMemory(AlgorithmMemory memory) {
+        Map<String, IdentifierType> valuesMap = new HashMap<>();
         for (String identifierName : memory.getMemory().keySet()) {
             valuesMap.put(identifierName, memory.getMemory().get(identifierName).getType());
         }

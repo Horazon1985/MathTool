@@ -4,7 +4,7 @@ import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.CompilerUtils;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.WhileControlStructure;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.model.Algorithm;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +36,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 2);
@@ -70,7 +70,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 3);
@@ -92,7 +92,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 4);
@@ -111,7 +111,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.MATRIX_EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierType.MATRIX_EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 3);
@@ -133,7 +133,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             Algorithm alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
-            assertEquals(alg.getReturnType(), IdentifierTypes.EXPRESSION);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(alg.getName(), "main");
             assertEquals(alg.getInputParameters().length, 0);
             assertEquals(alg.getCommands().size(), 3);
@@ -206,5 +206,14 @@ public class AlgorithmCompileTests {
         }
     }
 
+    @Test
+    public void parseAlgorithmWithoutReturnCommandTest() {
+        String input = "expression main(){expression x=2;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz fehlendem 'return' kompiliert.");
+        } catch (AlgorithmCompileException e) {
+        }
+    }
     
 }

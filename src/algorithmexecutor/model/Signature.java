@@ -1,16 +1,16 @@
 package algorithmexecutor.model;
 
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class Signature {
 
     private final String name;
-    private final IdentifierTypes[] parameterTypes;
-    private final IdentifierTypes returnType;
+    private final IdentifierType[] parameterTypes;
+    private final IdentifierType returnType;
 
-    public Signature(IdentifierTypes returnType, String name, IdentifierTypes[] parameterTypes) {
+    public Signature(IdentifierType returnType, String name, IdentifierType[] parameterTypes) {
         this.name = name;
         this.parameterTypes = parameterTypes;
         this.returnType = returnType;
@@ -20,11 +20,11 @@ public class Signature {
         return name;
     }
 
-    public IdentifierTypes[] getParameterTypes() {
+    public IdentifierType[] getParameterTypes() {
         return parameterTypes;
     }
 
-    public IdentifierTypes getReturnType() {
+    public IdentifierType getReturnType() {
         return returnType;
     }
 

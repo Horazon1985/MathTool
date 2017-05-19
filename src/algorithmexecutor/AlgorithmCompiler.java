@@ -12,7 +12,7 @@ import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
@@ -96,7 +96,7 @@ public abstract class AlgorithmCompiler {
         }
 
         // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
-        IdentifierTypes returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
+        IdentifierType returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
         // Signatur ermitteln.
         if (returnType != null) {
             input = input.substring(returnType.toString().length());
@@ -184,7 +184,7 @@ public abstract class AlgorithmCompiler {
         }
 
         // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
-        IdentifierTypes returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
+        IdentifierType returnType = CompilerUtils.getReturnTypeFromAlgorithmDeclaration(input);
         // Signatur ermitteln.
         if (returnType != null) {
             input = input.substring(returnType.toString().length());
@@ -245,12 +245,12 @@ public abstract class AlgorithmCompiler {
 
     private static Identifier[] getIdentifiersFromParameterStrings(String[] parameterStrings, AlgorithmMemory memory) throws AlgorithmCompileException {
         Identifier[] resultIdentifiers = new Identifier[parameterStrings.length];
-        IdentifierTypes parameterType;
+        IdentifierType parameterType;
         String parameterName;
         for (int i = 0; i < parameterStrings.length; i++) {
 
             parameterType = null;
-            for (IdentifierTypes type : IdentifierTypes.values()) {
+            for (IdentifierType type : IdentifierType.values()) {
                 if (parameterStrings[i].startsWith(type.toString() + " ")) {
                     parameterType = type;
                     break;
@@ -334,6 +334,9 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(Algorithm alg) throws AlgorithmCompileException {
+        // Prüfung, ob Wertrückgabe immer erfolgt.
+        CompilerUtils.checkForContainingReturnCommand(alg.getCommands(), alg.getReturnType());
+        // Prüfung auf korrekten Rückgabewert.
         CompilerUtils.checkForCorrectReturnType(alg.getCommands(), alg.getReturnType());
     }
 

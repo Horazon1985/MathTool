@@ -12,7 +12,7 @@ import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
@@ -76,7 +76,7 @@ public abstract class AlgorithmCommandCompiler {
 
     private static AlgorithmCommand parseDeclareIdentifierCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
         // Typ ermitteln. Dieser ist != null, wenn es sich definitiv um eine Identifierdeklaration handelt.
-        IdentifierTypes type = getTypeIfIsValidDeclareIdentifierCommand(line);
+        IdentifierType type = getTypeIfIsValidDeclareIdentifierCommand(line);
         if (type == null) {
             throw new NotDesiredCommandException();
         }
@@ -94,8 +94,8 @@ public abstract class AlgorithmCommandCompiler {
         return new DeclareIdentifierCommand(identifier, alg);
     }
 
-    private static IdentifierTypes getTypeIfIsValidDeclareIdentifierCommand(String line) {
-        for (IdentifierTypes type : IdentifierTypes.values()) {
+    private static IdentifierType getTypeIfIsValidDeclareIdentifierCommand(String line) {
+        for (IdentifierType type : IdentifierType.values()) {
             if (line.startsWith(type.toString() + " ")) {
                 return type;
             }
@@ -111,13 +111,13 @@ public abstract class AlgorithmCommandCompiler {
         String[] assignment = line.split(Operators.DEFINE.getValue());
 
         // Linke Seite behandeln.
-        IdentifierTypes type = null;
-        if (assignment[0].startsWith(IdentifierTypes.EXPRESSION.toString() + " ")) {
-            type = IdentifierTypes.EXPRESSION;
-        } else if (assignment[0].startsWith(IdentifierTypes.BOOLEAN_EXPRESSION.toString() + " ")) {
-            type = IdentifierTypes.BOOLEAN_EXPRESSION;
-        } else if (assignment[0].startsWith(IdentifierTypes.MATRIX_EXPRESSION.toString() + " ")) {
-            type = IdentifierTypes.MATRIX_EXPRESSION;
+        IdentifierType type = null;
+        if (assignment[0].startsWith(IdentifierType.EXPRESSION.toString() + " ")) {
+            type = IdentifierType.EXPRESSION;
+        } else if (assignment[0].startsWith(IdentifierType.BOOLEAN_EXPRESSION.toString() + " ")) {
+            type = IdentifierType.BOOLEAN_EXPRESSION;
+        } else if (assignment[0].startsWith(IdentifierType.MATRIX_EXPRESSION.toString() + " ")) {
+            type = IdentifierType.MATRIX_EXPRESSION;
         }
 
         String identifierName;
@@ -143,7 +143,7 @@ public abstract class AlgorithmCommandCompiler {
 
         // Rechte Seite behandeln.
         Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
-        if (type == IdentifierTypes.EXPRESSION) {
+        if (type == IdentifierType.EXPRESSION) {
 
             // Fall: Arithmetischer / Analytischer Ausdruck.
             try {
@@ -164,11 +164,11 @@ public abstract class AlgorithmCommandCompiler {
                 }
             }
 
-        } else if (type == IdentifierTypes.BOOLEAN_EXPRESSION) {
+        } else if (type == IdentifierType.BOOLEAN_EXPRESSION) {
 
             // Fall: boolscher Ausdruck.
             try {
-                Map<String, IdentifierTypes> valuesMap = CompilerUtils.extractTypesOfMemory(memory);
+                Map<String, IdentifierType> valuesMap = CompilerUtils.extractTypesOfMemory(memory);
                 BooleanExpression boolExpr = BooleanExpression.build(assignment[1], VALIDATOR, valuesMap);
                 Set<String> vars = boolExpr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), memory);
@@ -191,8 +191,8 @@ public abstract class AlgorithmCommandCompiler {
         try {
             MatrixExpression matExpr = MatrixExpression.build(assignment[1], VALIDATOR, VALIDATOR);
             checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), memory);
-            areIdentifiersOfCorrectType(IdentifierTypes.EXPRESSION, matExpr.getContainedExpressionVars(), memory);
-            areIdentifiersOfCorrectType(IdentifierTypes.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), memory);
+            areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), memory);
+            areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), memory);
             memory.getMemory().put(identifierName, identifier);
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
@@ -234,13 +234,13 @@ public abstract class AlgorithmCommandCompiler {
 
     private static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
-            if (!memory.getMemory().containsKey(var) || memory.getMemory().get(var).getType() != IdentifierTypes.EXPRESSION) {
+            if (!memory.getMemory().containsKey(var) || memory.getMemory().get(var).getType() != IdentifierType.EXPRESSION) {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
             }
         }
     }
 
-    private static void areIdentifiersOfCorrectType(IdentifierTypes type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
+    private static void areIdentifiersOfCorrectType(IdentifierType type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (memory.getMemory().get(var).getType() != type) {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES, memory.getMemory().get(var).getType(), type);
@@ -248,7 +248,7 @@ public abstract class AlgorithmCommandCompiler {
         }
     }
 
-    private static Algorithm parseAlgorithmCall(String input, AlgorithmMemory memory, IdentifierTypes returnType) throws ParseAssignValueException {
+    private static Algorithm parseAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
         try {
             String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
             String algName = algNameAndParams[0];
@@ -297,7 +297,7 @@ public abstract class AlgorithmCommandCompiler {
         }
     }
 
-    private static Signature getSignatureFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierTypes returnType) throws ParseAssignValueException {
+    private static Signature getSignatureFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
         try {
             String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
             String algName = algNameAndParams[0];
@@ -389,7 +389,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
-        Map<String, IdentifierTypes> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
         BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
@@ -473,7 +473,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String booleanConditionString = line.substring((Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
-        Map<String, IdentifierTypes> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
         BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "while(boolsche Bedingung){ ..." beginnt.

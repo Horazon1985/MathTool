@@ -4,7 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
@@ -27,7 +27,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     private Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
-        if (!areTypesCompatible(identifierSrc, IdentifierTypes.identifierTypeOf(targetExpression))) {
+        if (!areTypesCompatible(identifierSrc, IdentifierType.identifierTypeOf(targetExpression))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
@@ -53,7 +53,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         this.targetAlgorithm = targetAlgorithm;
     }
 
-    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierTypes targetType) {
+    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierType targetType) {
         return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 

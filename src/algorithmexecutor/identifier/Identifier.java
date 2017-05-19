@@ -3,7 +3,7 @@ package algorithmexecutor.identifier;
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.condition.BooleanExpression;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import java.util.Collections;
@@ -11,16 +11,16 @@ import java.util.Objects;
 
 public class Identifier {
 
-    private final IdentifierTypes type;
+    private final IdentifierType type;
     private final String name;
     private AbstractExpression value;
     
-    private Identifier(IdentifierTypes type, String name) {
+    private Identifier(IdentifierType type, String name) {
         this.type = type;
         this.name = name;
     }
 
-    private Identifier(Algorithm alg, IdentifierTypes type, String name) {
+    private Identifier(Algorithm alg, IdentifierType type, String name) {
         this.type = type;
         this.name = name;
         AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
@@ -30,13 +30,13 @@ public class Identifier {
         }
     }
 
-    private Identifier(IdentifierTypes type, String name, AbstractExpression value) {
+    private Identifier(IdentifierType type, String name, AbstractExpression value) {
         this.type = type;
         this.name = name;
         this.value = value;
     }
 
-    private Identifier(Algorithm alg, IdentifierTypes type, String name, AbstractExpression value) {
+    private Identifier(Algorithm alg, IdentifierType type, String name, AbstractExpression value) {
         this.type = type;
         this.name = name;
         this.value = value;
@@ -47,7 +47,7 @@ public class Identifier {
         }
     }
 
-    public IdentifierTypes getType() {
+    public IdentifierType getType() {
         return type;
     }
 
@@ -99,25 +99,25 @@ public class Identifier {
                 + ", value = " + this.value + "]";
     }
 
-    public static Identifier createIdentifier(String identifierName, IdentifierTypes type) {
+    public static Identifier createIdentifier(String identifierName, IdentifierType type) {
         return new Identifier(type, identifierName);
     }
     
-    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type) {
+    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type) {
         if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
             return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
         }
         return new Identifier(alg, type, identifierName);
     }
 
-    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type, AbstractExpression value) {
+    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type, AbstractExpression value) {
         if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
             return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
         }
         return new Identifier(alg, type, identifierName, value);
     }
 
-    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierTypes type, BooleanExpression booleanExpression) {
+    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type, BooleanExpression booleanExpression) {
         if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
             return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
         }

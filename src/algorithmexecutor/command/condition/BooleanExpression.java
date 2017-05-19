@@ -9,7 +9,7 @@ import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecutor.enums.ComparingOperators;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
@@ -39,7 +39,7 @@ public abstract class BooleanExpression implements AbstractExpression {
     }
     
     public static BooleanExpression build(String input, IdentifierValidator validator, 
-            Map<String, IdentifierTypes> typesMap) throws BooleanExpressionException {
+            Map<String, IdentifierType> typesMap) throws BooleanExpressionException {
 
 //        input = convertOperators(input.replaceAll(" ", "").toLowerCase());
 
@@ -204,7 +204,7 @@ public abstract class BooleanExpression implements AbstractExpression {
         return input.contains(op.getValue()) && input.length() - input.replaceAll(op.getValue(), "").length() == op.getValue().length();
     }
     
-    private static AbstractExpression parseAbstractExpression(String input, IdentifierValidator validator, Map<String, IdentifierTypes> typesMap) {
+    private static AbstractExpression parseAbstractExpression(String input, IdentifierValidator validator, Map<String, IdentifierType> typesMap) {
         // In valuesMap werden nur Variablen aufgenommen.
         AbstractExpression parsedInput;
         try {
@@ -238,9 +238,9 @@ public abstract class BooleanExpression implements AbstractExpression {
         return null;
     }
     
-    private static boolean doesValuesMapContainAllVarsOfCorrectType(AbstractExpression abstrExpr, Map<String, IdentifierTypes> typesMap) {
+    private static boolean doesValuesMapContainAllVarsOfCorrectType(AbstractExpression abstrExpr, Map<String, IdentifierType> typesMap) {
         Set<String> vars = abstrExpr.getContainedVars();
-        IdentifierTypes type = IdentifierTypes.identifierTypeOf(abstrExpr);
+        IdentifierType type = IdentifierType.identifierTypeOf(abstrExpr);
         for (String var : vars) {
             if (!typesMap.containsKey(var)) {
                 return false;

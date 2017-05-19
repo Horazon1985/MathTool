@@ -4,18 +4,18 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 
-public enum IdentifierTypes {
+public enum IdentifierType {
 
     EXPRESSION, BOOLEAN_EXPRESSION, MATRIX_EXPRESSION;
 
-    public boolean isSameOrGeneralTypeOf(IdentifierTypes type) {
+    public boolean isSameOrGeneralTypeOf(IdentifierType type) {
         if (type == EXPRESSION && (this == EXPRESSION || this == MATRIX_EXPRESSION)) {
             return true;
         }
         return this == type;
     }
 
-    public static IdentifierTypes identifierTypeOf(AbstractExpression abstrExpr) {
+    public static IdentifierType identifierTypeOf(AbstractExpression abstrExpr) {
         if (abstrExpr instanceof Expression) {
             return EXPRESSION;
         }

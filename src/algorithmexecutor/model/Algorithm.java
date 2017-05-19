@@ -10,7 +10,7 @@ import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.WhileControlStructure;
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
@@ -24,10 +24,10 @@ public class Algorithm {
 
     private final String name;
     private final Identifier[] inputParameters;
-    private final IdentifierTypes returnType;
+    private final IdentifierType returnType;
     private final List<AlgorithmCommand> commands;
 
-    public Algorithm(String name, Identifier[] inputParameters, IdentifierTypes returnType, List<AlgorithmCommand> commands) {
+    public Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType, List<AlgorithmCommand> commands) {
         this.name = name;
         this.inputParameters = inputParameters;
         this.returnType = returnType;
@@ -36,7 +36,7 @@ public class Algorithm {
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(inputParameters));
     }
 
-    public Algorithm(String name, Identifier[] inputParameters, IdentifierTypes returnType) {
+    public Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType) {
         this(name, inputParameters, returnType, new ArrayList<AlgorithmCommand>());
     }
 
@@ -59,7 +59,7 @@ public class Algorithm {
         return inputParameters;
     }
 
-    public IdentifierTypes getReturnType() {
+    public IdentifierType getReturnType() {
         return returnType;
     }
 

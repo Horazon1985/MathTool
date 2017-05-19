@@ -1,6 +1,6 @@
 package algorithmexecutor.command;
 
-import algorithmexecutor.enums.IdentifierTypes;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
@@ -26,7 +26,7 @@ public class DeclareIdentifierCommand extends AlgorithmCommand {
         this.targetAlgorithm = targetAlgorithm;
     }
 
-    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierTypes targetType) {
+    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierType targetType) {
         return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 
