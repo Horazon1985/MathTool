@@ -1,10 +1,12 @@
 package algorithmexecutor.command;
 
 import algorithmexecutor.AlgorithmCompiler;
+import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExecptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.Signature;
 import exceptions.EvaluationException;
 
 public class VoidCommand extends AlgorithmCommand {
@@ -30,21 +32,19 @@ public class VoidCommand extends AlgorithmCommand {
         return "VoidCommand[name = " + this.name + ", identifiers = " + this.identifiers + "]";
     }
     
-    public String getSignature() {
-        String signature = this.name + "(";
+    public Signature getSignature() {
+        IdentifierType[] identifierTypes = new IdentifierType[this.identifiers.length];
         for (int i = 0; i < this.identifiers.length; i++) {
-            signature += this.identifiers[i].getType();
-            if (i < this.identifiers.length - 1) {
-                signature += ",";
-            }
-        }   
-        return signature + ")";
+            identifierTypes[i] = this.identifiers[i].getType();
+        }
+        return new Signature(null, this.name, identifierTypes);
     }
 
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
         for (Algorithm alg : AlgorithmCompiler.STORED_ALGORITHMS) {
             if (alg.getSignature().equals(getSignature()) && alg.getReturnType() == null) {
+                // TO DO: Algorithmenparameter durch Bezeichnerwerte ersetzen. 
                 alg.execute();
                 return null;
             }

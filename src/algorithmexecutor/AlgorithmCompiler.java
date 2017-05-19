@@ -1,39 +1,21 @@
 package algorithmexecutor;
 
-import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.IdentifierValidator;
-import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
-import algorithmexecutor.command.DeclareIdentifierCommand;
-import algorithmexecutor.command.IfElseControlStructure;
-import algorithmexecutor.command.ReturnCommand;
-import algorithmexecutor.command.WhileControlStructure;
-import algorithmexecutor.command.condition.BooleanExpression;
-import algorithmexecutor.enums.ComparingOperators;
+import algorithmexecutor.command.ControlStructure;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
-import algorithmexecutor.enums.Operators;
 import algorithmexecutor.enums.ReservedChars;
-import algorithmexecutor.exceptions.BlockCompileException;
-import algorithmexecutor.exceptions.BooleanExpressionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.exceptions.DeclareIdentifierException;
-import algorithmexecutor.exceptions.NotDesiredCommandException;
-import algorithmexecutor.exceptions.ParseAssignValueException;
-import algorithmexecutor.exceptions.ParseControlStructureException;
-import algorithmexecutor.exceptions.ParseReturnException;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
-import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public abstract class AlgorithmCompiler {
 
@@ -239,7 +221,9 @@ public abstract class AlgorithmCompiler {
 
         // Plausibilitätschecks.
         checkAlgorithmForPlausibility(alg);
-
+        // Zum Schluss: bei Bezeichnerzuordnungen Algorithmensignaturen durch Algorithmenreferenzen ersetzen.
+        replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(alg.getCommands());
+        
         return alg;
     }
 
@@ -344,4 +328,30 @@ public abstract class AlgorithmCompiler {
         CompilerUtils.checkForUnreachableCodeInBlock(alg.getCommands());
     }
 
+    private static void replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(List<AlgorithmCommand> commands) {
+        for (AlgorithmCommand command : commands) {
+            if (command.isAssignValueCommand() && ((AssignValueCommand) command).getTargetAlgorithmSignature() != null) {
+                
+                Signature signature = ((AssignValueCommand) command).getTargetAlgorithmSignature();
+                Algorithm calledAlg = null;
+                for (Algorithm alg : STORED_ALGORITHMS) {
+                    if (alg.getSignature().equals(signature)) {
+                        calledAlg = alg;
+                        break;
+                    }
+                }
+                // Ab hier ist calledAlg != null (dies wurde durch andere, vorherige Prüfungen sichergestellt).
+                
+                
+                
+            } else if (command.isControlStructure()) {
+                // Analoges bei allen Unterblöcken durchführen.
+                for (List<AlgorithmCommand> commandBlock : ((ControlStructure) command).getCommandBlocks()) {
+                    replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(commandBlock);
+                }
+            }
+        }
+    }
+        
+    
 }

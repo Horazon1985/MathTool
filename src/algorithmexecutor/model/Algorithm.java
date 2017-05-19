@@ -40,15 +40,12 @@ public class Algorithm {
         this(name, inputParameters, returnType, new ArrayList<AlgorithmCommand>());
     }
 
-    public String getSignature() {
-        String signature = this.name + "(";
+    public Signature getSignature() {
+        IdentifierType[] identifierTypes = new IdentifierType[this.inputParameters.length];
         for (int i = 0; i < this.inputParameters.length; i++) {
-            signature += this.inputParameters[i].getType();
-            if (i < this.inputParameters.length - 1) {
-                signature += ",";
-            }
+            identifierTypes[i] = this.inputParameters[i].getType();
         }
-        return signature + ")";
+        return new Signature(this.returnType, this.name, identifierTypes);
     }
 
     public String getName() {

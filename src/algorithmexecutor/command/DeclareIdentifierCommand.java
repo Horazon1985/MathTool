@@ -11,23 +11,9 @@ import algorithmexecutor.AlgorithmExecutor;
 public class DeclareIdentifierCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
-    private final Algorithm targetAlgorithm;
 
     public DeclareIdentifierCommand(Identifier identifierSrc) {
         this.identifierSrc = identifierSrc;
-        this.targetAlgorithm = null;
-    }
-
-    public DeclareIdentifierCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
-        if (!areTypesCompatible(identifierSrc, targetAlgorithm.getReturnType())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
-        }
-        this.identifierSrc = identifierSrc;
-        this.targetAlgorithm = targetAlgorithm;
-    }
-
-    private boolean areTypesCompatible(Identifier identifierSrc, IdentifierType targetType) {
-        return identifierSrc.getType().isSameOrGeneralTypeOf(targetType);
     }
 
     public Identifier getIdentifierSrc() {
@@ -36,12 +22,7 @@ public class DeclareIdentifierCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        String command = "DeclareIdentifierCommand[identifierSrc = " + this.identifierSrc;
-        if (this.targetAlgorithm != null) {
-            return command + ", targetAlgorithm = " + this.targetAlgorithm.getSignature() + "]";
-        }
-        return command + "]";
-
+        return "DeclareIdentifierCommand[identifierSrc = " + this.identifierSrc + "]";
     }
 
     @Override

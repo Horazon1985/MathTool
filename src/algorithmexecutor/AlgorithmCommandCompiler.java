@@ -91,7 +91,7 @@ public abstract class AlgorithmCommandCompiler {
         }
         Identifier identifier = Identifier.createIdentifier(alg, identifierName, type);
         memory.getMemory().put(identifierName, identifier);
-        return new DeclareIdentifierCommand(identifier, alg);
+        return new DeclareIdentifierCommand(identifier);
     }
 
     private static IdentifierType getTypeIfIsValidDeclareIdentifierCommand(String line) {
