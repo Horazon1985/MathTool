@@ -149,7 +149,8 @@ public abstract class AlgorithmCompiler {
         CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
         // Prüfung, ob ein Main-Algorithmus parameterlos ist.
         CompilerUtils.checkIfMainAlgorithmContainsNoParameters(CompilerUtils.getMainAlgorithm(STORED_ALGORITHMS));
-
+        // Zum Schluss: bei Bezeichnerzuordnungen Algorithmensignaturen durch Algorithmenreferenzen ersetzen.
+        replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands();
     }
 
     public static Algorithm parseAlgorithm(String input) throws AlgorithmCompileException {
@@ -221,10 +222,14 @@ public abstract class AlgorithmCompiler {
 
         // Plausibilitätschecks.
         checkAlgorithmForPlausibility(alg);
-        // Zum Schluss: bei Bezeichnerzuordnungen Algorithmensignaturen durch Algorithmenreferenzen ersetzen.
-        replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(alg.getCommands());
-        
+
         return alg;
+    }
+
+    private static void replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands() {
+        for (Algorithm alg : STORED_ALGORITHMS) {
+            replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(alg.getCommands());
+        }
     }
 
     private static Identifier[] getIdentifiersFromParameterStrings(String[] parameterStrings, AlgorithmMemory memory) throws AlgorithmCompileException {
@@ -265,16 +270,15 @@ public abstract class AlgorithmCompiler {
         }
     }
 
-    private static boolean containsAlgorithmSignatureWithSameSignature(Signature signature) {
-        for (Signature sgn : STORED_ALGORITHM_SIGNATURES) {
-            if (sgn.getName().equals(signature.getName())
-                    && Arrays.deepEquals(sgn.getParameterTypes(), signature.getParameterTypes())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+//    private static boolean containsAlgorithmSignatureWithSameSignature(Signature signature) {
+//        for (Signature sgn : STORED_ALGORITHM_SIGNATURES) {
+//            if (sgn.getName().equals(signature.getName())
+//                    && Arrays.deepEquals(sgn.getParameterTypes(), signature.getParameterTypes())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     private static boolean containsAlgorithmWithSameSignature(Signature signature) {
         Signature algSignature;
         for (Algorithm alg : STORED_ALGORITHMS) {
@@ -329,10 +333,11 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(List<AlgorithmCommand> commands) {
+        AssignValueCommand assignValueCommand;
         for (AlgorithmCommand command : commands) {
             if (command.isAssignValueCommand() && ((AssignValueCommand) command).getTargetAlgorithmSignature() != null) {
-                
-                Signature signature = ((AssignValueCommand) command).getTargetAlgorithmSignature();
+                assignValueCommand = (AssignValueCommand) command;
+                Signature signature = assignValueCommand.getTargetAlgorithmSignature();
                 Algorithm calledAlg = null;
                 for (Algorithm alg : STORED_ALGORITHMS) {
                     if (alg.getSignature().equals(signature)) {
@@ -341,9 +346,7 @@ public abstract class AlgorithmCompiler {
                     }
                 }
                 // Ab hier ist calledAlg != null (dies wurde durch andere, vorherige Prüfungen sichergestellt).
-                
-                
-                
+                assignValueCommand.setTargetAlgorithm(calledAlg);
             } else if (command.isControlStructure()) {
                 // Analoges bei allen Unterblöcken durchführen.
                 for (List<AlgorithmCommand> commandBlock : ((ControlStructure) command).getCommandBlocks()) {
@@ -352,6 +355,5 @@ public abstract class AlgorithmCompiler {
             }
         }
     }
-        
-    
+
 }

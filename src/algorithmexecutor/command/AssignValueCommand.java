@@ -8,7 +8,7 @@ import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.exceptions.ExecutionExecptionTexts;
+import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
@@ -24,6 +24,7 @@ public class AssignValueCommand extends AlgorithmCommand {
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
     private Signature targetAlgorithmSignature;
+    private Identifier[] targetAlgorithmArguments;
     private Algorithm targetAlgorithm;
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
@@ -32,16 +33,16 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
-        this.targetAlgorithm = null;
     }
 
-    public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature) throws AlgorithmCompileException {
+    public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature, Identifier[] targetAlgorithmArguments) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetAlgorithmSignature.getReturnType())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
         this.targetAlgorithmSignature = targetAlgorithmSignature;
+        this.targetAlgorithmArguments = targetAlgorithmArguments;
     }
 
     public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
@@ -73,6 +74,10 @@ public class AssignValueCommand extends AlgorithmCommand {
         return targetAlgorithm;
     }
 
+    public void setTargetAlgorithm(Algorithm targetAlgorithm) {
+        this.targetAlgorithm = targetAlgorithm;
+    }
+
     @Override
     public String toString() {
         String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc
@@ -81,13 +86,17 @@ public class AssignValueCommand extends AlgorithmCommand {
             return command + ", targetAlgorithm = " + this.targetAlgorithm.getSignature().toString() + "]";
         }
         return command + "]";
-
     }
 
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
         Set<String> varsInAlgorithmSignature = new HashSet<>();
+        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AbstractExpression abstrExpr;
         for (Identifier identifier : alg.getInputParameters()) {
-            varsInAlgorithmSignature.addAll(identifier.getValue().getContainedIndeterminates());
+            abstrExpr = memory.getMemory().get(identifier.getName()).getValue();
+            if (abstrExpr != null) {
+                varsInAlgorithmSignature.addAll(abstrExpr.getContainedIndeterminates());
+            }
         }
         return varsInAlgorithmSignature;
     }
@@ -103,6 +112,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         } else {
             Set<String> varsInTargetExpr = getVarsFromAlgorithmParameters(this.targetAlgorithm);
             checkForUnknownIdentifier(alg, varsInTargetExpr);
+            this.targetAlgorithm.initInputParameter(this.targetAlgorithmArguments);
             AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
             this.identifierSrc.setValue(targetExprSimplified);
         }
@@ -114,7 +124,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
         for (String var : varsInTargetExpr) {
             if (!memory.containsIdentifier(var)) {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_UNKNOWN_IDENTIFIER);
+                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_UNKNOWN_IDENTIFIER);
             }
         }
     }

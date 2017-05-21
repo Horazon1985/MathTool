@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JTextPane;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -30,12 +31,12 @@ public class AlgorithmExecutionTests {
     public static void init() {
         AlgorithmOutputPrinter.setOutputArea(new JTextPane());
     }
-    
+
     @Before
     public void teardown() {
         AlgorithmOutputPrinter.clearOutput();
     }
-    
+
     @Test
     public void executeEmptyMainAlgorithmTest() {
         Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
@@ -96,6 +97,30 @@ public class AlgorithmExecutionTests {
             assertTrue(((MatrixExpression) result.getValue()).equals(MatrixExpression.build("[0,1;3,7]")));
         } catch (Exception e) {
             fail();
+        }
+    }
+
+    @Test
+    public void parseAlgorithmCallingAnotherAlgorithmTest() {
+        String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
+                + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
+        Algorithm mainAlg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
+            if (AlgorithmCompiler.STORED_ALGORITHMS.get(0).getName().equals("main")) {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            } else {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+            }
+            Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(mainAlg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("ggt"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("5")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + mainAlg + " konnte nicht ausgeführt werden.");
         }
     }
 
@@ -199,8 +224,7 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
     }
-    
-    
+
     @Test
     public void executeAlgorithmWithWhileControlStructureTest() {
         String input = "expression main(){expression a = 1;while(a<6){a = 2*a;};return a;}";

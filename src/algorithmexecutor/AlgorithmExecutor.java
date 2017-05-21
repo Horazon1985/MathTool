@@ -5,7 +5,7 @@ import algorithmexecutor.command.AssignValueCommand;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.exceptions.ExecutionExecptionTexts;
+import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
@@ -41,27 +41,8 @@ public abstract class AlgorithmExecutor {
             AlgorithmOutputPrinter.printOutput(mainAlg, result);
             return result;
         } catch (AlgorithmCompileException e) {
-            throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_MAIN_NOT_FOUND);
+            throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_MAIN_NOT_FOUND);
         }
-    }
-
-    /**
-     * Gibt den Hauptalgorithmus zurück oder wirft eine
-     * AlgorithmExecutionException, wenn kein Hauptalgorithmus
-     * (MAIN-Algorithmus) in der Liste <code>algorithms</code> vorhanden
-     * ist.<br>
-     * Es können keine zwei MAIN-Algorithmen in <code>algorithms</code>
-     * vorkommen, da dies bereits zur Compilezeit Fehler werfen würde.
-     *
-     * @throws AlgorithmExecutionException
-     */
-    private static Algorithm getMainAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException {
-        for (Algorithm alg : algorithms) {
-            if (alg.getName().equals(Keywords.MAIN.getValue())) {
-                return alg;
-            }
-        }
-        throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_MAIN_NOT_FOUND);
     }
 
     public static Identifier executeBlock(List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {

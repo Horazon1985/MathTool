@@ -155,10 +155,12 @@ public abstract class AlgorithmCommandCompiler {
                 return new AssignValueCommand(identifier, expr);
             } catch (ExpressionException e) {
                 try {
-                    Signature calledAlgSignature = getSignatureFromAlgorithmCall(assignment[1], memory, type);
                     // Kompatibilitätscheck
+                    Signature calledAlgSignature = getSignatureFromAlgorithmCall(assignment[1], memory, type);
+                    // Parameter auslesen
+                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(assignment[1], memory);
                     memory.getMemory().put(identifierName, identifier);
-                    return new AssignValueCommand(identifier, calledAlgSignature);
+                    return new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers);
                 } catch (ParseAssignValueException ex) {
                     throw ex;
                 }
@@ -177,9 +179,12 @@ public abstract class AlgorithmCommandCompiler {
                 return new AssignValueCommand(identifier, boolExpr);
             } catch (BooleanExpressionException e) {
                 try {
+                    // Kompatibilitätscheck
                     Signature calledAlgSignature = getSignatureFromAlgorithmCall(assignment[1], memory, type);
+                    // Parameter auslesen;
+                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(assignment[1], memory);
                     memory.getMemory().put(identifierName, identifier);
-                    return new AssignValueCommand(identifier, calledAlgSignature);
+                    return new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers);
                 } catch (ParseAssignValueException ex) {
                     throw ex;
                 }
@@ -197,9 +202,12 @@ public abstract class AlgorithmCommandCompiler {
             return new AssignValueCommand(identifier, matExpr);
         } catch (ExpressionException e) {
             try {
+                // Kompatibilitätscheck
                 Signature calledAlgSignature = getSignatureFromAlgorithmCall(assignment[1], memory, type);
+                // Parameter auslesen;
+                Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(assignment[1], memory);
                 memory.getMemory().put(identifierName, identifier);
-                return new AssignValueCommand(identifier, calledAlgSignature);
+                return new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers);
             } catch (ParseAssignValueException ex) {
                 throw ex;
             }
@@ -248,50 +256,18 @@ public abstract class AlgorithmCommandCompiler {
         }
     }
 
-    private static Algorithm parseAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
+    private static Identifier[] getParameterFromAlgorithmCall(String input, AlgorithmMemory memory) throws ParseAssignValueException {
         try {
             String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
-            String algName = algNameAndParams[0];
-            String[] params = CompilerUtils.getAlgorithmNameAndParameters(algNameAndParams[1]);
-            // Prüfung, ob ein Algorithmus mit diesem Namen bekannt ist.
-            List<Algorithm> algorithmInStorageCandidates = new ArrayList<>();
-            for (Algorithm alg : STORED_ALGORITHMS) {
-                if (alg.getName().equals(algName) && alg.getInputParameters().length == params.length) {
-                    algorithmInStorageCandidates.add(alg);
-                    break;
-                }
-            }
-
-            // Prüfung, ob alle Parameter gültige Identifier sind.
-            for (String param : params) {
-                if (memory.getMemory().get(param) == null) {
+            String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
+            Identifier[] identifiers = new Identifier[params.length];
+            for (int i = 0; i < params.length; i++) {
+                if (memory.getMemory().get(params[i]) == null) {
                     throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
                 }
+                identifiers[i] = memory.getMemory().get(params[i]);
             }
-
-            // Prüfung auf Signatur.
-            Algorithm algorithmInStorage = null;
-            for (Algorithm alg : algorithmInStorageCandidates) {
-                for (int i = 0; i < alg.getInputParameters().length; i++) {
-                    if (!alg.getInputParameters()[i].getType().equals(memory.getMemory().get(params[i]).getType())) {
-                        break;
-                    } else if (i == alg.getInputParameters().length - 1) {
-                        algorithmInStorage = alg;
-                    }
-                }
-                if (algorithmInStorage != null) {
-                    break;
-                }
-            }
-            if (algorithmInStorage == null) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
-            }
-            // Prüfung, ob Rückgabewert korrekt ist.
-            if (!algorithmInStorage.getReturnType().equals(returnType)) {
-                // TODO: Fehlermeldung korrigieren.
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
-            }
-            return algorithmInStorage;
+            return identifiers;
         } catch (AlgorithmCompileException e) {
             throw new ParseAssignValueException(e);
         }

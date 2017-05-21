@@ -12,7 +12,7 @@ import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.exceptions.ExecutionExecptionTexts;
+import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
@@ -27,7 +27,9 @@ public class Algorithm {
     private final IdentifierType returnType;
     private final List<AlgorithmCommand> commands;
 
-    public Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType, List<AlgorithmCommand> commands) {
+    private Identifier[] inputParameterValues = new Identifier[0];
+    
+    private Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType, List<AlgorithmCommand> commands) {
         this.name = name;
         this.inputParameters = inputParameters;
         this.returnType = returnType;
@@ -62,6 +64,10 @@ public class Algorithm {
 
     public List<AlgorithmCommand> getCommands() {
         return commands;
+    }
+
+    public void setInputParameterValues(Identifier[] inputParameterValues) {
+        this.inputParameterValues = inputParameterValues;
     }
 
     @Override
@@ -112,13 +118,21 @@ public class Algorithm {
         }
     }
 
+    public void initInputParameter(Identifier[] identifiers) {
+        for (int i = 0; i < this.inputParameters.length; i++) {
+            this.inputParameters[i].setValue(identifiers[i].getValue());
+        }
+    }
+    
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
+        // Inputparameter initialisieren (mit Aufrufwerten belegen).
+        initInputParameter(this.inputParameterValues);    
         // Leeren Algorithmus nur im void-Fall akzeptieren.
         if (this.commands.isEmpty()) {
             if (this.returnType == null) {
                 return null;
             } else {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_RETURN_TYPE_EXPECTED);
+                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_RETURN_TYPE_EXPECTED);
             }
         }
         AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
@@ -138,7 +152,7 @@ public class Algorithm {
     private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {
         for (Identifier inputParameter : this.inputParameters) {
             if (inputParameter.getValue() == null) {
-                throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
+                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
             }
         }
     }

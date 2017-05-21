@@ -119,6 +119,20 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "AC_WRONG_NUMBER_OF_INPUT_PARAMETERS">
+        <German>Falsche Anzahl von Parametern: [0] Parameter erwartet, aber [1] Parameter gefunden.</German>
+        <English>Wrong number of parameters: [0] parameters expected, but [1] parameters found.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_WRONG_TYPE_OF_INPUT_PARAMETERS">
+        <German>Falscher Parametertyp: Typ '[0]' erwartet, aber Typ '[1]' gefunden.</German>
+        <English>Wrong type of parameter: Type '[0]' expected, but type '[1]' found.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+
+
 
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>

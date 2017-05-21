@@ -1,6 +1,6 @@
 package algorithmexecutor.exceptions;
 
-public abstract class ExecutionExecptionTexts {
+public abstract class ExecutionExceptionTexts {
     
     public static final String AE_MAIN_NOT_FOUND = "AE_MAIN_NOT_FOUND";
     public static final String AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET = "AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET";

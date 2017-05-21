@@ -22,7 +22,8 @@ public abstract class CompileExceptionTexts {
     public static final String AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END";    
     public static final String AC_KEYWORD_EXPECTED = "AC_KEYWORD_EXPECTED";    
     public static final String AC_MISSING_LINE_SEPARATOR = "AC_MISSING_LINE_SEPARATOR";    
-    
+    public static final String AC_WRONG_NUMBER_OF_INPUT_PARAMETERS = "AC_WRONG_NUMBER_OF_INPUT_PARAMETERS";
+    public static final String AC_WRONG_TYPE_OF_INPUT_PARAMETERS = "AC_WRONG_TYPE_OF_INPUT_PARAMETERS";
     public static final String AC_UNKNOWN_ERROR = "AC_UNKNOWN_ERROR";    
     
 }

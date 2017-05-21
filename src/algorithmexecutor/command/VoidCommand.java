@@ -3,7 +3,7 @@ package algorithmexecutor.command;
 import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.exceptions.ExecutionExecptionTexts;
+import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
@@ -49,7 +49,7 @@ public class VoidCommand extends AlgorithmCommand {
                 return null;
             }
         }
-        throw new AlgorithmExecutionException(ExecutionExecptionTexts.AE_NO_SUCH_COMMAND);
+        throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_NO_SUCH_COMMAND);
     }
     
 }
