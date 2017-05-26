@@ -46,7 +46,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseSimpleAlgorithmTest() {
         String input = "main(){expression a=5;a=a+5;}";
@@ -85,7 +85,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithIdentifierDeclarationAndIfElseTest() {
         String input = "expression main(){expression a=2;expression b;if(a==1){b=7;}else{b=13;}return b;}";
@@ -104,7 +104,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseSimpleAlgorithmWithIfElseForMatrixComparisonTest() {
         String input = "matrixexpression main(){matrixexpression a=[1,1;2,-5]*[3;4];matrixexpression b=[7;15];if(a==b){return a;}else{return b;}}";
@@ -146,7 +146,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmCallingAnotherAlgorithmTest() {
         String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
@@ -154,7 +154,7 @@ public class AlgorithmCompileTests {
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
             assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
-            
+
             Algorithm mainAlg;
             Algorithm ggtAlg;
             if (AlgorithmCompiler.STORED_ALGORITHMS.get(0).getName().equals("main")) {
@@ -173,7 +173,7 @@ public class AlgorithmCompileTests {
             assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
             assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
             assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
-            
+
             // Prüfung für den aufgerufenen Algorithmus "computeggt".
             assertEquals(ggtAlg.getName(), "computeggt");
             assertEquals(ggtAlg.getReturnType(), IdentifierType.EXPRESSION);
@@ -185,7 +185,37 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
+    @Test
+    public void parseAlgorithmCallingAnotherAlgorithmInOneAssignmentTest() {
+        String input = "expression main(){expression ggt = computeggt(15, 25)*exp(2); return ggt;} "
+                + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
+
+            Algorithm mainAlg;
+            Algorithm ggtAlg;
+            if (AlgorithmCompiler.STORED_ALGORITHMS.get(0).getName().equals("main")) {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+                ggtAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+            } else {
+                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+                ggtAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            }
+
+            // Prüfung für den Hauptalgorithmus "main".
+//            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+//            assertEquals(mainAlg.getInputParameters().length, 0);
+//            assertEquals(mainAlg.getCommands().size(), 3);
+//            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+//            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+//            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
     @Test
     public void parseAlgorithmWithCompileErrorCodeTest() {
         String input = "main(){expression a=exp(1)}";
@@ -195,7 +225,7 @@ public class AlgorithmCompileTests {
         } catch (AlgorithmCompileException e) {
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithUnreachableCodeTest() {
         String input = "expression main(){expression a=exp(1);if(a>2){return a;expression b=a+5;}}";
@@ -215,5 +245,5 @@ public class AlgorithmCompileTests {
         } catch (AlgorithmCompileException e) {
         }
     }
-    
+
 }

@@ -28,7 +28,7 @@ public class Algorithm {
     private final List<AlgorithmCommand> commands;
 
     private Identifier[] inputParameterValues = new Identifier[0];
-    
+
     private Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType, List<AlgorithmCommand> commands) {
         this.name = name;
         this.inputParameters = inputParameters;
@@ -119,14 +119,15 @@ public class Algorithm {
     }
 
     public void initInputParameter(Identifier[] identifiers) {
+        AlgorithmMemory memory = new AlgorithmMemory();
+        AlgorithmExecutor.getMemoryMap().put(this, memory);
         for (int i = 0; i < this.inputParameters.length; i++) {
             this.inputParameters[i].setValue(identifiers[i].getValue());
+            memory.addToMemoryInRuntime(identifiers[i]);
         }
     }
-    
+
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
-        // Inputparameter initialisieren (mit Aufrufwerten belegen).
-        initInputParameter(this.inputParameterValues);    
         // Leeren Algorithmus nur im void-Fall akzeptieren.
         if (this.commands.isEmpty()) {
             if (this.returnType == null) {
@@ -135,7 +136,15 @@ public class Algorithm {
                 throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_RETURN_TYPE_EXPECTED);
             }
         }
-        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
+
+        /* 
+        Speicherinitialisierung dürfte eigentlich nur in main() erforderlich sein.
+        Restliche Ausführungen geschehen per Ausruf aus anderen Algorithmen und 
+        dort werden entsprechende Speicher initialisiert.
+         */
+        if (AlgorithmExecutor.getMemoryMap().get(this) == null) {
+            AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
+        }
 
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
         checkForIdentifierWithoutValues();

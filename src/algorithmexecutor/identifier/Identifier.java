@@ -110,18 +110,4 @@ public class Identifier {
         return new Identifier(alg, type, identifierName);
     }
 
-    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type, AbstractExpression value) {
-        if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
-            return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
-        }
-        return new Identifier(alg, type, identifierName, value);
-    }
-
-    public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type, BooleanExpression booleanExpression) {
-        if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
-            return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
-        }
-        return new Identifier(alg, type, identifierName, booleanExpression);
-    }
-    
 }

@@ -17,6 +17,7 @@ import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.JTextPane;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -121,41 +122,6 @@ public class AlgorithmExecutionTests {
             fail(input + " konnte nicht geparst werden.");
         } catch (Exception e) {
             fail("Der Algorithmus " + mainAlg + " konnte nicht ausgeführt werden.");
-        }
-    }
-
-    @Test
-    public void executAlgorithmCallingAnotherAlgorithmTest() {
-        Algorithm mainAlg = new Algorithm(Keywords.MAIN.getValue(), new Identifier[]{}, null);
-
-        Identifier idA = Identifier.createIdentifier(mainAlg, "a", IdentifierType.EXPRESSION);
-        Identifier idB = Identifier.createIdentifier(mainAlg, "b", IdentifierType.EXPRESSION);
-        Identifier idGgt = Identifier.createIdentifier(mainAlg, "ggt", IdentifierType.EXPRESSION);
-        Algorithm calledAlg = new Algorithm("computeggt", new Identifier[]{idA, idB}, IdentifierType.EXPRESSION);
-
-        Identifier idResult = Identifier.createIdentifier(mainAlg, "x", IdentifierType.EXPRESSION);
-
-        try {
-            mainAlg.appendCommand(new AssignValueCommand(idA, Expression.build("15")));
-            mainAlg.appendCommand(new AssignValueCommand(idB, Expression.build("25")));
-            mainAlg.appendCommand(new AssignValueCommand(idGgt, calledAlg));
-            mainAlg.appendCommand(new ReturnCommand(idGgt));
-
-            calledAlg.appendCommand(new AssignValueCommand(idResult, Expression.build("gcd(a,b)")));
-            calledAlg.appendCommand(new ReturnCommand(idResult));
-        } catch (ExpressionException | AlgorithmCompileException e) {
-            fail();
-        }
-
-        List<Algorithm> algorithms = new ArrayList<>();
-        algorithms.add(mainAlg);
-        try {
-            Identifier result = AlgorithmExecutor.executeAlgorithm(algorithms);
-            assertTrue(result.getType() == IdentifierType.EXPRESSION);
-            assertTrue(result.getName().equals("ggt"));
-            assertTrue(((Expression) result.getValue()).equals(Expression.build("5")));
-        } catch (Exception e) {
-            fail();
         }
     }
 

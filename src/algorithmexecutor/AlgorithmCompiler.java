@@ -15,7 +15,9 @@ import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AlgorithmCompiler {
 
@@ -25,6 +27,8 @@ public abstract class AlgorithmCompiler {
 
     protected final static List<Signature> STORED_ALGORITHM_SIGNATURES = new ArrayList<>();
 
+    private static final Map<Algorithm, AlgorithmMemory> COMPILETIME_MEMORY_MAP = new HashMap<>();
+    
     private static void parseAlgorithmSignatures(String input) throws AlgorithmCompileException {
         STORED_ALGORITHM_SIGNATURES.clear();
 
@@ -270,15 +274,6 @@ public abstract class AlgorithmCompiler {
         }
     }
 
-//    private static boolean containsAlgorithmSignatureWithSameSignature(Signature signature) {
-//        for (Signature sgn : STORED_ALGORITHM_SIGNATURES) {
-//            if (sgn.getName().equals(signature.getName())
-//                    && Arrays.deepEquals(sgn.getParameterTypes(), signature.getParameterTypes())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
     private static boolean containsAlgorithmWithSameSignature(Signature signature) {
         Signature algSignature;
         for (Algorithm alg : STORED_ALGORITHMS) {

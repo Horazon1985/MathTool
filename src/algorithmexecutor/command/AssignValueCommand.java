@@ -110,16 +110,16 @@ public class AssignValueCommand extends AlgorithmCommand {
             AbstractExpression targetExprSimplified = simplifyTargetExpression(alg);
             this.identifierSrc.setValue(targetExprSimplified);
         } else {
+            this.targetAlgorithm.initInputParameter(this.targetAlgorithmArguments);
             Set<String> varsInTargetExpr = getVarsFromAlgorithmParameters(this.targetAlgorithm);
             checkForUnknownIdentifier(alg, varsInTargetExpr);
-            this.targetAlgorithm.initInputParameter(this.targetAlgorithmArguments);
             AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
             this.identifierSrc.setValue(targetExprSimplified);
         }
         AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return null;
     }
-
+    
     private void checkForUnknownIdentifier(Algorithm alg, Set<String> varsInTargetExpr) throws AlgorithmExecutionException {
         AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
         for (String var : varsInTargetExpr) {
