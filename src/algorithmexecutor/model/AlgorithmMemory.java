@@ -1,4 +1,4 @@
-package algorithmexecutor.memory;
+package algorithmexecutor.model;
 
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;

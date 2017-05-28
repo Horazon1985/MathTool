@@ -1,7 +1,10 @@
 package algorithmexecutor;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Variable;
+import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import static algorithmexecutor.AlgorithmCompiler.VALIDATOR;
 import algorithmexecutor.command.AlgorithmCommand;
 import algorithmexecutor.command.AssignValueCommand;
@@ -10,6 +13,7 @@ import algorithmexecutor.command.IfElseControlStructure;
 import algorithmexecutor.command.ReturnCommand;
 import algorithmexecutor.command.WhileControlStructure;
 import algorithmexecutor.command.condition.BooleanExpression;
+import algorithmexecutor.command.condition.BooleanVariable;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
@@ -25,7 +29,7 @@ import algorithmexecutor.exceptions.ParseAssignValueException;
 import algorithmexecutor.exceptions.ParseControlStructureException;
 import algorithmexecutor.exceptions.ParseReturnException;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
 import exceptions.ExpressionException;
@@ -38,7 +42,7 @@ import java.util.UUID;
 
 public abstract class AlgorithmCommandCompiler {
 
-    private static final String GEN_VAR = "GEN_VAR_";
+    private static final String GEN_VAR = "gen_var_";
 
     /**
      * Gibt einen zufällig generierten technischen Namen für eine technische
@@ -176,8 +180,9 @@ public abstract class AlgorithmCommandCompiler {
             // Fall: Arithmetischer / Analytischer Ausdruck.
             AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, memory, alg);
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+            String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
             try {
-                Expression expr = Expression.build(rightSide, VALIDATOR);
+                Expression expr = Expression.build(rightSideReplaced, VALIDATOR);
                 Set<String> vars = expr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(vars, memory);
                 areIdentifiersOfCorrectType(type, vars, memory);
@@ -187,9 +192,9 @@ public abstract class AlgorithmCommandCompiler {
             } catch (ExpressionException e) {
                 try {
                     // Kompatibilitätscheck
-                    Signature calledAlgSignature = getSignatureFromAlgorithmCall(rightSide, memory, type);
+                    Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSideReplaced, memory, type).getSignature();
                     // Parameter auslesen
-                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
+                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSideReplaced, memory);
                     memory.getMemory().put(identifierName, identifier);
                     commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
                     return commands;
@@ -212,7 +217,7 @@ public abstract class AlgorithmCommandCompiler {
             } catch (BooleanExpressionException e) {
                 try {
                     // Kompatibilitätscheck
-                    Signature calledAlgSignature = getSignatureFromAlgorithmCall(rightSide, memory, type);
+                    Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, type).getSignature();
                     // Parameter auslesen;
                     Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
                     memory.getMemory().put(identifierName, identifier);
@@ -235,7 +240,7 @@ public abstract class AlgorithmCommandCompiler {
         } catch (ExpressionException e) {
             try {
                 // Kompatibilitätscheck
-                Signature calledAlgSignature = getSignatureFromAlgorithmCall(rightSide, memory, type);
+                Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, type).getSignature();
                 // Parameter auslesen;
                 Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
                 memory.getMemory().put(identifierName, identifier);
@@ -305,21 +310,39 @@ public abstract class AlgorithmCommandCompiler {
         }
     }
 
-    private static Signature getSignatureFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
+    private static AlgorithmCallData getAlgorithmCallDataFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
         try {
             String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
             String algName = algNameAndParams[0];
             String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
 
+            AbstractExpression[] paramValues = new AbstractExpression[params.length];
+            for (int i = 0; i < params.length; i++) {
+                try {
+                    paramValues[i] = Expression.build(params[i], AlgorithmCompiler.VALIDATOR);
+                } catch (ExpressionException eExpr) {
+                    Map<String, IdentifierType> typeMap = CompilerUtils.extractTypesOfMemory(memory);
+                    try {
+                        paramValues[i] = BooleanExpression.build(params[i], AlgorithmCompiler.VALIDATOR, typeMap);
+                    } catch (BooleanExpressionException eBoolExpr) {
+                        try {
+                            paramValues[i] = MatrixExpression.build(params[i], AlgorithmCompiler.VALIDATOR, AlgorithmCompiler.VALIDATOR);
+                        } catch (ExpressionException eMatExpr) {
+                            throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                        }
+                    }
+                }
+            }
+
             // Prüfung, ob ein Algorithmus mit diesem Namen bekannt ist.
             Signature algorithmCandidate = null;
             boolean candidateFound;
-            for (Signature signature : AlgorithmCompiler.STORED_ALGORITHM_SIGNATURES) {
+            for (Signature signature : AlgorithmCompiler.ALGORITHM_SIGNATURES.getAlgorithmSignatureStorage()) {
                 if (signature.getName().equals(algName) && signature.getParameterTypes().length == params.length) {
                     candidateFound = true;
                     for (int i = 0; i < params.length; i++) {
-                        if (memory.getMemory().get(params[i]) == null
-                                || !memory.getMemory().get(params[i]).getType().equals(signature.getParameterTypes()[i])) {
+                        if (!areAllVarsContainedInMemory(paramValues[i].getContainedVars(), memory)
+                                || IdentifierType.identifierTypeOf(paramValues[i]) != signature.getParameterTypes()[i]) {
                             candidateFound = false;
                         }
                     }
@@ -339,10 +362,19 @@ public abstract class AlgorithmCommandCompiler {
                 // TODO: Fehlermeldung korrigieren.
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
             }
-            return algorithmCandidate;
+            return new AlgorithmCallData(algorithmCandidate, paramValues);
         } catch (AlgorithmCompileException e) {
             throw new ParseAssignValueException(e);
         }
+    }
+
+    private static boolean areAllVarsContainedInMemory(Set<String> varNames, AlgorithmMemory memory) {
+        for (String varName : varNames) {
+            if (memory.getMemory().get(varName) == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static List<AlgorithmCommand> parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
@@ -585,58 +617,59 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     ///////////////////// Methoden für die Zerlegung eines Ausdrucks, welcher Algorithmenaufrufe enthält, in mehrere Befehle ///////////////////////
-    private static AlgorithmCommandReplacementList decomposeAbstractExpressionInvolvingAlgorithmCalls(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+    private static AlgorithmCommandReplacementList decomposeAbstractExpressionInvolvingAlgorithmCalls(String input, AlgorithmMemory memory, Algorithm alg) {
         String inputWithGeneratedVars = input;
         List<AlgorithmCommand> commands = new ArrayList<>();
 
         boolean algorithmCallFound = false;
         String algorithmCallAsString;
-        int beginning;
+        int beginningAlgCall;
+        int endingAlgCall;
         do {
-            for (Signature signature : AlgorithmCompiler.STORED_ALGORITHM_SIGNATURES) {
+            for (Signature signature : AlgorithmCompiler.ALGORITHM_SIGNATURES.getAlgorithmSignatureStorage()) {
                 if (!inputWithGeneratedVars.contains(signature.getName())) {
                     continue;
                 }
-                beginning = inputWithGeneratedVars.indexOf(signature.getName(), 0);
-                while (beginning >= 0) {
-                    for (int i = beginning + signature.getName().length(); i < input.length(); i++) {
+                beginningAlgCall = inputWithGeneratedVars.indexOf(signature.getName(), 0);
+                while (beginningAlgCall >= 0) {
+                    for (int i = beginningAlgCall + signature.getName().length(); i < input.length() + 1; i++) {
                         algorithmCallAsString = inputWithGeneratedVars.substring(inputWithGeneratedVars.indexOf(signature.getName()), i);
 
                         // Der Algorithmusaufruf darf nicht der gesamte input sein.
                         if (algorithmCallAsString.length() == inputWithGeneratedVars.length()) {
-                            break;
+                            return new AlgorithmCommandReplacementList(new ArrayList<AlgorithmCommand>(), input);
                         }
 
-                        Signature calledAlgSignature = null;
+                        AlgorithmCallData algorithmCallData = null;
                         try {
-                            calledAlgSignature = getSignatureFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.EXPRESSION);
+                            algorithmCallData = getAlgorithmCallDataFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.EXPRESSION);
                         } catch (ParseAssignValueException e) {
                         }
-                        try {
-                            calledAlgSignature = getSignatureFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.BOOLEAN_EXPRESSION);
-                        } catch (ParseAssignValueException e) {
+                        if (algorithmCallData == null) {
+                            try {
+                                algorithmCallData = getAlgorithmCallDataFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.BOOLEAN_EXPRESSION);
+                            } catch (ParseAssignValueException e) {
+                            }
                         }
-                        try {
-                            calledAlgSignature = getSignatureFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.MATRIX_EXPRESSION);
-                        } catch (ParseAssignValueException e) {
+                        if (algorithmCallData == null) {
+                            try {
+                                algorithmCallData = getAlgorithmCallDataFromAlgorithmCall(algorithmCallAsString, memory, IdentifierType.MATRIX_EXPRESSION);
+                            } catch (ParseAssignValueException e) {
+                            }
                         }
 
-                        if (calledAlgSignature == null) {
+                        if (algorithmCallData == null) {
                             continue;
                         }
 
+                        endingAlgCall = i;
+
                         try {
-                            Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(algorithmCallAsString, memory);
-                            String genVarName = generateTechnicalVarName();
-                            Identifier identifier = Identifier.createIdentifier(alg, genVarName, signature.getReturnType());
-                            memory.getMemory().put(genVarName, identifier);
-                            commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
-                            inputWithGeneratedVars = inputWithGeneratedVars.replaceAll(algorithmCallAsString, genVarName);
-                            algorithmCallFound = true;
-                            beginning = -1;
+                            inputWithGeneratedVars = addAssignValueCommandsForNonVarAlgorithmParameters(inputWithGeneratedVars, beginningAlgCall, endingAlgCall, algorithmCallData, commands, memory, alg);
+                            beginningAlgCall = inputWithGeneratedVars.indexOf(signature.getName(), endingAlgCall);
                             break;
                         } catch (ParseAssignValueException e) {
-                            beginning = inputWithGeneratedVars.indexOf(signature.getName(), beginning + 1);
+                            beginningAlgCall = inputWithGeneratedVars.indexOf(signature.getName(), beginningAlgCall + 1);
                             break;
                         }
 
@@ -647,6 +680,47 @@ public abstract class AlgorithmCommandCompiler {
         } while (algorithmCallFound);
 
         return new AlgorithmCommandReplacementList(commands, inputWithGeneratedVars);
+    }
+
+    private static String addAssignValueCommandsForNonVarAlgorithmParameters(String input, int beginningAlgCall, int endingAlgCall, AlgorithmCallData algorithmCallData,
+            List<AlgorithmCommand> commands, AlgorithmMemory memory, Algorithm alg) throws ParseAssignValueException {
+
+        String[] varNames = new String[algorithmCallData.getParameterValues().length];
+        Identifier[] inputParameters = new Identifier[algorithmCallData.getParameterValues().length];
+        AbstractExpression value;
+        for (int i = 0; i < algorithmCallData.getParameterValues().length; i++) {
+            value = algorithmCallData.getParameterValues()[i];
+            if (value instanceof Variable) {
+                inputParameters[i] = Identifier.createIdentifier(alg, ((Variable) value).getName(), IdentifierType.identifierTypeOf(value));
+            } else if (value instanceof BooleanVariable) {
+                inputParameters[i] = Identifier.createIdentifier(alg, ((BooleanVariable) value).getName(), IdentifierType.identifierTypeOf(value));
+            } else if (value instanceof MatrixVariable) {
+                inputParameters[i] = Identifier.createIdentifier(alg, ((MatrixVariable) value).getName(), IdentifierType.identifierTypeOf(value));
+            } else {
+                String genVarName = generateTechnicalVarName();
+                varNames[i] = genVarName;
+                try {
+                    Identifier genVarIdentifier = Identifier.createIdentifier(alg, genVarName, IdentifierType.identifierTypeOf(value));
+                    inputParameters[i] = genVarIdentifier;
+                    commands.add(new AssignValueCommand(genVarIdentifier, value));
+                    memory.addToMemoryInCompileTime(genVarIdentifier);
+                } catch (AlgorithmCompileException e) {
+                    throw new ParseAssignValueException(e);
+                }
+            }
+        }
+
+        String genVarNameForCalledAlg = generateTechnicalVarName();
+        Identifier identifierForCalledAlg = Identifier.createIdentifier(alg, genVarNameForCalledAlg, algorithmCallData.getSignature().getReturnType());
+        try {
+            commands.add(new AssignValueCommand(identifierForCalledAlg, algorithmCallData.getSignature(), inputParameters));
+            memory.addToMemoryInCompileTime(identifierForCalledAlg);
+        } catch (AlgorithmCompileException e) {
+            throw new ParseAssignValueException(e);
+        }
+
+        String inputWithGeneratedVars = input.substring(0, beginningAlgCall) + genVarNameForCalledAlg + input.substring(endingAlgCall);
+        return inputWithGeneratedVars;
     }
 
     private static class AlgorithmCommandReplacementList {
@@ -670,6 +744,26 @@ public abstract class AlgorithmCommandCompiler {
         public void addCommand(AlgorithmCommand command) {
             this.commands.add(command);
         }
+    }
+
+    private static class AlgorithmCallData {
+
+        private final Signature signature;
+        private final AbstractExpression[] parameterValues;
+
+        public AlgorithmCallData(Signature signature, AbstractExpression[] parameterValues) {
+            this.signature = signature;
+            this.parameterValues = parameterValues;
+        }
+
+        public Signature getSignature() {
+            return signature;
+        }
+
+        public AbstractExpression[] getParameterValues() {
+            return parameterValues;
+        }
+
     }
 
 }

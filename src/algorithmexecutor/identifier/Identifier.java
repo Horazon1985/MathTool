@@ -2,9 +2,8 @@ package algorithmexecutor.identifier;
 
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.AlgorithmExecutor;
-import algorithmexecutor.command.condition.BooleanExpression;
 import algorithmexecutor.enums.IdentifierType;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import java.util.Collections;
 import java.util.Objects;

@@ -134,7 +134,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                         AlgorithmOutputPrinter.printEndParsingAlgorithms();
 
                         AlgorithmOutputPrinter.printStartAlgorithmData();
-                        algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.STORED_ALGORITHMS);
+                        algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
                         AlgorithmOutputPrinter.printEndAlgorithmData();
                     } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                         AlgorithmOutputPrinter.printException(e);

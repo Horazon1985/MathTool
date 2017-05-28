@@ -6,8 +6,9 @@ import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.AlgorithmStorage;
 import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public abstract class AlgorithmExecutor {
 
         Algorithm mainAlg;
         try {
-            mainAlg = CompilerUtils.getMainAlgorithm(algorithms);
+            mainAlg = CompilerUtils.getMainAlgorithm(new AlgorithmStorage(algorithms));
             Identifier result = mainAlg.execute();
             AlgorithmOutputPrinter.printOutput(mainAlg, result);
             return result;

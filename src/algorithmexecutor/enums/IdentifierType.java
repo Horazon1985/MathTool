@@ -3,6 +3,8 @@ package algorithmexecutor.enums;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecutor.command.condition.BooleanExpression;
 
 public enum IdentifierType {
 
@@ -19,10 +21,13 @@ public enum IdentifierType {
         if (abstrExpr instanceof Expression) {
             return EXPRESSION;
         }
-        if (abstrExpr instanceof LogicalExpression) {
+        if (abstrExpr instanceof BooleanExpression) {
             return BOOLEAN_EXPRESSION;
         }
-        return MATRIX_EXPRESSION;
+        if (abstrExpr instanceof MatrixExpression) {
+            return MATRIX_EXPRESSION;
+        }
+        return null;
     }
 
     @Override

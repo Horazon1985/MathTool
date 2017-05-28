@@ -10,10 +10,11 @@ import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.AlgorithmSignatureStorage;
+import algorithmexecutor.model.AlgorithmStorage;
 import algorithmexecutor.model.Signature;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,14 +24,14 @@ public abstract class AlgorithmCompiler {
 
     public final static IdentifierValidator VALIDATOR = new IdentifierValidatorImpl();
 
-    public final static List<Algorithm> STORED_ALGORITHMS = new ArrayList<>();
+    public final static AlgorithmStorage ALGORITHMS = new AlgorithmStorage();
 
-    protected final static List<Signature> STORED_ALGORITHM_SIGNATURES = new ArrayList<>();
+    protected final static AlgorithmSignatureStorage ALGORITHM_SIGNATURES = new AlgorithmSignatureStorage();
 
     private static final Map<Algorithm, AlgorithmMemory> COMPILETIME_MEMORY_MAP = new HashMap<>();
     
     private static void parseAlgorithmSignatures(String input) throws AlgorithmCompileException {
-        STORED_ALGORITHM_SIGNATURES.clear();
+        ALGORITHM_SIGNATURES.clearAlgorithmSignatureStorage();
 
         if (input.isEmpty()) {
             return;
@@ -48,7 +49,7 @@ public abstract class AlgorithmCompiler {
                 bracketCounter--;
             }
             if (bracketCounter == 0 && beginPassed) {
-                STORED_ALGORITHM_SIGNATURES.add(parseAlgorithmSignature(input.substring(lastEndOfAlgorithm + 1, i + 1)));
+                ALGORITHM_SIGNATURES.add(parseAlgorithmSignature(input.substring(lastEndOfAlgorithm + 1, i + 1)));
                 beginPassed = false;
                 lastEndOfAlgorithm = i;
             }
@@ -62,9 +63,9 @@ public abstract class AlgorithmCompiler {
         }
 
         // Prüfung, ob die Signatur des Main-Algorithmus existiert.
-        CompilerUtils.checkIfMainAlgorithmSignatureExists(STORED_ALGORITHM_SIGNATURES);
+        CompilerUtils.checkIfMainAlgorithmSignatureExists(ALGORITHM_SIGNATURES);
         // Prüfung, ob die Signatur ein Main-Algorithmus parameterlos ist.
-        CompilerUtils.checkIfMainAlgorithmSignatureContainsNoParameters(CompilerUtils.getMainAlgorithmSignature(STORED_ALGORITHM_SIGNATURES));
+        CompilerUtils.checkIfMainAlgorithmSignatureContainsNoParameters(CompilerUtils.getMainAlgorithmSignature(ALGORITHM_SIGNATURES));
 
     }
 
@@ -109,7 +110,7 @@ public abstract class AlgorithmCompiler {
     }
 
     public static void parseAlgorithmFile(String input) throws AlgorithmCompileException {
-        STORED_ALGORITHMS.clear();
+        ALGORITHMS.clearAlgorithmStorage();
 
         if (input.isEmpty()) {
             return;
@@ -136,7 +137,7 @@ public abstract class AlgorithmCompiler {
                 bracketCounter--;
             }
             if (bracketCounter == 0 && beginPassed) {
-                STORED_ALGORITHMS.add(parseAlgorithm(input.substring(lastEndOfAlgorithm + 1, i + 1)));
+                ALGORITHMS.add(parseAlgorithm(input.substring(lastEndOfAlgorithm + 1, i + 1)));
                 beginPassed = false;
                 lastEndOfAlgorithm = i;
             }
@@ -150,9 +151,9 @@ public abstract class AlgorithmCompiler {
         }
 
         // Prüfung, ob ein Main-Algorithmus existiert.
-        CompilerUtils.checkIfMainAlgorithmExists(STORED_ALGORITHMS);
+        CompilerUtils.checkIfMainAlgorithmExists(ALGORITHMS);
         // Prüfung, ob ein Main-Algorithmus parameterlos ist.
-        CompilerUtils.checkIfMainAlgorithmContainsNoParameters(CompilerUtils.getMainAlgorithm(STORED_ALGORITHMS));
+        CompilerUtils.checkIfMainAlgorithmContainsNoParameters(CompilerUtils.getMainAlgorithm(ALGORITHMS));
         // Zum Schluss: bei Bezeichnerzuordnungen Algorithmensignaturen durch Algorithmenreferenzen ersetzen.
         replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands();
     }
@@ -231,7 +232,7 @@ public abstract class AlgorithmCompiler {
     }
 
     private static void replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands() {
-        for (Algorithm alg : STORED_ALGORITHMS) {
+        for (Algorithm alg : ALGORITHMS.getAlgorithmStorage()) {
             replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(alg.getCommands());
         }
     }
@@ -276,7 +277,7 @@ public abstract class AlgorithmCompiler {
 
     private static boolean containsAlgorithmWithSameSignature(Signature signature) {
         Signature algSignature;
-        for (Algorithm alg : STORED_ALGORITHMS) {
+        for (Algorithm alg : ALGORITHMS.getAlgorithmStorage()) {
             algSignature = CompilerUtils.getSignature(alg.getReturnType(), alg.getName(), alg.getInputParameters());
             if (algSignature.getName().equals(signature.getName())
                     && Arrays.deepEquals(algSignature.getParameterTypes(), signature.getParameterTypes())) {
@@ -334,7 +335,7 @@ public abstract class AlgorithmCompiler {
                 assignValueCommand = (AssignValueCommand) command;
                 Signature signature = assignValueCommand.getTargetAlgorithmSignature();
                 Algorithm calledAlg = null;
-                for (Algorithm alg : STORED_ALGORITHMS) {
+                for (Algorithm alg : ALGORITHMS.getAlgorithmStorage()) {
                     if (alg.getSignature().equals(signature)) {
                         calledAlg = alg;
                         break;

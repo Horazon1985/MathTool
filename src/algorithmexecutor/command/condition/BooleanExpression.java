@@ -1,13 +1,10 @@
 package algorithmexecutor.command.condition;
 
 import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.expression.classes.Variable;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
-import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
@@ -40,8 +37,6 @@ public abstract class BooleanExpression implements AbstractExpression {
     
     public static BooleanExpression build(String input, IdentifierValidator validator, 
             Map<String, IdentifierType> typesMap) throws BooleanExpressionException {
-
-//        input = convertOperators(input.replaceAll(" ", "").toLowerCase());
 
         /*
          Prioritäten: |: 0, &: 1, !: 2, ~: 3, Vergleiche, Boolsche Konstante oder Variable: 4.
@@ -192,14 +187,6 @@ public abstract class BooleanExpression implements AbstractExpression {
         throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-//    private static String convertOperators(String input) {
-//        String convertedInput = input;
-//        for (ComparingOperators op : ComparingOperators.values()) {
-//            convertedInput = convertedInput.replaceAll(op.getValue(), op.getConvertedValue());
-//        }
-//        return convertedInput;
-//    }
-
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {
         return input.contains(op.getValue()) && input.length() - input.replaceAll(op.getValue(), "").length() == op.getValue().length();
     }
@@ -215,13 +202,17 @@ public abstract class BooleanExpression implements AbstractExpression {
         } catch (ExpressionException e) {
         }
         try {
-            parsedInput = LogicalExpression.build(input, validator);
+            parsedInput = BooleanExpression.build(input, validator, typesMap);
             if (doesValuesMapContainAllVarsOfCorrectType(parsedInput, typesMap)) {
                 return parsedInput;
             }
-        } catch (ExpressionException e) {
+        } catch (BooleanExpressionException e) {
         }
         try {
+            /*
+            Hier darf build() rekursiv angewendet werden, da input hier eine kleinere Länge
+            besitzt, als der input im vorherigen Aufruf.
+            */
             parsedInput = MatrixExpression.build(input, validator, validator);
             if (doesValuesMapContainAllVarsOfCorrectType(parsedInput, typesMap)) {
                 return parsedInput;

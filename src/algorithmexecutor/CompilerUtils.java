@@ -11,8 +11,10 @@ import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
+import algorithmexecutor.model.AlgorithmSignatureStorage;
+import algorithmexecutor.model.AlgorithmStorage;
 import algorithmexecutor.model.Signature;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ import java.util.Map;
 public class CompilerUtils {
 
     public static String preprocessAlgorithm(String input) {
-        String outputFormatted = input;
+        String outputFormatted = input.toLowerCase();
         outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "\n", "\t");
         outputFormatted = removeLeadingWhitespaces(outputFormatted);
         outputFormatted = removeEndingWhitespaces(outputFormatted);
@@ -211,8 +213,8 @@ public class CompilerUtils {
         return returnType;
     }
 
-    public static void checkIfMainAlgorithmSignatureExists(List<Signature> signatures) throws AlgorithmCompileException {
-        for (Signature sgn : signatures) {
+    public static void checkIfMainAlgorithmSignatureExists(AlgorithmSignatureStorage signatures) throws AlgorithmCompileException {
+        for (Signature sgn : signatures.getAlgorithmSignatureStorage()) {
             if (sgn.getName().equals(Keywords.MAIN.getValue())) {
                 return;
             }
@@ -220,8 +222,8 @@ public class CompilerUtils {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    public static void checkIfMainAlgorithmExists(List<Algorithm> algorithms) throws AlgorithmCompileException {
-        for (Algorithm alg : algorithms) {
+    public static void checkIfMainAlgorithmExists(AlgorithmStorage algorithms) throws AlgorithmCompileException {
+        for (Algorithm alg : algorithms.getAlgorithmStorage()) {
             if (alg.getName().equals(Keywords.MAIN.getValue())) {
                 return;
             }
@@ -229,8 +231,8 @@ public class CompilerUtils {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    public static Signature getMainAlgorithmSignature(List<Signature> signatures) throws AlgorithmCompileException {
-        for (Signature sgn : signatures) {
+    public static Signature getMainAlgorithmSignature(AlgorithmSignatureStorage signatures) throws AlgorithmCompileException {
+        for (Signature sgn : signatures.getAlgorithmSignatureStorage()) {
             if (sgn.getName().equals(Keywords.MAIN.getValue())) {
                 return sgn;
             }
@@ -238,8 +240,8 @@ public class CompilerUtils {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
     }
 
-    public static Algorithm getMainAlgorithm(List<Algorithm> algorithms) throws AlgorithmCompileException {
-        for (Algorithm alg : algorithms) {
+    public static Algorithm getMainAlgorithm(AlgorithmStorage algorithms) throws AlgorithmCompileException {
+        for (Algorithm alg : algorithms.getAlgorithmStorage()) {
             if (alg.getName().equals(Keywords.MAIN.getValue())) {
                 return alg;
             }

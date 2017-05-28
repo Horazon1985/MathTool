@@ -25,6 +25,14 @@ public class BooleanVariable extends BooleanExpression {
         this.value = value;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean getValue() {
+        return value;
+    }
+
     /**
      * Methode create: ohne Wertzuweisung (d.h. die Variable wird automatisch
      * auf false gesetzt)

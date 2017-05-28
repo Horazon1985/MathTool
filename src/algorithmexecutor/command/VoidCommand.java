@@ -42,7 +42,7 @@ public class VoidCommand extends AlgorithmCommand {
 
     @Override
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
-        for (Algorithm alg : AlgorithmCompiler.STORED_ALGORITHMS) {
+        for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
             if (alg.getSignature().equals(getSignature()) && alg.getReturnType() == null) {
                 // TO DO: Algorithmenparameter durch Bezeichnerwerte ersetzen. 
                 alg.execute();

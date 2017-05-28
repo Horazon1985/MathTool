@@ -13,7 +13,7 @@ import algorithmexecutor.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.command.condition.BooleanExpression;
-import algorithmexecutor.memory.AlgorithmMemory;
+import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Signature;
 import exceptions.EvaluationException;
 import java.util.HashSet;

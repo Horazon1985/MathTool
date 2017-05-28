@@ -14,7 +14,6 @@ import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
 import algorithmexecutor.identifier.Identifier;
-import algorithmexecutor.memory.AlgorithmMemory;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
 import java.util.List;

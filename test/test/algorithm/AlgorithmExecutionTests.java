@@ -17,7 +17,6 @@ import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import javax.swing.JTextPane;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -108,11 +107,12 @@ public class AlgorithmExecutionTests {
         Algorithm mainAlg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            assertEquals(AlgorithmCompiler.STORED_ALGORITHMS.size(), 2);
-            if (AlgorithmCompiler.STORED_ALGORITHMS.get(0).getName().equals("main")) {
-                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 2);
+            if (algorithmList.get(0).getName().equals("main")) {
+                mainAlg = algorithmList.get(0);
             } else {
-                mainAlg = AlgorithmCompiler.STORED_ALGORITHMS.get(1);
+                mainAlg = algorithmList.get(1);
             }
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(mainAlg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
@@ -131,7 +131,7 @@ public class AlgorithmExecutionTests {
         Algorithm alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
@@ -146,7 +146,7 @@ public class AlgorithmExecutionTests {
         alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
@@ -161,7 +161,7 @@ public class AlgorithmExecutionTests {
         alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
@@ -179,7 +179,7 @@ public class AlgorithmExecutionTests {
         Algorithm alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("b"));
@@ -197,7 +197,7 @@ public class AlgorithmExecutionTests {
         Algorithm alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            alg = AlgorithmCompiler.STORED_ALGORITHMS.get(0);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecutor.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
