@@ -1,27 +1,26 @@
 package algorithmexecutor;
 
-import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.AssignValueCommand;
+import algorithmexecutor.model.command.AlgorithmCommand;
+import algorithmexecutor.model.command.AssignValueCommand;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.AlgorithmStorage;
+import algorithmexecutor.model.ExecutionMemory;
 import algorithmexecutor.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AlgorithmExecutor {
 
-    private static final Map<Algorithm, AlgorithmMemory> MEMORY_MAP = new HashMap<>();
+    private static final ExecutionMemory EXECUTION_MEMORY = new ExecutionMemory();
 
-    public static Map<Algorithm, AlgorithmMemory> getMemoryMap() {
-        return MEMORY_MAP;
+    public static ExecutionMemory getExecutionMemory() {
+        return EXECUTION_MEMORY;
     }
 
     /**
@@ -32,7 +31,7 @@ public abstract class AlgorithmExecutor {
      */
     public static Identifier executeAlgorithm(List<Algorithm> algorithms) throws AlgorithmExecutionException, EvaluationException {
         // Alle (lokalen) Variablen und Parameter aus dem Speicher entfernen.
-        MEMORY_MAP.clear();
+        EXECUTION_MEMORY.clearExecutionMemory();
 
         Algorithm mainAlg;
         try {
@@ -85,14 +84,14 @@ public abstract class AlgorithmExecutor {
 
     private static AlgorithmMemory getAlgorithmMemoryBeforeExecution(Algorithm alg) {
         List<Identifier> identifiers = new ArrayList<>();
-        identifiers.addAll(MEMORY_MAP.get(alg).getMemory().values());
+        identifiers.addAll(EXECUTION_MEMORY.get(alg).getMemory().values());
         return new AlgorithmMemory(identifiers);
     }
 
     private static void removeLocalIdentifiersFromMemory(Algorithm alg, AlgorithmMemory scopeMemory, AlgorithmMemory memoryBeforeBlockExecution) {
         for (String identifierName : scopeMemory.getMemory().keySet()) {
             if (memoryBeforeBlockExecution == null || !memoryBeforeBlockExecution.containsIdentifier(identifierName)) {
-                MEMORY_MAP.get(alg).getMemory().remove(identifierName);
+                EXECUTION_MEMORY.get(alg).getMemory().remove(identifierName);
             }
         }
     }

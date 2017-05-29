@@ -1,11 +1,11 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.AlgorithmExecutor;
 import algorithmexecutor.CompilerUtils;
-import algorithmexecutor.command.condition.BooleanExpression;
+import algorithmexecutor.booleanexpression.BooleanExpression;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import exceptions.EvaluationException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;

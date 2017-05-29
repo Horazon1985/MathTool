@@ -1,4 +1,4 @@
-package algorithmexecutor.command.condition;
+package algorithmexecutor.booleanexpression;
 
 public enum BooleanBinaryOperationType {
     

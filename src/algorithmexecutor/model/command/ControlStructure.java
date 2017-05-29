@@ -1,4 +1,4 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import java.util.List;
 

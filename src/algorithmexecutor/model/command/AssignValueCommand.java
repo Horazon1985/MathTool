@@ -1,4 +1,4 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
@@ -9,10 +9,10 @@ import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
-import algorithmexecutor.command.condition.BooleanExpression;
+import algorithmexecutor.booleanexpression.BooleanExpression;
 import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Signature;
 import exceptions.EvaluationException;
@@ -90,7 +90,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
         Set<String> varsInAlgorithmSignature = new HashSet<>();
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
         AbstractExpression abstrExpr;
         for (Identifier identifier : alg.getInputParameters()) {
             abstrExpr = memory.getMemory().get(identifier.getName()).getValue();
@@ -116,12 +116,12 @@ public class AssignValueCommand extends AlgorithmCommand {
             AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
             this.identifierSrc.setValue(targetExprSimplified);
         }
-        AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
+        AlgorithmExecutor.getExecutionMemory().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return null;
     }
     
     private void checkForUnknownIdentifier(Algorithm alg, Set<String> varsInTargetExpr) throws AlgorithmExecutionException {
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
         for (String var : varsInTargetExpr) {
             if (!memory.containsIdentifier(var)) {
                 throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_UNKNOWN_IDENTIFIER);
@@ -134,7 +134,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
         if (this.targetExpression instanceof Expression) {
             Expression exprSimplified = (Expression) this.targetExpression;
-            for (Identifier identifier : AlgorithmExecutor.getMemoryMap().get(alg).getMemory().values()) {
+            for (Identifier identifier : AlgorithmExecutor.getExecutionMemory().get(alg).getMemory().values()) {
                 if (identifier.getValue() instanceof Expression) {
                     exprSimplified = exprSimplified.replaceVariable(identifier.getName(), (Expression) identifier.getValue());
                 }
@@ -142,7 +142,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             targetExprSimplified = exprSimplified;
         } else if (this.targetExpression instanceof LogicalExpression) {
             LogicalExpression logExprSimplified = (LogicalExpression) this.targetExpression;
-            for (Identifier identifier : AlgorithmExecutor.getMemoryMap().get(alg).getMemory().values()) {
+            for (Identifier identifier : AlgorithmExecutor.getExecutionMemory().get(alg).getMemory().values()) {
                 if (identifier.getValue() instanceof LogicalExpression) {
                     logExprSimplified = logExprSimplified.replaceVariable(identifier.getName(), (LogicalExpression) identifier.getValue());
                 }
@@ -150,7 +150,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             targetExprSimplified = logExprSimplified;
         } else if (this.targetExpression instanceof MatrixExpression) {
             MatrixExpression matExprSimplified = (MatrixExpression) this.targetExpression;
-            for (Identifier identifier : AlgorithmExecutor.getMemoryMap().get(alg).getMemory().values()) {
+            for (Identifier identifier : AlgorithmExecutor.getExecutionMemory().get(alg).getMemory().values()) {
                 if (identifier.getValue() instanceof Expression) {
                     matExprSimplified = matExprSimplified.replaceVariable(identifier.getName(), (Expression) identifier.getValue());
                 }

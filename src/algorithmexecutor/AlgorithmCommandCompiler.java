@@ -6,14 +6,14 @@ import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import static algorithmexecutor.AlgorithmCompiler.VALIDATOR;
-import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.AssignValueCommand;
-import algorithmexecutor.command.DeclareIdentifierCommand;
-import algorithmexecutor.command.IfElseControlStructure;
-import algorithmexecutor.command.ReturnCommand;
-import algorithmexecutor.command.WhileControlStructure;
-import algorithmexecutor.command.condition.BooleanExpression;
-import algorithmexecutor.command.condition.BooleanVariable;
+import algorithmexecutor.model.command.AlgorithmCommand;
+import algorithmexecutor.model.command.AssignValueCommand;
+import algorithmexecutor.model.command.DeclareIdentifierCommand;
+import algorithmexecutor.model.command.IfElseControlStructure;
+import algorithmexecutor.model.command.ReturnCommand;
+import algorithmexecutor.model.command.WhileControlStructure;
+import algorithmexecutor.booleanexpression.BooleanExpression;
+import algorithmexecutor.booleanexpression.BooleanVariable;
 import algorithmexecutor.enums.ComparingOperators;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
@@ -28,7 +28,7 @@ import algorithmexecutor.exceptions.NotDesiredCommandException;
 import algorithmexecutor.exceptions.ParseAssignValueException;
 import algorithmexecutor.exceptions.ParseControlStructureException;
 import algorithmexecutor.exceptions.ParseReturnException;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
@@ -685,7 +685,6 @@ public abstract class AlgorithmCommandCompiler {
     private static String addAssignValueCommandsForNonVarAlgorithmParameters(String input, int beginningAlgCall, int endingAlgCall, AlgorithmCallData algorithmCallData,
             List<AlgorithmCommand> commands, AlgorithmMemory memory, Algorithm alg) throws ParseAssignValueException {
 
-        String[] varNames = new String[algorithmCallData.getParameterValues().length];
         Identifier[] inputParameters = new Identifier[algorithmCallData.getParameterValues().length];
         AbstractExpression value;
         for (int i = 0; i < algorithmCallData.getParameterValues().length; i++) {
@@ -698,7 +697,6 @@ public abstract class AlgorithmCommandCompiler {
                 inputParameters[i] = Identifier.createIdentifier(alg, ((MatrixVariable) value).getName(), IdentifierType.identifierTypeOf(value));
             } else {
                 String genVarName = generateTechnicalVarName();
-                varNames[i] = genVarName;
                 try {
                     Identifier genVarIdentifier = Identifier.createIdentifier(alg, genVarName, IdentifierType.identifierTypeOf(value));
                     inputParameters[i] = genVarIdentifier;
@@ -719,8 +717,12 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseAssignValueException(e);
         }
 
-        String inputWithGeneratedVars = input.substring(0, beginningAlgCall) + genVarNameForCalledAlg + input.substring(endingAlgCall);
-        return inputWithGeneratedVars;
+        String algorithmCallString = input.substring(beginningAlgCall, endingAlgCall);
+        String result = input;
+        while (result.contains(algorithmCallString)) {
+            result = result.replace(algorithmCallString, genVarNameForCalledAlg);
+        }
+        return result;
     }
 
     private static class AlgorithmCommandReplacementList {

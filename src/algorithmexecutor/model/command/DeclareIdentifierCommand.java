@@ -1,7 +1,7 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.AlgorithmExecutor;
 
@@ -25,7 +25,7 @@ public class DeclareIdentifierCommand extends AlgorithmCommand {
     @Override
     public Identifier execute() throws AlgorithmExecutionException {
         Algorithm alg = getAlgorithm();
-        AlgorithmExecutor.getMemoryMap().get(alg).addToMemoryInRuntime(this.identifierSrc);
+        AlgorithmExecutor.getExecutionMemory().get(alg).addToMemoryInRuntime(this.identifierSrc);
         return null;
     }
 

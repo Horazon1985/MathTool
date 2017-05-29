@@ -7,13 +7,13 @@ import abstractexpressions.logicalexpression.classes.LogicalVariable;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecutor.AlgorithmExecutor;
-import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.IfElseControlStructure;
-import algorithmexecutor.command.WhileControlStructure;
+import algorithmexecutor.model.command.AlgorithmCommand;
+import algorithmexecutor.model.command.IfElseControlStructure;
+import algorithmexecutor.model.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Algorithm {
         this.returnType = returnType;
         this.commands = commands;
         // Speicher für Identifier allokieren.
-        AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(inputParameters));
+        AlgorithmExecutor.getExecutionMemory().put(this, new AlgorithmMemory(inputParameters));
     }
 
     public Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType) {
@@ -119,7 +119,7 @@ public class Algorithm {
 
     public void initInputParameter(Identifier[] identifiers) {
         AlgorithmMemory memory = new AlgorithmMemory();
-        AlgorithmExecutor.getMemoryMap().put(this, memory);
+        AlgorithmExecutor.getExecutionMemory().put(this, memory);
         for (int i = 0; i < this.inputParameters.length; i++) {
             this.inputParameters[i].setValue(identifiers[i].getValue());
             memory.addToMemoryInRuntime(identifiers[i]);
@@ -141,8 +141,8 @@ public class Algorithm {
         Restliche Ausführungen geschehen per Ausruf aus anderen Algorithmen und 
         dort werden entsprechende Speicher initialisiert.
          */
-        if (AlgorithmExecutor.getMemoryMap().get(this) == null) {
-            AlgorithmExecutor.getMemoryMap().put(this, new AlgorithmMemory(this.inputParameters));
+        if (AlgorithmExecutor.getExecutionMemory().get(this) == null) {
+            AlgorithmExecutor.getExecutionMemory().put(this, new AlgorithmMemory(this.inputParameters));
         }
 
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
@@ -153,7 +153,7 @@ public class Algorithm {
         Identifier resultIdentifier = AlgorithmExecutor.executeBlock(this.commands);
 
         // Nach Ausführung des Algorithmus: Lokale Variablen wieder löschen.
-        AlgorithmExecutor.getMemoryMap().get(this).clearMemory();
+        AlgorithmExecutor.getExecutionMemory().get(this).clearMemory();
         return resultIdentifier;
     }
 
@@ -166,7 +166,7 @@ public class Algorithm {
     }
 
     private void refreshVariableValues() {
-        Map<String, Identifier> memory = AlgorithmExecutor.getMemoryMap().get(this).getMemory();
+        Map<String, Identifier> memory = AlgorithmExecutor.getExecutionMemory().get(this).getMemory();
         for (String var : memory.keySet()) {
             if (memory.get(var).getValue() instanceof Expression) {
                 Variable.setPreciseExpression(memory.get(var).getName(), (Expression) memory.get(var).getValue());

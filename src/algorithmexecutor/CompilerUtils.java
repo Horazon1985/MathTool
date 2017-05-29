@@ -1,16 +1,16 @@
 package algorithmexecutor;
 
 import abstractexpressions.interfaces.AbstractExpression;
-import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.ControlStructure;
-import algorithmexecutor.command.IfElseControlStructure;
-import algorithmexecutor.command.ReturnCommand;
+import algorithmexecutor.model.command.AlgorithmCommand;
+import algorithmexecutor.model.command.ControlStructure;
+import algorithmexecutor.model.command.IfElseControlStructure;
+import algorithmexecutor.model.command.ReturnCommand;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.AlgorithmSignatureStorage;
@@ -355,7 +355,7 @@ public class CompilerUtils {
 
     public static Map<String, AbstractExpression> extractValuesOfIdentifiers(Algorithm alg) {
         Map<String, AbstractExpression> valuesMap = new HashMap<>();
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
         for (String identifierName : memory.getMemory().keySet()) {
             valuesMap.put(identifierName, memory.getMemory().get(identifierName).getValue());
         }

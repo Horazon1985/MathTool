@@ -2,9 +2,9 @@ package test.algorithm;
 
 import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.CompilerUtils;
-import algorithmexecutor.command.AssignValueCommand;
-import algorithmexecutor.command.IfElseControlStructure;
-import algorithmexecutor.command.WhileControlStructure;
+import algorithmexecutor.model.command.AssignValueCommand;
+import algorithmexecutor.model.command.IfElseControlStructure;
+import algorithmexecutor.model.command.WhileControlStructure;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.model.Algorithm;
@@ -190,8 +190,59 @@ public class AlgorithmCompileTests {
     }
 
     @Test
+    public void parseAlgorithmCallingTheCorrectAlgorithmTest() {
+        String input = "expression main(){expression res = 5*myggt(10,14)*7; return res;} "
+                + "expression ggt(expression a, expression b){expression result = gcd(a, b); return result;} "
+                + "expression myggt(expression a, expression b){expression result = gcd(a, b); return result;} ";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 3);
+
+            Algorithm mainAlg = null; 
+            Algorithm ggtAlg = null;
+            Algorithm myggtAlg = null;
+            for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                switch (alg.getName()) {
+                    case "main":
+                        mainAlg = alg;
+                        break;
+                    case "ggt":
+                        ggtAlg = alg;
+                        break;
+                    case "myggt":
+                        myggtAlg = alg;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            assertTrue(mainAlg != null);
+            assertTrue(ggtAlg != null);
+            assertTrue(myggtAlg != null);
+            
+            // Prüfung für den Hauptalgorithmus "main".
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 5);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(((AssignValueCommand) mainAlg.getCommands().get(0)).getTargetAlgorithm() == null);
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(((AssignValueCommand) mainAlg.getCommands().get(1)).getTargetAlgorithm() == null);
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertEquals(((AssignValueCommand) mainAlg.getCommands().get(2)).getTargetAlgorithm(), myggtAlg);
+            assertTrue(mainAlg.getCommands().get(3).isAssignValueCommand());
+            assertTrue(((AssignValueCommand) mainAlg.getCommands().get(3)).getTargetAlgorithm() == null);
+            assertTrue(mainAlg.getCommands().get(4).isReturnCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
+    @Test
     public void parseAlgorithmCallingAnotherAlgorithmInOneAssignmentTest() {
-        String input = "expression main(){expression ggt = computeggt(15, 25)*exp(2); return ggt;} "
+        String input = "expression main(){expression ggt = computeggt(15, 25)*exp(2)*computeggt(15, 25); return ggt;} "
                 + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);

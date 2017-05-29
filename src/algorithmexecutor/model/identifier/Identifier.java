@@ -1,4 +1,4 @@
-package algorithmexecutor.identifier;
+package algorithmexecutor.model.identifier;
 
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecutor.AlgorithmExecutor;
@@ -22,10 +22,10 @@ public class Identifier {
     private Identifier(Algorithm alg, IdentifierType type, String name) {
         this.type = type;
         this.name = name;
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
         if (memory == null) {
             memory = new AlgorithmMemory(Collections.singletonList(createIdentifier(alg, name, type)));
-            AlgorithmExecutor.getMemoryMap().put(alg, memory);
+            AlgorithmExecutor.getExecutionMemory().put(alg, memory);
         }
     }
 
@@ -39,10 +39,10 @@ public class Identifier {
         this.type = type;
         this.name = name;
         this.value = value;
-        AlgorithmMemory memory = AlgorithmExecutor.getMemoryMap().get(alg);
+        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
         if (memory == null) {
             memory = new AlgorithmMemory(Collections.singletonList(createIdentifier(alg, name, type)));
-            AlgorithmExecutor.getMemoryMap().put(alg, memory);
+            AlgorithmExecutor.getExecutionMemory().put(alg, memory);
         }
     }
 
@@ -103,8 +103,8 @@ public class Identifier {
     }
     
     public static Identifier createIdentifier(Algorithm alg, String identifierName, IdentifierType type) {
-        if (AlgorithmExecutor.getMemoryMap().get(alg).containsIdentifier(identifierName)) {
-            return AlgorithmExecutor.getMemoryMap().get(alg).getMemory().get(identifierName);
+        if (AlgorithmExecutor.getExecutionMemory().get(alg).containsIdentifier(identifierName)) {
+            return AlgorithmExecutor.getExecutionMemory().get(alg).getMemory().get(identifierName);
         }
         return new Identifier(alg, type, identifierName);
     }

@@ -1,6 +1,6 @@
 package algorithmexecutor.output;
 
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import java.awt.Color;
 import java.text.SimpleDateFormat;

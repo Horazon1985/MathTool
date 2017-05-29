@@ -2,23 +2,21 @@ package algorithmexecutor;
 
 import abstractexpressions.interfaces.IdentifierValidator;
 import algorithmexecutor.exceptions.AlgorithmCompileException;
-import algorithmexecutor.command.AlgorithmCommand;
-import algorithmexecutor.command.AssignValueCommand;
-import algorithmexecutor.command.ControlStructure;
+import algorithmexecutor.model.command.AlgorithmCommand;
+import algorithmexecutor.model.command.AssignValueCommand;
+import algorithmexecutor.model.command.ControlStructure;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.enums.Keywords;
 import algorithmexecutor.enums.ReservedChars;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.AlgorithmMemory;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.AlgorithmSignatureStorage;
 import algorithmexecutor.model.AlgorithmStorage;
 import algorithmexecutor.model.Signature;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AlgorithmCompiler {
 
@@ -28,7 +26,7 @@ public abstract class AlgorithmCompiler {
 
     protected final static AlgorithmSignatureStorage ALGORITHM_SIGNATURES = new AlgorithmSignatureStorage();
 
-    private static final Map<Algorithm, AlgorithmMemory> COMPILETIME_MEMORY_MAP = new HashMap<>();
+    private static final AlgorithmStorage COMPILETIME_MEMORY_MAP = new AlgorithmStorage();
     
     private static void parseAlgorithmSignatures(String input) throws AlgorithmCompileException {
         ALGORITHM_SIGNATURES.clearAlgorithmSignatureStorage();
@@ -158,7 +156,7 @@ public abstract class AlgorithmCompiler {
         replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands();
     }
 
-    public static Algorithm parseAlgorithm(String input) throws AlgorithmCompileException {
+    private static Algorithm parseAlgorithm(String input) throws AlgorithmCompileException {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {

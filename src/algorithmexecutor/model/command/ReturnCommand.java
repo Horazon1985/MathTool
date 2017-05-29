@@ -1,6 +1,6 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 
 public class ReturnCommand extends AlgorithmCommand {
 

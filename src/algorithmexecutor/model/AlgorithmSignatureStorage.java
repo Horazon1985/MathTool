@@ -1,6 +1,7 @@
 package algorithmexecutor.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AlgorithmSignatureStorage {
@@ -17,6 +18,7 @@ public class AlgorithmSignatureStorage {
 
     public void add(Signature sgn) {
         this.algorithmSignatureStorage.add(sgn);
+        Collections.sort(this.algorithmSignatureStorage);
     }
-    
+
 }

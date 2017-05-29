@@ -1,7 +1,7 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import exceptions.EvaluationException;
 

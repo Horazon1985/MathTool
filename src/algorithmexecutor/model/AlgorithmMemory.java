@@ -2,7 +2,7 @@ package algorithmexecutor.model;
 
 import algorithmexecutor.exceptions.AlgorithmCompileException;
 import algorithmexecutor.exceptions.CompileExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

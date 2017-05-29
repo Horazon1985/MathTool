@@ -4,7 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import algorithmexecutor.command.condition.BooleanExpression;
+import algorithmexecutor.booleanexpression.BooleanExpression;
 
 public enum IdentifierType {
 

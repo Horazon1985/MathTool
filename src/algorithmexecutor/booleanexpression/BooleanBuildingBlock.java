@@ -1,4 +1,4 @@
-package algorithmexecutor.command.condition;
+package algorithmexecutor.booleanexpression;
 
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;

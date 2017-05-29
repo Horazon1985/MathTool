@@ -1,10 +1,10 @@
-package algorithmexecutor.command;
+package algorithmexecutor.model.command;
 
 import algorithmexecutor.AlgorithmCompiler;
 import algorithmexecutor.enums.IdentifierType;
 import algorithmexecutor.exceptions.AlgorithmExecutionException;
 import algorithmexecutor.exceptions.ExecutionExceptionTexts;
-import algorithmexecutor.identifier.Identifier;
+import algorithmexecutor.model.identifier.Identifier;
 import algorithmexecutor.model.Algorithm;
 import algorithmexecutor.model.Signature;
 import exceptions.EvaluationException;

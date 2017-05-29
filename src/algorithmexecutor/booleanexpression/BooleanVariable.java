@@ -1,4 +1,4 @@
-package algorithmexecutor.command.condition;
+package algorithmexecutor.booleanexpression;
 
 import abstractexpressions.interfaces.AbstractExpression;
 import java.util.HashMap;

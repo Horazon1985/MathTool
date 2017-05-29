@@ -4,7 +4,7 @@ import algorithmexecutor.enums.IdentifierType;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Signature {
+public class Signature implements Comparable {
 
     private final String name;
     private final IdentifierType[] parameterTypes;
@@ -68,6 +68,18 @@ public class Signature {
             }
         }
         return signature + ")";
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        if (t instanceof Signature) {
+            if (this.name.contains(((Signature) t).name)) {
+                return -1;
+            } else if (((Signature) t).name.contains(this.name)) {
+                return 1;
+            }
+        }
+        return 0;
     }
     
 }
