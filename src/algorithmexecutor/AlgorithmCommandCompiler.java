@@ -95,7 +95,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         try {
-            return parseReturnCommand(line, memory);
+            return parseReturnCommand(line, memory, alg);
         } catch (ParseReturnException e) {
             throw e;
         } catch (NotDesiredCommandException e) {
@@ -546,7 +546,7 @@ public abstract class AlgorithmCommandCompiler {
         throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL);
     }
 
-    private static List<AlgorithmCommand> parseReturnCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException, NotDesiredCommandException {
+    private static List<AlgorithmCommand> parseReturnCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
         if (line.startsWith(Keywords.RETURN.getValue() + " ")) {
             if (line.equals(Keywords.RETURN.getValue() + ReservedChars.LINE_SEPARATOR)) {
                 return Collections.singletonList((AlgorithmCommand) new ReturnCommand(null));
@@ -554,9 +554,26 @@ public abstract class AlgorithmCommandCompiler {
             String returnValueCandidate = line.substring((Keywords.RETURN.getValue() + " ").length());
 
             if (memory.getMemory().get(returnValueCandidate) == null) {
-                throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
+
+                AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(returnValueCandidate, memory, alg);
+                List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+                String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
+
+                if (memory.getMemory().get(rightSideReplaced) != null) {
+                    return Collections.singletonList((AlgorithmCommand) new ReturnCommand(memory.getMemory().get(returnValueCandidate)));
+                }
+                if (VALIDATOR.isValidIdentifier(rightSideReplaced)) {
+                    throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
+                }
+                String genVarForReturn = generateTechnicalVarName();
+                String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + rightSideReplaced;
+                List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, memory, alg);
+                commands.addAll(additionalCommandsByAssignment);
+                commands.add(new ReturnCommand(Identifier.createIdentifier(alg, genVarForReturn, alg.getReturnType())));
+                return commands;
+            } else {
+                return Collections.singletonList((AlgorithmCommand) new ReturnCommand(Identifier.createIdentifier(alg, returnValueCandidate, alg.getReturnType())));
             }
-            return Collections.singletonList((AlgorithmCommand) new ReturnCommand(memory.getMemory().get(returnValueCandidate)));
         }
         throw new NotDesiredCommandException();
     }

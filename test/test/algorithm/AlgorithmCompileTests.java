@@ -199,7 +199,7 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 3);
 
-            Algorithm mainAlg = null; 
+            Algorithm mainAlg = null;
             Algorithm ggtAlg = null;
             Algorithm myggtAlg = null;
             for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
@@ -217,11 +217,11 @@ public class AlgorithmCompileTests {
                         break;
                 }
             }
-            
+
             assertTrue(mainAlg != null);
             assertTrue(ggtAlg != null);
             assertTrue(myggtAlg != null);
-            
+
             // Prüfung für den Hauptalgorithmus "main".
             assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(mainAlg.getInputParameters().length, 0);
@@ -270,6 +270,26 @@ public class AlgorithmCompileTests {
             assertTrue(mainAlg.getCommands().get(3).isAssignValueCommand());
             assertTrue(((AssignValueCommand) mainAlg.getCommands().get(3)).getTargetExpression() != null);
             assertTrue(mainAlg.getCommands().get(4).isReturnCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithNonTrivialReturnCommandTest() {
+        String input = "expression main(){expression a = 3; return 7*a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 1);
+
+            Algorithm mainAlg = algorithmList.get(0);
+
+            // Prüfung für den Hauptalgorithmus "main".
+            assertEquals(mainAlg.getCommands().size(), 3);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
