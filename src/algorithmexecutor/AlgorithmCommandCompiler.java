@@ -190,64 +190,44 @@ public abstract class AlgorithmCommandCompiler {
                 commands.add(new AssignValueCommand(identifier, expr));
                 return commands;
             } catch (ExpressionException e) {
-                try {
-                    // Kompatibilitätscheck
-                    Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSideReplaced, memory, type).getSignature();
-                    // Parameter auslesen
-                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSideReplaced, memory);
-                    memory.getMemory().put(identifierName, identifier);
-                    commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
-                    return commands;
-                } catch (ParseAssignValueException ex) {
-                    throw ex;
-                }
+                return parseAlgorithmCall(memory, commands, rightSideReplaced, IdentifierType.EXPRESSION, identifier);
             }
 
         } else if (type == IdentifierType.BOOLEAN_EXPRESSION) {
 
             // Fall: boolscher Ausdruck.
+            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, memory, alg);
+            List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+            String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
             try {
                 Map<String, IdentifierType> valuesMap = CompilerUtils.extractTypesOfMemory(memory);
-                BooleanExpression boolExpr = BooleanExpression.build(rightSide, VALIDATOR, valuesMap);
+                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, valuesMap);
                 Set<String> vars = boolExpr.getContainedVars();
                 checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), memory);
                 areIdentifiersOfCorrectType(type, vars, memory);
                 memory.getMemory().put(identifierName, identifier);
-                return Collections.singletonList((AlgorithmCommand) new AssignValueCommand(identifier, boolExpr));
+                commands.add(new AssignValueCommand(identifier, boolExpr));
+                return commands;
             } catch (BooleanExpressionException e) {
-                try {
-                    // Kompatibilitätscheck
-                    Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, type).getSignature();
-                    // Parameter auslesen;
-                    Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
-                    memory.getMemory().put(identifierName, identifier);
-                    return Collections.singletonList((AlgorithmCommand) new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
-                } catch (ParseAssignValueException ex) {
-                    throw ex;
-                }
+                return parseAlgorithmCall(memory, commands, rightSideReplaced, IdentifierType.BOOLEAN_EXPRESSION, identifier);
             }
 
         }
 
         // Fall: Matrizenausdruck.
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, memory, alg);
+        List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+        String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
         try {
-            MatrixExpression matExpr = MatrixExpression.build(rightSide, VALIDATOR, VALIDATOR);
+            MatrixExpression matExpr = MatrixExpression.build(rightSideReplaced, VALIDATOR, VALIDATOR);
             checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), memory);
             areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), memory);
             areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), memory);
             memory.getMemory().put(identifierName, identifier);
-            return Collections.singletonList((AlgorithmCommand) new AssignValueCommand(identifier, matExpr));
+            commands.add(new AssignValueCommand(identifier, matExpr));
+            return commands;
         } catch (ExpressionException e) {
-            try {
-                // Kompatibilitätscheck
-                Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, type).getSignature();
-                // Parameter auslesen;
-                Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
-                memory.getMemory().put(identifierName, identifier);
-                return Collections.singletonList((AlgorithmCommand) new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
-            } catch (ParseAssignValueException ex) {
-                throw ex;
-            }
+            return parseAlgorithmCall(memory, commands, rightSideReplaced, IdentifierType.MATRIX_EXPRESSION, identifier);
         }
 
     }
@@ -293,10 +273,22 @@ public abstract class AlgorithmCommandCompiler {
         }
     }
 
+    private static List<AlgorithmCommand> parseAlgorithmCall(AlgorithmMemory memory, List<AlgorithmCommand> commands,
+            String rightSide, IdentifierType assignType, Identifier identifier) throws AlgorithmCompileException {
+        // Kompatibilitätscheck
+        Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, assignType).getSignature();
+        // Parameter auslesen;
+        Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
+        memory.getMemory().put(identifier.getName(), identifier);
+        commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
+        return commands;
+
+    }
+
     private static Identifier[] getParameterFromAlgorithmCall(String input, AlgorithmMemory memory) throws ParseAssignValueException {
         try {
-            String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
-            String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
+            CompilerUtils.AlgorithmParseData algParseData = CompilerUtils.getAlgorithmParseData(input);
+            String[] params = algParseData.getParameters();
             Identifier[] identifiers = new Identifier[params.length];
             for (int i = 0; i < params.length; i++) {
                 if (memory.getMemory().get(params[i]) == null) {
@@ -312,9 +304,9 @@ public abstract class AlgorithmCommandCompiler {
 
     private static AlgorithmCallData getAlgorithmCallDataFromAlgorithmCall(String input, AlgorithmMemory memory, IdentifierType returnType) throws ParseAssignValueException {
         try {
-            String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
-            String algName = algNameAndParams[0];
-            String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
+            CompilerUtils.AlgorithmParseData algParseData = CompilerUtils.getAlgorithmParseData(input);
+            String algName = algParseData.getName();
+            String[] params = algParseData.getParameters();
 
             AbstractExpression[] paramValues = new AbstractExpression[params.length];
             for (int i = 0; i < params.length; i++) {
@@ -560,6 +552,7 @@ public abstract class AlgorithmCommandCompiler {
                 return Collections.singletonList((AlgorithmCommand) new ReturnCommand(null));
             }
             String returnValueCandidate = line.substring((Keywords.RETURN.getValue() + " ").length());
+
             if (memory.getMemory().get(returnValueCandidate) == null) {
                 throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
             }

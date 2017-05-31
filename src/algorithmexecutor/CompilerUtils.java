@@ -23,6 +23,30 @@ import java.util.Map;
 
 public class CompilerUtils {
 
+    /**
+     * Transportklasse für Algorithmensignaturen. name gibt den Namen des
+     * Algorithmus an und parameters die konkreten Parameterwerte.
+     */
+    public static class AlgorithmParseData {
+
+        String name;
+        String[] parameters;
+
+        public String getName() {
+            return name;
+        }
+
+        public String[] getParameters() {
+            return parameters;
+        }
+
+        public AlgorithmParseData(String name, String[] parameters) {
+            this.name = name;
+            this.parameters = parameters;
+        }
+
+    }
+
     public static String preprocessAlgorithm(String input) {
         String outputFormatted = input.toLowerCase();
         outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "\n", "\t");
@@ -81,6 +105,13 @@ public class CompilerUtils {
         return new Signature(returnType, algName, types);
     }
 
+    public static AlgorithmParseData getAlgorithmParseData(String input) throws AlgorithmCompileException {
+        String[] algNameAndParams = CompilerUtils.getAlgorithmNameAndParameters(input);
+        String algName = algNameAndParams[0];
+        String[] params = CompilerUtils.getParameters(algNameAndParams[1]);
+        return new AlgorithmParseData(algName, params);
+    }
+
     /**
      * Der Algorithmusname und die Parameter in der Befehlsklammer werden
      * ausgelesen und zurückgegeben.<br>
@@ -90,7 +121,7 @@ public class CompilerUtils {
      *
      * @throws AlgorithmCompileException
      */
-    public static String[] getAlgorithmNameAndParameters(String input) throws AlgorithmCompileException {
+    private static String[] getAlgorithmNameAndParameters(String input) throws AlgorithmCompileException {
 
         // Leerzeichen beseitigen
         input = CompilerUtils.removeLeadingWhitespaces(input);
@@ -132,7 +163,7 @@ public class CompilerUtils {
      *
      * @throws AlgorithmCompileException
      */
-    public static String[] getParameters(String input) throws AlgorithmCompileException {
+    private static String[] getParameters(String input) throws AlgorithmCompileException {
 
         // Falls Parameterstring leer ist -> Fertig
         if (input.isEmpty()) {

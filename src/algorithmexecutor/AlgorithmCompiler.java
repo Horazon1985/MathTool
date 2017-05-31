@@ -27,7 +27,7 @@ public abstract class AlgorithmCompiler {
     protected final static AlgorithmSignatureStorage ALGORITHM_SIGNATURES = new AlgorithmSignatureStorage();
 
     private static final AlgorithmStorage COMPILETIME_MEMORY_MAP = new AlgorithmStorage();
-    
+
     private static void parseAlgorithmSignatures(String input) throws AlgorithmCompileException {
         ALGORITHM_SIGNATURES.clearAlgorithmSignatureStorage();
 
@@ -87,10 +87,9 @@ public abstract class AlgorithmCompiler {
             input = input.substring(returnType.toString().length());
         }
         String candidateForSignature = input.substring(0, input.indexOf(ReservedChars.BEGIN.getValue()));
-
-        String[] algNameAndParameters = CompilerUtils.getAlgorithmNameAndParameters(candidateForSignature);
-        String algName = algNameAndParameters[0];
-        String[] parametersAsStrings = CompilerUtils.getParameters(algNameAndParameters[1]);
+        CompilerUtils.AlgorithmParseData algParseData = CompilerUtils.getAlgorithmParseData(candidateForSignature);
+        String algName = algParseData.getName();
+        String[] parametersAsStrings = algParseData.getParameters();
 
         AlgorithmMemory memory = new AlgorithmMemory();
 
@@ -176,10 +175,9 @@ public abstract class AlgorithmCompiler {
             input = input.substring(returnType.toString().length());
         }
         String candidateForSignature = input.substring(0, input.indexOf(ReservedChars.BEGIN.getValue()));
-
-        String[] algNameAndParameters = CompilerUtils.getAlgorithmNameAndParameters(candidateForSignature);
-        String algName = algNameAndParameters[0];
-        String[] parametersAsStrings = CompilerUtils.getParameters(algNameAndParameters[1]);
+        CompilerUtils.AlgorithmParseData algParseData = CompilerUtils.getAlgorithmParseData(candidateForSignature);
+        String algName = algParseData.getName();
+        String[] parametersAsStrings = algParseData.getParameters();
 
         AlgorithmMemory memory = new AlgorithmMemory();
 
