@@ -11,6 +11,8 @@ import mathtool.component.templates.MathToolOptionComponentTemplate;
 
 public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTemplate {
 
+    private static final String PATH_LOGO_GRAPHIC_OPTIONS = "icons/OutputOptionsLogo.png";    
+    
     private static final String GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE = "GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE";
     private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_BRIGHT";
     private static final String GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK = "GUI_GraphicOptionsDialogGUI_BACKGROUNDCOLOR_OPTION_DARK";
@@ -21,11 +23,11 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
 
     private static GraphicOptionsDialogGUI instance = null;
 
-    private GraphicOptionsDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    private GraphicOptionsDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
-        super(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE,
-                "icons/OutputOptionsLogo.png", numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+        super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight, GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE,
+                PATH_LOGO_GRAPHIC_OPTIONS, numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         loadOptions();
 
         addWindowListener(new WindowAdapter() {

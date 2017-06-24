@@ -15,6 +15,8 @@ import javax.swing.JTextField;
  */
 public class OutputDetailsGUI extends JDialog {
 
+    private static final String PATH_LOGO_OUTPUT_DETAILS = "icons/DetailsLogo.png";    
+    
     private static final String GUI_OutputDetailsGUI_INFO = "GUI_OutputDetailsGUI_INFO";    
     private static final String GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION = "GUI_OutputDetailsGUI_GENERAL_AVAILABLE_EXPRESSION";    
     
@@ -23,7 +25,7 @@ public class OutputDetailsGUI extends JDialog {
     private JLabel[] formulaLabels;
     private JTextField[] formulas;
 
-    public OutputDetailsGUI(int mathToolGUIX, int mathToolGUIY, int mathToolGUIWidth, int mathToolGUIHeight, int width, AbstractExpression[] abstrExprs, String[] texts) {
+    public OutputDetailsGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight, int width, AbstractExpression[] abstrExprs, String[] texts) {
 
         setTitle(Translator.translateOutputMessage(GUI_OutputDetailsGUI_INFO));
         setLayout(null);
@@ -31,14 +33,14 @@ public class OutputDetailsGUI extends JDialog {
         setAlwaysOnTop(true);
 
         int height = 120 + 35 * (abstrExprs.length + texts.length);
-        this.setBounds((mathToolGUIWidth - width) / 2 + mathToolGUIX,
-                (mathToolGUIHeight - height) / 2 + mathToolGUIY, width, height);
+        this.setBounds((mathToolGuiWidth - width) / 2 + mathToolGuiX,
+                (mathToolGuiHeight - height) / 2 + mathToolGuiY, width, height);
         this.getContentPane().setBackground(Color.WHITE);
 
         // Logo laden
         JPanel panel = new JPanel();
         add(panel);
-        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/DetailsLogo.png"))));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource(PATH_LOGO_OUTPUT_DETAILS))));
         panel.setBounds(0, -5, 500, 70);
         panel.setVisible(true);
 

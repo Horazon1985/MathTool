@@ -71,6 +71,8 @@ import mathtool.annotations.GetCommand;
 import mathtool.component.components.LegendGUI;
 import mathtool.lang.translator.Translator;
 import mathtool.utilities.MathToolUtilities;
+import util.OperationDataTO;
+import util.OperationParsingUtils;
 
 public abstract class MathCommandCompiler {
 
@@ -99,8 +101,6 @@ public abstract class MathCommandCompiler {
     public static final String PATTERN_EXTREMA_WITH_PARAMETER = "extrema(expr,indet)";
     public static final String PATTERN_EXTREMA_APPROX = "extrema(expr(0,1),expr(0,0),expr(0,0))";
     public static final String PATTERN_EXTREMA_APPROX_WITH_NUMBER_OF_INTERVALS = "extrema(expr(0,1),expr(0,0),expr(0,0),integer(0,2147483647))";
-//    @GetCommand(type = TypeCommand.groebnerbasis)
-    public static final String PATTERN_GROEBNERBASIS = "groebnerbasis(expr+,type(lex,deglex,revlex,degrevlex),uniquevar+)";
     @GetCommand(type = TypeCommand.ker)
     public static final String PATTERN_KER = "ker(matexpr)";
     @GetCommand(type = TypeCommand.pi)
@@ -525,8 +525,9 @@ public abstract class MathCommandCompiler {
         String[] functionVars;
         try {
             // Funktionsname und Funktionsvariablen werden ermittelt.
-            functionName = Expression.getOperatorAndArguments(functionNameAndArguments)[0];
-            functionVars = Expression.getArguments(Expression.getOperatorAndArguments(functionNameAndArguments)[1]);
+            OperationDataTO functionData = OperationParsingUtils.getOperationData(functionNameAndArguments);
+            functionName = functionData.getOperationName();
+            functionVars = functionData.getOperationArguments();
         } catch (ExpressionException e) {
             throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_DEF"));
         }
@@ -1779,9 +1780,9 @@ public abstract class MathCommandCompiler {
 
         input = input.replaceAll(" ", "").toLowerCase();
 
-        String[] commandNameAndParams = Expression.getOperatorAndArguments(input);
-        String commandName = commandNameAndParams[0];
-        String[] params = Expression.getArguments(commandNameAndParams[1]);
+        OperationDataTO commandData = OperationParsingUtils.getOperationData(input);
+        String commandName = commandData.getOperationName();
+        String[] params = commandData.getOperationArguments();
 
         //Befehl ermitteln
         Command command = getCommand(commandName, params);
@@ -2633,7 +2634,7 @@ public abstract class MathCommandCompiler {
 
         MarchingSquare[][] implicitGraph2D = NumericalUtils.solveImplicitEquation2D(expr, varAbsc, varOrd,
                 x_0.evaluate(), x_1.evaluate(), y_0.evaluate(), y_1.evaluate());
-        
+
         // Graphen zeichnen.
         graphicPanelImplicit2D.setExpressions(((Expression[]) command.getParams()[0])[0], ((Expression[]) command.getParams()[0])[1]);
         graphicPanelImplicit2D.setVars(varAbsc, varOrd);
@@ -4006,12 +4007,12 @@ public abstract class MathCommandCompiler {
         gezeichnet (da freie Parameter vorkommen).
          */
         Set<String> varsInFunction = f.getContainedIndeterminates();
-        for (String var : varsInFunction){
-            if (!vars.keySet().contains(var)){
+        for (String var : varsInFunction) {
+            if (!vars.keySet().contains(var)) {
                 return;
             }
         }
-        
+
         if (vars.size() == 1) {
 
             String var = "";

@@ -47,11 +47,9 @@ import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.MathToolTextField;
-import mathtool.config.ConfigLoader;
-import mathtool.config.MathToolConfig;
+import mathtool.config.MathToolPropertiesHandler;
 import mathtool.lang.translator.Translator;
 import mathtool.session.SessionLoader;
 import mathtool.session.classes.DefinedFunction;
@@ -61,13 +59,15 @@ import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
 import notations.NotationLoader;
 import operationparser.ParseResultPattern;
+import util.OperationDataTO;
+import util.OperationParsingUtils;
 
 public class MathToolController {
 
-    private static final String GUI_OPERATOR = "GUI_OPERATOR";    
-    private static final String GUI_COMMAND = "GUI_COMMAND";    
-    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";    
-    
+    private static final String GUI_OPERATOR = "GUI_OPERATOR";
+    private static final String GUI_COMMAND = "GUI_COMMAND";
+    private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";
+
     private final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesOpen.png"));
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
@@ -133,84 +133,66 @@ public class MathToolController {
     }
 
     public static void loadSettings() {
-        try {
-            MathToolConfig config = ConfigLoader.loadConfig();
-            // Konfigurationen setzen.
-            MathToolGUI.setFontSizeGraphic(config.getGeneralSettings().getFontSizeGraphic());
-            MathToolGUI.setFontSizeText(config.getGeneralSettings().getFontSizeText());
-            MathToolGUI.setLanguage(config.getGeneralSettings().getLanguage());
-            MathToolGUI.setMode(config.getGeneralSettings().getMode());
-            MathToolGUI.setMinimumDimension(new Dimension(config.getScreenSettings().getMinWidth(), config.getScreenSettings().getMinHeight()));
 
-            // Setzen von: Algebraische Relationen
-            if (config.getOptionSettings().isAlgebraicRelations()) {
-                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_algebraic_expressions);
-            } else {
-                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_algebraic_expressions);
-            }
-            // Setzen von: Funktionale Relationen
-            if (config.getOptionSettings().isFunctionalRelations()) {
-                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_functional_relations);
-            } else {
-                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_functional_relations);
-            }
-            // Setzen von: Länge verkürzen
-            if (config.getOptionSettings().isExpandAndCollectIfShorter()) {
-                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
-            } else {
-                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
-            }
-            // Setzen von: FaktorisierungsDropDown
-            switch (config.getOptionSettings().getFactorizeDropDownOption()) {
-                case factorize:
-                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
-                    break;
-                case expand:
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
-                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_powerful);
-                    break;
-                case no_options:
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
-                    break;
-                default:
-                    break;
-            }
-            // Setzen von: LogarithmenDropDown
-            switch (config.getOptionSettings().getLogarithmsDropDownOption()) {
-                case collect:
-                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
-                    break;
-                case expand:
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
-                    MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_logarithms);
-                    break;
-                case no_options:
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
-                    MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
-                    break;
-                default:
-                    break;
-            }
+        MathToolPropertiesHandler.readMathToolProperties();
+        // Konfigurationen setzen.
+        MathToolGUI.setFontSizeGraphic(MathToolPropertiesHandler.getFontSizeGraphic());
+        MathToolGUI.setFontSizeText(MathToolPropertiesHandler.getFontSizeText());
+        MathToolGUI.setLanguage(MathToolPropertiesHandler.getLanguage());
+        MathToolGUI.setMode(MathToolPropertiesHandler.getMode());
+        MathToolGUI.setMinimumDimension(new Dimension(MathToolPropertiesHandler.getScreenWidth(), MathToolPropertiesHandler.getScreenHeight()));
 
-        } catch (JAXBException e) {
-            // Defaultwerte eintragen!
-            MathToolGUI.setFontSizeGraphic(18);
-            MathToolGUI.setFontSizeText(15);
-            Expression.setLanguage(TypeLanguage.DE);
-            MathToolGUI.setMode(TypeMode.GRAPHIC);
-            MathToolGUI.setMinimumDimension(new Dimension(1200, 670));
+        // Setzen von: Algebraische Relationen
+        if (MathToolPropertiesHandler.getAlgebraicRelations()) {
             MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_algebraic_expressions);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_algebraic_expressions);
+        }
+        // Setzen von: Funktionale Relationen
+        if (MathToolPropertiesHandler.getFunctionalRelations()) {
             MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_functional_relations);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_functional_relations);
+        }
+        // Setzen von: Länge verkürzen
+        if (MathToolPropertiesHandler.getExpandAndCollectIfShorter()) {
             MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
-            // Setzen von: FaktorisierungsDropDown
-            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
-            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
-            // Setzen von: LogarithmenDropDown
-            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
-            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+        }
+        // Setzen von: FaktorisierungsDropDown
+        switch (MathToolPropertiesHandler.getFactorizeDropDown()) {
+            case factorize:
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                break;
+            case expand:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_powerful);
+                break;
+            case no_options:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                break;
+            default:
+                break;
+        }
+        // Setzen von: LogarithmenDropDown
+        switch (MathToolPropertiesHandler.getLogarithmsDropDown()) {
+            case collect:
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                break;
+            case expand:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_logarithms);
+                break;
+            case no_options:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                break;
+            default:
+                break;
         }
 
     }
@@ -223,7 +205,7 @@ public class MathToolController {
 
             if (definedVars.getDefinedVarList() != null) {
                 // Alte Variablen löschen.
-                for (String var : Variable.getVariablesWithPredefinedValues()){
+                for (String var : Variable.getVariablesWithPredefinedValues()) {
                     Variable.setPreciseExpression(var, null);
                 }
                 // Variablen laden
@@ -237,7 +219,7 @@ public class MathToolController {
             }
             if (definedFunctions.getDefinedFunctionList() != null) {
                 // Alte Funktionen löschen.
-                for (String f : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()){
+                for (String f : SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions().keySet()) {
                     SelfDefinedFunction.removeSelfDefinedFunction(f);
                 }
                 // Variablen laden
@@ -306,19 +288,16 @@ public class MathToolController {
 
         boolean validCommand = false;
         try {
-            String[] commandName = Expression.getOperatorAndArguments(s);
+            OperationDataTO commandData = OperationParsingUtils.getOperationData(s);
+            String commandName = commandData.getOperationName();
             for (TypeCommand commandType : TypeCommand.values()) {
-                validCommand = validCommand || commandName[0].equals(commandType.toString());
+                validCommand = validCommand || commandName.equals(commandType.toString());
                 if (validCommand) {
                     break;
                 }
             }
-            if (!validCommand) {
-                // Dafür da, damit man in den Catch-Block springt.
-                throw new ExpressionException("");
-            }
-            String[] params = Expression.getArguments(commandName[1]);
-            MathCommandCompiler.getCommand(commandName[0], params);
+            String[] params = commandData.getOperationArguments();
+            MathCommandCompiler.getCommand(commandName, params);
         } catch (ExpressionException eCommand) {
 
             // Wenn der Befehlname gültig ist, aber der Befehl ungültig ist: entsprechende Fehlermeldung anzeigen.
@@ -447,9 +426,6 @@ public class MathToolController {
         if (commandName.equals(TypeCommand.plotvectorfield2d.name())) {
             return 6;
         }
-//        if (commandName.equals(TypeCommand.plotvectorfield3d.name())) {
-//            return 9;
-//        }
         if (commandName.equals(TypeCommand.solvediffeq.name())) {
             return 2;
         }
@@ -505,7 +481,7 @@ public class MathToolController {
      * Ermittelt den Typ des GraphicPanels, welcher zum Befehl c gehört.
      */
     public static TypeGraphic getTypeGraphicFromCommand(Command c) {
-        if (c.getTypeCommand().equals(TypeCommand.extrema) && c.getParams().length >= 3){
+        if (c.getTypeCommand().equals(TypeCommand.extrema) && c.getParams().length >= 3) {
             return TypeGraphic.GRAPH2D;
         }
         if (c.getTypeCommand().equals(TypeCommand.plot2d)) {
@@ -529,21 +505,18 @@ public class MathToolController {
         if (c.getTypeCommand().equals(TypeCommand.plotpolar)) {
             return TypeGraphic.GRAPHPOLAR;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)){
+        if (c.getTypeCommand().equals(TypeCommand.plotcylindrical)) {
             return TypeGraphic.GRAPHCYLINDRCAL;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotspherical)){
+        if (c.getTypeCommand().equals(TypeCommand.plotspherical)) {
             return TypeGraphic.GRAPHSPHERICAL;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotsurface)){
+        if (c.getTypeCommand().equals(TypeCommand.plotsurface)) {
             return TypeGraphic.GRAPHSURFACE;
         }
-        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)){
+        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)) {
             return TypeGraphic.VECTORFIELD2D;
         }
-//        if (c.getTypeCommand().equals(TypeCommand.plotvectorfield3d)){
-//            return TypeGraphic.VECTORFIELD3D;
-//        }
         if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
             return TypeGraphic.GRAPH2D;
         }
@@ -715,7 +688,7 @@ public class MathToolController {
                 break;
         }
         rotateThread.interrupt();
-        rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
+        rotateLabel.setText(bold(Translator.translateOutputMessage(GUI_ROTATE_GRAPH)));
 
     }
 
@@ -771,7 +744,7 @@ public class MathToolController {
     public static void updateAllCaptions(HashMap<JComponent, String> componentCaptions) {
         for (JComponent component : componentCaptions.keySet()) {
             if (component instanceof JLabel) {
-                ((JLabel) component).setText("<html><b>" + Translator.translateOutputMessage(componentCaptions.get(component)) + "</b></html>");
+                ((JLabel) component).setText(bold(Translator.translateOutputMessage(componentCaptions.get(component))));
             } else if (component instanceof JButton) {
                 ((JButton) component).setText(Translator.translateOutputMessage(componentCaptions.get(component)));
             } else if (component instanceof JMenuItem) {
@@ -800,6 +773,14 @@ public class MathToolController {
     public static boolean isInputMatrixExpression(String input) {
         return !input.contains("&") && !input.contains("|")
                 && !input.contains(">") && !input.contains("=");
+    }
+
+    public static String bold(String s) {
+        return "<html><b>" + s + "</b></html>";
+    }
+
+    public static String boldAndUnderlined(String s) {
+        return "<html><b><u>" + s + "</u></b></html>";
     }
 
 }

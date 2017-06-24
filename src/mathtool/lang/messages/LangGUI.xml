@@ -496,6 +496,12 @@
         <Ukrainian>Дебаг</Ukrainian>
         <Russian>Дебаг</Russian>
     </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_FORMAT">
+        <German>Formatieren</German>
+        <English>Format</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM">
         <German>Kompiliere Algoirithmus ...</German>
         <English>Start compiling algorithm ...</English>

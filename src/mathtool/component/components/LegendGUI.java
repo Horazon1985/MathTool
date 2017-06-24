@@ -3,6 +3,7 @@ package mathtool.component.components;
 import mathtool.component.templates.MathToolInfoComponentTemplate;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 /**
@@ -10,21 +11,23 @@ import java.util.ArrayList;
  */
 public class LegendGUI extends MathToolInfoComponentTemplate {
 
+    private static final String PATH_LOGO_LEGEND = "icons/LegendLogo.png";    
+    
     private static final String GUI_LegendGUI_LEGEND = "GUI_LegendGUI_LEGEND";    
     
     private static LegendGUI instance = null;
 
-    private LegendGUI(int mathtoolGUIX, int mathtoolGUIY, int mathtoolGUIWidth, int mathtoolGUIHeight,
+    private LegendGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
             ArrayList<String> instructions, ArrayList<Color> colors, ArrayList<String> exprs) {
 
-        super(mathtoolGUIX, mathtoolGUIY,
-                mathtoolGUIWidth, mathtoolGUIHeight,
-                GUI_LegendGUI_LEGEND, "icons/LegendLogo.png",
+        super(mathToolGuiX, mathToolGuiY,
+                mathToolGuiWidth, mathToolGuiHeight,
+                GUI_LegendGUI_LEGEND, PATH_LOGO_LEGEND,
                 instructions, exprs, colors, null, null);
 
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosing(WindowEvent windowEvent) {
                 instance.dispose();
                 instance = null;
             }

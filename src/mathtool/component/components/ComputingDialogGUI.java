@@ -11,20 +11,22 @@ import mathtool.lang.translator.Translator;
 
 public class ComputingDialogGUI extends JDialog {
 
+    private static final String PATH_LOGO_OWL = "icons/LogoOwlEyesOpen.png";    
+    
     private static final String GUI_ComputingDialogGUI_INFO = "GUI_ComputingDialogGUI_INFO";    
     private static final String GUI_ComputingDialogGUI_COMPUTING = "GUI_ComputingDialogGUI_COMPUTING";    
     
     private final JLabel owlLabel;
     private final SwingWorker swingWorker;
 
-    public ComputingDialogGUI(SwingWorker swingWorker, int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
+    public ComputingDialogGUI(SwingWorker swingWorker, int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight) {
 
         setTitle(Translator.translateOutputMessage(GUI_ComputingDialogGUI_INFO));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
 
-        this.setBounds((mathtoolformWidth - 550) / 2 + mathtoolformX, (mathtoolformHeight - 100) / 2 + mathtoolformY, 550, 100);
+        this.setBounds((mathToolGuiWidth - 550) / 2 + mathToolGuiX, (mathToolGuiHeight - 100) / 2 + mathToolGuiY, 550, 100);
         this.getContentPane().setBackground(Color.white);
 
         JLabel computingLabel = new JLabel(Translator.translateOutputMessage(GUI_ComputingDialogGUI_COMPUTING));
@@ -35,7 +37,7 @@ public class ComputingDialogGUI extends JDialog {
         add(owlPanel);
         ImageIcon icon;
         try {
-            icon = new ImageIcon(getClass().getResource("icons/LogoOwlEyesOpen.png"));
+            icon = new ImageIcon(getClass().getResource(PATH_LOGO_OWL));
         } catch (Exception e) {
             icon = null;
         }
@@ -51,7 +53,7 @@ public class ComputingDialogGUI extends JDialog {
 
         this.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+            public void keyPressed(KeyEvent evt) {
                 computingKeyPressed(evt);
             }
         });
@@ -68,7 +70,7 @@ public class ComputingDialogGUI extends JDialog {
         owlLabel.repaint();
     }
 
-    private void computingKeyPressed(java.awt.event.KeyEvent evt) {
+    private void computingKeyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
                 swingWorker.cancel(true);

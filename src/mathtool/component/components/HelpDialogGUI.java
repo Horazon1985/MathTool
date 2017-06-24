@@ -3,7 +3,9 @@ package mathtool.component.components;
 import mathtool.component.templates.MathToolInfoComponentTemplate;
 import abstractexpressions.expression.classes.Expression;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,10 @@ import java.util.ArrayList;
  */
 public class HelpDialogGUI extends MathToolInfoComponentTemplate {
 
+    private static final String PATH_LOGO_HELP = "icons/HelpLogo.png";    
+    private static final String RESOURCE_PREFIX = "html/MathToolHelp";    
+    private static final String RESOURCE_ENDING = ".html";    
+    
     private static final String GUI_HelpDialogGUI_HELP = "GUI_HelpDialogGUI_HELP";    
     
     private static HelpDialogGUI instance = null;
@@ -19,12 +25,12 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
 
         super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight,
-                GUI_HelpDialogGUI_HELP, "icons/HelpLogo.png",
+                GUI_HelpDialogGUI_HELP, PATH_LOGO_HELP,
                 null, null, null, menuCaptions, fileNames);
 
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosing(WindowEvent windowEvent) {
                 instance.dispose();
                 instance = null;
             }
@@ -49,7 +55,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
          Der Parameter helpType gibt den (relevanten) Teil des Dateinamens an,
          aus welcher die Hilfe ausgelesen wird.
          */
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("html/MathToolHelp" + fileName + Expression.getLanguage().toString() + ".html");
+        URL helpURL = HelpDialogGUI.class.getResource(RESOURCE_PREFIX + fileName + Expression.getLanguage().toString() + RESOURCE_ENDING);
 
         if (helpURL != null) {
             try {

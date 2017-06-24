@@ -3,6 +3,7 @@ package mathtool.component.components;
 import abstractexpressions.expression.classes.Expression;
 import java.awt.Color;
 import java.io.IOException;
+import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -13,25 +14,29 @@ import mathtool.lang.translator.Translator;
 
 public class DevelopersDialogGUI extends JDialog {
 
+    private static final String PATH_LOGO_MATHTOOL = "icons/MathToolLogo.png";    
+    private static final String RESOURCE_PREFIX = "html/MathToolDevelopers";    
+    private static final String RESOURCE_ENDING = ".html";    
+
     private static final String GUI_DevelopersDialogGUI_ABOUT = "GUI_DevelopersDialogGUI_ABOUT";    
     
     private final JEditorPane developersArea;
     private final JScrollPane scrollPaneDevelopers;
 
-    public DevelopersDialogGUI(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight) {
+    public DevelopersDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight) {
 
         setTitle(Translator.translateOutputMessage(GUI_DevelopersDialogGUI_ABOUT));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
 
-        this.setBounds((mathtoolformWidth - 505)/2 + mathtoolformX, (mathtoolformHeight - 530)/2 + mathtoolformY, 505, 530);
+        this.setBounds((mathToolGuiWidth - 505)/2 + mathToolGuiX, (mathToolGuiHeight - 530)/2 + mathToolGuiY, 505, 530);
         this.getContentPane().setBackground(Color.white);
 
         // Logo laden
         JPanel panel = new JPanel();
         add(panel);
-        panel.add(new JLabel(new ImageIcon(getClass().getResource("icons/MathToolLogo.png"))));
+        panel.add(new JLabel(new ImageIcon(getClass().getResource(PATH_LOGO_MATHTOOL))));
         panel.setBounds(0, -5, 500, 150);
         panel.setVisible(true);
 
@@ -46,7 +51,7 @@ public class DevelopersDialogGUI extends JDialog {
         scrollPaneDevelopers.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneDevelopers);
 
-        java.net.URL helpURL = HelpDialogGUI.class.getResource("html/MathToolDevelopers" + Expression.getLanguage().toString() + ".html");
+        URL helpURL = HelpDialogGUI.class.getResource(RESOURCE_PREFIX + Expression.getLanguage().toString() + RESOURCE_ENDING);
                 
         if (helpURL != null) {
             try {

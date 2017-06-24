@@ -1,14 +1,16 @@
 package test.algorithm;
 
-import algorithmexecutor.AlgorithmCompiler;
-import algorithmexecutor.CompilerUtils;
-import algorithmexecutor.model.command.AssignValueCommand;
-import algorithmexecutor.model.command.IfElseControlStructure;
-import algorithmexecutor.model.command.WhileControlStructure;
-import algorithmexecutor.enums.IdentifierType;
-import algorithmexecutor.exceptions.AlgorithmCompileException;
-import algorithmexecutor.model.Algorithm;
+import algorithmexecuter.AlgorithmCompiler;
+import algorithmexecuter.CompilerUtils;
+import algorithmexecuter.model.command.AssignValueCommand;
+import algorithmexecuter.model.command.IfElseControlStructure;
+import algorithmexecuter.model.command.WhileControlStructure;
+import algorithmexecuter.enums.IdentifierType;
+import algorithmexecuter.exceptions.AlgorithmCompileException;
+import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.model.Algorithm;
 import java.util.List;
+import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -322,6 +324,18 @@ public class AlgorithmCompileTests {
             AlgorithmCompiler.parseAlgorithmFile(input);
             fail("Der Algorithmus " + input + " wurde trotz fehlendem 'return' kompiliert.");
         } catch (AlgorithmCompileException e) {
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithDoubledParametersTest() {
+        String input = "expression main(){expression ggt = computeggt(15, 25); return ggt;} "
+                + "expression computeggt(expression a, expression a){return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz doppelt vorkommender Parameter in einem Algorithmusheader kompiliert.");
+        } catch (AlgorithmCompileException e) {
+            assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, "a"));
         }
     }
 

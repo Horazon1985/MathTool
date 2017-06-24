@@ -64,8 +64,12 @@ import mathtool.component.components.GraphicOptionsDialogGUI;
 import mathtool.component.components.OutputDetailsGUI;
 import mathtool.utilities.MathToolUtilities;
 import mathcommandcompiler.MathCommandCompiler;
+import static mathtool.MathToolController.bold;
+import static mathtool.MathToolController.boldAndUnderlined;
 import mathtool.component.components.MathToolAlgorithmsGUI;
 import mathtool.lang.translator.Translator;
+import util.OperationDataTO;
+import util.OperationParsingUtils;
 
 public class MathToolGUI extends JFrame implements MouseListener {
 
@@ -222,17 +226,17 @@ public class MathToolGUI extends JFrame implements MouseListener {
         setMinimumSize(minimumDimension);
 
         // Labels ausrichten
-        legendLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_LEGEND) + "</b></html>");
+        legendLabel = new JLabel(bold(Translator.translateOutputMessage(GUI_LEGEND)));
         legendLabel.setVisible(false);
         add(legendLabel);
         legendLabel.addMouseListener(this);
 
-        saveLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_SAVE) + "</b></html>");
+        saveLabel = new JLabel(bold(Translator.translateOutputMessage(GUI_SAVE)));
         saveLabel.setVisible(false);
         add(saveLabel);
         saveLabel.addMouseListener(this);
 
-        rotateLabel = new JLabel("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
+        rotateLabel = new JLabel(bold(Translator.translateOutputMessage(GUI_ROTATE_GRAPH)));
         rotateLabel.setVisible(false);
         add(rotateLabel);
         rotateLabel.addMouseListener(this);
@@ -396,7 +400,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 mathToolGraphicArea.updateSize();
 
                 // Abhängig von der Sprache alle Texte (neu) setzen.
-                updateAPI();
+                updateGUI();
 
                 validate();
                 repaint();
@@ -526,7 +530,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
-    private void updateAPI() {
+    private void updateGUI() {
         // Captions neu setzen.
         initCaptions();
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
@@ -1015,23 +1019,24 @@ public class MathToolGUI extends JFrame implements MouseListener {
                  prüfen.
                  */
                 try {
+                    OperationDataTO commandData = OperationParsingUtils.getOperationData(input);
 
-                    String[] commandName = Expression.getOperatorAndArguments(input);
-                    String[] params = Expression.getArguments(commandName[1]);
+                    String commandName = commandData.getOperationName();
+                    String[] params = commandData.getOperationArguments();
 
                     for (TypeCommand commandType : TypeCommand.values()) {
-                        validCommand = validCommand || commandName[0].equals(commandType.toString());
+                        validCommand = validCommand || commandName.equals(commandType.toString());
                         if (validCommand) {
                             break;
                         }
                     }
 
                     if (validCommand) {
-                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.getCommand(commandName[0], params));
+                        MathCommandCompiler.doPrintOutput(MathCommandCompiler.getCommand(commandName, params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
-                        activatePanelsForGraphs(commandName[0], params);
+                        activatePanelsForGraphs(commandName, params);
                         mathToolTextField.setText("");
                     }
 
@@ -1256,7 +1261,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.start();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</u></b></html>");
+            rotateLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_STOP_ROTATION)));
         } else {
             isRotating = false;
             switch (typeGraphic) {
@@ -1282,7 +1287,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
             }
             rotateThread.interrupt();
-            rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</u></b></html>");
+            rotateLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_ROTATE_GRAPH)));
         }
     }
 
@@ -1384,36 +1389,36 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
         Expression.setLanguage(TypeLanguage.EN);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemLanguageEnglishActionPerformed
 
     private void menuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageGermanActionPerformed
         Expression.setLanguage(TypeLanguage.DE);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemLanguageGermanActionPerformed
 
     private void menuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageRussianActionPerformed
         Expression.setLanguage(TypeLanguage.RU);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemLanguageRussianActionPerformed
 
     private void menuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageUkrainianActionPerformed
         Expression.setLanguage(TypeLanguage.UA);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
         typeMode = TypeMode.TEXT;
         scrollPaneGraphic.setVisible(false);
         scrollPaneText.setVisible(true);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
         typeMode = TypeMode.GRAPHIC;
         scrollPaneGraphic.setVisible(true);
         scrollPaneText.setVisible(false);
-        updateAPI();
+        updateGUI();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed
@@ -1488,10 +1493,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAlgorithmsActionPerformed
         String algorithmsTitle = Translator.translateOutputMessage(GUI_ALGORITHMS);
-        
+
         MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getHeight(),
                 algorithmsTitle);
-        
+
         mathToolAlgorithmsGUI.setVisible(true);
 
     }//GEN-LAST:event_menuItemAlgorithmsActionPerformed
@@ -1536,7 +1541,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         ArrayList<String> instructions = new ArrayList<>();
         ArrayList<String> exprs = new ArrayList<>();
-        instructions.add("<html><b><u>" + Translator.translateOutputMessage(GUI_LegendGUI_CONTROLS) + "</u></b></html>");
+        instructions.add(boldAndUnderlined(Translator.translateOutputMessage(GUI_LegendGUI_CONTROLS)));
 
         if (e.getSource() == legendLabel && e.getButton() == MouseEvent.BUTTON1) {
             switch (typeGraphic) {
@@ -1728,18 +1733,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_LEGEND) + "</u></b></html>");
+            legendLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_LEGEND)));
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_SAVE) + "</u></b></html>");
+            saveLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_SAVE)));
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</u></b></html>");
+                rotateLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_STOP_ROTATION)));
             } else {
-                rotateLabel.setText("<html><b><u>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</u></b></html>");
+                rotateLabel.setText(boldAndUnderlined(Translator.translateOutputMessage(GUI_ROTATE_GRAPH)));
             }
             validate();
             repaint();
@@ -1749,18 +1754,18 @@ public class MathToolGUI extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == legendLabel) {
-            legendLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_LEGEND) + "</b></html>");
+            legendLabel.setText(bold(Translator.translateOutputMessage(GUI_LEGEND)));
             validate();
             repaint();
         } else if (e.getSource() == saveLabel) {
-            saveLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_SAVE) + "</b></html>");
+            saveLabel.setText(bold(Translator.translateOutputMessage(GUI_SAVE)));
             validate();
             repaint();
         } else if (e.getSource() == rotateLabel) {
             if (isRotating) {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_STOP_ROTATION) + "</b></html>");
+                rotateLabel.setText(bold(Translator.translateOutputMessage(GUI_STOP_ROTATION)));
             } else {
-                rotateLabel.setText("<html><b>" + Translator.translateOutputMessage(GUI_ROTATE_GRAPH) + "</b></html>");
+                rotateLabel.setText(bold(Translator.translateOutputMessage(GUI_ROTATE_GRAPH)));
             }
             validate();
             repaint();

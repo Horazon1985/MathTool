@@ -1,11 +1,10 @@
 package mathtool.component.components;
 
 import org.jsoup.parser.Parser;
-import algorithmexecutor.AlgorithmCompiler;
-import algorithmexecutor.enums.Keywords;
-import algorithmexecutor.exceptions.AlgorithmCompileException;
-import algorithmexecutor.exceptions.AlgorithmExecutionException;
-import algorithmexecutor.output.AlgorithmOutputPrinter;
+import algorithmexecuter.AlgorithmCompiler;
+import algorithmexecuter.exceptions.AlgorithmCompileException;
+import algorithmexecuter.exceptions.AlgorithmExecutionException;
+import algorithmexecuter.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -18,17 +17,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
 
+    private static final String PATH_LOGO_MATHTOOL_ALGORITHMS = "icons/MathToolAlgorithmsLogo.png";    
+    
     private JPanel headerPanel;
     private JLabel headerLabel;
     private ImageIcon headerImage;
 
     private JButton addAlgorithmButton;
     private JButton runButton;
-    private JButton debugButton;
+    private JButton formatButton;
 
     private final int STUB = 20;
     private final int PADDING = 20;
@@ -39,6 +42,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private static final String GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
     private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
+    private static final String GUI_MathToolAlgorithmsGUI_FORMAT = "GUI_MathToolAlgorithmsGUI_FORMAT";
 
     private static MathToolAlgorithmsGUI instance = null;
 
@@ -52,10 +56,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
     /**
      * Aufbau:<br>
      * (1) Ganz oben: Logo.<br>
-     * (2) Eine Reihe von Informationstexten.<br>
-     * (3) Eine Reihe von Informationstexten.<br>
-     * (4) Eine Reihe von Menüpunkten.<br>
-     * (5) Eine TextArea, die mal ein-, mal ausgeblendet werden kann.
+     * (2) Editor zum Schreiben von Algorithmencodes.<br>
+     * (3) Ausgabefenster.<br>
+     * (4) Buttons.<br>
      */
     private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiHeight, String titleID) {
 
@@ -71,7 +74,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             // Logo ganz oben laden.
             this.headerPanel = new JPanel();
             add(this.headerPanel);
-            this.headerImage = new ImageIcon(getClass().getResource("icons/MathToolAlgorithmsLogo.png"));
+            this.headerImage = new ImageIcon(getClass().getResource(PATH_LOGO_MATHTOOL_ALGORITHMS));
             if (this.headerImage != null) {
                 this.headerLabel = new JLabel(this.headerImage);
                 this.headerPanel.add(this.headerLabel);
@@ -94,7 +97,23 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
             currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
 
-            this.algorithmEditor.setText("<b><font color=\"blue\">expression</font></b> main(){expression x = int(t^2,t,0,1); <b><font color=\"blue\">return</font></b> x;}");
+            this.algorithmEditor.setText("expression main(){expression x = int(t^2,t,0,1); if(x>1){x=x+2;} return x;}");
+            algorithmEditor.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+
+                }
+            });
 
             this.outputArea = new JTextPane();
             add(this.outputArea);
@@ -117,14 +136,14 @@ public class MathToolAlgorithmsGUI extends JDialog {
             add(this.runButton);
             this.runButton.setBounds(2 * PADDING + 200, currentComponentLevel, 200, 30);
 
-            this.debugButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_DEBUG));
-            add(this.debugButton);
-            this.debugButton.setBounds(3 * PADDING + 400, currentComponentLevel, 200, 30);
+            this.formatButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FORMAT));
+            add(this.formatButton);
+            this.formatButton.setBounds(3 * PADDING + 400, currentComponentLevel, 200, 30);
 
             this.runButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    String algString = getPlainCode(algorithmEditor.getText());
+                    String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
                     String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
 
                     try {
@@ -134,7 +153,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                         AlgorithmOutputPrinter.printEndParsingAlgorithms();
 
                         AlgorithmOutputPrinter.printStartAlgorithmData();
-                        algorithmexecutor.AlgorithmExecutor.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
+                        algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
                         AlgorithmOutputPrinter.printEndAlgorithmData();
                     } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                         AlgorithmOutputPrinter.printException(e);
@@ -143,6 +162,16 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 }
             });
 
+            this.formatButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    String unformattedCode = algorithmEditor.getText();
+                    String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(unformattedCode);
+                    algorithmEditor.setDocument(algorithmEditor.getEditorKit().createDefaultDocument());
+                    algorithmEditor.setText(formattedCode);
+                }
+            });
+            
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
@@ -150,28 +179,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
         } catch (Exception e) {
         }
 
-    }
-
-    private String getPlainCode(String HtmlCode) {
-        String code = HtmlCode;
-        String modifiedCode = code;
-        String tag;
-        do {
-            code = modifiedCode;
-            if (modifiedCode.contains("<")) {
-                tag = modifiedCode.substring(modifiedCode.indexOf("<"), modifiedCode.indexOf(">") + 1);
-                modifiedCode = modifiedCode.replaceAll(tag, "");
-            }
-        } while (modifiedCode.length() < code.length());
-        return code;
-    }
-
-    private String getCodeWithBoldKeywords(String code) {
-        String codeFormatted = code;
-        for (Keywords keyword : Keywords.values()) {
-            codeFormatted = codeFormatted.replaceAll(keyword.getValue(), "<b><font color=\"blue\">" + keyword.getValue() + "</font></b>");
-        }
-        return codeFormatted;
     }
 
 }

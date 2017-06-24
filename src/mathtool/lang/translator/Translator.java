@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import mathtool.component.components.ErrorDialogGUI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -13,13 +14,33 @@ import org.w3c.dom.NodeList;
 
 public abstract class Translator {
 
+    private static final String PREFIX_MATHTOOL_GUI_MESSAGES = "GUI";
+    private static final String PREFIX_MATH_COMMAND_COMPILER_MESSAGES = "MCC";
+    private static final String PREFIX_ALGORITHM_COMPILLATION_MESSAGES = "AC";
+    private static final String PREFIX_ALGORITHM_EXECUTION_MESSAGES = "AE";
+
+    private static final String PATH_LANG_GUI_MESSAGES = "mathtool/lang/messages/LangGUI.xml";
+    private static final String PATH_MATH_COMMAND_COMPILER_MESSAGES = "mathtool/lang/messages/LangMathCommandCompiler.xml";
+    private static final String PATH_ALGORITHM_COMPILLATION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmCompiler.xml";
+    private static final String PATH_ALGORITHM_EXECUTION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmExecuter.xml";
+
+    private static final String PATH_UNKNOWN_ERROR_MESSAGES = "mathtool/lang/messages/LangUndefinedError.xml";
+
+    private static final String ELEMENT_NAME_OBJECT = "object";
+    private static final String ELEMENT_ATTRIBUTE_ID = "id";
+
+    private static final String ELEMENT_NAME_DE = "German";
+    private static final String ELEMENT_NAME_EN = "English";
+    private static final String ELEMENT_NAME_RU = "Russian";
+    private static final String ELEMENT_NAME_UA = "Ukrainian";
+
     private static final Map<String, String> RESOURCES = new HashMap<>();
 
     static {
-        RESOURCES.put("GUI", "mathtool/lang/messages/LangGUI.xml");
-        RESOURCES.put("MCC", "mathtool/lang/messages/LangMathCommandCompiler.xml");
-        RESOURCES.put("AC", "algorithmexecutor/messages/AlgorithmCompileExceptionMessages.xml");
-        RESOURCES.put("AE", "algorithmexecutor/messages/AlgorithmExecutionExceptionMessages.xml");
+        RESOURCES.put(PREFIX_MATHTOOL_GUI_MESSAGES, PATH_LANG_GUI_MESSAGES);
+        RESOURCES.put(PREFIX_MATH_COMMAND_COMPILER_MESSAGES, PATH_MATH_COMMAND_COMPILER_MESSAGES);
+        RESOURCES.put(PREFIX_ALGORITHM_COMPILLATION_MESSAGES, PATH_ALGORITHM_COMPILLATION_MESSAGES);
+        RESOURCES.put(PREFIX_ALGORITHM_EXECUTION_MESSAGES, PATH_ALGORITHM_EXECUTION_MESSAGES);
     }
 
     /**
@@ -29,8 +50,8 @@ public abstract class Translator {
     private static String translateMessage(String exceptionId) {
 
         // Die entsprechende XML-Datei öffnen.
+        URL langFile = null;
         try {
-            URL langFile = null;
             for (String key : RESOURCES.keySet()) {
                 if (exceptionId.startsWith(key)) {
                     langFile = ClassLoader.getSystemResource(RESOURCES.get(key));
@@ -38,8 +59,8 @@ public abstract class Translator {
                 }
             }
             if (langFile == null) {
-                // Datei für unbekannten Fehler öffnen.
-                langFile = ClassLoader.getSystemResource("mathtool/lang/messages/LangUndefinedError.xml");
+                // Fall: Unbekannten Fehler aufgetreten (Präfix nicht identifizierbar).
+                langFile = ClassLoader.getSystemResource(PATH_UNKNOWN_ERROR_MESSAGES);
             }
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -47,7 +68,7 @@ public abstract class Translator {
             Document doc = dBuilder.parse(langFile.openStream());
 
             doc.getDocumentElement().normalize();
-            NodeList nList = doc.getElementsByTagName("object");
+            NodeList nList = doc.getElementsByTagName(ELEMENT_NAME_OBJECT);
 
             for (int i = 0; i < nList.getLength(); i++) {
 
@@ -57,16 +78,16 @@ public abstract class Translator {
 
                     Element eElement = (Element) nNode;
 
-                    if (eElement.getAttribute("id").equals(exceptionId)) {
+                    if (eElement.getAttribute(ELEMENT_ATTRIBUTE_ID).equals(exceptionId)) {
                         switch (Expression.getLanguage()) {
                             case DE:
-                                return eElement.getElementsByTagName("German").item(0).getTextContent();
+                                return eElement.getElementsByTagName(ELEMENT_NAME_DE).item(0).getTextContent();
                             case EN:
-                                return eElement.getElementsByTagName("English").item(0).getTextContent();
+                                return eElement.getElementsByTagName(ELEMENT_NAME_EN).item(0).getTextContent();
                             case RU:
-                                return eElement.getElementsByTagName("Russian").item(0).getTextContent();
+                                return eElement.getElementsByTagName(ELEMENT_NAME_RU).item(0).getTextContent();
                             case UA:
-                                return eElement.getElementsByTagName("Ukrainian").item(0).getTextContent();
+                                return eElement.getElementsByTagName(ELEMENT_NAME_UA).item(0).getTextContent();
                             default:
                                 break;
                         }
@@ -75,9 +96,17 @@ public abstract class Translator {
                 }
             }
         } catch (Exception e) {
+            String path;
+            if (langFile != null) {
+                path = langFile.getPath();
+            } else {
+                path = PATH_UNKNOWN_ERROR_MESSAGES;
+            }
+            ErrorDialogGUI errorDialog = new ErrorDialogGUI(path);
+            errorDialog.setVisible(true);
         }
 
-        // Sollte nie eintreten.
+        // Sollte bei korrekten Fehler-IDs und vorhandenen Fehlerdateien nie eintreten.
         return "";
 
     }
@@ -93,7 +122,7 @@ public abstract class Translator {
         for (int i = 0; i < params.length; i++) {
             token = "[" + i + "]";
             while (message.contains(token)) {
-                message = message.substring(0, message.indexOf(token)) + params[i].toString() + message.substring(message.indexOf(token) + token.length());
+                message = message.substring(0, message.indexOf(token)) + params[i] + message.substring(message.indexOf(token) + token.length());
             }
         }
         return message;
