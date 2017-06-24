@@ -2,7 +2,9 @@ package mathtool.lang.translator;
 
 import abstractexpressions.expression.classes.Expression;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +26,7 @@ public abstract class Translator {
     private static final String PATH_ALGORITHM_COMPILLATION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmCompiler.xml";
     private static final String PATH_ALGORITHM_EXECUTION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmExecuter.xml";
 
-    private static final String PATH_UNKNOWN_ERROR_MESSAGES = "mathtool/lang/messages/LangUndefinedError.xml";
+    public static final String PATH_UNKNOWN_ERROR_MESSAGES = "mathtool/lang/messages/LangUndefinedError.xml";
 
     private static final String ELEMENT_NAME_OBJECT = "object";
     private static final String ELEMENT_ATTRIBUTE_ID = "id";
@@ -43,6 +45,17 @@ public abstract class Translator {
         RESOURCES.put(PREFIX_ALGORITHM_EXECUTION_MESSAGES, PATH_ALGORITHM_EXECUTION_MESSAGES);
     }
 
+    public static Collection<String> getResources() {
+        Collection<String> resources = new HashSet<>();
+        /*
+        Manipulationen an RESOURCES.values() können Änderungen an der Map 
+        RESOURCES nach sich ziehen können. Deshalb wird hier eine Kopie 
+        zurückgegeben.
+        */
+        resources.addAll(RESOURCES.values());
+        return resources;
+    }
+    
     /**
      * Gibt eine Meldung entsprechend der exceptionId und der eingestellten
      * Sprache zurück.

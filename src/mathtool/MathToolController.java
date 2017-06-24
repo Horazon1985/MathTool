@@ -44,10 +44,13 @@ import graphic.GraphicPanelImplicit3D;
 import java.awt.Dimension;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import mathtool.component.components.ComputingDialogGUI;
+import mathtool.component.components.ErrorDialogGUI;
 import mathtool.component.components.MathToolTextField;
 import mathtool.config.MathToolPropertiesHandler;
 import mathtool.lang.translator.Translator;
@@ -71,6 +74,22 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesOpen.png"));
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
+
+    public static void checkResources() {
+        Collection<String> resourcesMathTool = Translator.getResources();
+        Set<String> missingResources = new HashSet<>();
+        URL langFile = null;
+        for (String res : resourcesMathTool) {
+            langFile = ClassLoader.getSystemResource(res);
+            if (langFile == null) {
+                missingResources.add(res);
+            }
+        }
+        if (!missingResources.isEmpty()) {
+            ErrorDialogGUI errorDialog = new ErrorDialogGUI(missingResources);
+            errorDialog.setVisible(true);
+        }
+    }
 
     public static void initSimplifyTypes() {
         HashSet<TypeSimplify> simplifyTypes = MathToolGUI.getSimplifyTypes();
