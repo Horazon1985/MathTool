@@ -572,11 +572,12 @@ public abstract class MathCommandCompiler {
         }
 
         /*
-         Hier wird den Variablen der Index "_ABSTRACT" angehängt. Dies
+         Hier wird den Variablen ein bestimmtes Format gegeben. Dies
          dient der Kennzeichnung, dass diese Variablen Platzhalter für
          weitere Ausdrücke und keine echten Variablen sind. Solche
          Variablen können niemals in einem geparsten Ausdruck vorkommen,
-         da der Parser Expression.build solche Variablen nicht akzeptiert.
+         da der Standardvalidator in der Methode Expression.build() solche 
+         Variablen nicht akzeptiert.
          */
         for (int i = 0; i < functionVars.length; i++) {
             functionVars[i] = NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (i + 1);
@@ -2548,8 +2549,8 @@ public abstract class MathCommandCompiler {
 
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
             }
@@ -2599,8 +2600,8 @@ public abstract class MathCommandCompiler {
         // Falls eines der Graphen nicht gezeichnet werden kann.
         if (expr.containsOperator()) {
             Expression difference = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]);
-            doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                    difference, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                    difference, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
@@ -2660,8 +2661,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = expr.simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        exprs.get(i), Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        exprs.get(i), Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
             }
@@ -2718,8 +2719,8 @@ public abstract class MathCommandCompiler {
         // Falls eines der Graphen nicht gezeichnet werden kann.
         if (expr.containsOperator()) {
             Expression difference = ((Expression[]) command.getParams()[0])[0].sub(((Expression[]) command.getParams()[0])[1]);
-            doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                    difference, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+            doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                    difference, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
             // Schließlich noch Fehler werfen.
             throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
         }
@@ -2799,8 +2800,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
@@ -2858,8 +2859,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
@@ -2904,8 +2905,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = expr.simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
             } else {
                 exprs.add(exprSimplified);
             }
@@ -2958,8 +2959,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = expr.simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
             } else {
@@ -3025,8 +3026,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = expr.simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        expr, Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        expr, Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
             } else {
@@ -3105,8 +3106,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_GRAPHS_CANNOT_BE_PLOTTED"));
 
@@ -3167,8 +3168,8 @@ public abstract class MathCommandCompiler {
             exprSimplified = components[i].simplify(simplifyTypesPlot);
             // Falls eines der Graphen nicht gezeichnet werden kann.
             if (exprSimplified.containsOperator()) {
-                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+                        components[i], Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
                 // Schließlich noch Fehler werfen.
                 throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
 
@@ -3231,8 +3232,8 @@ public abstract class MathCommandCompiler {
 //            exprSimplified = components[i].simplify(simplifyTypesPlot);
 //            // Falls eines der Graphen nicht gezeichnet werden kann.
 //            if (exprSimplified.containsOperator()) {
-//                doPrintOutput(Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_1"),
-//                        components[i], Translator.translateOutputMessage("EB_Operator_OPERATOR_CANNOT_BE_EVALUATED_2"));
+//                doPrintOutput(Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_1"),
+//                        components[i], Translator.translateOutputMessage("MCC_OPERATOR_CANNOT_BE_EVALUATED_2"));
 //                // Schließlich noch Fehler werfen.
 //                throw new EvaluationException(Translator.translateOutputMessage("MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED"));
 //

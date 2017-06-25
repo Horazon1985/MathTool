@@ -54,7 +54,7 @@ public class MathToolPropertiesHandler {
             input = new FileInputStream(PATH_PROPERTIES);
             PROPERTIES.load(input);
         } catch (IOException e) {
-            ErrorDialogGUI errorDialog = new ErrorDialogGUI(Paths.get(PATH_PROPERTIES).toAbsolutePath().toString());
+            ErrorDialogGUI errorDialog = ErrorDialogGUI.createResourceNotFoundDialog(Paths.get(PATH_PROPERTIES).toAbsolutePath().toString());
             errorDialog.setVisible(true);
         } finally {
             if (input != null) {

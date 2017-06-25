@@ -75,18 +75,35 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
 
-    public static void checkResources() {
+    /**
+     * Prüfung, ob alle benötigten Ressources im ExpressionBuilder vorhanden
+     * sind. Falls Ressourcen fehlen, wird ein entsprechender Dialog angezeigt.
+     */
+    public static void checkExpressionBuilderResources() {
+        Collection<String> resourcesExpressionBuilder = lang.translator.Translator.getResources();
+        checkResources(resourcesExpressionBuilder);
+    }
+
+    /**
+     * Prüfung, ob alle benötigten Ressources im ExpressionBuilder vorhanden
+     * sind. Falls Ressourcen fehlen, wird ein entsprechender Dialog angezeigt.
+     */
+    public static void checkMathToolResources() {
         Collection<String> resourcesMathTool = Translator.getResources();
+        checkResources(resourcesMathTool);
+    }
+
+    private static void checkResources(Collection<String> resources) {
         Set<String> missingResources = new HashSet<>();
         URL langFile = null;
-        for (String res : resourcesMathTool) {
+        for (String res : resources) {
             langFile = ClassLoader.getSystemResource(res);
             if (langFile == null) {
                 missingResources.add(res);
             }
         }
         if (!missingResources.isEmpty()) {
-            ErrorDialogGUI errorDialog = new ErrorDialogGUI(missingResources);
+            ErrorDialogGUI errorDialog = ErrorDialogGUI.createResourceNotFoundDialog(missingResources);
             errorDialog.setVisible(true);
         }
     }

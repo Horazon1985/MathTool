@@ -36,6 +36,8 @@ public abstract class Translator {
     private static final String ELEMENT_NAME_RU = "Russian";
     private static final String ELEMENT_NAME_UA = "Ukrainian";
 
+    private static final String ERROR_TEXT = "Message not found.";
+
     private static final Map<String, String> RESOURCES = new HashMap<>();
 
     static {
@@ -51,11 +53,11 @@ public abstract class Translator {
         Manipulationen an RESOURCES.values() können Änderungen an der Map 
         RESOURCES nach sich ziehen können. Deshalb wird hier eine Kopie 
         zurückgegeben.
-        */
+         */
         resources.addAll(RESOURCES.values());
         return resources;
     }
-    
+
     /**
      * Gibt eine Meldung entsprechend der exceptionId und der eingestellten
      * Sprache zurück.
@@ -109,18 +111,10 @@ public abstract class Translator {
                 }
             }
         } catch (Exception e) {
-            String path;
-            if (langFile != null) {
-                path = langFile.getPath();
-            } else {
-                path = PATH_UNKNOWN_ERROR_MESSAGES;
-            }
-            ErrorDialogGUI errorDialog = new ErrorDialogGUI(path);
-            errorDialog.setVisible(true);
         }
 
         // Sollte bei korrekten Fehler-IDs und vorhandenen Fehlerdateien nie eintreten.
-        return "";
+        return ERROR_TEXT;
 
     }
 

@@ -465,6 +465,18 @@
         <Ukrainian>Оберіть, будь ласка, менше число для </Ukrainian>
         <Russian>Выберите, пожалуйста, меньшее число для</Russian>
     </object>
+    <object id = "MCC_OPERATOR_CANNOT_BE_EVALUATED_1">
+        <German>Der Ausdruck </German>
+        <English>The expression </English>
+        <Ukrainian>Вираз </Ukrainian>
+        <Russian>Выражение </Russian>
+    </object>
+    <object id = "MCC_OPERATOR_CANNOT_BE_EVALUATED_2">
+        <German> kann nicht ausgewertet werden, da er einen Operator enthält, welcher nicht weiter vereinfacht werden kann.</German>
+        <English> cannot be evaluated, because it contains an operator, which cannot be further simplified.</English>
+        <Ukrainian> не можна оцінити, оскількт він містить оператор, який неможливо спростити.</Ukrainian>
+        <Russian> нельзя оценить, поскольку оно содержит оператор, который невозможно упростить.</Russian>
+    </object>
     <object id = "MCC_NOT_ENOUGH_PARAMETERS_IN_PLOT2D">
         <German>Zu wenig Parameter im Befehl 'plot2d'.</German>
         <English>Not enough parameters in command 'plot2d'.</English>
