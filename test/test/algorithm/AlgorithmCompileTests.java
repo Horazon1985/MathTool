@@ -9,6 +9,7 @@ import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.CompileExceptionTexts;
 import algorithmexecuter.model.Algorithm;
+import algorithmexecuter.model.command.DoWhileControlStructure;
 import java.util.List;
 import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +35,14 @@ public class AlgorithmCompileTests {
         assertTrue(outputFormatted.equals(outputFormattedExpected));
     }
 
+    @Test
+    public void preprocessNonTrivialAlgorithmTest() {
+        String input = "expression main(){expression a=5;do  {a=a+1;}   while(a<10);return a;}";
+        String outputFormatted = CompilerUtils.preprocessAlgorithm(input);
+        String outputFormattedExpected = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
+        assertTrue(outputFormatted.equals(outputFormattedExpected));
+    }
+    
     @Test
     public void parseSimpleAlgorithmWithReturnTest() {
         String input = "expression main(){expression a=5;return a;}";
@@ -151,6 +160,26 @@ public class AlgorithmCompileTests {
         }
     }
 
+    @Test
+    public void parseSimpleAlgorithmWithDoWhileControlStructureTest() {
+        String input = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(alg.getName(), "main");
+            assertEquals(alg.getInputParameters().length, 0);
+            assertEquals(alg.getCommands().size(), 3);
+            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(1).isDoWhileControlStructure());
+            assertTrue(alg.getCommands().get(2).isReturnCommand());
+            assertEquals(((DoWhileControlStructure) alg.getCommands().get(1)).getCommands().size(), 1);
+            assertTrue(((DoWhileControlStructure) alg.getCommands().get(1)).getCommands().get(0).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
     @Test
     public void parseAlgorithmCallingAnotherAlgorithmTest() {
         String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
@@ -338,5 +367,5 @@ public class AlgorithmCompileTests {
             assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, "a"));
         }
     }
-
+    
 }

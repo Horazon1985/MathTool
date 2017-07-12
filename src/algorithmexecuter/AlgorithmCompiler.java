@@ -298,7 +298,7 @@ public abstract class AlgorithmCompiler {
         // Ausnahme: if (...) {...} else {...}: Semikolon zwischen dem if- und dem else-Block entfernen.
         inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.ELSE.getValue(), "\\}" + Keywords.ELSE.getValue());
         // Ausnahme: do {...} while (...): Semikolon zwischen dem do-Block und dem while entfernen.
-        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.WHILE.getValue(), "\\}" + Keywords.ELSE.getValue());
+        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.WHILE.getValue(), "\\}" + Keywords.WHILE.getValue());
         return inputWithSeparators;
     }
 

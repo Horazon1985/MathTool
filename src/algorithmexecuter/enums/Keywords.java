@@ -6,16 +6,17 @@ public enum Keywords {
     FALSE("false"),
     TRUE("true"),
     RETURN("return"),
-    BREAK("break"),
-    CONTINUE("continue"),
     IF("if"),
     ELSE("else"),
+//    TRY("try"),
+//    CATCH("catch"),
+//    FINALLY("finally"),
+//    FOR("for"),
     WHILE("while"),
-    DO("do"),
-    FOR("for"),
-    TRY("try"),
-    CATCH("catch"),
-    FINALLY("finally");
+    BREAK("break"),
+    CONTINUE("continue"),
+    DO("do");
+ 
     
     private final String value;
     

@@ -95,12 +95,6 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
-    <object id = "AC_BRACKET_MISSING">
-        <German>Klammer fehlt: [0].</German>
-        <English>Bracket missing: [0].</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
-    </object>
     <object id = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END">
         <German>Eine Kontrollstruktur muss einen Befehlsblock besitzen, welcher mit [0] beginnt und mit [1] endet.</German>
         <English>A control structure must contains a command block, beginning with [0] and ending with [1].</English>

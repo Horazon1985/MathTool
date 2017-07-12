@@ -32,6 +32,7 @@ import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.Signature;
+import algorithmexecuter.model.command.DoWhileControlStructure;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,21 +70,21 @@ public abstract class AlgorithmCommandCompiler {
      */
     private static List<AlgorithmCommand> parseLine(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
         try {
-            return parseAssignValueCommand(line, memory, alg);
+            return parseAssignValueCommand(line, memory);
         } catch (ParseAssignValueException e) {
             throw e;
         } catch (NotDesiredCommandException e) {
         }
 
         try {
-            return parseDeclareIdentifierCommand(line, memory, alg);
+            return parseDeclareIdentifierCommand(line, memory);
         } catch (ParseAssignValueException e) {
             throw e;
         } catch (NotDesiredCommandException e) {
         }
 
         try {
-            return parseVoidCommand(line, memory, alg);
+            return parseVoidCommand(line, memory);
         } catch (NotDesiredCommandException e) {
         }
 
@@ -104,7 +105,7 @@ public abstract class AlgorithmCommandCompiler {
         throw new AlgorithmCompileException(CompileExceptionTexts.AC_COMMAND_COUND_NOT_BE_PARSED, line);
     }
 
-    private static List<AlgorithmCommand> parseDeclareIdentifierCommand(String line, AlgorithmMemory scopeMemory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+    private static List<AlgorithmCommand> parseDeclareIdentifierCommand(String line, AlgorithmMemory scopeMemory) throws AlgorithmCompileException, NotDesiredCommandException {
         // Typ ermitteln. Dieser ist != null, wenn es sich definitiv um eine Identifierdeklaration handelt.
         IdentifierType type = getTypeIfIsValidDeclareIdentifierCommand(line);
         if (type == null) {
@@ -133,7 +134,7 @@ public abstract class AlgorithmCommandCompiler {
         return null;
     }
 
-    private static List<AlgorithmCommand> parseAssignValueCommand(String line, AlgorithmMemory scopeMemory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+    private static List<AlgorithmCommand> parseAssignValueCommand(String line, AlgorithmMemory scopeMemory) throws AlgorithmCompileException, NotDesiredCommandException {
         // Erste Prüfung, ob es sich definitiv nicht um eine Zuweisung handelt.
         if (!isAssignValueCommandIfValid(line)) {
             throw new NotDesiredCommandException();
@@ -178,7 +179,7 @@ public abstract class AlgorithmCommandCompiler {
         if (type == IdentifierType.EXPRESSION) {
 
             // Fall: Arithmetischer / Analytischer Ausdruck.
-            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory, alg);
+            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
             String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
             try {
@@ -196,7 +197,7 @@ public abstract class AlgorithmCommandCompiler {
         } else if (type == IdentifierType.BOOLEAN_EXPRESSION) {
 
             // Fall: boolscher Ausdruck.
-            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory, alg);
+            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
             String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
             try {
@@ -215,7 +216,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         // Fall: Matrizenausdruck.
-        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory, alg);
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
         List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
         String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
         try {
@@ -369,7 +370,7 @@ public abstract class AlgorithmCommandCompiler {
         return true;
     }
 
-    private static List<AlgorithmCommand> parseVoidCommand(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+    private static List<AlgorithmCommand> parseVoidCommand(String line, AlgorithmMemory memory) throws AlgorithmCompileException, NotDesiredCommandException {
 
         throw new NotDesiredCommandException();
     }
@@ -379,32 +380,48 @@ public abstract class AlgorithmCommandCompiler {
         try {
             return parseIfElseControlStructure(line, memory, alg);
         } catch (ParseControlStructureException e) {
+            /*
+            Es ist zwar eine If-Else-Struktur mit korrekter Bedingung, aber der
+            innere Block kann nicht kompiliert werden.
+             */
             throw e;
         } catch (BooleanExpressionException | BlockCompileException e) {
             // Es ist zwar eine If-Else-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
         } catch (NotDesiredCommandException e) {
-            /*
-            Es ist zwar eine If-Else-Struktur mit korrekter Bedingung, aber der
-            innere Block kann nicht kompiliert werden.
-             */
+            // Keine If-Else-Struktur. Also weiter.
         }
         // For-Block
         // While-Block
         try {
             return parseWhileControlStructure(line, memory, alg);
         } catch (ParseControlStructureException e) {
+            /*
+            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der
+            innere Block kann nicht kompiliert werden.
+             */
             throw e;
         } catch (BooleanExpressionException | BlockCompileException e) {
             // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
             throw new AlgorithmCompileException(e);
         } catch (NotDesiredCommandException e) {
-            /*
-            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der
-            innere Block kann nicht kompiliert werden.
-             */
+            // Keine While-Struktur. Also weiter.
         }
         // Do-While-Block
+        try {
+            return parseDoWhileControlStructure(line, memory, alg);
+        } catch (ParseControlStructureException e) {
+            /*
+            Es ist zwar eine Do-While-Struktur mit korrekter Bedingung, aber der
+            innere Block kann nicht kompiliert werden.
+             */
+            throw e;
+        } catch (BooleanExpressionException | BlockCompileException e) {
+            // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
+            throw new AlgorithmCompileException(e);
+        } catch (NotDesiredCommandException e) {
+            // Keine Do-While-Struktur. Also weiter.
+        }
         throw new NotDesiredCommandException();
     }
 
@@ -417,7 +434,7 @@ public abstract class AlgorithmCommandCompiler {
 
         int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
         if (endOfBooleanCondition < 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_MISSING, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String booleanConditionString = line.substring((Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
@@ -501,7 +518,7 @@ public abstract class AlgorithmCommandCompiler {
 
         int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
         if (endOfBooleanCondition < 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_MISSING, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String booleanConditionString = line.substring((Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
@@ -546,6 +563,50 @@ public abstract class AlgorithmCommandCompiler {
         throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
     }
 
+    private static List<AlgorithmCommand> parseDoWhileControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException, NotDesiredCommandException {
+
+        if (!line.startsWith(Keywords.DO.getValue() + ReservedChars.BEGIN.getValue())) {
+            throw new NotDesiredCommandException();
+        }
+
+        // Block im Do-Teil kompilieren.
+        int bracketCounter = 1;
+        int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
+        int endBlockPosition = -1;
+        for (int i = beginBlockPosition; i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endBlockPosition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+        }
+
+        List<AlgorithmCommand> commandsDoPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        
+        // While-Bedingung kompilieren
+        String whilePart = line.substring(endBlockPosition + 1);
+        if (!whilePart.startsWith(Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_KEYWORD_EXPECTED, Keywords.WHILE.getValue());
+        }
+        if (!whilePart.endsWith(String.valueOf(ReservedChars.CLOSE_BRACKET.getValue()))) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+        }
+
+        String whileConditionPart = line.substring(endBlockPosition + Keywords.WHILE.getValue().length() + 2, line.length() - 1);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        BooleanExpression condition = BooleanExpression.build(whileConditionPart, VALIDATOR, typesMap);
+
+        return Collections.singletonList((AlgorithmCommand) new DoWhileControlStructure(commandsDoPart, condition));
+    }
+
     private static List<AlgorithmCommand> parseReturnCommand(String line, AlgorithmMemory scopeMemory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
         if (line.startsWith(Keywords.RETURN.getValue() + " ")) {
             if (line.equals(Keywords.RETURN.getValue() + ReservedChars.LINE_SEPARATOR)) {
@@ -555,7 +616,7 @@ public abstract class AlgorithmCommandCompiler {
 
             if (scopeMemory.getMemory().get(returnValueCandidate) == null) {
 
-                AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(returnValueCandidate, scopeMemory, alg);
+                AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(returnValueCandidate, scopeMemory);
                 List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
                 String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
 
@@ -567,7 +628,7 @@ public abstract class AlgorithmCommandCompiler {
                 }
                 String genVarForReturn = generateTechnicalVarName();
                 String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + rightSideReplaced;
-                List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, scopeMemory, alg);
+                List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, scopeMemory);
                 commands.addAll(additionalCommandsByAssignment);
                 commands.add(new ReturnCommand(Identifier.createIdentifier(scopeMemory, genVarForReturn, alg.getReturnType())));
                 return commands;
@@ -627,7 +688,7 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     ///////////////////// Methoden für die Zerlegung eines Ausdrucks, welcher Algorithmenaufrufe enthält, in mehrere Befehle ///////////////////////
-    private static AlgorithmCommandReplacementList decomposeAbstractExpressionInvolvingAlgorithmCalls(String input, AlgorithmMemory memory, Algorithm alg) {
+    private static AlgorithmCommandReplacementList decomposeAbstractExpressionInvolvingAlgorithmCalls(String input, AlgorithmMemory memory) {
         String inputWithGeneratedVars = input;
         List<AlgorithmCommand> commands = new ArrayList<>();
 
@@ -675,7 +736,7 @@ public abstract class AlgorithmCommandCompiler {
                         endingAlgCall = i;
 
                         try {
-                            inputWithGeneratedVars = addAssignValueCommandsForNonVarAlgorithmParameters(inputWithGeneratedVars, beginningAlgCall, endingAlgCall, algorithmCallData, commands, memory, alg);
+                            inputWithGeneratedVars = addAssignValueCommandsForNonVarAlgorithmParameters(inputWithGeneratedVars, beginningAlgCall, endingAlgCall, algorithmCallData, commands, memory);
                             beginningAlgCall = inputWithGeneratedVars.indexOf(signature.getName(), endingAlgCall);
                             break;
                         } catch (ParseAssignValueException e) {
@@ -693,7 +754,7 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     private static String addAssignValueCommandsForNonVarAlgorithmParameters(String input, int beginningAlgCall, int endingAlgCall, AlgorithmCallData algorithmCallData,
-            List<AlgorithmCommand> commands, AlgorithmMemory scopeMemory, Algorithm alg) throws ParseAssignValueException {
+            List<AlgorithmCommand> commands, AlgorithmMemory scopeMemory) throws ParseAssignValueException {
 
         Identifier[] inputParameters = new Identifier[algorithmCallData.getParameterValues().length];
         AbstractExpression value;

@@ -17,7 +17,6 @@ import algorithmexecuter.model.identifier.Identifier;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Algorithm {
 
@@ -134,19 +133,8 @@ public class Algorithm {
             }
         }
 
-        /* 
-        Speicherinitialisierung dürfte eigentlich nur in main() erforderlich sein.
-        Restliche Ausführungen geschehen per Ausruf aus anderen Algorithmen und 
-        dort werden entsprechende Speicher initialisiert.
-         */
-//        if (AlgorithmExecutor.getExecutionMemory().get(this) == null) {
-//            AlgorithmExecutor.getExecutionMemory().put(this, new AlgorithmMemory(this, this.inputParameters));
-//        }
-
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
         checkForIdentifierWithoutValues();
-        // Variablenwerte erneut setzen.
-//        refreshVariableValues(null);
 
         return AlgorithmExecuter.executeBlock(getInitialAlgorithmMemory(), this.commands);
     }
@@ -159,19 +147,6 @@ public class Algorithm {
         }
     }
 
-//    private void refreshVariableValues(AlgorithmMemory scopeMemory) {
-//        Map<String, Identifier> memoryMap = scopeMemory.getMemory();
-//        for (String var : memoryMap.keySet()) {
-//            if (memoryMap.get(var).getValue() instanceof Expression) {
-//                Variable.setPreciseExpression(memoryMap.get(var).getName(), (Expression) memoryMap.get(var).getValue());
-//            } else if (memoryMap.get(var).getValue() instanceof LogicalExpression) {
-//                LogicalVariable.setValue(memoryMap.get(var).getName(), ((LogicalExpression) memoryMap.get(var).getValue()).evaluate());
-//            } else if (memoryMap.get(var).getValue() instanceof MatrixExpression) {
-//                MatrixVariable.setValue(memoryMap.get(var).getName(), (MatrixExpression) memoryMap.get(var).getValue());
-//            }
-//        }
-//    }
-    
     private AlgorithmMemory getInitialAlgorithmMemory() {
         return new AlgorithmMemory(this, this.getInputParameters());
     }

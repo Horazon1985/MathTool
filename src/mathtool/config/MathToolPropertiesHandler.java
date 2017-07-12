@@ -30,7 +30,7 @@ public class MathToolPropertiesHandler {
     private static final String KEY_SIMPLIFY_EXPAND_COLLECT = "mathtool.option.expandAndCollectIfShorter";
     private static final String KEY_SIMPLIFY_FACTORIZE = "mathtool.option.factorizeDropDown";
     private static final String KEY_SIMPLIFY_LOGARITHMS = "mathtool.option.logarithmsDropDown";
-    
+
     private static final String DEFAULT_VALUE_FONTSIZE_GRAPHIC = "20";
     private static final String DEFAULT_VALUE_FONTSIZE_TEXT = "15";
     private static final String DEFAULT_VALUE_LANGUAGE = "DE";
@@ -42,7 +42,7 @@ public class MathToolPropertiesHandler {
     private static final String DEFAULT_VALUE_SIMPLIFY_EXPAND_COLLECT = "true";
     private static final String DEFAULT_VALUE_SIMPLIFY_FACTORIZE = "factorize";
     private static final String DEFAULT_VALUE_SIMPLIFY_LOGARITHMS = "collect";
-    
+
     private static final Properties PROPERTIES = new Properties();
 
     public static void readMathToolProperties() {
@@ -61,9 +61,9 @@ public class MathToolPropertiesHandler {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    // TO DO.
+                    ErrorDialogGUI errorDialog = ErrorDialogGUI.createCannotCloseResourceDialog(Paths.get(PATH_PROPERTIES).toAbsolutePath().toString());
+                    errorDialog.setVisible(true);
                 }
-
             }
         }
     }
@@ -87,7 +87,7 @@ public class MathToolPropertiesHandler {
             }
         }
     }
-    
+
     public static int getFontSizeGraphic() {
         return Integer.parseInt(PROPERTIES.getProperty(KEY_FONTSIZE_GRAPHIC, DEFAULT_VALUE_FONTSIZE_GRAPHIC));
     }
@@ -99,27 +99,27 @@ public class MathToolPropertiesHandler {
     public static TypeLanguage getLanguage() {
         return TypeLanguage.valueOf(PROPERTIES.getProperty(KEY_LANGUAGE, DEFAULT_VALUE_LANGUAGE));
     }
-    
+
     public static TypeMode getMode() {
         return TypeMode.valueOf(PROPERTIES.getProperty(KEY_MODE, DEFAULT_VALUE_MODE));
     }
-    
+
     public static int getScreenWidth() {
         return Integer.parseInt(PROPERTIES.getProperty(KEY_SCREEN_WIDTH, DEFAULT_VALUE_SCREEN_WIDTH));
     }
-    
+
     public static int getScreenHeight() {
         return Integer.parseInt(PROPERTIES.getProperty(KEY_SCREEN_HEIGHT, DEFAULT_VALUE_SCREEN_HEIGHT));
     }
-        
+
     public static boolean getAlgebraicRelations() {
         return Boolean.parseBoolean(PROPERTIES.getProperty(KEY_SIMPLIFY_ALGEBRAIC_RELATIONS, DEFAULT_VALUE_SIMPLIFY_ALGEBRAIC_RELATIONS));
     }
-    
+
     public static boolean getFunctionalRelations() {
         return Boolean.parseBoolean(PROPERTIES.getProperty(KEY_SIMPLIFY_FUNCTIONAL_RELATIONS, DEFAULT_VALUE_SIMPLIFY_FUNCTIONAL_RELATIONS));
     }
-    
+
     public static boolean getExpandAndCollectIfShorter() {
         return Boolean.parseBoolean(PROPERTIES.getProperty(KEY_SIMPLIFY_EXPAND_COLLECT, DEFAULT_VALUE_SIMPLIFY_EXPAND_COLLECT));
     }
@@ -131,5 +131,5 @@ public class MathToolPropertiesHandler {
     public static LogarithmsDropDownOption getLogarithmsDropDown() {
         return LogarithmsDropDownOption.valueOf(PROPERTIES.getProperty(KEY_SIMPLIFY_LOGARITHMS, DEFAULT_VALUE_SIMPLIFY_LOGARITHMS));
     }
-       
+
 }

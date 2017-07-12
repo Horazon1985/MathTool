@@ -18,7 +18,6 @@ public abstract class CompileExceptionTexts {
     public static final String AC_CANNOT_FIND_SYMBOL = "AC_CANNOT_FIND_SYMBOL";    
     public static final String AC_ILLEGAL_CHARACTER = "AC_ILLEGAL_CHARACTER";    
     public static final String AC_COMMAND_COUND_NOT_BE_PARSED = "AC_COMMAND_COUND_NOT_BE_PARSED";    
-    public static final String AC_BRACKET_MISSING = "AC_BRACKET_MISSING";    
     public static final String AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END";    
     public static final String AC_KEYWORD_EXPECTED = "AC_KEYWORD_EXPECTED";    
     public static final String AC_MISSING_LINE_SEPARATOR = "AC_MISSING_LINE_SEPARATOR";    

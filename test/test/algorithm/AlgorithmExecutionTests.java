@@ -1,20 +1,14 @@
 package test.algorithm;
 
-import abstractexpressions.expression.classes.Constant;
 import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecuter.AlgorithmCompiler;
 import algorithmexecuter.AlgorithmExecuter;
-import algorithmexecuter.model.command.AssignValueCommand;
-import algorithmexecuter.model.command.ReturnCommand;
 import algorithmexecuter.enums.IdentifierType;
-import algorithmexecuter.enums.Keywords;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
+import algorithmexecuter.model.command.DoWhileControlStructure;
 import algorithmexecuter.output.AlgorithmOutputPrinter;
-import exceptions.ExpressionException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JTextPane;
@@ -158,6 +152,24 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("8")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+    
+    @Test
+    public void executeAlgorithmWithDoWhileControlStructureTest() {
+        String input = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("10")));
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         } catch (Exception e) {

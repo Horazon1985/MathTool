@@ -42,6 +42,10 @@ public abstract class AlgorithmCommand {
         return this instanceof WhileControlStructure;
     }
     
+    public boolean isDoWhileControlStructure() {
+        return this instanceof DoWhileControlStructure;
+    }
+    
     public boolean isReturnCommand() {
         return this instanceof ReturnCommand;
     }
