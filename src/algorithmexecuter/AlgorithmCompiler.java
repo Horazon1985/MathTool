@@ -263,7 +263,7 @@ public abstract class AlgorithmCompiler {
 
             // Validierung des Parameternamen.
             if (!VALIDATOR.isValidIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, parameterName);
             }
             // Prüfung auf doppelte Deklaration.
             if (memory.containsIdentifier(parameterName)) {

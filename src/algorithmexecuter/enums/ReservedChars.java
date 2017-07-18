@@ -21,4 +21,8 @@ public enum ReservedChars {
         return this.value;
     }
     
+    public String getStringValue() {
+        return String.valueOf(this.value);
+    }
+    
 }

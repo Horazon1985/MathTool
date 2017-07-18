@@ -11,7 +11,7 @@ public enum Keywords {
 //    TRY("try"),
 //    CATCH("catch"),
 //    FINALLY("finally"),
-//    FOR("for"),
+    FOR("for"),
     WHILE("while"),
     BREAK("break"),
     CONTINUE("continue"),

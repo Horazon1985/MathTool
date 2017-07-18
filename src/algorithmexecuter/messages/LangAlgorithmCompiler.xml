@@ -36,32 +36,32 @@
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_MUST_START_WITH_BEGIN">
-        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
-        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <German>Ein Algorithmusrumpf muss mit mit '{' beginnen.</German>
+        <English>An algorithm body must start with '{'.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_MUST_END_WITH_END">
-        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
-        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <German>Inkompatible Typen: [0] kann nicht zu [1] konvertiert werden.</German>
+        <English>Incompatible types: [0] cannot be converted to [1].</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_HAS_NO_NAME">
-        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
-        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <German></German>
+        <English></English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM">
-        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
-        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <German></German>
+        <English></English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET">
-        <German>Inkompatible Typen: {0} kann nicht zu {1} konvertiert werden.</German>
-        <English>Incompatible types: {0} cannot be converted to {1}.</English>
+        <German></German>
+        <English></English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
@@ -78,26 +78,32 @@
         <Russian>???</Russian>
     </object>
     <object id = "AC_CANNOT_FIND_SYMBOL">
-        <German>Kann Symbol nicht finden: [0].</German>
-        <English>Cannot find symbol: [0].</English>
+        <German>Kann Symbol nicht finden: '[0]'.</German>
+        <English>Cannot find symbol: '[0]'.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_ILLEGAL_CHARACTER">
-        <German>Illegales Zeiches.</German>
-        <English>Illegal character.</English>
+        <German>Illegales Zeiches in: '[0]'.</German>
+        <English>Illegal character in: '[0]'.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_COMMAND_COUND_NOT_BE_PARSED">
-        <German>Der Befehl [0] konnte nicht geparst werden.</German>
-        <English>Command [0] could not be parsed.</English>
+        <German>Der Befehl '[0]' konnte nicht geparst werden.</German>
+        <English>Command '[0]' could not be parsed.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
     <object id = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END">
-        <German>Eine Kontrollstruktur muss einen Befehlsblock besitzen, welcher mit [0] beginnt und mit [1] endet.</German>
-        <English>A control structure must contains a command block, beginning with [0] and ending with [1].</English>
+        <German>Eine Kontrollstruktur muss einen Befehlsblock besitzen, welcher mit '[0]' beginnt und mit '[1]' endet.</German>
+        <English>A control structure must contains a command block, beginning with '[0]' and ending with '[1]'.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED">
+        <German>Im dritten Argument einer for-Schleife sind keine neuen Bezeichner erlaubt. Neuer gefundener Bezeichner: '[0]'.</German>
+        <English>No new identifier in the third argument of a for loop allowed. New identifier: '[0]'.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
@@ -115,7 +121,7 @@
     </object>
     <object id = "AC_WRONG_NUMBER_OF_INPUT_PARAMETERS">
         <German>Falsche Anzahl von Parametern: [0] Parameter erwartet, aber [1] Parameter gefunden.</German>
-        <English>Wrong number of parameters: [0] parameters expected, but [1] parameters found.</English>
+        <English>Wrong number of parameters: [0] parameters expected, but [1] parameter(s) found.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
@@ -125,8 +131,6 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
-
-
 
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>

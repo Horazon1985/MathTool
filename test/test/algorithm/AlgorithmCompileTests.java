@@ -9,7 +9,7 @@ import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.CompileExceptionTexts;
 import algorithmexecuter.model.Algorithm;
-import algorithmexecuter.model.command.DoWhileControlStructure;
+import algorithmexecuter.model.command.ControlStructure;
 import java.util.List;
 import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
@@ -141,7 +141,7 @@ public class AlgorithmCompileTests {
     }
 
     @Test
-    public void parseSimpleAlgorithmWithWhileControlStructureTest() {
+    public void parseSimpleAlgorithmWithWhileLoopTest() {
         String input = "expression main(){expression a = 1;while(a<6){a = 2*a;}return a;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
@@ -161,7 +161,7 @@ public class AlgorithmCompileTests {
     }
 
     @Test
-    public void parseSimpleAlgorithmWithDoWhileControlStructureTest() {
+    public void parseSimpleAlgorithmWithDoWhileLoopTest() {
         String input = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
@@ -173,8 +173,28 @@ public class AlgorithmCompileTests {
             assertTrue(alg.getCommands().get(0).isAssignValueCommand());
             assertTrue(alg.getCommands().get(1).isDoWhileControlStructure());
             assertTrue(alg.getCommands().get(2).isReturnCommand());
-            assertEquals(((DoWhileControlStructure) alg.getCommands().get(1)).getCommands().size(), 1);
-            assertTrue(((DoWhileControlStructure) alg.getCommands().get(1)).getCommands().get(0).isAssignValueCommand());
+            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
+    @Test
+    public void parseSimpleAlgorithmWithForLoopTest() {
+        String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(alg.getName(), "main");
+            assertEquals(alg.getInputParameters().length, 0);
+            assertEquals(alg.getCommands().size(), 3);
+            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(1).isForControlStructure());
+            assertTrue(alg.getCommands().get(2).isReturnCommand());
+            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }

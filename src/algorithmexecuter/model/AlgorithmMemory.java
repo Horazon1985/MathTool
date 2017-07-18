@@ -70,6 +70,10 @@ public class AlgorithmMemory {
     public void clearMemory() {
         this.memory.clear();
     }
+    
+    public int getSize() {
+        return this.memory.size();
+    }
 
     public AlgorithmMemory copyMemory() {
         AlgorithmMemory copyOfMemory = new AlgorithmMemory(this.algorithm);

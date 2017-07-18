@@ -162,8 +162,8 @@ public abstract class BooleanExpression implements AbstractExpression {
         }
 
         // Falls kein binärer Operator und die Formel die Form (...) hat -> Klammern beseitigen
-        if (priority == 4 && input.substring(0, 1).equals(ReservedChars.OPEN_BRACKET.getValue())
-                && input.substring(inputLength - 1, inputLength).equals(ReservedChars.CLOSE_BRACKET.getValue())) {
+        if (priority == 4 && input.substring(0, 1).equals(ReservedChars.OPEN_BRACKET.getStringValue())
+                && input.substring(inputLength - 1, inputLength).equals(ReservedChars.CLOSE_BRACKET.getStringValue())) {
             return build(input.substring(1, inputLength - 1), validator, typesMap);
         }
 

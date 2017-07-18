@@ -33,6 +33,7 @@ import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.Signature;
 import algorithmexecuter.model.command.DoWhileControlStructure;
+import algorithmexecuter.model.command.ForControlStructure;
 import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +90,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         try {
-            return parseControllStructure(line, memory, alg);
+            return parseControlStructure(line, memory, alg);
         } catch (ParseControlStructureException e) {
             throw e;
         } catch (NotDesiredCommandException e) {
@@ -114,7 +115,7 @@ public abstract class AlgorithmCommandCompiler {
 
         String identifierName = line.substring(type.toString().length() + 1);
         if (!VALIDATOR.isValidIdentifier(identifierName)) {
-            throw new DeclareIdentifierException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
+            throw new DeclareIdentifierException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, identifierName);
         }
         // Prüfung, ob dieser Identifier bereits existiert.
         if (scopeMemory.containsIdentifier(identifierName)) {
@@ -135,14 +136,14 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     private static List<AlgorithmCommand> parseAssignValueCommand(String line, AlgorithmMemory scopeMemory) throws AlgorithmCompileException, NotDesiredCommandException {
-        // Erste Prüfung, ob es sich definitiv nicht um eine Zuweisung handelt.
-        if (!isAssignValueCommandIfValid(line)) {
+        // Ermittlung der Stelle des Zuweisungsoperators "=", falls vorhanden. 
+        int defineCharPosition = getPositionOfDefineCharIfIsAssignValueCommandIfValid(line);
+        if (defineCharPosition < 0) {
             throw new NotDesiredCommandException();
         }
-        String[] assignment = line.split(Operators.DEFINE.getValue());
 
-        String leftSide = assignment[0];
-        String rightSide = assignment[1];
+        String leftSide = line.substring(0, defineCharPosition);
+        String rightSide = line.substring(defineCharPosition + 1);
         // Linke Seite behandeln.
         IdentifierType type = null;
         if (leftSide.startsWith(IdentifierType.EXPRESSION.toString() + " ")) {
@@ -156,10 +157,10 @@ public abstract class AlgorithmCommandCompiler {
         String identifierName;
         if (type != null) {
 
-            identifierName = leftSide.substring((type.toString() + " ").length(), assignment[0].length());
+            identifierName = leftSide.substring((type.toString() + " ").length());
             // Prüfung, ob dieser Identifier gültigen Namen besitzt.
             if (!VALIDATOR.isValidIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, identifierName);
             }
             // Prüfung, ob dieser Identifier bereits existiert.
             if (scopeMemory.containsIdentifier(identifierName)) {
@@ -233,7 +234,7 @@ public abstract class AlgorithmCommandCompiler {
 
     }
 
-    private static boolean isAssignValueCommandIfValid(String line) {
+    private static int getPositionOfDefineCharIfIsAssignValueCommandIfValid(String line) {
         /*
         Prüfung, ob line einen Vergleichsoperator enthält, welcher "=" enthält.
         Im positiven Fall kann es keine Zuweisung mehr sein, sondern höchstens eine
@@ -241,21 +242,30 @@ public abstract class AlgorithmCommandCompiler {
          */
         for (ComparingOperators op : ComparingOperators.getOperatorsContainingEqualsSign()) {
             if (line.contains(op.getValue())) {
-                return false;
+                return -1;
             }
         }
-        int bracketCounter = 0;
+        int wavyBracketCounter = 0, bracketCounter = 0, squareBracketCounter = 0;
         for (int i = 0; i < line.length(); i++) {
             if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
-                bracketCounter++;
+                wavyBracketCounter++;
             } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                wavyBracketCounter--;
+            } else if (line.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
                 bracketCounter--;
+            } else if (line.charAt(i) == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter--;
             }
-            if (bracketCounter == 0 && String.valueOf(line.charAt(i)).equals(Operators.DEFINE.getValue())) {
-                return true;
+            if (wavyBracketCounter == 0 && bracketCounter == 0 && squareBracketCounter == 0 
+                    && String.valueOf(line.charAt(i)).equals(Operators.DEFINE.getValue())) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     private static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
@@ -375,7 +385,7 @@ public abstract class AlgorithmCommandCompiler {
         throw new NotDesiredCommandException();
     }
 
-    private static List<AlgorithmCommand> parseControllStructure(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
+    private static List<AlgorithmCommand> parseControlStructure(String line, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {
         // If-Else-Block
         try {
             return parseIfElseControlStructure(line, memory, alg);
@@ -391,7 +401,23 @@ public abstract class AlgorithmCommandCompiler {
         } catch (NotDesiredCommandException e) {
             // Keine If-Else-Struktur. Also weiter.
         }
+
         // For-Block
+        try {
+            return parseForControlStructure(line, memory, alg);
+        } catch (ParseControlStructureException e) {
+            /*
+            Es ist zwar eine While-Struktur mit korrekter Bedingung, aber der
+            innere Block kann nicht kompiliert werden.
+             */
+            throw e;
+        } catch (BooleanExpressionException | BlockCompileException e) {
+            // Es ist zwar eine While-Struktur, aber die Bedingung kann nicht kompiliert werden.
+            throw new AlgorithmCompileException(e);
+        } catch (NotDesiredCommandException e) {
+            // Keine While-Struktur. Also weiter.
+        }
+
         // While-Block
         try {
             return parseWhileControlStructure(line, memory, alg);
@@ -407,6 +433,7 @@ public abstract class AlgorithmCommandCompiler {
         } catch (NotDesiredCommandException e) {
             // Keine While-Struktur. Also weiter.
         }
+
         // Do-While-Block
         try {
             return parseDoWhileControlStructure(line, memory, alg);
@@ -422,6 +449,7 @@ public abstract class AlgorithmCommandCompiler {
         } catch (NotDesiredCommandException e) {
             // Keine Do-While-Struktur. Also weiter.
         }
+
         throw new NotDesiredCommandException();
     }
 
@@ -432,8 +460,20 @@ public abstract class AlgorithmCommandCompiler {
             throw new NotDesiredCommandException();
         }
 
-        int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
-        if (endOfBooleanCondition < 0) {
+        int bracketCounter = 1;
+        int endOfBooleanCondition = -1;
+        for (int i = (Keywords.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endOfBooleanCondition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
@@ -442,15 +482,15 @@ public abstract class AlgorithmCommandCompiler {
         BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
-        if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
-                || !line.contains(String.valueOf(ReservedChars.END.getValue()))
+        if (!line.contains(ReservedChars.BEGIN.getStringValue())
+                || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
         // Block im If-Teil kompilieren.
-        int bracketCounter = 0;
+        bracketCounter = 0;
         int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
         int endBlockPosition = -1;
         for (int i = line.indexOf(ReservedChars.BEGIN.getValue()); i < line.length(); i++) {
@@ -516,8 +556,20 @@ public abstract class AlgorithmCommandCompiler {
             throw new NotDesiredCommandException();
         }
 
-        int endOfBooleanCondition = line.indexOf(ReservedChars.CLOSE_BRACKET.getValue());
-        if (endOfBooleanCondition < 0) {
+        int bracketCounter = 1;
+        int endOfBooleanCondition = -1;
+        for (int i = (Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endOfBooleanCondition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
@@ -526,15 +578,15 @@ public abstract class AlgorithmCommandCompiler {
         BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
 
         // Prüfung, ob line mit "while(boolsche Bedingung){ ..." beginnt.
-        if (!line.contains(String.valueOf(ReservedChars.BEGIN.getValue()))
-                || !line.contains(String.valueOf(ReservedChars.END.getValue()))
+        if (!line.contains(ReservedChars.BEGIN.getStringValue())
+                || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
         // Block im While-Teil kompilieren.
-        int bracketCounter = 0;
+        bracketCounter = 0;
         int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
         int endBlockPosition = -1;
         for (int i = line.indexOf(ReservedChars.BEGIN.getValue()); i < line.length(); i++) {
@@ -590,7 +642,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         List<AlgorithmCommand> commandsDoPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
-        
+
         // While-Bedingung kompilieren
         String whilePart = line.substring(endBlockPosition + 1);
         if (!whilePart.startsWith(Keywords.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
@@ -605,6 +657,92 @@ public abstract class AlgorithmCommandCompiler {
         BooleanExpression condition = BooleanExpression.build(whileConditionPart, VALIDATOR, typesMap);
 
         return Collections.singletonList((AlgorithmCommand) new DoWhileControlStructure(commandsDoPart, condition));
+    }
+
+    private static List<AlgorithmCommand> parseForControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
+            throws AlgorithmCompileException, BooleanExpressionException, BlockCompileException, NotDesiredCommandException {
+
+        if (!line.startsWith(Keywords.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
+            throw new NotDesiredCommandException();
+        }
+
+        int bracketCounter = 1;
+        int endOfForControlPart = -1;
+        for (int i = (Keywords.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endOfForControlPart = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+        }
+
+        String forControlString = line.substring((Keywords.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfForControlPart);
+
+        // Die drei for-Anweisungen kompilieren.
+        String[] forControlParts = forControlString.split(ReservedChars.ARGUMENT_SEPARATOR.getStringValue());
+        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memory);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        BooleanExpression endLoopCondition = BooleanExpression.build(forControlParts[1], VALIDATOR, typesMap);
+        AlgorithmMemory copyOfMemory = memory.copyMemory();
+        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memory);
+        // Prüfung, ob bei loopAssignment keine weiteren Bezeichner hinzukamen.
+        if (memory.getSize() > copyOfMemory.getSize()) {
+            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memory);
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, newIdentifierName);
+        }
+
+        // Prüfung, ob line mit "for(a;b;c){ ..." beginnt.
+        if (!line.contains(ReservedChars.BEGIN.getStringValue())
+                || !line.contains(ReservedChars.END.getStringValue())
+                || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfForControlPart + 1) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
+                    ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
+        }
+
+        // Block im While-Teil kompilieren.
+        bracketCounter = 0;
+        int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
+        int endBlockPosition = -1;
+        for (int i = line.indexOf(ReservedChars.BEGIN.getValue()); i < line.length(); i++) {
+            if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                bracketCounter++;
+            } else if (line.charAt(i) == ReservedChars.END.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                endBlockPosition = i;
+                break;
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+        }
+        List<AlgorithmCommand> commandsForPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, endLoopCondition, loopAssignment);
+
+        // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
+        if (endBlockPosition == line.length() - 1) {
+            // Kein Else-Teil vorhanden.
+            return Collections.singletonList((AlgorithmCommand) forControlStructure);
+        }
+
+        throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
+    }
+
+    private static String getNameOfNewIdentifier(AlgorithmMemory memoryBefore, AlgorithmMemory memoryAfter) {
+        for (String identifierName : memoryAfter.getMemory().keySet()) {
+            if (!memoryBefore.getMemory().containsKey(identifierName)) {
+                return identifierName;
+            }
+        }
+        return null;
     }
 
     private static List<AlgorithmCommand> parseReturnCommand(String line, AlgorithmMemory scopeMemory, Algorithm alg) throws AlgorithmCompileException, NotDesiredCommandException {

@@ -15,18 +15,12 @@ import java.util.Map;
 
 public class DoWhileControlStructure extends ControlStructure {
 
-    private final List<AlgorithmCommand> commands;
     private final BooleanExpression condition;
 
     public DoWhileControlStructure(List<AlgorithmCommand> commands, BooleanExpression condition) {
         this.condition = condition;
-        this.commands = commands;
         this.commandBlocks = (List<AlgorithmCommand>[]) Array.newInstance(new ArrayList<>().getClass(), 1);
         this.commandBlocks[0] = commands;
-    }
-
-    public List<AlgorithmCommand> getCommands() {
-        return commands;
     }
 
     public BooleanExpression getCondition() {
@@ -38,7 +32,7 @@ public class DoWhileControlStructure extends ControlStructure {
         Map<String, AbstractExpression> valuesMap;
         Identifier result = null;
         do {
-            result = AlgorithmExecuter.executeBlock(scopeMemory, this.commands);
+            result = AlgorithmExecuter.executeBlock(scopeMemory, this.commandBlocks[0]);
             // Identifierwerte aktualisieren.
             valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
             if (result != null) {
@@ -52,9 +46,7 @@ public class DoWhileControlStructure extends ControlStructure {
     public String toString() {
         
         String doWhileCommandString = "do (";
-        for (AlgorithmCommand c : this.commands) {
-            doWhileCommandString += c.toString() + "; \n";
-        }
+        doWhileCommandString = this.commandBlocks[0].stream().map((c) -> c.toString() + "; \n").reduce(doWhileCommandString, String::concat);
         doWhileCommandString += "} while (" + this.condition.toString() + ")";
         return doWhileCommandString;
     }

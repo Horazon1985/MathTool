@@ -7,7 +7,6 @@ import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.model.command.IfElseControlStructure;
 import algorithmexecuter.model.command.ReturnCommand;
 import algorithmexecuter.enums.IdentifierType;
-import algorithmexecuter.enums.Keywords;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.CompileExceptionTexts;
@@ -127,7 +126,7 @@ public class CompilerUtils {
         input = CompilerUtils.removeLeadingWhitespaces(input);
 
         String[] result = new String[2];
-        int i = input.indexOf(String.valueOf(ReservedChars.OPEN_BRACKET.getValue()));
+        int i = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (i == -1) {
             // Um zu verhindern, dass es eine IndexOutOfBoundsException gibt.
             i = 0;
@@ -145,7 +144,7 @@ public class CompilerUtils {
         }
 
         // Wenn am Ende nicht ")" steht.
-        if (!input.substring(input.length() - 1, input.length()).equals(String.valueOf(ReservedChars.CLOSE_BRACKET.getValue()))) {
+        if (!input.substring(input.length() - 1, input.length()).equals(ReservedChars.CLOSE_BRACKET.getStringValue())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET);
         }
 
