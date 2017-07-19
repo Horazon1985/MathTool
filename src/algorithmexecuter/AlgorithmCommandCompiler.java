@@ -260,7 +260,7 @@ public abstract class AlgorithmCommandCompiler {
             } else if (line.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter--;
             }
-            if (wavyBracketCounter == 0 && bracketCounter == 0 && squareBracketCounter == 0 
+            if (wavyBracketCounter == 0 && bracketCounter == 0 && squareBracketCounter == 0
                     && String.valueOf(line.charAt(i)).equals(Operators.DEFINE.getValue())) {
                 return i;
             }
@@ -508,7 +508,9 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
-        List<AlgorithmCommand> commandsIfPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        AlgorithmMemory memoryBeforIfElsePart = memory.copyMemory();
+        
+        List<AlgorithmCommand> commandsIfPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memoryBeforIfElsePart, alg);
         IfElseControlStructure ifElseControlStructure = new IfElseControlStructure(condition, commandsIfPart);
 
         // Block im Else-Teil kompilieren, falls vorhanden.
@@ -543,7 +545,7 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
         }
 
-        List<AlgorithmCommand> commandsElsePart = parseConnectedBlock(restLine.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        List<AlgorithmCommand> commandsElsePart = parseConnectedBlock(restLine.substring(beginBlockPosition, endBlockPosition), memoryBeforIfElsePart, alg);
         ifElseControlStructure.setCommandsElsePart(commandsElsePart);
 
         return Collections.singletonList((AlgorithmCommand) ifElseControlStructure);
@@ -603,7 +605,10 @@ public abstract class AlgorithmCommandCompiler {
         if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
-        List<AlgorithmCommand> commandsWhilePart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        
+        AlgorithmMemory memoryBeforWhileLoop = memory.copyMemory();
+        
+        List<AlgorithmCommand> commandsWhilePart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memoryBeforWhileLoop, alg);
         WhileControlStructure whileControlStructure = new WhileControlStructure(condition, commandsWhilePart);
 
         // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
@@ -641,7 +646,9 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
-        List<AlgorithmCommand> commandsDoPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        AlgorithmMemory memoryBeforWhileLoop = memory.copyMemory();
+        
+        List<AlgorithmCommand> commandsDoPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memoryBeforWhileLoop, alg);
 
         // While-Bedingung kompilieren
         String whilePart = line.substring(endBlockPosition + 1);
@@ -685,16 +692,18 @@ public abstract class AlgorithmCommandCompiler {
 
         String forControlString = line.substring((Keywords.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfForControlPart);
 
+        AlgorithmMemory memoryBeforFoorLoop = memory.copyMemory();
+        
         // Die drei for-Anweisungen kompilieren.
         String[] forControlParts = forControlString.split(ReservedChars.ARGUMENT_SEPARATOR.getStringValue());
-        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memory);
-        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memoryBeforFoorLoop);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforFoorLoop);
         BooleanExpression endLoopCondition = BooleanExpression.build(forControlParts[1], VALIDATOR, typesMap);
-        AlgorithmMemory copyOfMemory = memory.copyMemory();
-        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memory);
+        AlgorithmMemory copyOfMemory = memoryBeforFoorLoop.copyMemory();
+        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memoryBeforFoorLoop);
         // Prüfung, ob bei loopAssignment keine weiteren Bezeichner hinzukamen.
-        if (memory.getSize() > copyOfMemory.getSize()) {
-            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memory);
+        if (memoryBeforFoorLoop.getSize() > copyOfMemory.getSize()) {
+            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memoryBeforFoorLoop);
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, newIdentifierName);
         }
 
@@ -706,7 +715,7 @@ public abstract class AlgorithmCommandCompiler {
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
-        // Block im While-Teil kompilieren.
+        // Block im For-Teil kompilieren.
         bracketCounter = 0;
         int beginBlockPosition = line.indexOf(ReservedChars.BEGIN.getValue()) + 1;
         int endBlockPosition = -1;
@@ -724,9 +733,11 @@ public abstract class AlgorithmCommandCompiler {
         if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
-        List<AlgorithmCommand> commandsForPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memory, alg);
+        List<AlgorithmCommand> commandsForPart = parseConnectedBlock(line.substring(beginBlockPosition, endBlockPosition), memoryBeforFoorLoop, alg);
         ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, endLoopCondition, loopAssignment);
 
+        // Lokale Variable aus dem Speicher memory wieder herausnehmen.
+        
         // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
         if (endBlockPosition == line.length() - 1) {
             // Kein Else-Teil vorhanden.
@@ -778,12 +789,26 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     public static List<AlgorithmCommand> parseConnectedBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+        return parseCommandBlock(input, memory, alg, true);
+    }
+
+    public static List<AlgorithmCommand> parseBlock(String input, AlgorithmMemory memory, Algorithm alg) throws AlgorithmCompileException {
+        return parseCommandBlock(input, memory, alg, false);
+    }
+
+    private static List<AlgorithmCommand> parseCommandBlock(String input, AlgorithmMemory memory, Algorithm alg, boolean connectedBlock) throws AlgorithmCompileException {
         if (!input.isEmpty() && !input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_MISSING_LINE_SEPARATOR, ReservedChars.LINE_SEPARATOR.getValue());
         }
 
+        AlgorithmMemory memoryBeforeBlockBeginning;
+        if (connectedBlock) {
+            memoryBeforeBlockBeginning = memory.copyMemory();
+        } else {
+            memoryBeforeBlockBeginning = memory;
+        }
+
         List<String> linesAsList = new ArrayList<>();
-        // Block im While-Teil kompilieren.
         int bracketCounter = 0;
         int squareBracketCounter = 0;
         int beginBlockPosition = 0;
@@ -819,7 +844,7 @@ public abstract class AlgorithmCommandCompiler {
         List<AlgorithmCommand> commands = new ArrayList<>();
         for (String line : lines) {
             if (!line.isEmpty()) {
-                commands.addAll(parseLine(line, memory, alg));
+                commands.addAll(parseLine(line, memoryBeforeBlockBeginning, alg));
             }
         }
         return commands;

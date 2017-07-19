@@ -201,6 +201,27 @@ public class AlgorithmCompileTests {
     }
     
     @Test
+    public void parseAlgorithmWithForLoopTest() {
+        String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}expression i=10;return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(alg.getName(), "main");
+            assertEquals(alg.getInputParameters().length, 0);
+            assertEquals(alg.getCommands().size(), 4);
+            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(1).isForControlStructure());
+            assertTrue(alg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(alg.getCommands().get(3).isReturnCommand());
+            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
+    @Test
     public void parseAlgorithmCallingAnotherAlgorithmTest() {
         String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
                 + "expression computeggt(expression a, expression b){expression result = gcd(a, b); return result;}";
