@@ -32,7 +32,7 @@ public class DoWhileControlStructure extends ControlStructure {
         Map<String, AbstractExpression> valuesMap;
         Identifier result = null;
         do {
-            result = AlgorithmExecuter.executeBlock(scopeMemory, this.commandBlocks[0]);
+            result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandBlocks[0]);
             // Identifierwerte aktualisieren.
             valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
             if (result != null) {

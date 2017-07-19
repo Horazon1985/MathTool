@@ -21,8 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CompilerUtils {
+public final class CompilerUtils {
 
+    private CompilerUtils() {
+    }
+    
     /**
      * Transportklasse für Algorithmensignaturen. name gibt den Namen des
      * Algorithmus an und parameters die konkreten Parameterwerte.

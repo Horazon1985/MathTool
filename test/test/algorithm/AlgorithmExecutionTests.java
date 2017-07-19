@@ -176,5 +176,23 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
     }
+    
+    @Test
+    public void parseSimpleAlgorithmWithForLoopTest() {
+        String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("96")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
 
 }

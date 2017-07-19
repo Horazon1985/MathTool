@@ -38,7 +38,7 @@ public class WhileControlStructure extends ControlStructure {
         Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
         Identifier result = null;
         while (this.condition.evaluate(valuesMap)) {
-            result = AlgorithmExecuter.executeBlock(scopeMemory, this.commands);
+            result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commands);
             // Identifierwerte aktualisieren.
             valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
             if (result != null) {

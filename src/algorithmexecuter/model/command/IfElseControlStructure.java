@@ -48,9 +48,9 @@ public class IfElseControlStructure extends ControlStructure {
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
         Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
         if (this.condition.evaluate(valuesMap)) {
-            return AlgorithmExecuter.executeBlock(scopeMemory, this.commandsIfPart);
+            return AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandsIfPart);
         }
-        return AlgorithmExecuter.executeBlock(scopeMemory, this.commandsElsePart);
+        return AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandsElsePart);
     }
     
     @Override

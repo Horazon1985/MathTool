@@ -90,14 +90,6 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
         Set<String> varsInAlgorithmSignature = new HashSet<>();
-//        AlgorithmMemory memory = AlgorithmExecutor.getExecutionMemory().get(alg);
-//        AbstractExpression abstrExpr;
-//        for (Identifier identifier : alg.getInputParameters()) {
-//            abstrExpr = memory.getMemory().get(identifier.getName()).getValue();
-//            if (abstrExpr != null) {
-//                varsInAlgorithmSignature.addAll(abstrExpr.getContainedIndeterminates());
-//            }
-//        }
         AbstractExpression abstrExpr;
         for (Identifier identifier : alg.getInputParameters()) {
             abstrExpr = identifier.getValue();
@@ -110,7 +102,6 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
-        Algorithm alg = getAlgorithm();
         if (this.targetExpression != null) {
             Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
             checkForUnknownIdentifier(scopeMemory, varsInTargetExpr);

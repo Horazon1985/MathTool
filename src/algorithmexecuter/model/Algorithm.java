@@ -136,7 +136,7 @@ public class Algorithm {
         // Prüfung, ob alle Parameter Werte besitzen. Sollte eigentlich stets der Fall sein.
         checkForIdentifierWithoutValues();
 
-        return AlgorithmExecuter.executeBlock(getInitialAlgorithmMemory(), this.commands);
+        return AlgorithmExecuter.executeConnectedBlock(getInitialAlgorithmMemory(), this.commands);
     }
 
     private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {

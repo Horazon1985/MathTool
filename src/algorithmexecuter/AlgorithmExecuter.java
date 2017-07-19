@@ -32,7 +32,19 @@ public abstract class AlgorithmExecuter {
         }
     }
 
-    public static Identifier executeBlock(AlgorithmMemory memoryBeforBlockExecution, List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
+    /**
+     * Führt einen zusammenhängenden Befehlsblock aus und gibt den
+     * Ergebnisbezeichner zurück, falls ein Return-Befehl ausgeführt wurde. Nach
+     * der Blockausführung werden die in diesem Block deklarierten Bezeichner
+     * wieder verworfen.
+     *
+     * @param memoryBeforeBlockExecution
+     * @param commands
+     * @return
+     * @throws AlgorithmExecutionException
+     * @throws EvaluationException
+     */
+    public static Identifier executeConnectedBlock(AlgorithmMemory memoryBeforeBlockExecution, List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
         AlgorithmMemory scopeMemory = new AlgorithmMemory(null);
         Identifier resultIdentifier = null;
         Algorithm alg = null;
@@ -40,7 +52,7 @@ public abstract class AlgorithmExecuter {
             // Zuerst: Zugehörigen Algorithmus ermitteln.
             if (alg == null) {
                 alg = command.getAlgorithm();
-                scopeMemory = memoryBeforBlockExecution.copyMemory();
+                scopeMemory = memoryBeforeBlockExecution.copyMemory();
             }
             resultIdentifier = command.execute(scopeMemory);
 
@@ -53,16 +65,35 @@ public abstract class AlgorithmExecuter {
             }
         }
         // Speicher vor der Ausführung des Blocks aktualisieren.
-        updateMemoryBeforeBlockExecution(memoryBeforBlockExecution, scopeMemory);
+        ExecutionUtils.updateMemoryBeforeBlockExecution(memoryBeforeBlockExecution, scopeMemory);
         return resultIdentifier;
     }
-    
-    private static void updateMemoryBeforeBlockExecution(AlgorithmMemory memoryBeforBlockExecution, AlgorithmMemory scopeMemory) {
-        for (String identifierName : memoryBeforBlockExecution.getMemory().keySet()) {
-            if (scopeMemory.getMemory().keySet().contains(identifierName)) {
-                memoryBeforBlockExecution.getMemory().put(identifierName, scopeMemory.getMemory().get(identifierName));
+
+    /**
+     * Führt einen zusammenhängenden Befehlsblock aus und gibt den
+     * Ergebnisbezeichner zurück, falls ein Return-Befehl ausgeführt wurde. 
+     * 
+     * @param scopeMemory
+     * @param commands
+     * @return
+     * @throws AlgorithmExecutionException
+     * @throws EvaluationException 
+     */
+    public static Identifier executeBlock(AlgorithmMemory scopeMemory, List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
+        Identifier resultIdentifier = null;
+        for (AlgorithmCommand command : commands) {
+            // Zuerst: Zugehörigen Algorithmus ermitteln.
+            resultIdentifier = command.execute(scopeMemory);
+
+            /*
+            Nur Return-Befehle geben echte Identifier zurück. Alle anderen
+            Befehle geben null zurück.
+             */
+            if (command.isReturnCommand() || resultIdentifier != null) {
+                return resultIdentifier;
             }
         }
+        return resultIdentifier;
     }
 
 }
