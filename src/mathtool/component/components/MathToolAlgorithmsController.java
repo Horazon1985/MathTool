@@ -2,7 +2,7 @@ package mathtool.component.components;
 
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.enums.FixedAlgorithmNames;
-import algorithmexecuter.enums.Keywords;
+import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.ReservedChars;
 import org.jsoup.parser.Parser;
 
@@ -20,7 +20,7 @@ public class MathToolAlgorithmsController {
     private static final String SIGN_NEXT_LINE = "\n";
 
     public static String emphasizeWordsInAlgorithmSourceCode(String inputSourceCode) {
-        String formattedSourceCode = emphaziseWordsOfGivenType(inputSourceCode, Keywords.class);
+        String formattedSourceCode = emphaziseWordsOfGivenType(inputSourceCode, Keyword.class);
         formattedSourceCode = emphaziseWordsOfGivenType(formattedSourceCode, FixedAlgorithmNames.class);
         return formattedSourceCode;
     }
@@ -59,7 +59,7 @@ public class MathToolAlgorithmsController {
     }
 
     private static String[] getTags(Class<? extends Enum> clazz) {
-        if (clazz.equals(Keywords.class)) {
+        if (clazz.equals(Keyword.class)) {
             return new String[]{BEGINNING_TAG_BOLD_BLUE, ENDING_TAG_BOLD_BLUE};
         } else if (clazz.equals(FixedAlgorithmNames.class)) {
             return new String[]{BEGINNING_TAG_ITALIC, ENDING_TAG_ITALIC};
@@ -68,8 +68,8 @@ public class MathToolAlgorithmsController {
     }
 
     private static Enum[] getEnumValues(Class<? extends Enum> clazz) {
-        if (clazz.equals(Keywords.class)) {
-            return Keywords.values();
+        if (clazz.equals(Keyword.class)) {
+            return Keyword.values();
         } else if (clazz.equals(FixedAlgorithmNames.class)) {
             return FixedAlgorithmNames.values();
         }
@@ -78,7 +78,7 @@ public class MathToolAlgorithmsController {
 
     private static String emphaziseWordIfNotEmphazised(String inputSourceCode, Enum name, int beginningIndex) {
         String beginningTag, endingTag;
-        if (name instanceof Keywords) {
+        if (name instanceof Keyword) {
             beginningTag = BEGINNING_TAG_BOLD_BLUE;
             endingTag = ENDING_TAG_BOLD_BLUE;
         } else if (name instanceof FixedAlgorithmNames) {

@@ -1,6 +1,6 @@
 package algorithmexecuter.enums;
 
-public enum Keywords {
+public enum Keyword {
     
     NULL("null"),
     FALSE("false"),
@@ -20,7 +20,7 @@ public enum Keywords {
     
     private final String value;
     
-    Keywords(String keyword){
+    Keyword(String keyword){
         this.value = keyword;
     }
     

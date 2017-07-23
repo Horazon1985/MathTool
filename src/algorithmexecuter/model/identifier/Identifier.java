@@ -10,7 +10,7 @@ public class Identifier {
     private final IdentifierType type;
     private final String name;
     private AbstractExpression value;
-    
+
     private Identifier(IdentifierType type, String name) {
         this.type = type;
         this.name = name;
@@ -23,11 +23,11 @@ public class Identifier {
     public String getName() {
         return name;
     }
-    
+
     public AbstractExpression getValue() {
         return value;
     }
-    
+
     public void setValue(AbstractExpression value) {
         this.value = value;
     }
@@ -61,17 +61,17 @@ public class Identifier {
         }
         return Objects.equals(this.value, other.value);
     }
-    
+
     @Override
     public String toString() {
-        return "Identifier[type = " + this.type + ", name = " + this.name 
+        return "Identifier[type = " + this.type + ", name = " + this.name
                 + ", value = " + this.value + "]";
     }
 
     public static Identifier createIdentifier(String identifierName, IdentifierType type) {
         return new Identifier(type, identifierName);
     }
-    
+
     public static Identifier createIdentifier(AlgorithmMemory scopeMemory, String identifierName, IdentifierType type) {
         if (scopeMemory.containsIdentifier(identifierName)) {
             return scopeMemory.getMemory().get(identifierName);

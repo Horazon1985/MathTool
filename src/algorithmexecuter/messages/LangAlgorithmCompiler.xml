@@ -113,6 +113,12 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "AC_KEYWORD_NOT_ALLOWED_HERE">
+        <German>Schlüsselwort '[0]' ist an dieser Stelle nicht zugelassen.</German>
+        <English>Key word '[0]' not allowed here.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <object id = "AC_MISSING_LINE_SEPARATOR">
         <German>Befehl muss mit '[0]' enden.</German>
         <English>Command must end with '[0]'.</English>

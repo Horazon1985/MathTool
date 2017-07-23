@@ -6,5 +6,4 @@ public class ParseReturnException extends AlgorithmCompileException {
         super(message, params);
     }
     
-    
 }

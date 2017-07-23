@@ -4,6 +4,8 @@ import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.exceptions.AlgorithmBreakException;
+import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.identifier.Identifier;
@@ -38,16 +40,21 @@ public class WhileControlStructure extends ControlStructure {
         Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
         Identifier result = null;
         while (this.condition.evaluate(valuesMap)) {
-            result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commands);
-            // Identifierwerte aktualisieren.
-            valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
-            if (result != null) {
-                return result;
+            try {
+                result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commands);
+                // Identifierwerte aktualisieren.
+                valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
+                if (result != null) {
+                    return result;
+                }
+            } catch (AlgorithmBreakException e) {
+                return null;
+            } catch (AlgorithmContinueException e) {
             }
         }
         return result;
     }
-    
+
     @Override
     public String toString() {
         String whileCommandString = "while (" + this.condition.toString() + ") {";

@@ -7,7 +7,7 @@ import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecuter.enums.ComparingOperators;
 import algorithmexecuter.enums.IdentifierType;
-import algorithmexecuter.enums.Keywords;
+import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.BooleanExpressionException;
@@ -169,10 +169,10 @@ public abstract class BooleanExpression implements AbstractExpression {
 
         // Falls der Ausdruck eine logische Konstante ist (false, true)
         if (priority == 4) {
-            if (input.equals(Keywords.FALSE.getValue())) {
+            if (input.equals(Keyword.FALSE.getValue())) {
                 return new BooleanConstant(false);
             }
-            if (input.equals(Keywords.TRUE.getValue())) {
+            if (input.equals(Keyword.TRUE.getValue())) {
                 return new BooleanConstant(true);
             }
         }

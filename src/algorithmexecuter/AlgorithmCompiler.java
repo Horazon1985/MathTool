@@ -6,7 +6,7 @@ import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.model.command.AssignValueCommand;
 import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.enums.IdentifierType;
-import algorithmexecuter.enums.Keywords;
+import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.CompileExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
@@ -216,7 +216,7 @@ public abstract class AlgorithmCompiler {
 
         if (!input.isEmpty()) {
             // Alle Zeilen innerhalb des Algorithmus kompilieren.
-            List<AlgorithmCommand> commands = AlgorithmCommandCompiler.parseConnectedBlock(input, memory, alg);
+            List<AlgorithmCommand> commands = AlgorithmCommandCompiler.parseConnectedBlockWithoutKeywords(input, memory, alg);
             // Allen Befehlen den aktuellen Algorithmus alg zuordnen.
             alg.appendCommands(commands);
         }
@@ -267,7 +267,7 @@ public abstract class AlgorithmCompiler {
             }
             // Prüfung auf doppelte Deklaration.
             if (memory.containsIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, parameterName);
             }
             resultIdentifiers[i] = Identifier.createIdentifier(parameterName, parameterType);
 
@@ -296,9 +296,9 @@ public abstract class AlgorithmCompiler {
     private static String putSeparatorAfterBlockEnding(String input) {
         String inputWithSeparators = input.replaceAll("\\}", "\\};");
         // Ausnahme: if (...) {...} else {...}: Semikolon zwischen dem if- und dem else-Block entfernen.
-        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.ELSE.getValue(), "\\}" + Keywords.ELSE.getValue());
+        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keyword.ELSE.getValue(), "\\}" + Keyword.ELSE.getValue());
         // Ausnahme: do {...} while (...): Semikolon zwischen dem do-Block und dem while entfernen.
-        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keywords.WHILE.getValue(), "\\}" + Keywords.WHILE.getValue());
+        inputWithSeparators = inputWithSeparators.replaceAll("\\}" + String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()) + Keyword.WHILE.getValue(), "\\}" + Keyword.WHILE.getValue());
         return inputWithSeparators;
     }
 

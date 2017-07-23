@@ -50,6 +50,10 @@ public abstract class AlgorithmCommand {
         return this instanceof ForControlStructure;
     }
     
+    public boolean isKeywordCommand() {
+        return this instanceof KeywordCommand;
+    }
+    
     public boolean isReturnCommand() {
         return this instanceof ReturnCommand;
     }

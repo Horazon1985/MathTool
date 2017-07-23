@@ -2,7 +2,7 @@ package algorithmexecuter;
 
 import abstractexpressions.interfaces.IdentifierValidator;
 import algorithmexecuter.enums.FixedAlgorithmNames;
-import algorithmexecuter.enums.Keywords;
+import algorithmexecuter.enums.Keyword;
 import java.math.BigInteger;
 
 public class IdentifierValidatorImpl implements IdentifierValidator {
@@ -15,7 +15,7 @@ public class IdentifierValidatorImpl implements IdentifierValidator {
     @Override
     public boolean isValidIdentifier(String identifierName) {
         // Prüfung, ob es kein Keyword ist.
-        for (Keywords keyword : Keywords.values()) {
+        for (Keyword keyword : Keyword.values()) {
             if (keyword.getValue().equals(identifierName)) {
                 return false;
             }
