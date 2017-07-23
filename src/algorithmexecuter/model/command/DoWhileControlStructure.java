@@ -4,6 +4,8 @@ import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.exceptions.AlgorithmBreakException;
+import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.identifier.Identifier;
@@ -26,25 +28,30 @@ public class DoWhileControlStructure extends ControlStructure {
     public BooleanExpression getCondition() {
         return condition;
     }
-    
+
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
         Map<String, AbstractExpression> valuesMap;
         Identifier result = null;
         do {
-            result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandBlocks[0]);
+            try {
+                result = AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandBlocks[0]);
+                if (result != null) {
+                    return result;
+                }
+            } catch (AlgorithmBreakException e) {
+                return null;
+            } catch (AlgorithmContinueException e) {
+            }
             // Identifierwerte aktualisieren.
             valuesMap = CompilerUtils.extractValuesOfIdentifiers(scopeMemory);
-            if (result != null) {
-                return result;
-            }
         } while (this.condition.evaluate(valuesMap));
         return result;
     }
-    
+
     @Override
     public String toString() {
-        
+
         String doWhileCommandString = "do (";
         doWhileCommandString = this.commandBlocks[0].stream().map((c) -> c.toString() + "; \n").reduce(doWhileCommandString, String::concat);
         doWhileCommandString += "} while (" + this.condition.toString() + ")";

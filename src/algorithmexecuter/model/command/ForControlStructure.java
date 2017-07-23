@@ -5,6 +5,8 @@ import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.ExecutionUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.exceptions.AlgorithmBreakException;
+import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.identifier.Identifier;
@@ -47,24 +49,29 @@ public class ForControlStructure extends ControlStructure {
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
         Identifier result = null;
-        
+
         AlgorithmMemory memoryBeforeForLoopExecution = scopeMemory.copyMemory();
-        
+
         AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.initialization);
         Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
         while (this.endLoopCondition.evaluate(valuesMap)) {
-            result = AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.commandBlocks[0]);
-            // Identifierwerte aktualisieren.
-            if (result != null) {
-                return result;
+            try {
+                result = AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.commandBlocks[0]);
+                // Identifierwerte aktualisieren.
+                if (result != null) {
+                    return result;
+                }
+                AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.loopAssignment);
+                valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
+            } catch (AlgorithmBreakException e) {
+                return null;
+            } catch (AlgorithmContinueException e) {
             }
-            AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.loopAssignment);
-            valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
         }
-        
+
         // Speicher vor der Ausführung des Blocks aktualisieren.
         ExecutionUtils.updateMemoryBeforeBlockExecution(scopeMemory, memoryBeforeForLoopExecution);
-        
+
         return result;
     }
 
