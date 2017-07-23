@@ -48,20 +48,8 @@
         <Russian>???</Russian>
     </object>
     <object id = "AC_ALGORITHM_HAS_NO_NAME">
-        <German></German>
-        <English></English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
-    </object>
-    <object id = "AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM">
-        <German></German>
-        <English></English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
-    </object>
-    <object id = "AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET">
-        <German></German>
-        <English></English>
+        <German>Ein Algorithmus besitzt keinen Namen.</German>
+        <English>An algorithm has no name.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>

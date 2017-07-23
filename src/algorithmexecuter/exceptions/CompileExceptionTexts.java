@@ -11,8 +11,6 @@ public abstract class CompileExceptionTexts {
     public static final String AC_ALGORITHM_MUST_START_WITH_BEGIN = "AC_ALGORITHM_MUST_START_WITH_BEGIN";    
     public static final String AC_ALGORITHM_MUST_END_WITH_END = "AC_ALGORITHM_MUST_END_WITH_END";    
     public static final String AC_ALGORITHM_HAS_NO_NAME = "AC_ALGORITHM_HAS_NO_NAME";    
-    public static final String AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM = "AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM";    
-    public static final String AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET = "AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET";    
     public static final String AC_IDENTIFIER_EXPECTED = "AC_IDENTIFIER_EXPECTED";    
     public static final String AC_BRACKET_EXPECTED = "AC_BRACKET_EXPECTED";    
     public static final String AC_CANNOT_FIND_SYMBOL = "AC_CANNOT_FIND_SYMBOL";    

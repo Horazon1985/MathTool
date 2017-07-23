@@ -141,14 +141,9 @@ public final class CompilerUtils {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_HAS_NO_NAME);
         }
 
-        // Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...)).
+        // Wenn length(result[0]) > l - 2 -> Fehler (der Befehl besitzt NICHT die Form command(...), insbesondere fehlt ")" am Ende).
         if (result[0].length() > input.length() - 2) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_HAS_INCORRECT_FORM);
-        }
-
-        // Wenn am Ende nicht ")" steht.
-        if (!input.substring(input.length() - 1, input.length()).equals(ReservedChars.CLOSE_BRACKET.getStringValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_SIGNATURE_MUST_END_WITH_CLOSE_BRACKET);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
         }
 
         result[1] = input.substring(result[0].length() + 1, input.length() - 1);
