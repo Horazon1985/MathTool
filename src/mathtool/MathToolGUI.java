@@ -148,7 +148,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private final JScrollPane scrollPaneText;
     private final GraphicArea mathToolGraphicArea;
     private final JScrollPane scrollPaneGraphic;
-    private ComputingDialogGUI computingDialog;
+    private ComputingDialogGUI computingDialogGUI;
     private final MathToolTextField mathToolTextField;
 
     @GraphicPanel
@@ -219,7 +219,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Prüfung, ob alle nötigen Resourcen vorhanden sind.
         MathToolController.checkExpressionBuilderResources();
         MathToolController.checkMathToolResources();
-        
+
         // Vereinfachungsoptionen initialisieren.
         MathToolController.initSimplifyTypes();
 
@@ -391,8 +391,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 saveLabel.setBounds(graphicPanel3D.getX() + 150, scrollPaneText.getHeight() + 25, 150, 25);
                 rotateLabel.setBounds(graphicPanel3D.getX() + 300, scrollPaneText.getHeight() + 25, 200, 25);
 
-                if (computingDialog != null) {
-                    computingDialog = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
+                if (computingDialogGUI != null) {
+                    computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, getX(), getY(), getWidth(), getHeight());
                 }
 
                 if (!typeGraphic.equals(TypeGraphic.NONE)) {
@@ -987,7 +987,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             protected void done() {
                 computing = false;
                 computingTimer.cancel();
-                computingDialog.setVisible(false);
+                computingDialogGUI.setVisible(false);
                 inputButton.setVisible(true);
                 cancelButton.setVisible(false);
                 // mathToolTextArea und mathToolGraphicArea nach unten scrollen lassen.
@@ -998,11 +998,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
-                try {
-                    computingDialog = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
-                } catch (Exception e) {
-                }
-                MathToolController.initTimer(computingTimer, computingDialog);
+                computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
+                MathToolController.initTimer(computingTimer, computingDialogGUI);
 
                 boolean validCommand = false;
 

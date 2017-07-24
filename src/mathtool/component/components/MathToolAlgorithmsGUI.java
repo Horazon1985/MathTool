@@ -9,6 +9,7 @@ import exceptions.EvaluationException;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,15 +17,17 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import mathtool.MathToolController;
 import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
 
-    private static final String PATH_LOGO_MATHTOOL_ALGORITHMS = "icons/MathToolAlgorithmsLogo.png";    
-    
+    private static final String PATH_LOGO_MATHTOOL_ALGORITHMS = "icons/MathToolAlgorithmsLogo.png";
+
     private JPanel headerPanel;
     private JLabel headerLabel;
     private ImageIcon headerImage;
@@ -39,8 +42,13 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JEditorPane algorithmEditor;
     private JTextPane outputArea;
 
-    private static final String GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM";
+    private SwingWorker<Void, Void> computingSwingWorker;
+    private ComputingDialogGUI computingDialogGUI;
+    private Timer computingTimer;
+
+    private static final String GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
+    private static final String GUI_MathToolAlgorithmsGUI_STOP = "GUI_MathToolAlgorithmsGUI_STOP";
     private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
     private static final String GUI_MathToolAlgorithmsGUI_FORMAT = "GUI_MathToolAlgorithmsGUI_FORMAT";
 
@@ -62,11 +70,11 @@ public class MathToolAlgorithmsGUI extends JDialog {
      */
     private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiHeight, String titleID) {
 
-        setTitle(Translator.translateOutputMessage(titleID));
+        setTitle(titleID);
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
-        this.getContentPane().setBackground(Color.white);
+        getContentPane().setBackground(Color.white);
 
         int currentComponentLevel;
 
@@ -128,7 +136,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             AlgorithmOutputPrinter.setOutputArea(this.outputArea);
 
             // Buttons definieren.
-            this.addAlgorithmButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_ADD_ALGORITHM));
+            this.addAlgorithmButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM));
             add(this.addAlgorithmButton);
             this.addAlgorithmButton.setBounds(PADDING, currentComponentLevel, 200, 30);
 
@@ -145,20 +153,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 public void actionPerformed(ActionEvent ae) {
                     String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
                     String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
-
-                    try {
-                        AlgorithmOutputPrinter.clearOutput();
-                        AlgorithmOutputPrinter.printStartParsingAlgorithms();
-                        AlgorithmCompiler.parseAlgorithmFile(algStringWithoutUTF8);
-                        AlgorithmOutputPrinter.printEndParsingAlgorithms();
-
-                        AlgorithmOutputPrinter.printStartAlgorithmData();
-                        algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
-                        AlgorithmOutputPrinter.printEndAlgorithmData();
-                    } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
-                        AlgorithmOutputPrinter.printException(e);
-                    }
-
+                    compileAndExecuteAlgorithmAlgorithmFile(algStringWithoutUTF8);
                 }
             });
 
@@ -171,13 +166,52 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     algorithmEditor.setText(formattedCode);
                 }
             });
-            
+
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
 
         } catch (Exception e) {
         }
+
+    }
+
+    private void compileAndExecuteAlgorithmAlgorithmFile(String algorithm) {
+        final MathToolAlgorithmsGUI mathToolAlgorithmsGUI = this;
+        computingSwingWorker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected void done() {
+                computingTimer.cancel();
+                computingDialogGUI.setVisible(false);
+                runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN));
+            }
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_STOP));
+                computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, mathToolAlgorithmsGUI.getX(), mathToolAlgorithmsGUI.getY(), mathToolAlgorithmsGUI.getWidth(), mathToolAlgorithmsGUI.getHeight());
+                MathToolController.initTimer(computingTimer, computingDialogGUI);
+
+                try {
+                    AlgorithmOutputPrinter.clearOutput();
+                    AlgorithmOutputPrinter.printStartParsingAlgorithms();
+                    AlgorithmCompiler.parseAlgorithmFile(algorithm);
+                    AlgorithmOutputPrinter.printEndParsingAlgorithms();
+
+                    AlgorithmOutputPrinter.printStartAlgorithmData();
+                    algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
+                    AlgorithmOutputPrinter.printEndAlgorithmData();
+                } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
+                    AlgorithmOutputPrinter.printException(e);
+                }
+
+                return null;
+            }
+
+        };
+        computingTimer = new Timer();
+        computingSwingWorker.execute();
 
     }
 

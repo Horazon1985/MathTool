@@ -57,16 +57,16 @@ public class ForControlStructure extends ControlStructure {
         while (this.endLoopCondition.evaluate(valuesMap)) {
             try {
                 result = AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.commandBlocks[0]);
-                // Identifierwerte aktualisieren.
                 if (result != null) {
                     return result;
                 }
-                AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.loopAssignment);
-                valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
             } catch (AlgorithmBreakException e) {
                 return null;
             } catch (AlgorithmContinueException e) {
             }
+            AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.loopAssignment);
+            // Identifierwerte aktualisieren.
+            valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
         }
 
         // Speicher vor der Ausführung des Blocks aktualisieren.
