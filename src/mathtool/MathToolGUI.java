@@ -296,9 +296,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPaneGraphic);
 
-        // Buttons ausrichten
-        cancelButton.setVisible(false);
-
         // 2D-Grafikobjekte initialisieren
         graphicPanel2D = new GraphicPanel2D();
         add(graphicPanel2D);
@@ -381,7 +378,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
                 // Konsolenmaße setzen.
                 MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 40, getHeight() - 170,
-                        mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
+                        mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton);
                 // Alle Buttons und Dropdowns korrekt ausrichten.
                 MathToolController.locateButtonsAndDropDowns(buttonsAndDropDowns, 10, scrollPaneText.getHeight() + 60, 150, 30, 5);
                 // Alle Grafikpanels korrekt ausrichten.
@@ -398,7 +395,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 if (!typeGraphic.equals(TypeGraphic.NONE)) {
                     // Konsolenmaße neu setzen, falls eine Grafik angezeigt werden muss.
                     MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 550, getHeight() - 170,
-                            mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
+                            mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton);
                 }
 
                 mathToolGraphicArea.updateSize();
@@ -566,7 +563,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 550, getHeight() - 170,
-                mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
+                mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton);
 
         // Alle Grafik-Panels zunächst unsichtbar machen, dann, je nach Fall, wieder sichtbar machen.
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
@@ -648,7 +645,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             saveLabel.setVisible(true);
         } else {
             MathToolController.resizeConsole(scrollPaneText, scrollPaneGraphic, 10, 10, getWidth() - 40, getHeight() - 170,
-                    mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton, cancelButton);
+                    mathToolTextArea, mathToolGraphicArea, mathToolTextField, inputButton);
         }
 
         validate();
@@ -664,7 +661,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         inputButton = new javax.swing.JButton();
         latexButton = new javax.swing.JButton();
         approxButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
         operatorChoice = new javax.swing.JComboBox();
         commandChoice = new javax.swing.JComboBox();
         clearButton = new javax.swing.JButton();
@@ -707,7 +703,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(inputButton);
-        inputButton.setBounds(560, 330, 130, 30);
+        inputButton.setBounds(700, 370, 130, 30);
 
         latexButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         latexButton.setText("LaTex-Code");
@@ -729,16 +725,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         getContentPane().add(approxButton);
         approxButton.setBounds(10, 370, 130, 30);
 
-        cancelButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        cancelButton.setText("Abbruch");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        getContentPane().add(cancelButton);
-        cancelButton.setBounds(560, 300, 130, 30);
-
         operatorChoice.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         operatorChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -755,7 +741,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
         });
         getContentPane().add(commandChoice);
-        commandChoice.setBounds(560, 370, 32, 23);
+        commandChoice.setBounds(560, 370, 130, 23);
 
         clearButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         clearButton.setText("Leeren");
@@ -947,7 +933,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions.put(latexButton, GUI_LATEX_CODE);
         componentCaptions.put(clearButton, GUI_CLEAR);
         componentCaptions.put(inputButton, GUI_INPUT);
-        componentCaptions.put(cancelButton, GUI_CANCEL);
 
         // Labels
         componentCaptions.put(legendLabel, GUI_LEGEND);
@@ -977,8 +962,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     private void executeCommand() {
 
-        cancelButton.setVisible(true);
-        inputButton.setVisible(false);
         final MathToolGUI mathToolGUI = this;
 
         computingSwingWorker = new SwingWorker<Void, Void>() {
@@ -988,8 +971,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 computing = false;
                 computingTimer.cancel();
                 computingDialogGUI.setVisible(false);
-                inputButton.setVisible(true);
-                cancelButton.setVisible(false);
+                inputButton.setText(Translator.translateOutputMessage(GUI_INPUT));
                 // mathToolTextArea und mathToolGraphicArea nach unten scrollen lassen.
                 scrollPaneText.getVerticalScrollBar().setValue(scrollPaneText.getVerticalScrollBar().getMaximum());
                 scrollPaneGraphic.getVerticalScrollBar().setValue(scrollPaneGraphic.getVerticalScrollBar().getMaximum());
@@ -998,6 +980,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
+                inputButton.setText(Translator.translateOutputMessage(GUI_CANCEL));
                 computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
                 MathToolController.initTimer(computingTimer, computingDialogGUI);
 
@@ -1335,10 +1318,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         System.exit(0);
     }//GEN-LAST:event_menuItemQuitActionPerformed
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        computingSwingWorker.cancel(true);
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
     private void operatorChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operatorChoiceActionPerformed
         if (operatorChoice.getSelectedIndex() > 0) {
 
@@ -1508,10 +1487,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void mathToolTextFieldKeyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-                // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
-                stopPossibleRotation();
-                executeCommand();
-                break;
+                if (!computing) {
+                    // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
+                    stopPossibleRotation();
+                    executeCommand();
+                }
             case KeyEvent.VK_UP:
                 if (logPosition > 0) {
                     logPosition--;
@@ -1795,7 +1775,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton approxButton;
-    private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearButton;
     private javax.swing.JComboBox commandChoice;
     private javax.swing.JButton inputButton;

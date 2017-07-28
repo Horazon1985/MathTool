@@ -580,7 +580,7 @@ public class MathToolController {
      */
     public static void resizeConsole(JScrollPane scrollPaneText, JScrollPane scrollPaneGraphic, int x, int y, int width, int height,
             JTextArea mathToolTextArea, GraphicArea mathToolGraphicArea, MathToolTextField mathToolTextField,
-            JButton inputButton, JButton cancelButton) {
+            JButton inputButton) {
 
         // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
         scrollPaneText.setBounds(x, y, width, height);
@@ -593,7 +593,6 @@ public class MathToolController {
         mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
         mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
         inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
-        cancelButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, cancelButton.getWidth(), cancelButton.getHeight());
 
     }
 

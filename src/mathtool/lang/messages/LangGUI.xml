@@ -481,8 +481,8 @@
     <object id = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM">
         <German>Algorithmus laden</German>
         <English>Load algorithm</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Завантажити алгоритм</Ukrainian>
+        <Russian>Загрузить алгоритм</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_RUN">
         <German>Ausführen</German>
@@ -493,8 +493,8 @@
     <object id = "GUI_MathToolAlgorithmsGUI_STOP">
         <German>Stoppen</German>
         <English>Stop</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Зупинити</Ukrainian>
+        <Russian>Остановить</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_DEBUG">
         <German>Debuggen</German>
@@ -505,44 +505,50 @@
     <object id = "GUI_MathToolAlgorithmsGUI_FORMAT">
         <German>Formatieren</German>
         <English>Format</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Відформатувати</Ukrainian>
+        <Russian>Отформатировать</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM">
         <German>Kompiliere Algoirithmus ...</German>
         <English>Start compiling algorithm ...</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Компілювати алгоритм ...</Ukrainian>
+        <Russian>Компилировать алгоритм ...</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL">
         <German>Kompilieren des Algorithmus erfolgreich.</German>
         <English>Compiling algorithm successful.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Компіляція завершена успішно.</Ukrainian>
+        <Russian>Компиляция заверншена успешно.</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM">
         <German>Starte Ausführung des Algoirithmus ...</German>
         <English>Start executing algorithm ...</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Почати виконання алгоритму ...</Ukrainian>
+        <Russian>Начать выполнение алгоритма ...</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM">
         <German>Ausgabe des Algorithmus [0]: [1]</German>
         <English>Output of algorithm [0]: [1]</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Результат виконання алгоритму [0]: [1]</Ukrainian>
+        <Russian>Результат выполнения алгоритма [0]: [1]</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL">
         <German>Ausführung des Algorithmus erfolgreich.</German>
         <English>Execution of algorithm successful.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Виконання алгоритма завершено успішно.</Ukrainian>
+        <Russian>Выполнеие алгоритма заверншено успешно.</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED">
+        <German>Ausführung des Algorithmus abgebrochen.</German>
+        <English>Execution of algorithm aborted.</English>
+        <Ukrainian>Виконання алгоритма перервано.</Ukrainian>
+        <Russian>Выполнеие алгоритма прервано.</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED">
         <German>Folgender Fehler trat im Algorithmus auf: [0]</German>
         <English>Following exception ocurred in algorithm: [0]</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Виникла наступна помилка: [0]</Ukrainian>
+        <Russian>Возникла следующая ошибка [0]</Russian>
     </object>
     
 </objects>

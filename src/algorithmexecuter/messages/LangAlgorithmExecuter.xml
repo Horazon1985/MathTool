@@ -2,38 +2,38 @@
     <object id = "AE_MAIN_NOT_FOUND">
         <German>Main-Algorithmus nicht gefunden.</German>
         <English>Main algorithm not found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритм Main не знайдено.</Ukrainian>
+        <Russian>Алгоритм Main не найден.</Russian>
     </object>
     <object id = "AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET">
         <German>Der Wert des [0]. Parameters im Algorithmus [1] wurde nicht gesetzt.</German>
         <English>The value of the [0]. parameter in algorithm [1] is not defined.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Значення [0]. Параметр у алгоритмі [1] не визначено.</Ukrainian>
+        <Russian>Значение [0]. Параметр в алгоритме [1] не определен.</Russian>
     </object>
     <object id = "AE_NO_SUCH_COMMAND">
         <German>Ein Befehl mit der Signatur [0] wurde nicht gefunden.</German>
         <English>A command with signature [0] could not be found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Команду з сігнатурою [0] не знайдено.</Ukrainian>
+        <Russian>Команда с сигнатурой [0] не найдена.</Russian>
     </object>
     <object id = "AE_UNKNOWN_IDENTIFIER">
         <German>Unbekannter Bezeichner: [0].</German>
         <English>Unknown identifier: [0].</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Невідомий ідентифікатор: [0].</Ukrainian>
+        <Russian>Неизвестный идентификатор: [0].</Russian>
     </object>
     <object id = "AE_RETURN_TYPE_EXPECTED">
         <German>Ein Rückgabewert wird erwartet.</German>
         <English>Return value expected.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Очікується значення, що повертає алгоритм.</Ukrainian>
+        <Russian>Ожидается возвращаемое значение.</Russian>
     </object>
     <object id = "AE_NULL_POINTER">
         <German>Der Bezeichner [0] hat den Wert null.</German>
         <English>The identifier [0] has value null.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Ідентифікатор [0] має значення null.</Ukrainian>
+        <Russian>Идентификатор [0] имеет значение null.</Russian>
     </object>
     
 </objects>

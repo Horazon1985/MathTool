@@ -21,6 +21,7 @@ public abstract class AlgorithmOutputPrinter {
     private static final String GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM = "GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM = "GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL";
+    private static final String GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED";
     private static final String GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED";
     
     private static JTextPane outputArea;
@@ -102,6 +103,15 @@ public abstract class AlgorithmOutputPrinter {
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
         println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL));
+    }
+
+    public static void printAbortAlgorithm() {
+        if (outputArea == null) {
+            return;
+        }
+        StyledDocument doc = outputArea.getStyledDocument();
+        SimpleAttributeSet keyWord = new SimpleAttributeSet();
+        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED));
     }
 
     public static void printException(Exception e) {
