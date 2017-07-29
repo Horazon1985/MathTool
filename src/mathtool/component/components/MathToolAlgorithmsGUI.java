@@ -9,6 +9,7 @@ import exceptions.EvaluationException;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,7 +17,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -42,6 +42,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private JEditorPane algorithmEditor;
     private JTextPane outputArea;
+
+    private ImageIcon runIcon;
+    private ImageIcon stopIcon;
 
     private SwingWorker<Void, Void> computingSwingWorker;
 
@@ -143,9 +146,13 @@ public class MathToolAlgorithmsGUI extends JDialog {
             add(this.addAlgorithmButton);
             this.addAlgorithmButton.setBounds(PADDING, currentComponentLevel, 200, 30);
 
-            this.runButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN), new ImageIcon(PATH_RUN_LOGO));
-            this.runButton.setVerticalTextPosition(SwingConstants.CENTER);
-            this.runButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            this.runIcon = new ImageIcon(ImageIO.read(getClass().getResource(PATH_RUN_LOGO)));
+            this.stopIcon = new ImageIcon(ImageIO.read(getClass().getResource(PATH_STOP_LOGO)));
+
+            this.runButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN));
+            this.runButton.setIcon(this.runIcon);
+            this.runButton.setOpaque(false);
+
             add(this.runButton);
             this.runButton.setBounds(2 * PADDING + 200, currentComponentLevel, 200, 30);
 
@@ -193,11 +200,14 @@ public class MathToolAlgorithmsGUI extends JDialog {
             @Override
             protected void done() {
                 runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN));
+                runButton.setIcon(runIcon);
+                computing = false;
             }
 
             @Override
             protected Void doInBackground() throws Exception {
                 runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_STOP));
+                runButton.setIcon(stopIcon);
 
                 try {
                     AlgorithmOutputPrinter.clearOutput();
