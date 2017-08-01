@@ -50,6 +50,7 @@ import graphic.GraphicPanelImplicit3D;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
+import java.util.Set;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
 import mathtool.component.dialogs.MathToolSaveGraphicDialog;
@@ -205,7 +206,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public static int mathToolGraphicAreaHeight;
 
     // Optionen
-    private static HashSet<TypeSimplify> simplifyTypes = new HashSet<>();
+    private static Set<TypeSimplify> simplifyTypes = new HashSet<>();
 
     // logPosition = Index des aktuellen Befehls, den man mittels Pfeiltasten ausgegeben haben möchte.
     public static int logPosition = 0;
@@ -498,14 +499,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Getter für simplifyTypes.
      */
-    public static HashSet<TypeSimplify> getSimplifyTypes() {
+    public static Set<TypeSimplify> getSimplifyTypes() {
         return simplifyTypes;
     }
 
     /**
      * Setter für simplifyTypes.
      */
-    public static void setSimplifyTypes(HashSet<TypeSimplify> simplifyTypes) {
+    public static void setSimplifyTypes(Set<TypeSimplify> simplifyTypes) {
         MathToolGUI.simplifyTypes = simplifyTypes;
     }
 

@@ -2079,7 +2079,7 @@ public abstract class MathCommandCompiler {
         Expression expr = (Expression) command.getParams()[0];
 
         // Voreingestellte Vereinfachungstypen müssen eingebunden werden, welche expand() nicht widersprechen.
-        HashSet<TypeSimplify> simplifyTypesMathTool = MathToolGUI.getSimplifyTypes();
+        Set<TypeSimplify> simplifyTypesMathTool = MathToolGUI.getSimplifyTypes();
         if (simplifyTypesMathTool.contains(TypeSimplify.simplify_algebraic_expressions)) {
             simplifyTypesExpand.add(TypeSimplify.simplify_algebraic_expressions);
         } else {

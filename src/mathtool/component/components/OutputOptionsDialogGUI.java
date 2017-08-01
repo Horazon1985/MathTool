@@ -6,6 +6,7 @@ import enums.TypeSimplify;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import mathtool.lang.translator.Translator;
@@ -29,7 +30,7 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
     private static OutputOptionsDialogGUI instance = null;
 
     private final HashSet<TypeSimplify> mandatorySimplifyTypes = new HashSet<>();
-    private HashSet<TypeSimplify> simplifyTypes;
+    private Set<TypeSimplify> simplifyTypes;
 
     private OutputOptionsDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,

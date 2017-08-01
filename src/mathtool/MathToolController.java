@@ -109,7 +109,7 @@ public class MathToolController {
     }
 
     public static void initSimplifyTypes() {
-        HashSet<TypeSimplify> simplifyTypes = MathToolGUI.getSimplifyTypes();
+        Set<TypeSimplify> simplifyTypes = MathToolGUI.getSimplifyTypes();
         simplifyTypes.add(TypeSimplify.order_difference_and_division);
         simplifyTypes.add(TypeSimplify.order_sums_and_products);
         simplifyTypes.add(TypeSimplify.simplify_basic);
