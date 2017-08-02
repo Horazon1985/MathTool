@@ -89,14 +89,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_MENU_RUSSIAN = "GUI_MENU_RUSSIAN";
     private static final String GUI_MENU_UKRAINIAN = "GUI_MENU_UKRAINIAN";
     private static final String GUI_MENU_REPRESENTATION_MODE = "GUI_MENU_REPRESENTATION_MODE";
-    private static final String GUI_FORMULA_MODE = "GUI_FORMULA_MODE";
+    private static final String GUI_MENU_FORMULA_MODE = "GUI_MENU_FORMULA_MODE";
     private static final String GUI_MENU_TEXT_MODE = "GUI_MENU_TEXT_MODE";
     private static final String GUI_MENU_ABOUT = "GUI_MENU_ABOUT";
     private static final String GUI_MENU_OPTIONS = "GUI_MENU_OPTIONS";
     private static final String GUI_MENU_OUTPUT_OPTIONS = "GUI_MENU_OUTPUT_OPTIONS";
     private static final String GUI_MENU_GRAPHIC_OPTIONS = "GUI_MENU_GRAPHIC_OPTIONS";
-    private static final String GUI_TOOLS = "GUI_TOOLS";
-    private static final String GUI_ALGORITHMS = "GUI_ALGORITHMS";
+    private static final String GUI_MENU_TOOLS = "GUI_MENU_TOOLS";
+    private static final String GUI_MENU_ALGORITHMS = "GUI_MENU_ALGORITHMS";
     private static final String GUI_APPROX = "GUI_APPROX";
     private static final String GUI_LATEX_CODE = "GUI_LATEX_CODE";
     private static final String GUI_CLEAR = "GUI_CLEAR";
@@ -921,14 +921,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         componentCaptions.put(menuItemLanguageRussian, GUI_MENU_RUSSIAN);
         componentCaptions.put(menuItemLanguageUkrainian, GUI_MENU_UKRAINIAN);
         componentCaptions.put(menuItemRepresentationMenu, GUI_MENU_REPRESENTATION_MODE);
-        componentCaptions.put(menuItemRepresentationFormula, GUI_FORMULA_MODE);
+        componentCaptions.put(menuItemRepresentationFormula, GUI_MENU_FORMULA_MODE);
         componentCaptions.put(menuItemRepresentationText, GUI_MENU_TEXT_MODE);
         componentCaptions.put(menuItemAbout, GUI_MENU_ABOUT);
         componentCaptions.put(menuItemOptionsMenu, GUI_MENU_OPTIONS);
         componentCaptions.put(menuItemOutputOptions, GUI_MENU_OUTPUT_OPTIONS);
         componentCaptions.put(menuItemGraphicOptions, GUI_MENU_GRAPHIC_OPTIONS);
-        componentCaptions.put(menuTools, GUI_TOOLS);
-        componentCaptions.put(menuItemAlgorithms, GUI_ALGORITHMS);
+        componentCaptions.put(menuTools, GUI_MENU_TOOLS);
+        componentCaptions.put(menuItemAlgorithms, GUI_MENU_ALGORITHMS);
         // Buttons
         componentCaptions.put(approxButton, GUI_APPROX);
         componentCaptions.put(latexButton, GUI_LATEX_CODE);
@@ -1473,7 +1473,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
 
     private void menuItemAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAlgorithmsActionPerformed
-        String algorithmsTitle = Translator.translateOutputMessage(GUI_ALGORITHMS);
+        String algorithmsTitle = Translator.translateOutputMessage(GUI_MENU_ALGORITHMS);
 
         MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getHeight(),
                 algorithmsTitle);

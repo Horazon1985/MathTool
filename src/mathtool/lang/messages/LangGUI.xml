@@ -176,7 +176,7 @@
         <Russian>Текстовый режим</Russian>
         <Ukrainian>Текстовий режим</Ukrainian>
     </object>
-    <object id = "GUI_FORMULA_MODE">
+    <object id = "GUI_MENU_FORMULA_MODE">
         <German>Formelmodus</German>
         <English>Formula mode</English>
         <Russian>Формульный режим</Russian>
@@ -194,13 +194,13 @@
         <Ukrainian>Опції графіки</Ukrainian>
         <Russian>Опции графики</Russian>
     </object>
-    <object id = "GUI_TOOLS">
+    <object id = "GUI_MENU_TOOLS">
         <German>Werkzeuge</German>
         <English>Tools</English>
         <Ukrainian>Засоби</Ukrainian>
         <Russian>Инструменты</Russian>
     </object>
-    <object id = "GUI_ALGORITHMS">
+    <object id = "GUI_MENU_ALGORITHMS">
         <German>Algorithmencompiler</German>
         <English>Algorithm compiler</English>
         <Ukrainian>Компілятор алгорітмів</Ukrainian>
