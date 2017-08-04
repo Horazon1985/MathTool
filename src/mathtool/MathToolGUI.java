@@ -1493,6 +1493,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     stopPossibleRotation();
                     executeCommand();
                 }
+                break;
             case KeyEvent.VK_UP:
                 if (logPosition > 0) {
                     logPosition--;
@@ -1502,8 +1503,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
             case KeyEvent.VK_DOWN:
                 if (logPosition < COMMANDS.size() - 1) {
                     logPosition++;
+                    MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 }
-                MathToolController.showLoggedCommand(mathToolTextField, logPosition);
                 break;
             case KeyEvent.VK_ESCAPE:
                 if (computing) {
