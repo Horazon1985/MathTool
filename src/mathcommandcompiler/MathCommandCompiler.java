@@ -55,12 +55,12 @@ import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
 import exceptions.CancellationException;
 import graphic.GraphicPanelCylindrical;
-import graphic.GraphicPanelImplicit2D.MarchingSquare;
 import graphic.GraphicPanelImplicit3D;
-import graphic.GraphicPanelImplicit3D.MarchingCube;
 import graphic.GraphicPanelSpherical;
 import graphic.GraphicPanelSurface;
 import graphic.GraphicPanelVectorField2D;
+import graphic.util.MarchingCube;
+import graphic.util.MarchingSquare;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -558,7 +558,7 @@ public abstract class MathCommandCompiler {
         // Wird geprüft, ob die einzelnen Parameter in der Funktionsklammer gültige Variablen sind.
         for (String functionVar : functionVars) {
             if (!VALIDATOR.isValidIdentifier(functionVar) || Variable.getVariablesWithPredefinedValues().contains(functionVar)) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_1") + functionVar + Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE_2"));
+                throw new ExpressionException(Translator.translateOutputMessage("MCC_IS_NOT_VALID_VARIABLE", functionVar));
             }
         }
 

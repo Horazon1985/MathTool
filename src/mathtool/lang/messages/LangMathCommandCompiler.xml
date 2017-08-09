@@ -14,53 +14,17 @@
         <Ukrainian>Забагато параметрів у команди [0].</Ukrainian>
         <Russian>Слишком много параметров у команды [0].</Russian>
     </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_OCCUR_IN_PARAMETER_1">
-        <German>Die Variable </German>
-        <English>The variable </English>
-        <Ukrainian>Змінна </Ukrainian>
-        <Russian>Переменная </Russian>
+    <object id = "MCC_COMMAND_VARIABLE_MUST_OCCUR_IN_PARAMETER">
+        <German>Die Variable [0] muss im Ausdruck im [1]. Parameter des Befehls '[2]' vorkommen.</German>
+        <English>The variable [0] must occur in the [1]. parameter of the command '[2]'.</English>
+        <Ukrainian>Змінна [0] повинна міститися у [1]. параметрі команди [2].</Ukrainian>
+        <Russian>Переменная [0] должна встречаться в [1]. параметре команды [2].</Russian>
     </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_OCCUR_IN_PARAMETER_2">
-        <German> muss im Ausdruck im </German>
-        <English> must occur in the </English>
-        <Ukrainian> повинна міститися у </Ukrainian>
-        <Russian> должна встречаться в </Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_OCCUR_IN_PARAMETER_3">
-        <German>. Parameter des Befehls </German>
-        <English>. parameter of the command </English>
-        <Ukrainian>. параметрі команди </Ukrainian>
-        <Russian>. параметре команды </Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_OCCUR_IN_PARAMETER_4">
-        <German> vorkommen.</German>
-        <English>.</English>
-        <Ukrainian>.</Ukrainian>
-        <Russian>.</Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_NOT_OCCUR_IN_PARAMETER_1">
-        <German>Die Variable </German>
-        <English>The variable </English>
-        <Ukrainian>Змінна </Ukrainian>
-        <Russian>Переменная </Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_NOT_OCCUR_IN_PARAMETER_2">
-        <German> darf im Ausdruck im </German>
-        <English> must not occur in the </English>
-        <Ukrainian> не повинна міститися у </Ukrainian>
-        <Russian> не должна встречаться в </Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_NOT_OCCUR_IN_PARAMETER_3">
-        <German>. Parameter des Befehls </German>
-        <English>. parameter of the command </English>
-        <Ukrainian>. параметрі команди </Ukrainian>
-        <Russian>. параметре команды </Russian>
-    </object>
-    <object id = "MCC_COMMAND_VARIABLE_MUST_NOT_OCCUR_IN_PARAMETER_4">
-        <German> nicht vorkommen.</German>
-        <English>.</English>
-        <Ukrainian>.</Ukrainian>
-        <Russian>.</Russian>
+    <object id = "MCC_COMMAND_VARIABLE_MUST_NOT_OCCUR_IN_PARAMETER">
+        <German>Die Variable [0] darf im Ausdruck im [1]. Parameter des Befehls '[2]' nicht vorkommen.</German>
+        <English>The variable [0] must not occur in the [1]. parameter of the command '[2]'.</English>
+        <Ukrainian>Змінна [0] не повинна міститися у [1]. параметрі команди '[2]'.</Ukrainian>
+        <Russian>Переменная [0] не должна встречаться в [1]. параметре команды '[2]'.</Russian>
     </object>
     <object id = "MCC_COMMAND_UNIQUE_VARIABLE_OCCUR_TWICE">
         <German>Die Variable [0] darf in den Parametern des Befehls '[1]' nicht mehrmals vorkommen.</German>
@@ -255,17 +219,11 @@
         <Ukrainian>Функція, що визначається, має містить щонайменше одну змінну як параметр.</Ukrainian>
         <Russian>Определяемая функция должна содержать минимум одну переменную как параметр.</Russian>
     </object>
-    <object id = "MCC_IS_NOT_VALID_VARIABLE_1">
-        <German>'</German>
-        <English>'</English>
-        <Ukrainian>'</Ukrainian>
-        <Russian>'</Russian>
-    </object>
-    <object id = "MCC_IS_NOT_VALID_VARIABLE_2">
-        <German>' ist keine gültige Veränderliche.</German>
-        <English>' is not a valid variable.</English>
-        <Ukrainian>' не є діючою змінною.</Ukrainian>
-        <Russian>' не является действительной переменной.</Russian>
+    <object id = "MCC_IS_NOT_VALID_VARIABLE">
+        <German>'[0]' ist keine gültige Veränderliche.</German>
+        <English>'[0]' is not a valid variable.</English>
+        <Ukrainian>'[0]' не є діючою змінною.</Ukrainian>
+        <Russian>'[0]' не является действительной переменной.</Russian>
     </object>
     <object id = "MCC_VARIABLES_OCCUR_TWICE_IN_DEF">
         <German>In der Funktionsdeklaration der Funktion '[0]' dürfen nicht mehrmals dieselben Veränderlichen vorkommen.</German>
@@ -346,13 +304,13 @@
         <Russian> : </Russian>
     </object>
     <object id = "MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS">
-        <German>Es konnte kein Eigenvector explizit berechnet werden.</German>
+        <German>Es konnte kein Eigenvektor explizit berechnet werden.</German>
         <English>No eigenvector could be computetd explicitely.</English>
         <Ukrainian>Жоден власний вектор не можна визначити у явному вигляді.</Ukrainian>
         <Russian>Ни один собственный вектор нельзя определить явно.</Russian>
     </object>
     <object id = "MCC_EIGENVECTORS_NO_EIGENVECTORS">
-        <German>Es konnte kein Eigenvector berechnet werden.</German>
+        <German>Es konnte kein Eigenvektor berechnet werden.</German>
         <English>No eigenvector could be computetd.</English>
         <Ukrainian>Жоден власний вектор не можна визначити.</Ukrainian>
         <Russian>Ни один собственный вектор нельзя определить.</Russian>
