@@ -1,6 +1,6 @@
 package mathtool.component.dialogs;
 
-import graphic.AbstractGraphicPanel;
+import graphic.swing.AbstractGraphicPanel;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 

@@ -1,8 +1,8 @@
 package mathtool.component.components;
 
-import graphic.AbstractGraphicPanel2D;
-import graphic.AbstractGraphicPanel3D;
-import graphic.GraphicPanel3D;
+import graphic.swing.AbstractGraphicPanel2D;
+import graphic.swing.AbstractGraphicPanel3D;
+import graphic.swing.GraphicPanel3D;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;

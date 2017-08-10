@@ -34,22 +34,22 @@ import enums.TypeSimplify;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import abstractexpressions.expression.classes.Expression;
-import graphic.GraphicArea;
-import graphic.GraphicPanel2D;
-import graphic.GraphicPanel3D;
-import graphic.GraphicPanelCurves2D;
-import graphic.GraphicPanelCurves3D;
-import graphic.GraphicPanelImplicit2D;
-import graphic.GraphicPanelPolar;
+import graphic.swing.GraphicArea;
+import graphic.swing.GraphicPanel2D;
+import graphic.swing.GraphicPanel3D;
+import graphic.swing.GraphicPanelCurves2D;
+import graphic.swing.GraphicPanelCurves3D;
+import graphic.swing.GraphicPanelImplicit2D;
+import graphic.swing.GraphicPanelPolar;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import exceptions.CancellationException;
-import graphic.GraphicPanelCylindrical;
-import graphic.GraphicPanelFormula;
-import graphic.GraphicPanelImplicit3D;
-import graphic.GraphicPanelSpherical;
-import graphic.GraphicPanelSurface;
-import graphic.GraphicPanelVectorField2D;
+import graphic.swing.GraphicPanelCylindrical;
+import graphic.swing.GraphicPanelFormula;
+import graphic.swing.GraphicPanelImplicit3D;
+import graphic.swing.GraphicPanelSpherical;
+import graphic.swing.GraphicPanelSurface;
+import graphic.swing.GraphicPanelVectorField2D;
 import java.util.Set;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
@@ -1437,7 +1437,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
             saveDialog.save(path);
         } catch (Exception e) {
         }
-
     }//GEN-LAST:event_menuItemSaveActionPerformed
 
     private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
