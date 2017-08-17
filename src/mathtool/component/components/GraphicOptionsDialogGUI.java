@@ -40,11 +40,11 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
 
     }
 
-    public static GraphicOptionsDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    public static GraphicOptionsDialogGUI getInstance(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
             int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         if (instance == null) {
-            instance = new GraphicOptionsDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
+            instance = new GraphicOptionsDialogGUI(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight,
                     numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         }
         return instance;
