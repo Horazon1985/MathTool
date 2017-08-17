@@ -1451,7 +1451,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemGraphicOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGraphicOptionsActionPerformed
 
-        String simplifyOptionsTitle = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME);
+        String optionGroupName = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_GROUP_NAME);
 
         String saveButtonLabel = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_SAVE_BUTTON);
         String cancelButtonLabel = Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_CANCEL_BUTTON);
@@ -1466,7 +1466,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
             Translator.translateOutputMessage(GUI_GraphicOptionsDialogGUI_DO_NOT_SHOW_CURSOR_ON_GRAPH)});
 
         GraphicOptionsDialogGUI graphicOptionsDialogGUI = GraphicOptionsDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                2, simplifyOptionsTitle, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
+                2, optionGroupName, null, dropDownOptions, saveButtonLabel, cancelButtonLabel);
         graphicOptionsDialogGUI.setVisible(true);
 
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
