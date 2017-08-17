@@ -73,7 +73,6 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
         // Für Matrizen
         mandatorySimplifyTypes.add(TypeSimplify.simplify_matrix_entries);
         mandatorySimplifyTypes.add(TypeSimplify.simplify_compute_matrix_operations);
-        
     }
 
     @Override
