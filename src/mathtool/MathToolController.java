@@ -12,7 +12,7 @@ import abstractexpressions.expression.classes.Operator;
 import abstractexpressions.expression.classes.SelfDefinedFunction;
 import abstractexpressions.expression.classes.TypeOperator;
 import abstractexpressions.expression.classes.Variable;
-import graphic.swing.GraphicArea;
+import graphic.common.GraphicArea;
 import graphic.swing.GraphicPanel3D;
 import graphic.swing.GraphicPanelCurves3D;
 import java.awt.Color;

@@ -21,7 +21,7 @@ import abstractexpressions.expression.differentialequation.SolveGeneralDifferent
 import abstractexpressions.expression.basic.ExpressionCollection;
 import abstractexpressions.expression.basic.SimplifyPolynomialUtils;
 import static abstractexpressions.expression.classes.Expression.VALIDATOR;
-import graphic.swing.GraphicArea;
+import graphic.common.GraphicArea;
 import graphic.swing.GraphicPanel2D;
 import graphic.swing.GraphicPanel3D;
 import graphic.swing.GraphicPanelCurves2D;
