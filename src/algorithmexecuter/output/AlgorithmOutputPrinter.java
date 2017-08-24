@@ -2,14 +2,11 @@ package algorithmexecuter.output;
 
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
-import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.transaction.TransactionRequiredException;
 import mathtool.lang.translator.Translator;
 
 public abstract class AlgorithmOutputPrinter {
