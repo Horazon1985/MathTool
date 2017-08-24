@@ -48,6 +48,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
@@ -776,7 +777,7 @@ public class MathToolController {
      * Die Captions aller in componentCaptions befindlichen Komponenten werden
      * entsprechend der Sprache und der ID (im zugehörigen value) gesetzt.
      */
-    public static void updateAllCaptions(HashMap<JComponent, String> componentCaptions) {
+    public static void updateAllCaptions(Map<JComponent, String> componentCaptions) {
         for (JComponent component : componentCaptions.keySet()) {
             if (component instanceof JLabel) {
                 ((JLabel) component).setText(bold(Translator.translateOutputMessage(componentCaptions.get(component))));

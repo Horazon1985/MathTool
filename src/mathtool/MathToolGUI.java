@@ -50,6 +50,8 @@ import graphic.swing.GraphicPanelImplicit3D;
 import graphic.swing.GraphicPanelSpherical;
 import graphic.swing.GraphicPanelSurface;
 import graphic.swing.GraphicPanelVectorField2D;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
@@ -178,7 +180,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
 
-    private HashMap<JComponent, String> componentCaptions;
+    private Map<JComponent, String> componentCaptions;
 
     // Zeitabhängige Komponenten
     private Thread rotateThread;
@@ -188,7 +190,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * MathTool-Log mit allen bisher ausgeführten Befehlen.
      */
-    private static final ArrayList<String> COMMANDS = new ArrayList<>();
+    private static final List<String> COMMANDS = new ArrayList<>();
 
     // Laufzeitvariablen.
     private static TypeGraphic typeGraphic = TypeGraphic.NONE;
@@ -492,7 +494,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Getter für commandList.
      */
-    public static ArrayList<String> getCommandList() {
+    public static List<String> getCommandList() {
         return COMMANDS;
     }
 
