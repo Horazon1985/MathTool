@@ -132,7 +132,7 @@ public abstract class AlgorithmCompiler {
             } else if (input.charAt(i) == ReservedChars.END.getValue()) {
                 bracketCounter--;
             }
-            if (bracketCounter == 0 && beginPassed) {
+            if (bracketCounter == 0 && beginPassed || i == input.length() - 1) {
                 ALGORITHMS.add(parseAlgorithm(input.substring(lastEndOfAlgorithm + 1, i + 1)));
                 beginPassed = false;
                 lastEndOfAlgorithm = i;
