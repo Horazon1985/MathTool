@@ -714,7 +714,16 @@ public abstract class AlgorithmCommandCompiler {
         AlgorithmMemory memoryBeforFoorLoop = memory.copyMemory();
 
         // Die drei for-Anweisungen kompilieren.
-        String[] forControlParts = forControlString.split(ReservedChars.ARGUMENT_SEPARATOR.getStringValue());
+        String[] forControlParts = CompilerUtils.splitByKomma(forControlString);
+
+        // Es müssen genau 3 Befehle in der For-Struktur stehen.
+        if (forControlParts.length < 3) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_EXPECTED, ReservedChars.ARGUMENT_SEPARATOR.getValue());
+        }
+        if (forControlParts.length > 3) {
+            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+        }
+
         List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memoryBeforFoorLoop);
         Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforFoorLoop);
         BooleanExpression endLoopCondition = BooleanExpression.build(forControlParts[1], VALIDATOR, typesMap);
@@ -725,7 +734,6 @@ public abstract class AlgorithmCommandCompiler {
             String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memoryBeforFoorLoop);
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, newIdentifierName);
         }
-
         // Prüfung, ob line mit "for(a;b;c){ ..." beginnt.
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
                 || !line.contains(ReservedChars.END.getStringValue())
@@ -851,34 +859,42 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         List<String> linesAsList = new ArrayList<>();
+        int wavedBracketCounter = 0;
         int bracketCounter = 0;
         int squareBracketCounter = 0;
         int beginBlockPosition = 0;
         int endBlockPosition = -1;
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
-                bracketCounter++;
+                wavedBracketCounter++;
             } else if (input.charAt(i) == ReservedChars.END.getValue()) {
+                wavedBracketCounter--;
+            } else if (input.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
                 bracketCounter--;
             } else if (input.charAt(i) == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter++;
             } else if (input.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
                 squareBracketCounter--;
             }
-            if (bracketCounter == 0 && squareBracketCounter == 0 && input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()) {
+            if (wavedBracketCounter == 0 && squareBracketCounter == 0 && input.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()) {
                 endBlockPosition = i;
                 linesAsList.add(input.substring(beginBlockPosition, endBlockPosition));
                 beginBlockPosition = i + 1;
             }
         }
+        if (wavedBracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END);
+        }
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
         }
         if (squareBracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET);
         }
         if (endBlockPosition != input.length() - 1) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, input.substring(endBlockPosition));
         }
 
         String[] lines = linesAsList.toArray(new String[linesAsList.size()]);

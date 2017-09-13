@@ -468,4 +468,26 @@ public class AlgorithmCompileTests {
         }
     }
     
+    @Test
+    public void parseAlgorithmWithWrongForLoopTest() {
+        String input = "expression main(){expression a=5;for(expression i=0,i<7){a=a+i^2;}return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz doppelt fehlerhafter For-Struktur kompiliert.");
+        } catch (AlgorithmCompileException e) {
+            assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_EXPECTED, ","));
+        }
+    }
+    
+    @Test
+    public void parseAlgorithmWithWrongForLoopWithFourCommandsInHeaderTest() {
+        String input = "expression main(){expression a=5;for(expression i=0,i<7,i++,i=i+7){a=a+i^2;}return a;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz doppelt fehlerhafter For-Struktur kompiliert.");
+        } catch (AlgorithmCompileException e) {
+            assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_BRACKET_EXPECTED, ")"));
+        }
+    }
+    
 }

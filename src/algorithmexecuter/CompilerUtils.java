@@ -25,7 +25,7 @@ public final class CompilerUtils {
 
     private CompilerUtils() {
     }
-    
+
     /**
      * Transportklasse für Algorithmensignaturen. name gibt den Namen des
      * Algorithmus an und parameters die konkreten Parameterwerte.
@@ -54,6 +54,7 @@ public final class CompilerUtils {
         String outputFormatted = input.toLowerCase();
         outputFormatted = removeLeadingWhitespaces(outputFormatted);
         outputFormatted = removeEndingWhitespaces(outputFormatted);
+        outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "\t", "\n");
         outputFormatted = replaceAllRepeatedly(outputFormatted, " ", "  ");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ",", ", ", " ,");
         outputFormatted = replaceAllRepeatedly(outputFormatted, ";", "; ", " ;");
@@ -247,7 +248,7 @@ public final class CompilerUtils {
                 return;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_DOES_NOT_EXIST);
     }
 
     public static void checkIfMainAlgorithmExists(AlgorithmStorage algorithms) throws AlgorithmCompileException {
@@ -256,7 +257,7 @@ public final class CompilerUtils {
                 return;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_DOES_NOT_EXIST);
     }
 
     public static Signature getMainAlgorithmSignature(AlgorithmSignatureStorage signatures) throws AlgorithmCompileException {
@@ -265,7 +266,7 @@ public final class CompilerUtils {
                 return sgn;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_DOES_NOT_EXIST);
     }
 
     public static Algorithm getMainAlgorithm(AlgorithmStorage algorithms) throws AlgorithmCompileException {
@@ -274,25 +275,77 @@ public final class CompilerUtils {
                 return alg;
             }
         }
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_DOES_NOT_EXIST);
+    }
+
+    /**
+     * Teilt den String input gemäß dem Trennungszeichen ',' auf, sofern dieses
+     * außerhalb jeglicher Klammern vorkommt. Es wird ein Fehler geworfen, wenn
+     * eine öffnende Klammer keine entsprechende schließende Klammer besitzt,
+     * oder umgekehrt.
+     *
+     * @throws AlgorithmCompileException
+     */
+    public static String[] splitByKomma(String input) throws AlgorithmCompileException {
+        List<String> linesAsList = new ArrayList<>();
+        int wavedBracketCounter = 0;
+        int bracketCounter = 0;
+        int squareBracketCounter = 0;
+        int beginBlockPosition = 0;
+        int endBlockPosition = -1;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == ReservedChars.BEGIN.getValue()) {
+                wavedBracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.END.getValue()) {
+                wavedBracketCounter--;
+            } else if (input.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            } else if (input.charAt(i) == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter--;
+            }
+            if (wavedBracketCounter == 0 && squareBracketCounter == 0 && (input.charAt(i) == ReservedChars.ARGUMENT_SEPARATOR.getValue() || i == input.length() - 1)) {
+                if (input.charAt(i) == ReservedChars.ARGUMENT_SEPARATOR.getValue()) {
+                    endBlockPosition = i;
+                    linesAsList.add(input.substring(beginBlockPosition, endBlockPosition));
+                    beginBlockPosition = i + 1;
+                } else {
+                    linesAsList.add(input.substring(beginBlockPosition, input.length()));
+                }
+            }
+        }
+        if (wavedBracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END);
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
+        }
+        if (squareBracketCounter > 0) {
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET);
+        }
+
+        return linesAsList.toArray(new String[linesAsList.size()]);
     }
 
     public static void checkIfMainAlgorithmSignatureContainsNoParameters(Signature mainAlgSignature) throws AlgorithmCompileException {
         if (mainAlgSignature.getName().equals(FixedAlgorithmNames.MAIN.getValue()) && mainAlgSignature.getParameterTypes().length != 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS);
         }
     }
 
     public static void checkIfMainAlgorithmContainsNoParameters(Algorithm mainAlg) throws AlgorithmCompileException {
         if (mainAlg.getName().equals(FixedAlgorithmNames.MAIN.getValue()) && mainAlg.getInputParameters().length != 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS);
         }
     }
 
     public static void checkForOnlySimpleReturns(List<AlgorithmCommand> commands) throws AlgorithmCompileException {
         for (int i = 0; i < commands.size(); i++) {
             if (commands.get(i).isReturnCommand() && ((ReturnCommand) commands.get(i)).getIdentifier() != null) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_VOID_ALGORITHM_MUST_CONTAIN_ONLY_SIMPLE_RETURNS);
             }
             if (commands.get(i).isControlStructure()) {
                 for (List<AlgorithmCommand> commandsInBlock : ((ControlStructure) commands.get(i)).getCommandBlocks()) {
@@ -307,7 +360,7 @@ public final class CompilerUtils {
             return;
         }
         if (commands.isEmpty()) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_MISSING_RETURN_STATEMENT);
         }
         AlgorithmCommand lastCommand = commands.get(commands.size() - 1);
         if (!lastCommand.isReturnCommand()) {
@@ -316,7 +369,7 @@ public final class CompilerUtils {
             am Ende haben. In allen anderen Fällen wird ein Fehler geworfen.
              */
             if (!lastCommand.isIfElseControlStructure()) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_MISSING_RETURN_STATEMENT);
             }
             List<AlgorithmCommand> commandsIfPart = ((IfElseControlStructure) lastCommand).getCommandsIfPart();
             List<AlgorithmCommand> commandsElsePart = ((IfElseControlStructure) lastCommand).getCommandsElsePart();
@@ -331,10 +384,10 @@ public final class CompilerUtils {
             if (commands.get(i).isReturnCommand() && ((ReturnCommand) commands.get(i)).getIdentifier() != null) {
                 returnIdentifier = ((ReturnCommand) commands.get(i)).getIdentifier();
                 if (returnIdentifier == null) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_WRONG_RETURN_TYPE);
                 }
                 if (!returnType.isSameOrGeneralTypeOf(returnIdentifier.getType())) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_WRONG_RETURN_TYPE);
                 }
             }
             if (commands.get(i).isControlStructure()) {
@@ -345,18 +398,18 @@ public final class CompilerUtils {
         }
     }
 
-    public static void checkForUnreachableCodeInBlock(List<AlgorithmCommand> commands) throws AlgorithmCompileException {
+    public static void checkForUnreachableCodeInBlock(List<AlgorithmCommand> commands, Algorithm alg) throws AlgorithmCompileException {
         for (int i = 0; i < commands.size(); i++) {
             if (commands.get(i).isReturnCommand() && i < commands.size() - 1) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNREACHABLE_CODE, alg);
             }
             if (commands.get(i).isControlStructure()) {
                 for (List<AlgorithmCommand> commandsInBlock : ((ControlStructure) commands.get(i)).getCommandBlocks()) {
-                    checkForUnreachableCodeInBlock(commandsInBlock);
+                    checkForUnreachableCodeInBlock(commandsInBlock, alg);
                 }
                 if (commands.get(i).isIfElseControlStructure()) {
                     if (doBothPartsContainReturnStatementInIfElseBlock((IfElseControlStructure) commands.get(i)) && i < commands.size() - 1) {
-                        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                        throw new AlgorithmCompileException(CompileExceptionTexts.AC_UNREACHABLE_CODE, alg);
                     }
                 }
             }

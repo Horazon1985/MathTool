@@ -13,14 +13,12 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
@@ -40,7 +38,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private final int STUB = 20;
     private final int PADDING = 20;
 
-    private JEditorPane algorithmEditor;
+    private JTextArea algorithmEditor;
     private JTextPane outputArea;
 
     private ImageIcon runIcon;
@@ -103,31 +101,14 @@ public class MathToolAlgorithmsGUI extends JDialog {
             setBounds(mathtoolGuiX, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
             // Algorithmeneditor definieren.
-            this.algorithmEditor = new JEditorPane();
+            this.algorithmEditor = new JTextArea();
             add(this.algorithmEditor);
-            this.algorithmEditor.setContentType("text/html; charset=UTF-8");
             this.algorithmEditor.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
             currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
 
             this.algorithmEditor.setText("expression main(){expression x = int(t^2,t,0,1); if(x>1){x=x+2;} return x;}");
-            algorithmEditor.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-
-                }
-            });
 
             this.outputArea = new JTextPane();
             add(this.outputArea);
@@ -180,7 +161,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 public void actionPerformed(ActionEvent event) {
                     String unformattedCode = algorithmEditor.getText();
                     String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(unformattedCode);
-                    algorithmEditor.setDocument(algorithmEditor.getEditorKit().createDefaultDocument());
                     algorithmEditor.setText(formattedCode);
                 }
             });

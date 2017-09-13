@@ -2,134 +2,175 @@
     <object id = "AC_IDENTIFIER_ALREADY_DEFINED">
         <German>Bezeichner [0] existiert bereits.</German>
         <English>Identifier [0] already exists.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Ідентифікатор [0] вже існує.</Ukrainian>
+        <Russian>Ідентификатор [0] уже существует.</Russian>
     </object>
     <object id = "AC_INCOMPATIBLE_TYPES">
         <German>Inkompatible Typen: [0] kann nicht zu [1] konvertiert werden.</German>
         <English>Incompatible types: [0] cannot be converted to [1].</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Несумісні типи: [0] неможливо конвертувати у [1].</Ukrainian>
+        <Russian>Несовместимые типы: [0] невозможно конвертировать в [1].</Russian>
     </object>
     <object id = "AC_FILE_MUST_CONTAIN_A_BEGIN">
         <German>Die definierten Algorithmen müssen mindestens einen Algorithmusbeginn ('{') enthalten.</German>
         <English>Declared algorithms must contain at least one beginning character ('{').</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритми задані користувачем повинні містити щонайменше один початок ('{').</Ukrainian>
+        <Russian>Алгоритмы заданные пользователем должны содержать минимум одно начало ('{').</Russian>
     </object>
     <object id = "AC_FILE_MUST_CONTAIN_AN_END">
         <German>Die definierten Algorithmen müssen mindestens einen Algorithmusende ('}') enthalten.</German>
         <English>Declared algorithms must contain at least one ending character ('}').</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритми задані користувачем повинні містити щонайменше один кінець ('}').</Ukrainian>
+        <Russian>Алгоритмы заданные пользователем должны содержать минимум одн конец ('}').</Russian>
     </object>
     <object id = "AC_END_BEFORE_BEGIN">
-        <German>Block- oder Algoritmusende ('}') vor einem Beginn ('}').</German>
-        <German>Block- oder algoritm end ('}') occurs before a beginning ('}').</German>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <German>Block- oder Algoritmusende ('}') vor einem Beginn ('{').</German>
+        <German>Block- oder algoritm end ('}') occurs before a beginning ('{').</German>
+        <Ukrainian>Кінець блока чи алгоритма ('}') міститься перед його початком ('{')).</Ukrainian>
+        <Russian>Конец блока или алгоритма ('}') расположен перед его началом ('{')</Russian>
     </object>
     <object id = "AC_ALGORITHM_ALREADY_EXISTS">
         <German>Algorithmus mit Signatur [0] existiert bereits.</German>
         <German>Algorithm with signature [0] already exists.</German>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритм з сігнатурою [0] вже існує.</Ukrainian>
+        <Russian>Алгоритм с сигнатурой [0] уже сущетвует.</Russian>
     </object>
     <object id = "AC_ALGORITHM_MUST_START_WITH_BEGIN">
         <German>Ein Algorithmusrumpf muss mit mit '{' beginnen.</German>
         <English>An algorithm body must start with '{'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Тіло алгоритма повнно починатися з '{'.</Ukrainian>
+        <Russian>Тело алгоритма должно начинаться с '{'.</Russian>
     </object>
     <object id = "AC_ALGORITHM_MUST_END_WITH_END">
         <German>Inkompatible Typen: [0] kann nicht zu [1] konvertiert werden.</German>
         <English>Incompatible types: [0] cannot be converted to [1].</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Несумісні типи: [0] не можна конвертувати у [1].</Ukrainian>
+        <Russian>Несовместимые типы: [0] нельзя конвертировать в [1].</Russian>
     </object>
     <object id = "AC_ALGORITHM_HAS_NO_NAME">
         <German>Ein Algorithmus besitzt keinen Namen.</German>
         <English>An algorithm has no name.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритм не має імені.</Ukrainian>
+        <Russian>У алгоритма нет имени.</Russian>
     </object>
     <object id = "AC_IDENTIFIER_EXPECTED">
         <German>Bezeichner erwartet.</German>
         <English>Identifier expected.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Очікується ідентифікатор.</Ukrainian>
+        <Russian>Ожидается идентификатор.</Russian>
     </object>
     <object id = "AC_BRACKET_EXPECTED">
         <German>Klammer erwartet: [0].</German>
         <English>Bracket expected: [0].</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Очікується дужка: [0].</Ukrainian>
+        <Russian>Ожидается скобка: [0].</Russian>
+    </object>
+    <object id = "AC_EXPECTED">
+        <German>Erwartet: [0].</German>
+        <English>Expected: [0].</English>
+        <Ukrainian>Очікується: [0].</Ukrainian>
+        <Russian>Ожидается: [0].</Russian>
     </object>
     <object id = "AC_CANNOT_FIND_SYMBOL">
         <German>Kann Symbol nicht finden: '[0]'.</German>
         <English>Cannot find symbol: '[0]'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Не можливо знайти символ: '[0]'.</Ukrainian>
+        <Russian>Не возможно найти символ: '[0]'.</Russian>
     </object>
     <object id = "AC_ILLEGAL_CHARACTER">
         <German>Illegales Zeiches in: '[0]'.</German>
         <English>Illegal character in: '[0]'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Недопустимий символ у: '[0]'.</Ukrainian>
+        <Russian>Недопустимий символ в: '[0]'.</Russian>
     </object>
     <object id = "AC_COMMAND_COUND_NOT_BE_PARSED">
         <German>Der Befehl '[0]' konnte nicht geparst werden.</German>
         <English>Command '[0]' could not be parsed.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Неможливо парсити команду '[0]'.</Ukrainian>
+        <Russian>Невозможно парсить команду '[0]'.</Russian>
     </object>
     <object id = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END">
         <German>Eine Kontrollstruktur muss einen Befehlsblock besitzen, welcher mit '[0]' beginnt und mit '[1]' endet.</German>
         <English>A control structure must contains a command block, beginning with '[0]' and ending with '[1]'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Контрольна структура повинна містити командний блок, що починається з '[0]' та закінчується '[1]'.</Ukrainian>
+        <Russian>Контрольная структура должна содержать командный блок, начинающийся с '[0]' и заканчивающийся '[1]'.</Russian>
     </object>
     <object id = "AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED">
         <German>Im dritten Argument einer for-Schleife sind keine neuen Bezeichner erlaubt. Neuer gefundener Bezeichner: '[0]'.</German>
         <English>No new identifier in the third argument of a for loop allowed. New identifier: '[0]'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Третій аргумент цикла for не містить нового ідентифікатора. Новий ідентифікатор: '[0]'.</Ukrainian>
+        <Russian>Третий аргумент цикла for не содержит нового идентификатора. Новый идентификатор: '[0]'.</Russian>
     </object>
     <object id = "AC_KEYWORD_EXPECTED">
         <German>Schlüsselwort '[0]' erwartet.</German>
         <English>Key word '[0]' expected.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Очікується ключове слово '[0]'.</Ukrainian>
+        <Russian>Ожидается ключевое слово '[0]'.</Russian>
     </object>
     <object id = "AC_KEYWORD_NOT_ALLOWED_HERE">
         <German>Schlüsselwort '[0]' ist an dieser Stelle nicht zugelassen.</German>
         <English>Key word '[0]' not allowed here.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Ключове слово '[0]' недопустиме у цьому місці.</Ukrainian>
+        <Russian>Ключевое слово '[0]' недопустимо в этом месте.</Russian>
     </object>
     <object id = "AC_MISSING_LINE_SEPARATOR">
         <German>Befehl muss mit '[0]' enden.</German>
         <English>Command must end with '[0]'.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Команда повинна закінчуватися '[0]'.</Ukrainian>
+        <Russian>Команда должна заканчиваться '[0]'.</Russian>
     </object>
     <object id = "AC_WRONG_NUMBER_OF_INPUT_PARAMETERS">
         <German>Falsche Anzahl von Parametern: [0] Parameter erwartet, aber [1] Parameter gefunden.</German>
-        <English>Wrong number of parameters: [0] parameters expected, but [1] parameter(s) found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <English>Wrong number of parameters: [0] parameter(s) expected, but [1] parameter(s) found.</English>
+        <Ukrainian>Невірна кількість параметрів: очікується [0] параметр(ів), але знайдено [1] параметр(ів).</Ukrainian>
+        <Russian>Неверноее количество параметров: ожидается [0] параметр(ов), но найдено [1] параметр(ов).</Russian>
     </object>
     <object id = "AC_WRONG_TYPE_OF_INPUT_PARAMETERS">
         <German>Falscher Parametertyp: Typ '[0]' erwartet, aber Typ '[1]' gefunden.</German>
         <English>Wrong type of parameter: Type '[0]' expected, but type '[1]' found.</English>
+        <Ukrainian>Невірний тип параметра: очікується тип [0], але знайдено тип [1].</Ukrainian>
+        <Russian>Неверный тип параметра: ожидается тип [0], но найден тип [1].</Russian>
+    </object>
+    <object id = "AC_MAIN_ALGORITHM_DOES_NOT_EXIST">
+        <German>Es wurde kein Algorithmus mit dem Namen 'main' gefunden.</German>
+        <English>Algorithm named 'main' not found.</English>
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
-
+    <object id = "AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS">
+        <German>Der Algorithmus mit dem Namen 'main' darf keine Parameter enthalten.</German>
+        <English>The algorithm named 'main' is not allowed to contain parameters.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_VOID_ALGORITHM_MUST_CONTAIN_ONLY_SIMPLE_RETURNS">
+        <German>Ein Algorithmus ohne Rückgabewert darf keine Objekte zurückgeben.</German>
+        <English>An algorithm with void return type is not allowed to return objects.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_MISSING_RETURN_STATEMENT">
+        <German>Kein Rückgabewert gefunden.</German>
+        <English>No return value found.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_WRONG_RETURN_TYPE">
+        <German>Rückgabetyp stimmt nicht mit dem erwarteten Rückgabetyp überein.</German>
+        <English>Return type does not coincide with expected return type.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_UNREACHABLE_CODE">
+        <German>Unerreichbarer Code im Algorithmus '[0]' gefunden.</German>
+        <English>Unreachable code in algorithm '[0]'found.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>
         <English>Unknown error.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Невідома помилка.</Ukrainian>
+        <Russian>Неизвестная ошибка.</Russian>
     </object>
 </objects>

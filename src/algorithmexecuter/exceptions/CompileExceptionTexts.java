@@ -13,6 +13,7 @@ public abstract class CompileExceptionTexts {
     public static final String AC_ALGORITHM_HAS_NO_NAME = "AC_ALGORITHM_HAS_NO_NAME";    
     public static final String AC_IDENTIFIER_EXPECTED = "AC_IDENTIFIER_EXPECTED";    
     public static final String AC_BRACKET_EXPECTED = "AC_BRACKET_EXPECTED";    
+    public static final String AC_EXPECTED = "AC_EXPECTED";
     public static final String AC_CANNOT_FIND_SYMBOL = "AC_CANNOT_FIND_SYMBOL";    
     public static final String AC_ILLEGAL_CHARACTER = "AC_ILLEGAL_CHARACTER";    
     public static final String AC_COMMAND_COUND_NOT_BE_PARSED = "AC_COMMAND_COUND_NOT_BE_PARSED";    
@@ -23,6 +24,12 @@ public abstract class CompileExceptionTexts {
     public static final String AC_MISSING_LINE_SEPARATOR = "AC_MISSING_LINE_SEPARATOR";    
     public static final String AC_WRONG_NUMBER_OF_INPUT_PARAMETERS = "AC_WRONG_NUMBER_OF_INPUT_PARAMETERS";
     public static final String AC_WRONG_TYPE_OF_INPUT_PARAMETERS = "AC_WRONG_TYPE_OF_INPUT_PARAMETERS";
+    public static final String AC_MAIN_ALGORITHM_DOES_NOT_EXIST = "AC_MAIN_ALGORITHM_DOES_NOT_EXIST";
+    public static final String AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS = "AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS";
+    public static final String AC_VOID_ALGORITHM_MUST_CONTAIN_ONLY_SIMPLE_RETURNS = "AC_VOID_ALGORITHM_MUST_CONTAIN_ONLY_SIMPLE_RETURNS";
+    public static final String AC_MISSING_RETURN_STATEMENT = "AC_MISSING_RETURN_STATEMENT";
+    public static final String AC_WRONG_RETURN_TYPE = "AC_WRONG_RETURN_TYPE";
+    public static final String AC_UNREACHABLE_CODE = "AC_UNREACHABLE_CODE";
     public static final String AC_UNKNOWN_ERROR = "AC_UNKNOWN_ERROR";    
     
 }

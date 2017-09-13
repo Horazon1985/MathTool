@@ -50,9 +50,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JTextField;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
-import mathtool.component.components.MathToolTextField;
 import mathtool.config.MathToolPropertiesHandler;
 import mathtool.lang.translator.Translator;
 import mathtool.session.SessionLoader;
@@ -302,9 +302,9 @@ public class MathToolController {
     /**
      * Gibt den i-ten geloggten Befehl zurück.
      */
-    public static void showLoggedCommand(MathToolTextField mathToolTextField, int i) {
+    public static void showLoggedCommand(JTextField inputField, int i) {
         if (!MathToolGUI.getCommandList().isEmpty() && MathToolGUI.getCommandList().get(i) != null) {
-            mathToolTextField.setText(MathToolGUI.getCommandList().get(i));
+            inputField.setText(MathToolGUI.getCommandList().get(i));
         }
     }
 
@@ -312,14 +312,14 @@ public class MathToolController {
      * Prüft, ob die Eingabe gültig ist. Bei gültiger (kompilierbarer) Eingabe
      * wird der Text schwary gefärbt, bei ungültiger Eingabe rot.
      */
-    public static void checkInputValidity(MathToolTextField mathToolTextField) {
+    public static void checkInputValidity(JTextField inputField) {
 
         // ToolTipText im Vorfeld entfernen (falls die Validierung doch korrekt ist).
-        mathToolTextField.setToolTipText("");
-        String s = mathToolTextField.getText().replaceAll(" ", "").toLowerCase();
+        inputField.setToolTipText("");
+        String s = inputField.getText().replaceAll(" ", "").toLowerCase();
 
-        if (mathToolTextField.getText().equals("")) {
-            mathToolTextField.setForeground(Color.black);
+        if (inputField.getText().equals("")) {
+            inputField.setForeground(Color.black);
             return;
         }
 
@@ -339,8 +339,8 @@ public class MathToolController {
 
             // Wenn der Befehlname gültig ist, aber der Befehl ungültig ist: entsprechende Fehlermeldung anzeigen.
             if (validCommand) {
-                mathToolTextField.setForeground(Color.red);
-                mathToolTextField.setToolTipText(eCommand.getMessage());
+                inputField.setForeground(Color.red);
+                inputField.setToolTipText(eCommand.getMessage());
                 return;
             }
 
@@ -353,15 +353,15 @@ public class MathToolController {
                     try {
                         MatrixExpression.build(s);
                     } catch (ExpressionException eMatExpr) {
-                        mathToolTextField.setForeground(Color.red);
-                        mathToolTextField.setToolTipText(eMatExpr.getMessage());
+                        inputField.setForeground(Color.red);
+                        inputField.setToolTipText(eMatExpr.getMessage());
                         return;
                     }
                 }
             }
         }
 
-        mathToolTextField.setForeground(Color.black);
+        inputField.setForeground(Color.black);
 
     }
 
@@ -580,7 +580,7 @@ public class MathToolController {
      * Maße der restlichen Komponenten werden dementsprechend angepasst.
      */
     public static void resizeConsole(JScrollPane scrollPaneText, JScrollPane scrollPaneGraphic, int x, int y, int width, int height,
-            JTextArea mathToolTextArea, GraphicArea mathToolGraphicArea, MathToolTextField mathToolTextField,
+            JTextArea mathToolTextArea, GraphicArea mathToolGraphicArea, JTextField inputField,
             JButton inputButton) {
 
         // Konsolenmaße abpassen, wenn eine Graphic eingeblendet wird.
@@ -592,7 +592,7 @@ public class MathToolController {
         mathToolGraphicAreaY = 0;
         mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
         mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
-        mathToolTextField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
+        inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
         inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
 
     }
