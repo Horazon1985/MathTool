@@ -372,7 +372,7 @@ public abstract class AlgorithmCommandCompiler {
             // Prüfung, ob Rückgabewert korrekt ist.
             if (!algorithmCandidate.getReturnType().equals(returnType)) {
                 // TODO: Fehlermeldung korrigieren.
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_WRONG_RETURN_TYPE);
             }
             return new AlgorithmCallData(algorithmCandidate, paramValues);
         } catch (AlgorithmCompileException e) {
@@ -929,7 +929,7 @@ public abstract class AlgorithmCommandCompiler {
 
                         // Der Algorithmusaufruf darf nicht der gesamte input sein.
                         if (algorithmCallAsString.length() == inputWithGeneratedVars.length()) {
-                            return new AlgorithmCommandReplacementList(new ArrayList<AlgorithmCommand>(), input);
+                            return new AlgorithmCommandReplacementList(new ArrayList<>(), input);
                         }
 
                         AlgorithmCallData algorithmCallData = null;
