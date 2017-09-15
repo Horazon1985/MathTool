@@ -1,7 +1,7 @@
 package algorithmexecuter.model;
 
 import algorithmexecuter.exceptions.AlgorithmCompileException;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import java.util.HashMap;
 import java.util.List;

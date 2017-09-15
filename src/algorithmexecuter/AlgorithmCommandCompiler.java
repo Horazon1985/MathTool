@@ -22,7 +22,7 @@ import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.BlockCompileException;
 import algorithmexecuter.exceptions.BooleanExpressionException;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.exceptions.DeclareIdentifierException;
 import algorithmexecuter.exceptions.NotDesiredCommandException;
 import algorithmexecuter.exceptions.ParseAssignValueException;

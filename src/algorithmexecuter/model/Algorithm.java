@@ -12,7 +12,7 @@ import algorithmexecuter.model.command.IfElseControlStructure;
 import algorithmexecuter.model.command.WhileControlStructure;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
-import algorithmexecuter.exceptions.ExecutionExceptionTexts;
+import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import exceptions.EvaluationException;
 import java.util.ArrayList;

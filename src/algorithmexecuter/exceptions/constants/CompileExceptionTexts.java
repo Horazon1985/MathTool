@@ -1,4 +1,4 @@
-package algorithmexecuter.exceptions;
+package algorithmexecuter.exceptions.constants;
 
 public abstract class CompileExceptionTexts {
     

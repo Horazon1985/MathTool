@@ -8,7 +8,7 @@ import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.ReservedChars;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;

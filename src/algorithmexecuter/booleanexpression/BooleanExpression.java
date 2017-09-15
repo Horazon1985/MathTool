@@ -11,7 +11,7 @@ import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.BooleanExpressionException;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import exceptions.ExpressionException;
 import java.util.HashSet;
 import java.util.Map;

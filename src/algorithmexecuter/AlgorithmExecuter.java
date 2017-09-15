@@ -3,7 +3,7 @@ package algorithmexecuter;
 import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
-import algorithmexecuter.exceptions.ExecutionExceptionTexts;
+import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;

@@ -9,7 +9,7 @@ import algorithmexecuter.model.command.ReturnCommand;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;

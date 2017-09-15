@@ -5,7 +5,7 @@ import algorithmexecuter.AlgorithmCompiler;
 import algorithmexecuter.enums.FixedAlgorithmNames;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
-import algorithmexecuter.exceptions.ExecutionExceptionTexts;
+import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.AlgorithmMemory;

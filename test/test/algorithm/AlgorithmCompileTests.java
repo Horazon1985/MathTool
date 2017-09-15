@@ -8,7 +8,7 @@ import algorithmexecuter.model.command.WhileControlStructure;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
-import algorithmexecuter.exceptions.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.command.ControlStructure;
 import java.util.List;
