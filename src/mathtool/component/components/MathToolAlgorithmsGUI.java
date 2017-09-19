@@ -1,5 +1,6 @@
 package mathtool.component.components;
 
+import mathtool.component.controller.MathToolAlgorithmsController;
 import org.jsoup.parser.Parser;
 import algorithmexecuter.AlgorithmCompiler;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
