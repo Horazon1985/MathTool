@@ -167,6 +167,31 @@
         <Ukrainian>???</Ukrainian>
         <Russian>???</Russian>
     </object>
+    <object id = "AC_BOOLEAN_EXPRESSION_EMPTY_OR_INCOMPLETE">
+        <German>Der boolsche Ausdruck oder ein Teilausdruck ist leer oder unvollständig.</German>
+        <English>The boolean expression or a part of the expression is either empty or incomplete.</English>
+        <Ukrainian>??? вираз або частина виразу порожня або неповна.</Ukrainian>
+        <Russian>??? выражение или часть выражения пуста либо неполна.</Russian>
+    </object>
+    <object id = "AC_LEFT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY">
+        <German>Linke Seite eines boolschen binären Operators ist leer.</German>
+        <English>The left side of a boolean binary operator is empty.</English>
+        <Ukrainian>Ліва частина ??? бінарного оператора порожня.</Ukrainian>
+        <Russian>Левая часть ??? бинарного оператора пуста.</Russian>
+    </object>
+    <object id = "AC_RIGHT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY">
+        <German>Rechte Seite eines boolschen binären Operators ist leer.</German>
+        <English>The right side of a boolean binary operator is empty.</English>
+        <Ukrainian>Права частина ??? бінарного оператора порожня.</Ukrainian>
+        <Russian>Правая часть ??? бинарного оператора пуста.</Russian>
+    </object>
+    <object id = "AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED">
+        <German>Folgender boolscher Ausdruck/Teilausdruck kann nicht interpretiert werden: [0]</German>
+        <English>The following boolean expression/part of a logical expression cannot be interpreted: [0]</English>
+        <Ukrainian>Наступний ??? вираз/частина логічного виразу не може бути проінтерпритована: [0]</Ukrainian>
+        <Russian>Следующее ??? выражение/часть логического выражения не может быть проинтерпритирована: [0]</Russian>
+    </object>
+
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>
         <English>Unknown error.</English>

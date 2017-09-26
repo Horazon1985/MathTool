@@ -3,7 +3,6 @@ package algorithmexecuter.booleanexpression;
 import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
-import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import algorithmexecuter.enums.ComparingOperators;
 import algorithmexecuter.enums.IdentifierType;
@@ -19,6 +18,10 @@ import java.util.Set;
 
 public abstract class BooleanExpression implements AbstractExpression {
 
+    
+    
+    
+    
     public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
     @Override
@@ -48,21 +51,21 @@ public abstract class BooleanExpression implements AbstractExpression {
         String currentEnding;
 
         if (input.equals("")) {
-            throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new BooleanExpressionException(CompileExceptionTexts.AC_BOOLEAN_EXPRESSION_EMPTY_OR_INCOMPLETE);
         }
 
         for (int i = 1; i <= inputLength - 1; i++) {
             currentEnding = input.substring(0, inputLength - i + 1);
 
             // Öffnende und schließende Klammern zählen.
-            if (currentEnding.endsWith("(") && bracketCounter == 0) {
-                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            if (currentEnding.endsWith(ReservedChars.OPEN_BRACKET.getStringValue()) && bracketCounter == 0) {
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
             }
 
-            if (currentEnding.endsWith(")")) {
+            if (currentEnding.endsWith(ReservedChars.CLOSE_BRACKET.getStringValue())) {
                 bracketCounter++;
             }
-            if (currentEnding.endsWith("(")) {
+            if (currentEnding.endsWith(ReservedChars.OPEN_BRACKET.getStringValue())) {
                 bracketCounter--;
             }
 
@@ -93,7 +96,7 @@ public abstract class BooleanExpression implements AbstractExpression {
         }
 
         if (bracketCounter > 0) {
-            throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+            throw new BooleanExpressionException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.OPEN_BRACKET.getValue());
         }
 
         // Aufteilung, falls eine Elementaroperation (|, &, !) vorliegt
@@ -102,10 +105,10 @@ public abstract class BooleanExpression implements AbstractExpression {
             String inputRight = input.substring(breakpoint + 1, inputLength);
 
             if (inputLeft.equals("") && priority != 1) {
-                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_LEFT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY);
             }
             if (inputRight.equals("")) {
-                throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                throw new BooleanExpressionException(CompileExceptionTexts.AC_RIGHT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY);
             }
 
             switch (priority) {
@@ -184,7 +187,7 @@ public abstract class BooleanExpression implements AbstractExpression {
             }
         }
 
-        throw new BooleanExpressionException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+        throw new BooleanExpressionException(CompileExceptionTexts.AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED);
     }
 
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {

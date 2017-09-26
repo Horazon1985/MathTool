@@ -340,7 +340,7 @@ public abstract class AlgorithmCommandCompiler {
                         try {
                             paramValues[i] = MatrixExpression.build(params[i], AlgorithmCompiler.VALIDATOR, AlgorithmCompiler.VALIDATOR);
                         } catch (ExpressionException eMatExpr) {
-                            throw new ParseAssignValueException(CompileExceptionTexts.AC_UNKNOWN_ERROR);
+                            throw new ParseAssignValueException(eMatExpr.getMessage());
                         }
                     }
                 }
