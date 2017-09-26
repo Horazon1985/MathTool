@@ -1,4 +1,4 @@
-package mathtool.component.components;
+package mathtool.component.controller;
 
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.enums.ReservedChars;
@@ -29,27 +29,46 @@ public class MathToolAlgorithmsController {
         inputSourceCode = CompilerUtils.preprocessAlgorithm(inputSourceCode);
 
         int bracketCounter = 0;
+        int wavedBracketCounter = 0;
+        int squareBracketCounter = 0;
         boolean newLine = false;
         String formattedSourceCode = "";
         for (int i = 0; i < inputSourceCode.length(); i++) {
             if (inputSourceCode.charAt(i) == ReservedChars.BEGIN.getValue()) {
                 formattedSourceCode += inputSourceCode.charAt(i);
-                bracketCounter++;
+                wavedBracketCounter++;
                 newLine = true;
                 formattedSourceCode += SIGN_NEXT_LINE;
             } else if (inputSourceCode.charAt(i) == ReservedChars.END.getValue()) {
-                bracketCounter--;
+                wavedBracketCounter--;
                 newLine = true;
-                formattedSourceCode += writeMultipleTabs(bracketCounter);
+                formattedSourceCode += writeMultipleTabs(wavedBracketCounter);
                 formattedSourceCode += inputSourceCode.charAt(i);
                 formattedSourceCode += SIGN_NEXT_LINE;
-            } else if (inputSourceCode.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()) {
+            } else if (inputSourceCode.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+                newLine = false;
+                formattedSourceCode += inputSourceCode.charAt(i);
+            } else if (inputSourceCode.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+                newLine = false;
+                formattedSourceCode += inputSourceCode.charAt(i);
+            } else if (inputSourceCode.charAt(i) == ReservedChars.OPEN_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter++;
+                newLine = false;
+                formattedSourceCode += inputSourceCode.charAt(i);
+            } else if (inputSourceCode.charAt(i) == ReservedChars.CLOSE_SQUARE_BRACKET.getValue()) {
+                squareBracketCounter--;
+                newLine = false;
+                formattedSourceCode += inputSourceCode.charAt(i);
+            } else if (inputSourceCode.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() 
+                    && bracketCounter == 0 && squareBracketCounter == 0) {
                 formattedSourceCode += inputSourceCode.charAt(i);
                 formattedSourceCode += SIGN_NEXT_LINE;
                 newLine = true;
             } else {
                 if (newLine) {
-                    formattedSourceCode += writeMultipleTabs(bracketCounter);
+                    formattedSourceCode += writeMultipleTabs(wavedBracketCounter);
                 }
                 newLine = false;
                 formattedSourceCode += inputSourceCode.charAt(i);

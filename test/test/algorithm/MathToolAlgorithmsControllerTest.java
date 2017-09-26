@@ -1,6 +1,6 @@
 package test.algorithm;
 
-import mathtool.component.components.MathToolAlgorithmsController;
+import mathtool.component.controller.MathToolAlgorithmsController;
 import org.junit.Assert;
 import org.junit.Test;
 

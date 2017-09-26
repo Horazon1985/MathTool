@@ -711,7 +711,7 @@ public abstract class AlgorithmCommandCompiler {
 
         String forControlString = line.substring((Keyword.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfForControlPart);
 
-        AlgorithmMemory memoryBeforFoorLoop = memory.copyMemory();
+        AlgorithmMemory memoryBeforForLoop = memory.copyMemory();
 
         // Die drei for-Anweisungen kompilieren.
         String[] forControlParts = CompilerUtils.splitByKomma(forControlString);
@@ -724,14 +724,14 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
-        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memoryBeforFoorLoop);
-        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforFoorLoop);
+        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memoryBeforForLoop);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforForLoop);
         BooleanExpression endLoopCondition = BooleanExpression.build(forControlParts[1], VALIDATOR, typesMap);
-        AlgorithmMemory copyOfMemory = memoryBeforFoorLoop.copyMemory();
-        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memoryBeforFoorLoop);
+        AlgorithmMemory copyOfMemory = memoryBeforForLoop.copyMemory();
+        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memoryBeforForLoop);
         // Prüfung, ob bei loopAssignment keine weiteren Bezeichner hinzukamen.
-        if (memoryBeforFoorLoop.getSize() > copyOfMemory.getSize()) {
-            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memoryBeforFoorLoop);
+        if (memoryBeforForLoop.getSize() > copyOfMemory.getSize()) {
+            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memoryBeforForLoop);
             throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, newIdentifierName);
         }
         // Prüfung, ob line mit "for(a;b;c){ ..." beginnt.
@@ -760,7 +760,7 @@ public abstract class AlgorithmCommandCompiler {
         if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
-        List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), memoryBeforFoorLoop, alg);
+        List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), memoryBeforForLoop, alg);
         ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, endLoopCondition, loopAssignment);
 
         // Lokale Variable aus dem Speicher memory wieder herausnehmen.
