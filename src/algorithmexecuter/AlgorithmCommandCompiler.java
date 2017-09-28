@@ -191,7 +191,7 @@ public abstract class AlgorithmCommandCompiler {
             // Fall: Arithmetischer / Analytischer Ausdruck.
             AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-            String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
+            String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
             try {
                 Expression expr = Expression.build(rightSideReplaced, VALIDATOR);
                 Set<String> vars = expr.getContainedVars();
@@ -209,12 +209,12 @@ public abstract class AlgorithmCommandCompiler {
             // Fall: boolscher Ausdruck.
             AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-            String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
+            String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
             try {
-                Map<String, IdentifierType> valuesMap = CompilerUtils.extractTypesOfMemory(scopeMemory);
-                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, valuesMap);
+                Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(scopeMemory);
+                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, typesMap);
                 Set<String> vars = boolExpr.getContainedVars();
-                checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), scopeMemory);
+                checkIfAllIdentifiersAreDefined(vars, scopeMemory);
                 areIdentifiersOfCorrectType(type, vars, scopeMemory);
                 scopeMemory.getMemory().put(identifierName, identifier);
                 commands.add(new AssignValueCommand(identifier, boolExpr));
@@ -228,7 +228,7 @@ public abstract class AlgorithmCommandCompiler {
         // Fall: Matrizenausdruck.
         AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
         List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-        String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
+        String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
         try {
             MatrixExpression matExpr = MatrixExpression.build(rightSideReplaced, VALIDATOR, VALIDATOR);
             checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), scopeMemory);
@@ -279,7 +279,7 @@ public abstract class AlgorithmCommandCompiler {
 
     private static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
-            if (!memory.getMemory().containsKey(var) || memory.getMemory().get(var).getType() != IdentifierType.EXPRESSION) {
+            if (!memory.getMemory().containsKey(var)) {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, var);
             }
         }
@@ -487,8 +487,16 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String booleanConditionString = line.substring((Keyword.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
+
+        // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
+        BooleanExpression condition;
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(booleanConditionString, memory);
+        List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+        String booleanConditionReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+
         Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
-        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
+        condition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
+        checkIfAllIdentifiersAreDefined(condition.getContainedVars(), memory);
 
         // Prüfung, ob line mit "if(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
@@ -567,7 +575,8 @@ public abstract class AlgorithmCommandCompiler {
         }
         ifElseControlStructure.setCommandsElsePart(commandsElsePart);
 
-        return Collections.singletonList((AlgorithmCommand) ifElseControlStructure);
+        commands.add(ifElseControlStructure);
+        return commands;
     }
 
     private static List<AlgorithmCommand> parseWhileControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
@@ -809,16 +818,16 @@ public abstract class AlgorithmCommandCompiler {
 
                 AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(returnValueCandidate, scopeMemory);
                 List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-                String rightSideReplaced = algorithmCommandReplacementList.getRightSide();
+                String returnValueReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
 
-                if (scopeMemory.getMemory().get(rightSideReplaced) != null) {
+                if (scopeMemory.getMemory().get(returnValueReplaced) != null) {
                     return Collections.singletonList((AlgorithmCommand) new ReturnCommand(scopeMemory.getMemory().get(returnValueCandidate)));
                 }
-                if (VALIDATOR.isValidIdentifier(rightSideReplaced)) {
+                if (VALIDATOR.isValidIdentifier(returnValueReplaced)) {
                     throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
                 }
                 String genVarForReturn = generateTechnicalVarName();
-                String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + rightSideReplaced;
+                String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + returnValueReplaced;
                 List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, scopeMemory);
                 commands.addAll(additionalCommandsByAssignment);
                 commands.add(new ReturnCommand(Identifier.createIdentifier(scopeMemory, genVarForReturn, alg.getReturnType())));
@@ -1020,24 +1029,21 @@ public abstract class AlgorithmCommandCompiler {
     private static class AlgorithmCommandReplacementList {
 
         private final List<AlgorithmCommand> commands;
-        private final String rightSide;
+        private final String substitutedExpression;
 
         public AlgorithmCommandReplacementList(List<AlgorithmCommand> commands, String rightSide) {
             this.commands = commands;
-            this.rightSide = rightSide;
+            this.substitutedExpression = rightSide;
         }
 
         public List<AlgorithmCommand> getCommands() {
             return commands;
         }
 
-        public String getRightSide() {
-            return rightSide;
+        public String getSubstitutedExpression() {
+            return substitutedExpression;
         }
 
-        public void addCommand(AlgorithmCommand command) {
-            this.commands.add(command);
-        }
     }
 
     private static class AlgorithmCallData {

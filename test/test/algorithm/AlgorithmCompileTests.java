@@ -43,7 +43,7 @@ public class AlgorithmCompileTests {
         String outputFormattedExpected = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
         assertTrue(outputFormatted.equals(outputFormattedExpected));
     }
-    
+
     @Test
     public void parseSimpleAlgorithmWithReturnTest() {
         String input = "expression main(){expression a=5;return a;}";
@@ -123,7 +123,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithIdentifierDeclarationAndIfElseTest() {
         String input = "expression main(){expression a=2;expression b;if(a==1){b=7;}else{b=13;}return b;}";
@@ -177,6 +177,35 @@ public class AlgorithmCompileTests {
     }
 
     @Test
+    public void parseAlgorithmWithAlgorithmUsageInConditionTest() {
+        String input = "expression main(){expression a=4;expression b=6;if(ggT(a,b)==2){return 5;}else{return 7;}} "
+                + "expression ggt(expression a, expression b){return gcd(a, b);}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 2);
+
+            Algorithm mainAlg;
+            if (algorithmList.get(0).getName().equals("main")) {
+                mainAlg = algorithmList.get(0);
+            } else {
+                mainAlg = algorithmList.get(1);
+            }
+
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getName(), "main");
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(3).isIfElseControlStructure());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
+    @Test
     public void parseSimpleAlgorithmWithWhileLoopTest() {
         String input = "expression main(){expression a = 1;while(a<6){a = 2*a;}return a;}";
         try {
@@ -215,7 +244,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseSimpleAlgorithmWithForLoopTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
@@ -235,7 +264,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithForLoopAndBreakTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2; if (i==5){break;}}return a;}";
@@ -258,7 +287,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithForLoopTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}expression i=10;return a;}";
@@ -279,7 +308,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmCallingAnotherAlgorithmTest() {
         String input = "expression main(){expression a = 15; expression b = 25; expression ggt = computeggt(a, b); return ggt;} "
@@ -467,7 +496,7 @@ public class AlgorithmCompileTests {
             assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, "a"));
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithWrongForLoopTest() {
         String input = "expression main(){expression a=5;for(expression i=0,i<7){a=a+i^2;}return a;}";
@@ -478,7 +507,7 @@ public class AlgorithmCompileTests {
             assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_EXPECTED, ","));
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithWrongForLoopWithFourCommandsInHeaderTest() {
         String input = "expression main(){expression a=5;for(expression i=0,i<7,i++,i=i+7){a=a+i^2;}return a;}";
@@ -489,5 +518,5 @@ public class AlgorithmCompileTests {
             assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_BRACKET_EXPECTED, ")"));
         }
     }
-    
+
 }

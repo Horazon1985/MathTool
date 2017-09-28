@@ -71,13 +71,15 @@ public abstract class AlgorithmExecuter {
 
     /**
      * Führt einen zusammenhängenden Befehlsblock aus und gibt den
-     * Ergebnisbezeichner zurück, falls ein Return-Befehl ausgeführt wurde. 
-     * 
+     * Ergebnisbezeichner zurück, falls ein Return-Befehl ausgeführt wurde. Nach
+     * der Blockausführung werden die in diesem Block deklarierten Bezeichner
+     * jedoch nicht wieder verworfen.
+     *
      * @param scopeMemory
      * @param commands
      * @return
      * @throws AlgorithmExecutionException
-     * @throws EvaluationException 
+     * @throws EvaluationException
      */
     public static Identifier executeBlock(AlgorithmMemory scopeMemory, List<AlgorithmCommand> commands) throws AlgorithmExecutionException, EvaluationException {
         Identifier resultIdentifier = null;

@@ -75,8 +75,8 @@ public class AlgorithmExecutionTests {
     }
 
     @Test
-    public void executeAlgorithmWithIfElseControlStructureTest() {
-        String input = "expression main(){expression a=exp(1);if(a>2){return a;};a=a+1;return a;}";
+    public void executeAlgorithmsWithIfElseControlStructureTest() {
+        String input = "expression main(){expression a=exp(1);if(a>2){return a;}a=a+1;return a;}";
         Algorithm alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
@@ -91,7 +91,7 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
 
-        input = "expression main(){expression a=exp(1);expression b=7;if(a>b){return a;};a=a+1;return a;}";
+        input = "expression main(){expression a=exp(1);expression b=7;if(a>b){return a;}a=a+1;return a;}";
         alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
@@ -106,7 +106,7 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
 
-        input = "expression main(){expression a=exp(1);if(a>2){a=a+1;expression b=2;};return a;}";
+        input = "expression main(){expression a=exp(1);if(a>2){a=a+1;expression b=2;}return a;}";
         alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
@@ -115,6 +115,21 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("1+exp(1)")));
+        } catch (AlgorithmCompileException e) {
+            fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+
+        input = "expression main(){booleanexpression a=false;if(a==true){return 5;}return 7;}";
+        alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().startsWith("gen_var"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("7")));
         } catch (AlgorithmCompileException e) {
             fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
         } catch (Exception e) {
@@ -223,6 +238,24 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("82")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+
+    @Test
+    public void executeAlgorithmWithWhileLoopAndAssignmentTest() {
+        String input = "expression main(){expression a=5;while(a<8){expression b = 1; a=a+b;}return a;}";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("8")));
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         } catch (Exception e) {

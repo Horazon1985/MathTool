@@ -117,7 +117,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
             return false;
         } else if (isComparisonOfBooleanExpressions()) {
             boolean boolValueLeft = ((BooleanExpression) this.left).evaluate(valuesMap);
-            boolean boolValueRight = ((BooleanExpression) this.left).evaluate(valuesMap);
+            boolean boolValueRight = ((BooleanExpression) this.right).evaluate(valuesMap);
             switch (this.comparingOperator) {
                 case EQUALS:
                     return boolValueLeft == boolValueRight;

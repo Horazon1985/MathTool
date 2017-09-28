@@ -17,10 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class BooleanExpression implements AbstractExpression {
-
-    
-    
-    
     
     public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
@@ -187,7 +183,7 @@ public abstract class BooleanExpression implements AbstractExpression {
             }
         }
 
-        throw new BooleanExpressionException(CompileExceptionTexts.AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED);
+        throw new BooleanExpressionException(CompileExceptionTexts.AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED, input);
     }
 
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {
