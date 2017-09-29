@@ -9,8 +9,11 @@ public class IdentifierValidatorImpl implements IdentifierValidator {
 
     /**
      * Prüft, ob der Name identifier ein gültiger Bezeichner ist. Gültig
-     * bedeutet, dass er nur aus Groß- und Kleinbuchstaben, Ziffern 0 bis 9 und
-     * dem Unterstrich '_' bestehen darf. Es darf aber keine ganze Zahl sein.
+     * bedeutet, dass er entweder<br>
+     * (1) die Form #i, i >= 1 besitzt (technischer Identifier), oder <br>
+     * (2) nur aus Groß- und Kleinbuchstaben, Ziffern 0 bis 9 und dem
+     * Unterstrich '_' bestehen darf (aber selbst keine ganze Zahl ist). Es darf
+     * aber keine ganze Zahl sein.
      */
     @Override
     public boolean isValidIdentifier(String identifierName) {
@@ -26,7 +29,16 @@ public class IdentifierValidatorImpl implements IdentifierValidator {
                 return false;
             }
         }
-        // Prüfung, ob es nur zulässige Zeichen enthält.
+        // Fall (1).
+        if (identifierName.startsWith(CompilerUtils.GEN_VAR)) {
+            try {
+                Integer.valueOf(identifierName.substring(1));
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        // Fall (2): Prüfung, ob es nur zulässige Zeichen enthält.
         int asciiValue;
         for (int i = 0; i < identifierName.length(); i++) {
             asciiValue = (int) identifierName.charAt(i);

@@ -128,7 +128,7 @@ public class AlgorithmExecutionTests {
             alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
             Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
-            assertTrue(result.getName().startsWith("gen_var"));
+            assertTrue(result.getName().startsWith("#"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("7")));
         } catch (AlgorithmCompileException e) {
             fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
@@ -174,6 +174,33 @@ public class AlgorithmExecutionTests {
     }
     
     @Test
+    public void parseAlgorithmWithAlgorithmCallInWhileConditionTest() {
+        String input = "expression main(){expression a = 1;while(f(a)*g(a)<=24){a=a+1;}return a;} "
+                + "expression f(expression a) {return a-1;} "
+                + "expression g(expression a) {return a+1;}";
+            Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            
+            for (Algorithm algorithm : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                if (algorithm.getName().equals("main")) {
+                    alg = algorithm;
+                    break;
+                }
+            }
+
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("6")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+    
+    @Test
     public void executeAlgorithmWithDoWhileControlStructureTest() {
         String input = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
         Algorithm alg = null;
@@ -184,6 +211,33 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("10")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithAlgorithmCallInDoWhileConditionTest() {
+        String input = "expression main(){expression a = 1;do{a=a+1;}while(f(a)*g(a)<6);return a;} "
+                + "expression f(expression a) {return a-1;} "
+                + "expression g(expression a) {return a+1;}";
+            Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            
+            for (Algorithm algorithm : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                if (algorithm.getName().equals("main")) {
+                    alg = algorithm;
+                    break;
+                }
+            }
+
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("3")));
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         } catch (Exception e) {

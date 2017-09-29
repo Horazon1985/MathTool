@@ -42,21 +42,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 public abstract class AlgorithmCommandCompiler {
-
-    private static final String GEN_VAR = "gen_var_";
-
-    /**
-     * Gibt einen zufällig generierten technischen Namen für eine technische
-     * (temporäre) Variable zurück.
-     *
-     * @return
-     */
-    private static String generateTechnicalVarName() {
-        return GEN_VAR + UUID.randomUUID().toString().replaceAll("-", "_");
-    }
 
     /**
      * Gibt eine Liste von Befehlen zurück, welche aus der gegebenen Zeile
@@ -604,8 +591,16 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String booleanConditionString = line.substring((Keyword.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
+
+        // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
+        BooleanExpression condition;
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(booleanConditionString, memory);
+        List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+        String booleanConditionReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+
         Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
-        BooleanExpression condition = BooleanExpression.build(booleanConditionString, VALIDATOR, typesMap);
+        condition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
+        checkIfAllIdentifiersAreDefined(condition.getContainedVars(), memory);
 
         // Prüfung, ob line mit "while(boolsche Bedingung){ ..." beginnt.
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
@@ -641,8 +636,9 @@ public abstract class AlgorithmCommandCompiler {
 
         // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
         if (endBlockPosition == line.length() - 1) {
-            // Kein Else-Teil vorhanden.
-            return Collections.singletonList((AlgorithmCommand) whileControlStructure);
+            whileControlStructure.getCommands().addAll(commands);
+            commands.add(whileControlStructure);
+            return commands;
         }
 
         throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
@@ -687,11 +683,22 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
-        String whileConditionPart = line.substring(endBlockPosition + Keyword.WHILE.getValue().length() + 2, line.length() - 1);
-        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
-        BooleanExpression condition = BooleanExpression.build(whileConditionPart, VALIDATOR, typesMap);
+        String whileConditionString = line.substring(endBlockPosition + Keyword.WHILE.getValue().length() + 2, line.length() - 1);
+        
+        // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
+        BooleanExpression condition;
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(whileConditionString, memory);
+        List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+        String booleanConditionReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
 
-        return Collections.singletonList((AlgorithmCommand) new DoWhileControlStructure(commandsDoPart, condition));
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        condition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
+        checkIfAllIdentifiersAreDefined(condition.getContainedVars(), memory);
+        
+        DoWhileControlStructure doWhileControlStructure = new DoWhileControlStructure(commandsDoPart, condition);
+        doWhileControlStructure.getCommands().addAll(commands);
+        commands.add(doWhileControlStructure);
+        return commands;
     }
 
     private static List<AlgorithmCommand> parseForControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
@@ -826,7 +833,7 @@ public abstract class AlgorithmCommandCompiler {
                 if (VALIDATOR.isValidIdentifier(returnValueReplaced)) {
                     throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
                 }
-                String genVarForReturn = generateTechnicalVarName();
+                String genVarForReturn = CompilerUtils.generateTechnicalVarName(scopeMemory);
                 String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + returnValueReplaced;
                 List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, scopeMemory);
                 commands.addAll(additionalCommandsByAssignment);
@@ -922,11 +929,12 @@ public abstract class AlgorithmCommandCompiler {
         String inputWithGeneratedVars = input;
         List<AlgorithmCommand> commands = new ArrayList<>();
 
-        boolean algorithmCallFound = false;
+        boolean algorithmCallFound;
         String algorithmCallAsString;
         int beginningAlgCall;
         int endingAlgCall;
         do {
+            algorithmCallFound = false;
             for (Signature signature : AlgorithmCompiler.ALGORITHM_SIGNATURES.getAlgorithmSignatureStorage()) {
                 if (!inputWithGeneratedVars.contains(signature.getName())) {
                     continue;
@@ -964,6 +972,7 @@ public abstract class AlgorithmCommandCompiler {
                         }
 
                         endingAlgCall = i;
+                        algorithmCallFound = true;
 
                         try {
                             inputWithGeneratedVars = addAssignValueCommandsForNonVarAlgorithmParameters(inputWithGeneratedVars, beginningAlgCall, endingAlgCall, algorithmCallData, commands, memory);
@@ -997,7 +1006,7 @@ public abstract class AlgorithmCommandCompiler {
             } else if (value instanceof MatrixVariable) {
                 inputParameters[i] = Identifier.createIdentifier(scopeMemory, ((MatrixVariable) value).getName(), IdentifierType.identifierTypeOf(value));
             } else {
-                String genVarName = generateTechnicalVarName();
+                String genVarName = CompilerUtils.generateTechnicalVarName(scopeMemory);
                 try {
                     Identifier genVarIdentifier = Identifier.createIdentifier(scopeMemory, genVarName, IdentifierType.identifierTypeOf(value));
                     inputParameters[i] = genVarIdentifier;
@@ -1009,7 +1018,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
 
-        String genVarNameForCalledAlg = generateTechnicalVarName();
+        String genVarNameForCalledAlg = CompilerUtils.generateTechnicalVarName(scopeMemory);
         Identifier identifierForCalledAlg = Identifier.createIdentifier(scopeMemory, genVarNameForCalledAlg, algorithmCallData.getSignature().getReturnType());
         try {
             commands.add(new AssignValueCommand(identifierForCalledAlg, algorithmCallData.getSignature(), inputParameters));

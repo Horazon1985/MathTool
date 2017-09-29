@@ -11,6 +11,7 @@ import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.command.ControlStructure;
+import algorithmexecuter.model.command.DoWhileControlStructure;
 import java.util.List;
 import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
@@ -226,6 +227,38 @@ public class AlgorithmCompileTests {
     }
 
     @Test
+    public void parseAlgorithmWithAlgorithmCallInWhileConditionTest() {
+        String input = "expression main(){expression a = 1;while(f(a)*g(a)<6){a=a+1;}return a;} "
+                + "expression f(expression a) {return a-1;} "
+                + "expression g(expression a) {return a+1;} ";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 3);
+
+            Algorithm mainAlg = null;
+            for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                if (alg.getName().equals("main")) {
+                    mainAlg = alg;
+                    break;
+                }
+            }
+
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getCommands().size(), 5);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(3).isWhileControlStructure());
+            assertTrue(mainAlg.getCommands().get(4).isReturnCommand());
+            assertEquals(((WhileControlStructure) mainAlg.getCommands().get(3)).getCommands().size(), 3);
+            assertTrue(((WhileControlStructure) mainAlg.getCommands().get(3)).getCommands().get(0).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
+    @Test
     public void parseSimpleAlgorithmWithDoWhileLoopTest() {
         String input = "expression main(){expression a=5;do{a=a+1;}while(a<10);return a;}";
         try {
@@ -245,6 +278,38 @@ public class AlgorithmCompileTests {
         }
     }
 
+    @Test
+    public void parseAlgorithmWithAlgorithmCallInDoWhileConditionTest() {
+        String input = "expression main(){expression a = 1;do{a=a+1;}while(f(a)*g(a)<6);return a;} "
+                + "expression f(expression a) {return a-1;} "
+                + "expression g(expression a) {return a+1;}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 3);
+
+            Algorithm mainAlg = null;
+            for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                if (alg.getName().equals("main")) {
+                    mainAlg = alg;
+                    break;
+                }
+            }
+
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getCommands().size(), 5);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(3).isDoWhileControlStructure());
+            assertTrue(mainAlg.getCommands().get(4).isReturnCommand());
+            assertEquals(((DoWhileControlStructure) mainAlg.getCommands().get(3)).getCommands().size(), 3);
+            assertTrue(((DoWhileControlStructure) mainAlg.getCommands().get(3)).getCommands().get(0).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
     @Test
     public void parseSimpleAlgorithmWithForLoopTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
@@ -318,8 +383,7 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 2);
 
-            Algorithm mainAlg;
-            Algorithm ggtAlg;
+            Algorithm mainAlg, ggtAlg;
             if (algorithmList.get(0).getName().equals("main")) {
                 mainAlg = algorithmList.get(0);
                 ggtAlg = algorithmList.get(1);
@@ -359,9 +423,7 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 3);
 
-            Algorithm mainAlg = null;
-            Algorithm ggtAlg = null;
-            Algorithm myggtAlg = null;
+            Algorithm mainAlg = null, ggtAlg = null, myggtAlg = null;
             for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
                 switch (alg.getName()) {
                     case "main":
@@ -409,8 +471,7 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 2);
 
-            Algorithm mainAlg;
-            Algorithm ggtAlg;
+            Algorithm mainAlg, ggtAlg;
             if (algorithmList.get(0).getName().equals("main")) {
                 mainAlg = algorithmList.get(0);
                 ggtAlg = algorithmList.get(1);

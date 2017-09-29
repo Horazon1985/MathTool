@@ -23,6 +23,8 @@ import java.util.Map;
 
 public final class CompilerUtils {
 
+    public static final String GEN_VAR = "#";
+    
     private CompilerUtils() {
     }
 
@@ -452,6 +454,19 @@ public final class CompilerUtils {
             valuesMap.put(identifierName, memory.getMemory().get(identifierName).getType());
         }
         return valuesMap;
+    }
+    
+    /**
+     * Gibt einen Namen für eine technische Variable zurück. Der zurückgegebene
+     * Name ist "gen_var_i" mit dem kleinsten i &ge; 1, welcher in scopeMemory
+     * noch nict vorkommt.
+     */
+    public static String generateTechnicalVarName(AlgorithmMemory scopeMemory) {
+        int i = 1;
+        while (scopeMemory.getMemory().containsKey(GEN_VAR + i)) {
+            i++;
+        }
+        return GEN_VAR + i;
     }
 
 }

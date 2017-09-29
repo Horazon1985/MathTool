@@ -135,14 +135,14 @@ public abstract class BooleanExpression implements AbstractExpression {
             ComparingOperators comparisonType = null;
             if (containsOperatorExactlyOneTime(input, ComparingOperators.EQUALS)) {
                 comparisonType = ComparingOperators.EQUALS;
-            } else if (containsOperatorExactlyOneTime(input, ComparingOperators.GREATER)) {
-                comparisonType = ComparingOperators.GREATER;
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.GREATER_OR_EQUALS)) {
                 comparisonType = ComparingOperators.GREATER_OR_EQUALS;
-            } else if (containsOperatorExactlyOneTime(input, ComparingOperators.SMALLER)) {
-                comparisonType = ComparingOperators.SMALLER;
+            } else if (containsOperatorExactlyOneTime(input, ComparingOperators.GREATER)) {
+                comparisonType = ComparingOperators.GREATER;
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.SMALLER_OR_EQUALS)) {
                 comparisonType = ComparingOperators.SMALLER_OR_EQUALS;
+            } else if (containsOperatorExactlyOneTime(input, ComparingOperators.SMALLER)) {
+                comparisonType = ComparingOperators.SMALLER;
             }
             
             if (comparisonType != null) {
