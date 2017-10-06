@@ -1,11 +1,5 @@
 package algorithmexecuter.model;
 
-import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.expression.classes.Variable;
-import abstractexpressions.logicalexpression.classes.LogicalExpression;
-import abstractexpressions.logicalexpression.classes.LogicalVariable;
-import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.model.command.IfElseControlStructure;
@@ -140,9 +134,9 @@ public class Algorithm {
     }
 
     private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {
-        for (Identifier inputParameter : this.inputParameters) {
-            if (inputParameter.getValue() == null) {
-                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET);
+        for (int i = 0; i < this.inputParameters.length; i++) {
+            if (this.inputParameters[i].getValue() == null) {
+                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET, i, this.getName());
             }
         }
     }

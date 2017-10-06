@@ -262,6 +262,26 @@ public class AlgorithmExecutionTests {
             fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
         }
     }
+
+    @Test
+    public void executeAlgorithmWithAlgorithmCallsInForLoopTest() {
+        String input = "expression main(){expression a = 1;for(expression i=0,f(i)<=10,i=g(i)){a=3*a+2;}return a;} "
+                + "expression f(expression i) {return 2*i;} "
+                + "expression g(expression i) {return i^2+1;} ";
+        Algorithm alg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            alg = AlgorithmCompiler.ALGORITHMS.getMainAlgorithm();
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(alg));
+            assertTrue(result.getType() == IdentifierType.EXPRESSION);
+            assertTrue(result.getName().equals("a"));
+            assertTrue(((Expression) result.getValue()).equals(Expression.build("161")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + alg + " konnte nicht ausgeführt werden.");
+        }
+    }
     
     @Test
     public void executeAlgorithmWithForLoopAndBreakTest() {

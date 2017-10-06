@@ -744,13 +744,13 @@ public abstract class AlgorithmCommandCompiler {
         
         // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
         BooleanExpression endLoopCondition;
-        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(forControlParts[1], memory);
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(forControlParts[1], memoryBeforForLoop);
         List<AlgorithmCommand> commandsEndLoopCondition = algorithmCommandReplacementList.getCommands();
         String booleanConditionReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
 
-        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforForLoop);
         endLoopCondition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
-        checkIfAllIdentifiersAreDefined(endLoopCondition.getContainedVars(), memory);
+        checkIfAllIdentifiersAreDefined(endLoopCondition.getContainedVars(), memoryBeforForLoop);
         
         AlgorithmMemory copyOfMemory = memoryBeforForLoop.copyMemory();
         
@@ -787,16 +787,12 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), memoryBeforForLoop, alg);
-        commandsForPart.addAll(commandsEndLoopCondition);
-        ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, endLoopCondition, loopAssignment);
+        ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, commandsEndLoopCondition, endLoopCondition, loopAssignment);
 
         // Lokale Variable aus dem Speicher memory wieder herausnehmen.
         // '}' muss als letztes Zeichen stehen, sonst ist die Struktur nicht korrekt.
         if (endBlockPosition == line.length() - 1) {
-            // Kein Else-Teil vorhanden.
-            List<AlgorithmCommand> resultCommands = new ArrayList<>(commandsEndLoopCondition);
-            resultCommands.add(forControlStructure);
-            return resultCommands;
+            return Collections.singletonList(forControlStructure);
         }
 
         throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));

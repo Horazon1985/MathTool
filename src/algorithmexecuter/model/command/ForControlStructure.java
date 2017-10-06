@@ -19,11 +19,13 @@ import java.util.Map;
 public class ForControlStructure extends ControlStructure {
 
     private final List<AlgorithmCommand> initialization;
+    private final List<AlgorithmCommand> endLoopCommands;
     private final BooleanExpression endLoopCondition;
     private final List<AlgorithmCommand> loopAssignment;
 
-    public ForControlStructure(List<AlgorithmCommand> commands, List<AlgorithmCommand> initialization, BooleanExpression endLoopCondition, List<AlgorithmCommand> loopAssignment) {
+    public ForControlStructure(List<AlgorithmCommand> commands, List<AlgorithmCommand> initialization, List<AlgorithmCommand> endLoopCommands, BooleanExpression endLoopCondition, List<AlgorithmCommand> loopAssignment) {
         this.initialization = initialization;
+        this.endLoopCommands = endLoopCommands;
         this.endLoopCondition = endLoopCondition;
         this.loopAssignment = loopAssignment;
         this.commandBlocks = (List<AlgorithmCommand>[]) Array.newInstance(new ArrayList<>().getClass(), 1);
@@ -32,6 +34,10 @@ public class ForControlStructure extends ControlStructure {
 
     public List<AlgorithmCommand> getInitialization() {
         return this.initialization;
+    }
+
+    public List<AlgorithmCommand> getEndLoopCommands() {
+        return this.endLoopCommands;
     }
 
     public BooleanExpression getEndLoopCondition() {
@@ -50,13 +56,14 @@ public class ForControlStructure extends ControlStructure {
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
         Identifier result = null;
 
-        AlgorithmMemory memoryBeforeForLoopExecution = scopeMemory.copyMemory();
+        AlgorithmMemory currentMemory = scopeMemory.copyMemory();
 
-        AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.initialization);
-        Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
+        AlgorithmExecuter.executeBlock(currentMemory, this.initialization);
+        AlgorithmExecuter.executeBlock(currentMemory, this.endLoopCommands);
+        Map<String, AbstractExpression> valuesMap = CompilerUtils.extractValuesOfIdentifiers(currentMemory);
         while (this.endLoopCondition.evaluate(valuesMap)) {
             try {
-                result = AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.commandBlocks[0]);
+                result = AlgorithmExecuter.executeBlock(currentMemory, this.commandBlocks[0]);
                 if (result != null) {
                     return result;
                 }
@@ -64,22 +71,23 @@ public class ForControlStructure extends ControlStructure {
                 return null;
             } catch (AlgorithmContinueException e) {
             }
-            AlgorithmExecuter.executeBlock(memoryBeforeForLoopExecution, this.loopAssignment);
+            AlgorithmExecuter.executeBlock(currentMemory, this.loopAssignment);
+            AlgorithmExecuter.executeBlock(currentMemory, this.endLoopCommands);
             // Identifierwerte aktualisieren.
-            valuesMap = CompilerUtils.extractValuesOfIdentifiers(memoryBeforeForLoopExecution);
+            valuesMap = CompilerUtils.extractValuesOfIdentifiers(currentMemory);
         }
 
         // Speicher vor der Ausführung des Blocks aktualisieren.
-        ExecutionUtils.updateMemoryBeforeBlockExecution(scopeMemory, memoryBeforeForLoopExecution);
+        ExecutionUtils.updateMemoryBeforeBlockExecution(scopeMemory, currentMemory);
 
         return result;
     }
 
     @Override
     public String toString() {
-        String doWhileCommandString = "for (" + this.initialization + "; " + this.endLoopCondition + "; " + this.loopAssignment + "; " + "){";
-        doWhileCommandString = this.commandBlocks[0].stream().map((c) -> c.toString() + "; \n").reduce(doWhileCommandString, String::concat);
-        return doWhileCommandString + "}";
+        String forCommandString = "for (" + this.initialization + "; " + this.endLoopCommands + ", " + this.endLoopCondition + "; " + this.loopAssignment + "){";
+        forCommandString = this.commandBlocks[0].stream().map((c) -> c.toString() + "; \n").reduce(forCommandString, String::concat);
+        return forCommandString + "}";
     }
 
 }

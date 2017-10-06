@@ -12,6 +12,7 @@ import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.model.command.DoWhileControlStructure;
+import algorithmexecuter.model.command.ForControlStructure;
 import java.util.List;
 import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
@@ -330,6 +331,37 @@ public class AlgorithmCompileTests {
         }
     }
 
+    @Test
+    public void parseAlgorithmWithAlgorithmCallInForConditionTest() {
+        String input = "expression main(){expression a = 1;for(expression i=0,f(i)<10,i=i+1){a=3*a+1;}return a;} "
+                + "expression f(expression a) {return a-1;} ";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 2);
+
+            Algorithm mainAlg = null;
+            for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
+                if (alg.getName().equals("main")) {
+                    mainAlg = alg;
+                    break;
+                }
+            }
+
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isForControlStructure());
+            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
+            assertEquals(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().size(), 2);
+            assertTrue(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().get(0).isAssignValueCommand());
+            assertTrue(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().get(1).isAssignValueCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
     @Test
     public void parseAlgorithmWithForLoopAndBreakTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2; if (i==5){break;}}return a;}";

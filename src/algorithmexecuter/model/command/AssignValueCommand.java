@@ -11,7 +11,6 @@ import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
 import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
-import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.booleanexpression.BooleanExpression;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Signature;
@@ -80,14 +79,13 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc
-                + ", targetExpression = " + this.targetExpression;
-        if (this.targetAlgorithm != null) {
-            return command + ", targetAlgorithm = " + this.targetAlgorithm.getSignature().toString() + "]";
+        String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc;
+        if (this.targetExpression != null) {
+            return command + ", targetExpression = " + this.targetExpression + "]";
         }
-        return command + "]";
+        return command + ", targetAlgorithm = " + this.targetAlgorithmSignature.toString() + "]";
     }
-
+    
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
         Set<String> varsInAlgorithmSignature = new HashSet<>();
         AbstractExpression abstrExpr;
@@ -117,7 +115,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         scopeMemory.addToMemoryInRuntime(this.identifierSrc);
         return null;
     }
-    
+
     private void checkForUnknownIdentifier(AlgorithmMemory scopeMemory, Set<String> varsInTargetExpr) throws AlgorithmExecutionException {
         for (String var : varsInTargetExpr) {
             if (!scopeMemory.containsIdentifier(var)) {

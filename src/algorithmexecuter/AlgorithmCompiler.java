@@ -15,6 +15,7 @@ import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.AlgorithmSignatureStorage;
 import algorithmexecuter.model.AlgorithmStorage;
 import algorithmexecuter.model.Signature;
+import algorithmexecuter.model.command.ForControlStructure;
 import java.util.Arrays;
 import java.util.List;
 
@@ -90,10 +91,10 @@ public abstract class AlgorithmCompiler {
         String[] parametersAsStrings = algParseData.getParameters();
 
         Identifier[] parameters = getIdentifiersFromParameterStrings(parametersAsStrings, new AlgorithmMemory(null));
-        
+
         // Prüfung, ob Algorithmusparameter nicht doppelt vorkommen.
         checkForTwiceOccurringParameters(parameters);
-        
+
         Signature signature = CompilerUtils.getSignature(returnType, algName, parameters);
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
@@ -353,6 +354,11 @@ public abstract class AlgorithmCompiler {
                 // Analoges bei allen Unterblöcken durchführen.
                 for (List<AlgorithmCommand> commandBlock : ((ControlStructure) command).getCommandBlocks()) {
                     replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(commandBlock);
+                }
+                if (command.isForControlStructure()) {
+                    replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(((ForControlStructure) command).getInitialization());
+                    replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(((ForControlStructure) command).getEndLoopCommands());
+                    replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(((ForControlStructure) command).getLoopAssignment());
                 }
             }
         }
