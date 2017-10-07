@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
@@ -39,6 +40,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private final int STUB = 20;
     private final int PADDING = 20;
 
+    private JScrollPane algorithmEditorPane;
     private JTextArea algorithmEditor;
     private JTextPane outputArea;
 
@@ -57,9 +59,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private static MathToolAlgorithmsGUI instance = null;
 
-    public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiHeight, String titleID) {
+    public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight, String titleID) {
         if (instance == null) {
-            instance = new MathToolAlgorithmsGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiHeight, titleID);
+            instance = new MathToolAlgorithmsGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, titleID);
         }
         return instance;
     }
@@ -71,7 +73,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
      * (3) Ausgabefenster.<br>
      * (4) Buttons.<br>
      */
-    private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiHeight, String titleID) {
+    private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight, String titleID) {
 
         computing = false;
 
@@ -99,15 +101,21 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 currentComponentLevel = this.STUB;
             }
 
-            setBounds(mathtoolGuiX, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
+            setBounds(mathtoolGuiX + (mathtoolGuiWidth - this.headerImage.getIconWidth()) / 2, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
             // Algorithmeneditor definieren.
             this.algorithmEditor = new JTextArea();
             add(this.algorithmEditor);
-            this.algorithmEditor.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
-            currentComponentLevel += this.algorithmEditor.getHeight() + STUB;
+            this.algorithmEditorPane = new JScrollPane(this.algorithmEditor,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
+            this.algorithmEditor.setCaretPosition(this.algorithmEditor.getDocument().getLength());
+            add(this.algorithmEditorPane);
+            this.algorithmEditorPane.setVisible(true);
+
+            currentComponentLevel += this.algorithmEditorPane.getHeight() + STUB;
 
             this.algorithmEditor.setText("expression main(){expression x = int(t^2,t,0,1); if(x>1){x=x+2;} return x;}");
 

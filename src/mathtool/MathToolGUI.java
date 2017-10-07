@@ -1477,7 +1477,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void menuItemAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAlgorithmsActionPerformed
         String algorithmsTitle = Translator.translateOutputMessage(GUI_MENU_ALGORITHMS);
 
-        MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getHeight(),
+        MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                 algorithmsTitle);
 
         mathToolAlgorithmsGUI.setVisible(true);
