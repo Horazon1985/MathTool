@@ -267,7 +267,7 @@ public class AlgorithmExecutionTests {
     public void executeAlgorithmWithAlgorithmCallsInForLoopTest() {
         String input = "expression main(){expression a = 1;for(expression i=0,f(i)<=10,i=g(i)){a=3*a+2;}return a;} "
                 + "expression f(expression i) {return 2*i;} "
-                + "expression g(expression i) {return i^2+1;} ";
+                + "expression g(expression i) {return i^2+1;}";
         Algorithm alg = null;
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);

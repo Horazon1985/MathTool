@@ -9,9 +9,7 @@ public class MathToolAlgorithmsController {
     private static final String SIGN_NEXT_LINE = "\n";
 
     public static String formatSourceCodeFromEditor(String inputSourceCode) {
-        String algString = getPlainCode(inputSourceCode);
-        String formattedCode = MathToolAlgorithmsController.formatSourceCode(algString);
-        return formattedCode;
+        return MathToolAlgorithmsController.formatSourceCode(getPlainCode(inputSourceCode));
     }
 
     public static String getPlainCode(String code) {
@@ -45,6 +43,10 @@ public class MathToolAlgorithmsController {
                 formattedSourceCode += writeMultipleTabs(wavedBracketCounter);
                 formattedSourceCode += inputSourceCode.charAt(i);
                 formattedSourceCode += SIGN_NEXT_LINE;
+                // Beim Beginn eines neuen Algorithmus eine zusätzliche Leerzeile lassen.
+                if (wavedBracketCounter == 0) {
+                    formattedSourceCode += SIGN_NEXT_LINE;
+                }
             } else if (inputSourceCode.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
                 bracketCounter++;
                 newLine = false;
@@ -61,7 +63,7 @@ public class MathToolAlgorithmsController {
                 squareBracketCounter--;
                 newLine = false;
                 formattedSourceCode += inputSourceCode.charAt(i);
-            } else if (inputSourceCode.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue() 
+            } else if (inputSourceCode.charAt(i) == ReservedChars.LINE_SEPARATOR.getValue()
                     && bracketCounter == 0 && squareBracketCounter == 0) {
                 formattedSourceCode += inputSourceCode.charAt(i);
                 formattedSourceCode += SIGN_NEXT_LINE;

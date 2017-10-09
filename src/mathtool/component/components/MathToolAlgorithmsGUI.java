@@ -42,6 +42,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private JScrollPane algorithmEditorPane;
     private JTextArea algorithmEditor;
+    private JScrollPane outputAreaPane;
     private JTextPane outputArea;
 
     private ImageIcon runIcon;
@@ -122,11 +123,16 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.outputArea = new JTextPane();
             add(this.outputArea);
             this.outputArea.setContentType("text/html; charset=UTF-8");
-            this.outputArea.setBounds(PADDING, currentComponentLevel, this.getWidth() - 2 * PADDING, 200);
             this.outputArea.setVisible(true);
             this.outputArea.setEditable(false);
             this.outputArea.setBorder(new LineBorder(Color.black, 1));
-            currentComponentLevel += this.outputArea.getHeight() + STUB;
+            this.outputAreaPane = new JScrollPane(this.outputArea,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            this.outputAreaPane.setBounds(PADDING, currentComponentLevel, this.getWidth() - 2 * PADDING, 200);
+            add(this.outputAreaPane);
+            this.outputAreaPane.setVisible(true);
+            
+            currentComponentLevel += this.outputAreaPane.getHeight() + STUB;
 
             // outputArea als Ausgabe deklarieren.
             AlgorithmOutputPrinter.setOutputArea(this.outputArea);
@@ -156,8 +162,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     if (!computing) {
                         computing = true;
                         String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
-                        String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
-                        compileAndExecuteAlgorithmAlgorithmFile(algStringWithoutUTF8);
+//                        String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
+//                        compileAndExecuteAlgorithmAlgorithmFile(algStringWithoutUTF8);
+                        compileAndExecuteAlgorithmAlgorithmFile(algString);
                     } else {
                         computing = false;
                         computingSwingWorker.cancel(true);
@@ -168,8 +175,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.formatButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent event) {
-                    String unformattedCode = algorithmEditor.getText();
-                    String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(unformattedCode);
+                    String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(algorithmEditor.getText());
                     algorithmEditor.setText(formattedCode);
                 }
             });
@@ -184,7 +190,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     }
 
     private void compileAndExecuteAlgorithmAlgorithmFile(String algorithm) {
-        computingSwingWorker = new SwingWorker<Void, Void>() {
+        this.computingSwingWorker = new SwingWorker<Void, Void>() {
 
             @Override
             protected void done() {
@@ -215,7 +221,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             }
 
         };
-        computingSwingWorker.execute();
+        this.computingSwingWorker.execute();
 
     }
 
