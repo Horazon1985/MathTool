@@ -4,6 +4,8 @@ import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.identifier.Identifier;
@@ -52,7 +54,7 @@ public class IfElseControlStructure extends ControlStructure {
         }
         return AlgorithmExecuter.executeConnectedBlock(scopeMemory, this.commandsElsePart);
     }
-    
+
     @Override
     public String toString() {
         String ifElseCommandString = "if (" + this.condition.toString() + ") {";
@@ -66,6 +68,27 @@ public class IfElseControlStructure extends ControlStructure {
             }
         }
         return ifElseCommandString + "}";
+    }
+
+    @Override
+    public String toCommandString() {
+        String commandString = Keyword.IF.getValue() + ReservedChars.OPEN_BRACKET.getStringValue() + this.condition.toString()
+                + ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue();
+
+        for (AlgorithmCommand command : this.commandsIfPart) {
+            commandString += command.toCommandString();
+        }
+        commandString += ReservedChars.END.getStringValue();
+
+        if (!this.commandsElsePart.isEmpty()) {
+            commandString += Keyword.ELSE.getValue() + ReservedChars.BEGIN.getStringValue();
+            for (AlgorithmCommand command : this.commandsElsePart) {
+                commandString += command.toCommandString();
+            }
+            commandString += ReservedChars.END.getStringValue();
+        }
+
+        return commandString;
     }
 
 }

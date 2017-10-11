@@ -1,6 +1,7 @@
 package algorithmexecuter.model.command;
 
 import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmBreakException;
 import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
@@ -29,4 +30,9 @@ public class KeywordCommand extends AlgorithmCommand {
         throw new AlgorithmContinueException();
     }
 
+    @Override
+    public String toCommandString() {
+        return this.keyword.getValue() + ReservedChars.LINE_SEPARATOR.getStringValue();
+    }
+    
 }

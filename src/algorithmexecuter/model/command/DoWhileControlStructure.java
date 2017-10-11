@@ -4,6 +4,8 @@ import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmBreakException;
 import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
@@ -18,7 +20,7 @@ import java.util.Map;
 public class DoWhileControlStructure extends ControlStructure {
 
     private final List<AlgorithmCommand> commands;
-    
+
     private final BooleanExpression condition;
 
     public DoWhileControlStructure(List<AlgorithmCommand> commands, BooleanExpression condition) {
@@ -31,11 +33,11 @@ public class DoWhileControlStructure extends ControlStructure {
     public List<AlgorithmCommand> getCommands() {
         return commands;
     }
-    
+
     public BooleanExpression getCondition() {
         return condition;
     }
-    
+
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
         Map<String, AbstractExpression> valuesMap;
@@ -58,11 +60,21 @@ public class DoWhileControlStructure extends ControlStructure {
 
     @Override
     public String toString() {
-
         String doWhileCommandString = "do (";
         doWhileCommandString = this.commands.stream().map((c) -> c.toString() + "; \n").reduce(doWhileCommandString, String::concat);
         doWhileCommandString += "} while (" + this.condition.toString() + ")";
         return doWhileCommandString;
+    }
+
+    @Override
+    public String toCommandString() {
+        String commandString = Keyword.DO.getValue() + ReservedChars.BEGIN.getStringValue();
+        for (AlgorithmCommand command : this.commands) {
+            commandString += command.toCommandString();
+        }
+        return commandString + ReservedChars.END.getStringValue() + Keyword.WHILE.getValue() 
+                + ReservedChars.OPEN_BRACKET.getStringValue() + this.condition.toString()
+                + ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.LINE_SEPARATOR.getStringValue();
     }
 
 }

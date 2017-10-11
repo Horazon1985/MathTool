@@ -2,6 +2,8 @@ package mathtool.component.controller;
 
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.enums.ReservedChars;
+import algorithmexecuter.model.Algorithm;
+import java.util.List;
 
 public class MathToolAlgorithmsController {
 
@@ -18,7 +20,7 @@ public class MathToolAlgorithmsController {
         return code;
     }
 
-    public static String formatSourceCode(String inputSourceCode) {
+    private static String formatSourceCode(String inputSourceCode) {
         if (inputSourceCode.isEmpty()) {
             return inputSourceCode;
         }
@@ -86,6 +88,14 @@ public class MathToolAlgorithmsController {
             result += SIGN_TAB;
         }
         return result;
+    }
+    
+    public static String writeCompiledCode(List<Algorithm> algorithms) {
+        String compiledCode = "";
+        for (Algorithm alg : algorithms) {
+            compiledCode += alg.toCommandString();
+        }
+        return formatSourceCode(compiledCode);
     }
 
 }

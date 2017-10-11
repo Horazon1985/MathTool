@@ -4,6 +4,8 @@ import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmBreakException;
 import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
@@ -64,4 +66,15 @@ public class WhileControlStructure extends ControlStructure {
         return whileCommandString + "}";
     }
 
+    @Override
+    public String toCommandString() {
+        String commandString = Keyword.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getStringValue() + this.condition.toString()
+                + ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue();
+
+        for (AlgorithmCommand command : this.commands) {
+            commandString += command.toCommandString();
+        }
+        return commandString + ReservedChars.END.getStringValue();
+    }
+    
 }

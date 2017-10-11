@@ -14,6 +14,7 @@ import algorithmexecuter.model.command.ReturnCommand;
 import algorithmexecuter.model.command.WhileControlStructure;
 import algorithmexecuter.booleanexpression.BooleanExpression;
 import algorithmexecuter.booleanexpression.BooleanVariable;
+import algorithmexecuter.enums.AssignValueType;
 import algorithmexecuter.enums.ComparingOperators;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
@@ -151,9 +152,11 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String identifierName;
+        AssignValueType assignValueType;
         if (type != null) {
 
             identifierName = leftSide.substring((type.toString() + " ").length());
+            assignValueType = AssignValueType.NEW;
             // Prüfung, ob dieser Identifier gültigen Namen besitzt.
             if (!VALIDATOR.isValidIdentifier(identifierName)) {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, identifierName);
@@ -164,6 +167,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         } else {
             identifierName = leftSide;
+            assignValueType = AssignValueType.CHANGE;
             // Prüfung, ob dieser Identifier bereits existiert.
             if (!scopeMemory.containsIdentifier(identifierName)) {
                 throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, identifierName);
@@ -185,10 +189,10 @@ public abstract class AlgorithmCommandCompiler {
                 checkIfAllIdentifiersAreDefined(vars, scopeMemory);
                 areIdentifiersOfCorrectType(type, vars, scopeMemory);
                 scopeMemory.getMemory().put(identifierName, identifier);
-                commands.add(new AssignValueCommand(identifier, expr));
+                commands.add(new AssignValueCommand(identifier, expr, assignValueType));
                 return commands;
             } catch (ExpressionException e) {
-                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.EXPRESSION, identifier);
+                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.EXPRESSION, identifier, assignValueType);
             }
 
         } else if (type == IdentifierType.BOOLEAN_EXPRESSION) {
@@ -204,10 +208,10 @@ public abstract class AlgorithmCommandCompiler {
                 checkIfAllIdentifiersAreDefined(vars, scopeMemory);
                 areIdentifiersOfCorrectType(type, vars, scopeMemory);
                 scopeMemory.getMemory().put(identifierName, identifier);
-                commands.add(new AssignValueCommand(identifier, boolExpr));
+                commands.add(new AssignValueCommand(identifier, boolExpr, assignValueType));
                 return commands;
             } catch (BooleanExpressionException e) {
-                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.BOOLEAN_EXPRESSION, identifier);
+                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.BOOLEAN_EXPRESSION, identifier, assignValueType);
             }
 
         }
@@ -222,10 +226,10 @@ public abstract class AlgorithmCommandCompiler {
             areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), scopeMemory);
             areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), scopeMemory);
             scopeMemory.getMemory().put(identifierName, identifier);
-            commands.add(new AssignValueCommand(identifier, matExpr));
+            commands.add(new AssignValueCommand(identifier, matExpr, assignValueType));
             return commands;
         } catch (ExpressionException e) {
-            return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.MATRIX_EXPRESSION, identifier);
+            return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.MATRIX_EXPRESSION, identifier, assignValueType);
         }
 
     }
@@ -281,13 +285,13 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     private static List<AlgorithmCommand> parseAlgorithmCall(AlgorithmMemory memory, List<AlgorithmCommand> commands,
-            String rightSide, IdentifierType assignType, Identifier identifier) throws AlgorithmCompileException {
+            String rightSide, IdentifierType assignType, Identifier identifier, AssignValueType assignValueType) throws AlgorithmCompileException {
         // Kompatibilitätscheck
         Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, assignType).getSignature();
         // Parameter auslesen;
         Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
         memory.getMemory().put(identifier.getName(), identifier);
-        commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers));
+        commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers, assignValueType));
         return commands;
 
     }
@@ -684,7 +688,7 @@ public abstract class AlgorithmCommandCompiler {
         }
 
         String whileConditionString = line.substring(endBlockPosition + Keyword.WHILE.getValue().length() + 2, line.length() - 1);
-        
+
         // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
         BooleanExpression condition;
         AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(whileConditionString, memory);
@@ -694,7 +698,7 @@ public abstract class AlgorithmCommandCompiler {
         Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memory);
         condition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
         checkIfAllIdentifiersAreDefined(condition.getContainedVars(), memory);
-        
+
         DoWhileControlStructure doWhileControlStructure = new DoWhileControlStructure(commandsDoPart, condition);
         doWhileControlStructure.getCommands().addAll(commands);
         commands.add(doWhileControlStructure);
@@ -727,7 +731,7 @@ public abstract class AlgorithmCommandCompiler {
 
         String forControlString = line.substring((Keyword.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfForControlPart);
 
-        AlgorithmMemory memoryBeforForLoop = memory.copyMemory();
+        AlgorithmMemory currentMemory = memory.copyMemory();
 
         // Die drei for-Anweisungen kompilieren.
         String[] forControlParts = CompilerUtils.splitByKomma(forControlString);
@@ -740,27 +744,25 @@ public abstract class AlgorithmCommandCompiler {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
-        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], memoryBeforForLoop);
-        
+        List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], currentMemory);
+
         // Die boolsche Bedingung kann wieder Algorithmenaufrufe enthalten. Daher muss sie in "elementare" Teile zerlegt werden.
         BooleanExpression endLoopCondition;
-        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(forControlParts[1], memoryBeforForLoop);
+        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(forControlParts[1], currentMemory);
         List<AlgorithmCommand> commandsEndLoopCondition = algorithmCommandReplacementList.getCommands();
         String booleanConditionReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
 
-        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(memoryBeforForLoop);
+        Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(currentMemory);
         endLoopCondition = BooleanExpression.build(booleanConditionReplaced, VALIDATOR, typesMap);
-        checkIfAllIdentifiersAreDefined(endLoopCondition.getContainedVars(), memoryBeforForLoop);
-        
-        AlgorithmMemory copyOfMemory = memoryBeforForLoop.copyMemory();
-        
-        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], memoryBeforForLoop);
-        // Prüfung, ob bei loopAssignment keine weiteren Bezeichner hinzukamen.
-        if (memoryBeforForLoop.getSize() > copyOfMemory.getSize()) {
-            String newIdentifierName = getNameOfNewIdentifier(copyOfMemory, memoryBeforForLoop);
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, newIdentifierName);
-        }
-        // Prüfung, ob line mit "for(a;b;c){ ..." beginnt.
+        checkIfAllIdentifiersAreDefined(endLoopCondition.getContainedVars(), currentMemory);
+
+        AlgorithmMemory memoryBeforeLoop = currentMemory.copyMemory();
+
+        List<AlgorithmCommand> loopAssignment = parseAssignValueCommand(forControlParts[2], currentMemory);
+        // Prüfung, ob bei loopAssignment keine weiteren Bezeichner hinzukamen, außer den Technischen.
+        checkIfNewIdentifierOccur(memoryBeforeLoop, currentMemory);
+
+        // Prüfung, ob line mit "for(a,b,c){ ..." beginnt.
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
                 || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfForControlPart + 1) {
@@ -786,7 +788,7 @@ public abstract class AlgorithmCommandCompiler {
         if (bracketCounter > 0) {
             throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
-        List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), memoryBeforForLoop, alg);
+        List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), currentMemory, alg);
         ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, commandsEndLoopCondition, endLoopCondition, loopAssignment);
 
         // Lokale Variable aus dem Speicher memory wieder herausnehmen.
@@ -798,13 +800,12 @@ public abstract class AlgorithmCommandCompiler {
         throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
     }
 
-    private static String getNameOfNewIdentifier(AlgorithmMemory memoryBefore, AlgorithmMemory memoryAfter) {
-        for (String identifierName : memoryAfter.getMemory().keySet()) {
-            if (!memoryBefore.getMemory().containsKey(identifierName)) {
-                return identifierName;
+    private static void checkIfNewIdentifierOccur(AlgorithmMemory memoryBeforeLoop, AlgorithmMemory currentMemory) throws ParseControlStructureException {
+        for (String identifierName : currentMemory.getMemory().keySet()) {
+            if (!memoryBeforeLoop.getMemory().containsKey(identifierName) && !CompilerUtils.isTechnicalIdentifierName(identifierName)) {
+                throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, identifierName);
             }
         }
-        return null;
     }
 
     private static List<AlgorithmCommand> parseKeywordCommand(String line, boolean keywordsAllowed) throws AlgorithmCompileException, NotDesiredCommandException {
@@ -842,7 +843,7 @@ public abstract class AlgorithmCommandCompiler {
                 if (VALIDATOR.isValidIdentifier(returnValueReplaced)) {
                     throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
                 }
-                String genVarForReturn = CompilerUtils.generateTechnicalVarName(scopeMemory);
+                String genVarForReturn = CompilerUtils.generateTechnicalIdentifierName(scopeMemory);
                 String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + returnValueReplaced;
                 List<AlgorithmCommand> additionalCommandsByAssignment = parseAssignValueCommand(assignValueCommand, scopeMemory);
                 commands.addAll(additionalCommandsByAssignment);
@@ -1015,11 +1016,11 @@ public abstract class AlgorithmCommandCompiler {
             } else if (value instanceof MatrixVariable) {
                 inputParameters[i] = Identifier.createIdentifier(scopeMemory, ((MatrixVariable) value).getName(), IdentifierType.identifierTypeOf(value));
             } else {
-                String genVarName = CompilerUtils.generateTechnicalVarName(scopeMemory);
+                String genVarName = CompilerUtils.generateTechnicalIdentifierName(scopeMemory);
                 try {
                     Identifier genVarIdentifier = Identifier.createIdentifier(scopeMemory, genVarName, IdentifierType.identifierTypeOf(value));
                     inputParameters[i] = genVarIdentifier;
-                    commands.add(new AssignValueCommand(genVarIdentifier, value));
+                    commands.add(new AssignValueCommand(genVarIdentifier, value, AssignValueType.NEW));
                     scopeMemory.addToMemoryInCompileTime(genVarIdentifier);
                 } catch (AlgorithmCompileException e) {
                     throw new ParseAssignValueException(e);
@@ -1027,10 +1028,10 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
 
-        String genVarNameForCalledAlg = CompilerUtils.generateTechnicalVarName(scopeMemory);
+        String genVarNameForCalledAlg = CompilerUtils.generateTechnicalIdentifierName(scopeMemory);
         Identifier identifierForCalledAlg = Identifier.createIdentifier(scopeMemory, genVarNameForCalledAlg, algorithmCallData.getSignature().getReturnType());
         try {
-            commands.add(new AssignValueCommand(identifierForCalledAlg, algorithmCallData.getSignature(), inputParameters));
+            commands.add(new AssignValueCommand(identifierForCalledAlg, algorithmCallData.getSignature(), inputParameters, AssignValueType.NEW));
             scopeMemory.addToMemoryInCompileTime(identifierForCalledAlg);
         } catch (AlgorithmCompileException e) {
             throw new ParseAssignValueException(e);

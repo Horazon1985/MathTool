@@ -7,8 +7,23 @@ import algorithmexecuter.booleanexpression.BooleanExpression;
 
 public enum IdentifierType {
 
-    EXPRESSION, BOOLEAN_EXPRESSION, MATRIX_EXPRESSION;
+    EXPRESSION("expression"), BOOLEAN_EXPRESSION("booleanexpression"), MATRIX_EXPRESSION("matrixexpression");
 
+    private final String value;
+    
+    IdentifierType(String value){
+        this.value = value;
+    }
+    
+    public String getValue() {
+        return this.value;
+    }
+    
+    @Override
+    public String toString() {
+        return this.value;
+    }
+    
     public boolean isSameOrGeneralTypeOf(IdentifierType type) {
         if (type == EXPRESSION && (this == EXPRESSION || this == MATRIX_EXPRESSION)) {
             return true;
@@ -27,17 +42,6 @@ public enum IdentifierType {
             return MATRIX_EXPRESSION;
         }
         return null;
-    }
-
-    @Override
-    public String toString() {
-        if (this == EXPRESSION) {
-            return "expression";
-        }
-        if (this == BOOLEAN_EXPRESSION) {
-            return "booleanexpression";
-        }
-        return "matrixexpression";
     }
 
 }

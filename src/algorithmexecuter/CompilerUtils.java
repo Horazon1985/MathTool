@@ -24,7 +24,7 @@ import java.util.Map;
 public final class CompilerUtils {
 
     public static final String GEN_VAR = "#";
-    
+
     private CompilerUtils() {
     }
 
@@ -455,18 +455,33 @@ public final class CompilerUtils {
         }
         return valuesMap;
     }
-    
+
     /**
-     * Gibt einen Namen für eine technische Variable zurück. Der zurückgegebene
-     * Name ist "gen_var_i" mit dem kleinsten i &ge; 1, welcher in scopeMemory
-     * noch nict vorkommt.
+     * Gibt einen Namen für einen technischen Bezeichner zurück. Der
+     * zurückgegebene Name ist "#i" mit dem kleinsten i &ge; 1, welcher in
+     * scopeMemory noch nict vorkommt.
      */
-    public static String generateTechnicalVarName(AlgorithmMemory scopeMemory) {
+    public static String generateTechnicalIdentifierName(AlgorithmMemory scopeMemory) {
         int i = 1;
         while (scopeMemory.getMemory().containsKey(GEN_VAR + i)) {
             i++;
         }
         return GEN_VAR + i;
+    }
+
+    /**
+     * Gibt zurück, ob name der Name eines technischen Bezeichners ist.
+     */
+    public static boolean isTechnicalIdentifierName(String name) {
+        if (!name.startsWith(GEN_VAR)) {
+            return false;
+        }
+        try {
+            Integer.parseInt(name.substring(GEN_VAR.length()));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

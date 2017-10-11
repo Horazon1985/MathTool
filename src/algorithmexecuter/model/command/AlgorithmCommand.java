@@ -58,6 +58,8 @@ public abstract class AlgorithmCommand {
         return this instanceof ReturnCommand;
     }
     
+    public abstract String toCommandString();
+    
     public abstract Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException;
     
 }

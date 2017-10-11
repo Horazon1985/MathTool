@@ -4,6 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import algorithmexecuter.AlgorithmCompiler;
 import algorithmexecuter.enums.FixedAlgorithmNames;
 import algorithmexecuter.enums.IdentifierType;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
@@ -88,4 +89,16 @@ public class VoidCommand extends AlgorithmCommand {
         throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_NULL_POINTER, identifier.getName());
     }
 
+    @Override
+    public String toCommandString() {
+        String commandString = this.name + ReservedChars.OPEN_BRACKET.getStringValue();
+        for (int i = 0; i < this.identifiers.length; i++) {
+            commandString += this.identifiers[i].getName();
+            if (i < this.identifiers.length - 1) {
+                commandString += ReservedChars.ARGUMENT_SEPARATOR.getStringValue() + " ";
+            }
+        }
+        return commandString + ReservedChars.CLOSE_BRACKET.getStringValue();
+    }
+    
 }

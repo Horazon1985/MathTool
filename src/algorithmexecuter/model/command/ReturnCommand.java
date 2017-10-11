@@ -1,5 +1,7 @@
 package algorithmexecuter.model.command;
 
+import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.identifier.Identifier;
 
@@ -23,6 +25,11 @@ public class ReturnCommand extends AlgorithmCommand {
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) {
         return scopeMemory.getMemory().get(this.identifier.getName());
+    }
+    
+    @Override
+    public String toCommandString() {
+        return Keyword.RETURN.getValue() + " " + this.identifier.getName() + ReservedChars.LINE_SEPARATOR.getStringValue();
     }
     
 }

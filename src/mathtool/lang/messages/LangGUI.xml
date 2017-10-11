@@ -478,6 +478,12 @@
         <Russian>Выражение [0]:</Russian>
     </object>
     <!-- MathToolAlgorithmsGUI -->    
+    <object id = "GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM">
+        <German>Algorithmus speichern</German>
+        <English>Save algorithm</English>
+        <Ukrainian>Зберегти алгоритм</Ukrainian>
+        <Russian>Сохранить алгоритм</Russian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM">
         <German>Algorithmus laden</German>
         <English>Load algorithm</English>
@@ -507,6 +513,18 @@
         <English>Format</English>
         <Ukrainian>Відформатувати</Ukrainian>
         <Russian>Отформатировать</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_SEE_COMPILED_CODE">
+        <German>Compilierten Code ansehen</German>
+        <English>See compiled code</English>
+        <Ukrainian>Дивитися зкомпільований код</Ukrainian>
+        <Russian>Смотреть скомпилированный код</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_SEE_EDITOR_CODE">
+        <German>Editorcode ansehen</German>
+        <English>See editor code</English>
+        <Ukrainian>Дивитися код редагування</Ukrainian>
+        <Russian>Смотреть код редактирования</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM">
         <German>Kompiliere Algoirithmus ...</German>

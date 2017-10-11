@@ -12,6 +12,9 @@ import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.enums.AssignValueType;
+import algorithmexecuter.enums.Operators;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Signature;
 import exceptions.EvaluationException;
@@ -22,35 +25,31 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
-    private Signature targetAlgorithmSignature;
-    private Identifier[] targetAlgorithmArguments;
+    private final AssignValueType type;
+    private final Signature targetAlgorithmSignature;
+    private final Identifier[] targetAlgorithmArguments;
     private Algorithm targetAlgorithm;
 
-    public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression) throws AlgorithmCompileException {
+    public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression, AssignValueType type) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, IdentifierType.identifierTypeOf(targetExpression))) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
+        this.type = type;
+        this.targetAlgorithmSignature = null;
+        this.targetAlgorithmArguments = null;
     }
 
-    public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature, Identifier[] targetAlgorithmArguments) throws AlgorithmCompileException {
+    public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature, Identifier[] targetAlgorithmArguments, AssignValueType type) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetAlgorithmSignature.getReturnType())) {
             throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
+        this.type = type;
         this.targetAlgorithmSignature = targetAlgorithmSignature;
         this.targetAlgorithmArguments = targetAlgorithmArguments;
-    }
-
-    public AssignValueCommand(Identifier identifierSrc, Algorithm targetAlgorithm) throws AlgorithmCompileException {
-        if (!areTypesCompatible(identifierSrc, targetAlgorithm.getReturnType())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
-        }
-        this.identifierSrc = identifierSrc;
-        this.targetExpression = null;
-        this.targetAlgorithm = targetAlgorithm;
     }
 
     private boolean areTypesCompatible(Identifier identifierSrc, IdentifierType targetType) {
@@ -69,8 +68,16 @@ public class AssignValueCommand extends AlgorithmCommand {
         return targetAlgorithmSignature;
     }
 
+    public Identifier[] getTargetAlgorithmArguments() {
+        return targetAlgorithmArguments;
+    }
+
     public Algorithm getTargetAlgorithm() {
         return targetAlgorithm;
+    }
+
+    public AssignValueType getType() {
+        return type;
     }
 
     public void setTargetAlgorithm(Algorithm targetAlgorithm) {
@@ -79,13 +86,13 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        String command = "AssignValueCommand[identifierSrc = " + this.identifierSrc;
+        String command = "AssignValueCommand[type = " + this.type + ", identifierSrc = " + this.identifierSrc;
         if (this.targetExpression != null) {
             return command + ", targetExpression = " + this.targetExpression + "]";
         }
         return command + ", targetAlgorithm = " + this.targetAlgorithmSignature.toString() + "]";
     }
-    
+
     private Set<String> getVarsFromAlgorithmParameters(Algorithm alg) {
         Set<String> varsInAlgorithmSignature = new HashSet<>();
         AbstractExpression abstrExpr;
@@ -164,6 +171,28 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         return targetExprSimplified;
 
+    }
+
+    @Override
+    public String toCommandString() {
+        String commandString = "";
+        if (this.type == AssignValueType.NEW) {
+            commandString += this.identifierSrc.getType().toString() + " ";
+        }
+        commandString += this.identifierSrc.getName() + Operators.DEFINE.getValue();
+        if (this.targetExpression != null) {
+            commandString += this.targetExpression.toString();
+        } else {
+            commandString += this.targetAlgorithm.getName() + ReservedChars.OPEN_BRACKET.getStringValue();
+            for (int i = 0; i < this.targetAlgorithmArguments.length; i++) {
+                commandString += this.targetAlgorithmArguments[i].getName();
+                if (i < this.targetAlgorithmArguments.length - 1) {
+                    commandString += ReservedChars.ARGUMENT_SEPARATOR.getStringValue();
+                }
+            }
+            commandString += ReservedChars.CLOSE_BRACKET.getStringValue();
+        }
+        return commandString + ReservedChars.LINE_SEPARATOR.getStringValue();
     }
 
 }

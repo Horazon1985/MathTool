@@ -5,6 +5,7 @@ import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.model.command.IfElseControlStructure;
 import algorithmexecuter.model.command.WhileControlStructure;
 import algorithmexecuter.enums.IdentifierType;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
 import algorithmexecuter.model.identifier.Identifier;
@@ -18,8 +19,6 @@ public class Algorithm {
     private final Identifier[] inputParameters;
     private final IdentifierType returnType;
     private final List<AlgorithmCommand> commands;
-
-    private Identifier[] inputParameterValues = new Identifier[0];
 
     private Algorithm(String name, Identifier[] inputParameters, IdentifierType returnType, List<AlgorithmCommand> commands) {
         this.name = name;
@@ -54,10 +53,6 @@ public class Algorithm {
 
     public List<AlgorithmCommand> getCommands() {
         return commands;
-    }
-
-    public void setInputParameterValues(Identifier[] inputParameterValues) {
-        this.inputParameterValues = inputParameterValues;
     }
 
     @Override
@@ -143,6 +138,28 @@ public class Algorithm {
 
     private AlgorithmMemory getInitialAlgorithmMemory() {
         return new AlgorithmMemory(this, this.getInputParameters());
+    }
+
+    public String toCommandString() {
+        String commandString = "";
+        if (this.returnType != null) {
+            commandString += this.returnType.getValue() + " ";
+        }
+        commandString += this.name + ReservedChars.OPEN_BRACKET.getStringValue();
+        for (int i = 0; i < this.inputParameters.length; i++) {
+            commandString += this.inputParameters[i].getType().getValue() + " " + this.inputParameters[i].getName();
+            if (i < this.inputParameters.length - 1) {
+                commandString += ReservedChars.ARGUMENT_SEPARATOR.getStringValue() + " ";
+            }
+        }
+        commandString += ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue();
+        
+        for (AlgorithmCommand command : this.commands) {
+            commandString += command.toCommandString();
+        }
+        
+        return commandString + ReservedChars.END.getStringValue();
+        
     }
 
 }

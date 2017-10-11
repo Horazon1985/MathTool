@@ -134,62 +134,62 @@
     <object id = "AC_MAIN_ALGORITHM_DOES_NOT_EXIST">
         <German>Es wurde kein Algorithmus mit dem Namen 'main' gefunden.</German>
         <English>Algorithm named 'main' not found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Не знайдено алгоритм з іменем 'main'.</Ukrainian>
+        <Russian>Алгоритм с именем 'main' не найден.</Russian>
     </object>
     <object id = "AC_MAIN_ALGORITHM_NOT_ALLOWED_TO_CONTAIN_PARAMETERS">
         <German>Der Algorithmus mit dem Namen 'main' darf keine Parameter enthalten.</German>
         <English>The algorithm named 'main' is not allowed to contain parameters.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритм з іменем 'main' не повинен мати параметрів.</Ukrainian>
+        <Russian>Алгоритм с именем 'main' не должен иметь параметров.</Russian>
     </object>
     <object id = "AC_VOID_ALGORITHM_MUST_CONTAIN_ONLY_SIMPLE_RETURNS">
         <German>Ein Algorithmus ohne Rückgabewert darf keine Objekte zurückgeben.</German>
         <English>An algorithm with void return type is not allowed to return objects.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Алгоритм з типом повернення void не повинен повертати об'єкти.</Ukrainian>
+        <Russian>Алгоритм с типом возврата void не должен возвращать объекты.</Russian>
     </object>
     <object id = "AC_MISSING_RETURN_STATEMENT">
         <German>Kein Rückgabewert gefunden.</German>
         <English>No return value found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Не знайдено змінної повернення.</Ukrainian>
+        <Russian>Не найдено переменную возврата.</Russian>
     </object>
     <object id = "AC_WRONG_RETURN_TYPE">
         <German>Rückgabetyp stimmt nicht mit dem erwarteten Rückgabetyp überein.</German>
         <English>Return type does not coincide with expected return type.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Тип що повертається не співпадає з очікуваним типов повернення.</Ukrainian>
+        <Russian>Возвращаемый тип не совпадает с ожидаемым типом возврата.</Russian>
     </object>
     <object id = "AC_UNREACHABLE_CODE">
         <German>Unerreichbarer Code im Algorithmus '[0]' gefunden.</German>
-        <English>Unreachable code in algorithm '[0]'found.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <English>Unreachable code in algorithm '[0]' found.</English>
+        <Ukrainian>Код, що не використовується знайдено у алгоритмі '[0]'.</Ukrainian>
+        <Russian>Неиспользуемый код найден в алгоритме '[0]'.</Russian>
     </object>
     <object id = "AC_BOOLEAN_EXPRESSION_EMPTY_OR_INCOMPLETE">
         <German>Der boolsche Ausdruck oder ein Teilausdruck ist leer oder unvollständig.</German>
         <English>The boolean expression or a part of the expression is either empty or incomplete.</English>
-        <Ukrainian>??? вираз або частина виразу порожня або неповна.</Ukrainian>
-        <Russian>??? выражение или часть выражения пуста либо неполна.</Russian>
+        <Ukrainian>Булів вираз або частина виразу порожня або неповна.</Ukrainian>
+        <Russian>Булево выражение или часть выражения пуста либо неполна.</Russian>
     </object>
     <object id = "AC_LEFT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY">
         <German>Linke Seite eines boolschen binären Operators ist leer.</German>
         <English>The left side of a boolean binary operator is empty.</English>
-        <Ukrainian>Ліва частина ??? бінарного оператора порожня.</Ukrainian>
-        <Russian>Левая часть ??? бинарного оператора пуста.</Russian>
+        <Ukrainian>Ліва частина бульового бінарного оператора порожня.</Ukrainian>
+        <Russian>Левая часть булевого бинарного оператора пуста.</Russian>
     </object>
     <object id = "AC_RIGHT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY">
         <German>Rechte Seite eines boolschen binären Operators ist leer.</German>
         <English>The right side of a boolean binary operator is empty.</English>
-        <Ukrainian>Права частина ??? бінарного оператора порожня.</Ukrainian>
-        <Russian>Правая часть ??? бинарного оператора пуста.</Russian>
+        <Ukrainian>Права частина бульового бінарного оператора порожня.</Ukrainian>
+        <Russian>Правая часть булевого бинарного оператора пуста.</Russian>
     </object>
     <object id = "AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED">
         <German>Folgender boolscher Ausdruck/Teilausdruck kann nicht interpretiert werden: [0]</German>
         <English>The following boolean expression/part of a logical expression cannot be interpreted: [0]</English>
-        <Ukrainian>Наступний ??? вираз/частина логічного виразу не може бути проінтерпритована: [0]</Ukrainian>
-        <Russian>Следующее ??? выражение/часть логического выражения не может быть проинтерпритирована: [0]</Russian>
+        <Ukrainian>Наступний булів вираз/частина логічного виразу не може бути проінтерпритована: [0]</Ukrainian>
+        <Russian>Следующее булевое выражение/часть логического выражения не может быть проинтерпритирована: [0]</Russian>
     </object>
 
     <object id = "AC_UNKNOWN_ERROR">

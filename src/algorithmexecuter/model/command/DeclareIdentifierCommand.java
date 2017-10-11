@@ -1,5 +1,6 @@
 package algorithmexecuter.model.command;
 
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
@@ -27,4 +28,9 @@ public class DeclareIdentifierCommand extends AlgorithmCommand {
         return null;
     }
 
+    @Override
+    public String toCommandString() {
+        return this.identifierSrc.getType().toString() + " " + this.identifierSrc.getName() + ReservedChars.LINE_SEPARATOR.getStringValue();
+    }
+    
 }

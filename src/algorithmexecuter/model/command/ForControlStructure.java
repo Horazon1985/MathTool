@@ -5,6 +5,8 @@ import algorithmexecuter.AlgorithmExecuter;
 import algorithmexecuter.CompilerUtils;
 import algorithmexecuter.ExecutionUtils;
 import algorithmexecuter.booleanexpression.BooleanExpression;
+import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmBreakException;
 import algorithmexecuter.exceptions.AlgorithmContinueException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
@@ -88,6 +90,29 @@ public class ForControlStructure extends ControlStructure {
         String forCommandString = "for (" + this.initialization + "; " + this.endLoopCommands + ", " + this.endLoopCondition + "; " + this.loopAssignment + "){";
         forCommandString = this.commandBlocks[0].stream().map((c) -> c.toString() + "; \n").reduce(forCommandString, String::concat);
         return forCommandString + "}";
+    }
+
+    @Override
+    public String toCommandString() {
+
+        String commandString = Keyword.FOR.getValue() + ReservedChars.OPEN_BRACKET.getStringValue();
+
+        for (AlgorithmCommand command : this.initialization) {
+            commandString += command.toCommandString();
+        }
+        for (AlgorithmCommand command : this.endLoopCommands) {
+            commandString += command.toCommandString();
+        }
+        commandString += this.endLoopCondition.toString() + ReservedChars.LINE_SEPARATOR.getStringValue();
+        for (AlgorithmCommand command : this.loopAssignment) {
+            commandString += command.toCommandString();
+        }
+
+        commandString += ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue();
+        for (AlgorithmCommand command : this.commandBlocks[0]) {
+            commandString += command.toCommandString();
+        }
+        return commandString + ReservedChars.END.getStringValue();
     }
 
 }

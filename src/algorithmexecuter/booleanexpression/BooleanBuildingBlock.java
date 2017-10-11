@@ -153,7 +153,7 @@ public class BooleanBuildingBlock extends BooleanExpression {
 
     @Override
     public String toString() {
-        return this.left.toString() + " " + this.comparingOperator.getValue() + " " + this.right.toString();
+        return this.left.toString() + this.comparingOperator.getValue() + this.right.toString();
     }
 
     private static AbstractExpression replaceVarsByIdentifierValues(AbstractExpression abstrExpr, Map<String, AbstractExpression> valuesMap) {
