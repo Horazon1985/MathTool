@@ -349,14 +349,12 @@ public class AlgorithmCompileTests {
             }
 
             assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
-            assertEquals(mainAlg.getCommands().size(), 4);
+            assertEquals(mainAlg.getCommands().size(), 3);
             assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
-            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
-            assertTrue(mainAlg.getCommands().get(2).isForControlStructure());
-            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
-            assertEquals(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().size(), 2);
-            assertTrue(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().get(0).isAssignValueCommand());
-            assertTrue(((ForControlStructure) mainAlg.getCommands().get(2)).getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isForControlStructure());
+            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+            assertEquals(((ForControlStructure) mainAlg.getCommands().get(1)).getCommands().size(), 1);
+            assertTrue(((ForControlStructure) mainAlg.getCommands().get(1)).getCommands().get(0).isAssignValueCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
