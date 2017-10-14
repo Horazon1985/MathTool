@@ -310,7 +310,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseSimpleAlgorithmWithForLoopTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
@@ -359,7 +359,7 @@ public class AlgorithmCompileTests {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
     @Test
     public void parseAlgorithmWithForLoopAndBreakTest() {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2; if (i==5){break;}}return a;}";
@@ -577,6 +577,16 @@ public class AlgorithmCompileTests {
     }
 
     @Test
+    public void parseAlgorithmWithoutReturnCommandTest2() {
+        String input = "expression main(){expression result=1;if(result>0){result=3*result;}}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz fehlendem 'return' kompiliert.");
+        } catch (AlgorithmCompileException e) {
+        }
+    }
+
+    @Test
     public void parseAlgorithmWithDoubledParametersTest() {
         String input = "expression main(){expression ggt = computeggt(15, 25); return ggt;} "
                 + "expression computeggt(expression a, expression a){return a;}";
@@ -607,6 +617,22 @@ public class AlgorithmCompileTests {
             fail("Der Algorithmus " + input + " wurde trotz doppelt fehlerhafter For-Struktur kompiliert.");
         } catch (AlgorithmCompileException e) {
             assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_BRACKET_EXPECTED, ")"));
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithWrongAssignmentTest() {
+        String input = "matrixexpression main(){\n"
+                + "	matrixexpression a=[3,0;-2,1];\n"
+                + "	for(expression i=0,i<4,i=i+1){\n"
+                + "		a=3*a+2;\n"
+                + "	}\n"
+                + "	return a;\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz fehlerhafter Zuweisung kompiliert.");
+        } catch (AlgorithmCompileException e) {
         }
     }
 

@@ -379,8 +379,8 @@ public final class CompilerUtils {
             }
             List<AlgorithmCommand> commandsIfPart = ((IfElseControlStructure) lastCommand).getCommandsIfPart();
             List<AlgorithmCommand> commandsElsePart = ((IfElseControlStructure) lastCommand).getCommandsElsePart();
-            checkForContainingReturnCommand(commandsIfPart, null);
-            checkForContainingReturnCommand(commandsElsePart, null);
+            checkForContainingReturnCommand(commandsIfPart, returnType);
+            checkForContainingReturnCommand(commandsElsePart, returnType);
         }
     }
 

@@ -18,6 +18,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -31,6 +34,12 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private static final String PATH_LOGO_MATHTOOL_ALGORITHMS = "icons/MathToolAlgorithmsLogo.png";
     private static final String PATH_RUN_LOGO = "icons/RunLogo.png";
     private static final String PATH_STOP_LOGO = "icons/StopLogo.png";
+
+    private JMenuBar algorithmsMenuBar;
+    private JMenu algorithmsMenuFile;
+    private JMenuItem algorithmsMenuItemOpen;
+    private JMenuItem algorithmsMenuItemSave;
+    private JMenuItem algorithmsMenuItemQuit;
 
     private JPanel headerPanel;
     private JLabel headerLabel;
@@ -60,8 +69,10 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private boolean computing;
 
+    private static final String GUI_MathToolAlgorithmsGUI_FILE = "GUI_MathToolAlgorithmsGUI_FILE";
     private static final String GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM = "GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM";
+    private static final String GUI_MathToolAlgorithmsGUI_QUIT = "GUI_MathToolAlgorithmsGUI_QUIT";
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
     private static final String GUI_MathToolAlgorithmsGUI_STOP = "GUI_MathToolAlgorithmsGUI_STOP";
     private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
@@ -71,6 +82,10 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private static MathToolAlgorithmsGUI instance = null;
 
+    public JTextArea getAlgorithmEditor() {
+        return this.algorithmEditor;
+    }
+    
     public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight, String titleID) {
         if (instance == null) {
             instance = new MathToolAlgorithmsGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, titleID);
@@ -116,6 +131,37 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             setBounds(mathtoolGuiX + (mathtoolGuiWidth - this.headerImage.getIconWidth()) / 2, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
+            this.algorithmsMenuBar = new JMenuBar();
+            this.algorithmsMenuFile = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FILE));
+            this.algorithmsMenuItemOpen = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM));
+            this.algorithmsMenuItemSave = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM));
+            this.algorithmsMenuItemQuit = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_QUIT));
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemOpen);
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemSave);
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemQuit);
+            this.algorithmsMenuBar.add(this.algorithmsMenuFile);
+            setJMenuBar(this.algorithmsMenuBar);
+
+            this.algorithmsMenuItemOpen.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    MathToolAlgorithmsController.loadAlgorithm();
+                }
+            });
+            this.algorithmsMenuItemSave.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    MathToolAlgorithmsController.saveAlgorithm();
+                }
+            });
+            this.algorithmsMenuItemQuit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    instance.dispose();
+                    instance = null;
+                }
+            });
+
             // Algorithmeneditor definieren.
             this.algorithmEditor = new JTextArea();
             add(this.algorithmEditor);
@@ -124,10 +170,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             this.algorithmEditorPane = new JScrollPane(this.algorithmEditor,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
-            this.algorithmEditor.setCaretPosition(this.algorithmEditor.getDocument().getLength());
-
-            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 500);
+            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 520);
             this.algorithmEditor.setCaretPosition(this.algorithmEditor.getDocument().getLength());
             add(this.algorithmEditorPane);
             this.algorithmEditorPane.setVisible(true);
@@ -177,6 +220,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             };
             this.algorithmEditor.addKeyListener(this.keyListener);
 
+            // Ausgabefeld definieren.
             this.outputArea = new JTextPane();
             add(this.outputArea);
             this.outputArea.setContentType("text/html; charset=UTF-8");
@@ -219,8 +263,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     if (!computing) {
                         computing = true;
                         String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
-//                        String algStringWithoutUTF8 = Parser.unescapeEntities(algString, false);
-//                        compileAndExecuteAlgorithmAlgorithmFile(algStringWithoutUTF8);
                         compileAndExecuteAlgorithmAlgorithmFile(algString);
                     } else {
                         computing = false;
@@ -229,31 +271,27 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 }
             });
 
-            this.formatButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    formatCode();
-                }
+            this.formatButton.addActionListener((ActionEvent e) -> {
+                formatCode();
             });
 
-            this.seeCompiledCodeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    if (codeVisible) {
-                        seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_EDITOR_CODE));
-                        code = algorithmEditor.getText();
-                        algorithmEditor.setBackground(Color.LIGHT_GRAY);
-                        algorithmEditor.setText(compiledCode);
-                    } else {
-                        seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_COMPILED_CODE));
-                        algorithmEditor.setBackground(Color.WHITE);
-                        algorithmEditor.setText(code);
-                    }
-                    codeVisible = !codeVisible;
-                    algorithmEditor.setEditable(codeVisible);
+            this.seeCompiledCodeButton.addActionListener((ActionEvent e) -> {
+                if (codeVisible) {
+                    seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_EDITOR_CODE));
+                    code = algorithmEditor.getText();
+                    algorithmEditor.setBackground(Color.LIGHT_GRAY);
+                    algorithmEditor.setText(compiledCode);
+                } else {
+                    seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_COMPILED_CODE));
+                    algorithmEditor.setBackground(Color.WHITE);
+                    algorithmEditor.setText(code);
                 }
+                codeVisible = !codeVisible;
+                algorithmEditor.setEditable(codeVisible);
             });
 
+            MathToolAlgorithmsController.setMathToolAlgorithmsGUI(this);
+            
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
@@ -262,7 +300,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
         }
 
     }
-
+    
     private void formatCode() {
         String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(algorithmEditor.getText());
         algorithmEditor.setText(formattedCode);

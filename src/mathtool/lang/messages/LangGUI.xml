@@ -477,7 +477,13 @@
         <Ukrainian>Вираз [0]:</Ukrainian>
         <Russian>Выражение [0]:</Russian>
     </object>
-    <!-- MathToolAlgorithmsGUI -->    
+    <!-- MathToolAlgorithmsGUI --> 
+    <object id = "GUI_MathToolAlgorithmsGUI_FILE">
+        <German>Datei</German>
+        <English>File</English>
+        <Russian>Файл</Russian>
+        <Ukrainian>Файл</Ukrainian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM">
         <German>Algorithmus speichern</German>
         <English>Save algorithm</English>
@@ -489,6 +495,12 @@
         <English>Load algorithm</English>
         <Ukrainian>Завантажити алгоритм</Ukrainian>
         <Russian>Загрузить алгоритм</Russian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_QUIT">
+        <German>Verlassen</German>
+        <English>Quit</English>
+        <Russian>Выход</Russian>
+        <Ukrainian>Вихід</Ukrainian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_RUN">
         <German>Ausführen</German>

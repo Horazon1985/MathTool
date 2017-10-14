@@ -155,6 +155,8 @@ public class AssignValueCommand extends AlgorithmCommand {
             for (Identifier identifier : scopeMemory.getMemory().values()) {
                 if (identifier.getValue() instanceof Expression) {
                     matExprSimplified = matExprSimplified.replaceVariable(identifier.getName(), (Expression) identifier.getValue());
+                } else if (identifier.getValue() instanceof MatrixExpression) {
+                    matExprSimplified = matExprSimplified.replaceMatrixVariable(identifier.getName(), (MatrixExpression) identifier.getValue());
                 }
             }
             targetExprSimplified = matExprSimplified;
