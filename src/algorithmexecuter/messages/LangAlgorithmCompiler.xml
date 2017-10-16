@@ -167,6 +167,12 @@
         <Ukrainian>Код, що не використовується знайдено у алгоритмі '[0]'.</Ukrainian>
         <Russian>Неиспользуемый код найден в алгоритме '[0]'.</Russian>
     </object>
+    <object id = "AC_IDENTIFIER_MAYBE_NOT_INITIALIZED">
+        <German>Der Bezeichner '[0]' ist möglicherweise nicht initialisiert.</German>
+        <English>The identifier '[0]' might not have been initialized.</English>
+        <Ukrainian>Ідентифікатор '[0]', ймовірно, не було ініціалізовано.</Ukrainian>
+        <Russian>Идентификатор '[0]', вероятно,  не был инициализирован.</Russian>
+    </object>
     <object id = "AC_BOOLEAN_EXPRESSION_EMPTY_OR_INCOMPLETE">
         <German>Der boolsche Ausdruck oder ein Teilausdruck ist leer oder unvollständig.</German>
         <English>The boolean expression or a part of the expression is either empty or incomplete.</English>

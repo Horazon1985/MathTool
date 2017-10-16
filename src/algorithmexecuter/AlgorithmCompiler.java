@@ -310,6 +310,8 @@ public abstract class AlgorithmCompiler {
         checkIfVoidAlgorithmContainsOnlyAtMostSimpleReturns(alg);
         // Prüfung, ob es bei Algorithmen mit Rückgabewerten immer Rückgaben mit korrektem Typ gibt.
         checkIfNonVoidAlgorithmContainsAlwaysReturnsWithCorrectReturnType(alg);
+        // Prüfung, ob alle eingeführten Bezeichner auch initialisiert wurden.
+        checkIfAllIdentifierAreInitialized(alg);
         // Prüfung, ob es bei (beliebigen) Algorithmen keinen Code hinter einem Return gibt.
         checkIfAlgorithmContainsNoDeadCode(alg);
     }
@@ -333,6 +335,10 @@ public abstract class AlgorithmCompiler {
 
     private static void checkIfAlgorithmContainsNoDeadCode(Algorithm alg) throws AlgorithmCompileException {
         CompilerUtils.checkForUnreachableCodeInBlock(alg.getCommands(), alg);
+    }
+
+    private static void checkIfAllIdentifierAreInitialized(Algorithm alg) throws AlgorithmCompileException {
+        CompilerUtils.checkIfAllIdentifierAreInitialized(alg.getCommands(), alg);
     }
 
     private static void replaceAlgorithmSignaturesByAlgorithmReferencesInAssignValueCommands(List<AlgorithmCommand> commands) {

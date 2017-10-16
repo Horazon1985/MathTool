@@ -16,10 +16,14 @@ import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.AlgorithmSignatureStorage;
 import algorithmexecuter.model.AlgorithmStorage;
 import algorithmexecuter.model.Signature;
+import algorithmexecuter.model.command.AssignValueCommand;
+import algorithmexecuter.model.command.DeclareIdentifierCommand;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class CompilerUtils {
 
@@ -438,6 +442,55 @@ public final class CompilerUtils {
             }
         }
         return ifPartContainsReturnStatement && elsePartContainsReturnStatement;
+    }
+
+    public static void checkIfAllIdentifierAreInitialized(List<AlgorithmCommand> commands, Algorithm alg) throws AlgorithmCompileException {
+        Map<String, Boolean> declaredIdentifiers = new HashMap<>();
+        for (AlgorithmCommand command : commands) {
+            if (command.isDeclareIDentifierCommand()) {
+                declaredIdentifiers.put(((DeclareIdentifierCommand) command).getIdentifierSrc().getName(), false);
+            } else if (command.isAssignValueCommand()
+                    && declaredIdentifiers.keySet().contains(((AssignValueCommand) command).getIdentifierSrc().getName())) {
+                declaredIdentifiers.put(((AssignValueCommand) command).getIdentifierSrc().getName(), true);
+            } else if (command.isIfElseControlStructure()) {
+                Set<String> assignedIdentifiers = getIdentifiersWhichValueIsAssigned((IfElseControlStructure) command);
+                for (String identifier : assignedIdentifiers) {
+                    if (declaredIdentifiers.keySet().contains(identifier)) {
+                        declaredIdentifiers.put(identifier, true);
+                    }
+                }
+            }
+        }
+
+        for (String identifierName : declaredIdentifiers.keySet()) {
+            if (!declaredIdentifiers.get(identifierName)) {
+                throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_MAYBE_NOT_INITIALIZED, identifierName);
+            }
+        }
+    }
+
+    private static Set<String> getIdentifiersWhichValueIsAssigned(IfElseControlStructure ifElseControlStructure) {
+        Set<String> assignedIdentifiers = new HashSet<>();
+        Set<String> assignedIdentifiersInIfPart = getIdentifiersInCommandBlockWhichValueIsAssigned(ifElseControlStructure.getCommandsIfPart());
+        Set<String> assignedIdentifiersInElsePart = getIdentifiersInCommandBlockWhichValueIsAssigned(ifElseControlStructure.getCommandsElsePart());
+        for (String identifier : assignedIdentifiersInIfPart) {
+            if (assignedIdentifiersInElsePart.contains(identifier)) {
+                assignedIdentifiers.add(identifier);
+            }
+        }
+        return assignedIdentifiers;
+    }
+
+    private static Set<String> getIdentifiersInCommandBlockWhichValueIsAssigned(List<AlgorithmCommand> commands) {
+        Set<String> assignedIdentifiers = new HashSet<>();
+        for (AlgorithmCommand command : commands) {
+            if (command.isAssignValueCommand()) {
+                assignedIdentifiers.add(((AssignValueCommand) command).getIdentifierSrc().getName());
+            } else if (command.isIfElseControlStructure()) {
+                assignedIdentifiers.addAll(getIdentifiersWhichValueIsAssigned((IfElseControlStructure) command));
+            }
+        }
+        return assignedIdentifiers;
     }
 
     public static Map<String, AbstractExpression> extractValuesOfIdentifiers(AlgorithmMemory scopeMemory) {

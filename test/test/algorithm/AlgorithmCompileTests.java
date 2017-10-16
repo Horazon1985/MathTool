@@ -636,4 +636,44 @@ public class AlgorithmCompileTests {
         }
     }
 
+    @Test
+    public void parseAlgorithmWithNotNecessaryDefinedVariableTest() {
+        String input = "expression main(){\n"
+                + "	expression a;\n"
+                + "	expression b;\n"
+                + "	if (true) {;\n"
+                + "          a=10;\n"
+                + "          b=5;\n"
+                + "	}else{\n"
+                + "          b=7;\n"
+                + "	}\n"
+                + "	return a;\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz nicht initialisierter Variable kompiliert.");
+        } catch (AlgorithmCompileException e) {
+            assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_IDENTIFIER_MAYBE_NOT_INITIALIZED, "a"));
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithNotNecessaryDefinedVariableAndWhileLoopTest() {
+        String input = "expression main(){\n"
+                + "	expression a;\n"
+                + "	expression b=1;\n"
+                + "	while (b<3) {;\n"
+                + "          a=1;\n"
+                + "          b=b+1;\n"
+                + "	}\n"
+                + "	return a;\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            fail("Der Algorithmus " + input + " wurde trotz nicht initialisierter Variable kompiliert.");
+        } catch (AlgorithmCompileException e) {
+            assertEquals(e.getMessage(), Translator.translateOutputMessage(CompileExceptionTexts.AC_IDENTIFIER_MAYBE_NOT_INITIALIZED, "a"));
+        }
+    }
+
 }
