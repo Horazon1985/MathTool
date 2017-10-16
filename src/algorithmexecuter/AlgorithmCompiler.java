@@ -53,10 +53,10 @@ public abstract class AlgorithmCompiler {
         }
 
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (bracketCounter < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
         }
 
         // Prüfung, ob die Signatur des Main-Algorithmus existiert.
@@ -139,12 +139,12 @@ public abstract class AlgorithmCompiler {
                 lastEndOfAlgorithm = i;
             }
         }
-
+        
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (bracketCounter < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
         }
 
         // Prüfung, ob ein Main-Algorithmus existiert.

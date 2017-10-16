@@ -10,39 +10,36 @@ public class MathToolAlgorithmsControllerTest {
     public void formatTest() {
         String inputSourceCode = "main() {expression x = 5; return x;}";
         String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(inputSourceCode);
-        Assert.assertEquals(formattedCode, "main(){\n"
+        Assert.assertEquals("main(){\n"
                 + "\texpression x=5;\n"
                 + "\treturn x;\n"
-                + "}\n");
+                + "}\n\n", formattedCode);
     }
 
     @Test
     public void formatTest2() {
         String inputSourceCode = "main() {expression returnresult = 5; return returnresult;}";
         String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(inputSourceCode);
-        Assert.assertEquals(formattedCode, "main(){\n"
+        Assert.assertEquals("main(){\n"
                 + "\texpression returnresult=5;\n"
                 + "\treturn returnresult;\n"
-                + "}\n");
+                + "}\n\n", formattedCode);
     }
 
     @Test
     public void formatTest3() {
         String inputSourceCode = "matrixexpression main(){matrixexpression a=[1,1;2,-5]*[3;4];matrixexpression b=[7;15];if(a==b){return a;}else{return b;}}";
         String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(inputSourceCode);
-//        Assert.assertEquals(formattedCode, "matrixexpression main(){\n"
-//                + "\tmatrixexpression a=[1,1;\n"
-//                + "\t2,-5]*[3;\n"
-//                + "\t4];\n"
-//                + "\tmatrixexpression b=[7;\n"
-//                + "\t15];\n"
-//                + "\tif(a==b){\n"
-//                + "\t\treturn a;\n"
-//                + "\t}\n"
-//                + "\telse{\n"
-//                + "\treturn b;\n"
-//                + "\t}\n"
-//                + "}\n");
+        Assert.assertEquals(formattedCode, "matrixexpression main(){\n"
+                + "\tmatrixexpression a=[1,1;2,-5]*[3;4];\n"
+                + "\tmatrixexpression b=[7;15];\n"
+                + "\tif(a==b){\n"
+                + "\t\treturn a;\n"
+                + "\t}\n"
+                + "\telse{\n"
+                + "\t\treturn b;\n"
+                + "\t}\n"
+                + "}\n\n");
     }
 
 }

@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -142,24 +143,15 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.algorithmsMenuBar.add(this.algorithmsMenuFile);
             setJMenuBar(this.algorithmsMenuBar);
 
-            this.algorithmsMenuItemOpen.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MathToolAlgorithmsController.loadAlgorithm();
-                }
+            this.algorithmsMenuItemOpen.addActionListener((ActionEvent e) -> {
+                MathToolAlgorithmsController.loadAlgorithm();
             });
-            this.algorithmsMenuItemSave.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MathToolAlgorithmsController.saveAlgorithm();
-                }
+            this.algorithmsMenuItemSave.addActionListener((ActionEvent e) -> {
+                MathToolAlgorithmsController.saveAlgorithm();
             });
-            this.algorithmsMenuItemQuit.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    instance.dispose();
-                    instance = null;
-                }
+            this.algorithmsMenuItemQuit.addActionListener((ActionEvent e) -> {
+                instance.dispose();
+                instance = null;
             });
 
             // Algorithmeneditor definieren.
@@ -257,17 +249,14 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.seeCompiledCodeButton.setBounds(3 * PADDING + 400, currentComponentLevel, 320, 30);
 
             // Actions definieren.
-            this.runButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    if (!computing) {
-                        computing = true;
-                        String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
-                        compileAndExecuteAlgorithmAlgorithmFile(algString);
-                    } else {
-                        computing = false;
-                        computingSwingWorker.cancel(true);
-                    }
+            this.runButton.addActionListener((ActionEvent ae) -> {
+                if (!computing) {
+                    computing = true;
+                    String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
+                    compileAndExecuteAlgorithmAlgorithmFile(algString);
+                } else {
+                    computing = false;
+                    computingSwingWorker.cancel(true);
                 }
             });
 
@@ -296,7 +285,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             validate();
             repaint();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
         }
 
     }
@@ -322,6 +311,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 runButton.setIcon(stopIcon);
 
                 try {
+                    // Zunächst formatieren.
+                    formatCode();
                     // Algorithmus kompilieren.
                     AlgorithmOutputPrinter.clearOutput();
                     AlgorithmOutputPrinter.printStartParsingAlgorithms();

@@ -8,6 +8,8 @@ import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
+import algorithmexecuter.model.command.DoWhileControlStructure;
+import algorithmexecuter.model.command.ForControlStructure;
 import algorithmexecuter.model.identifier.Identifier;
 import exceptions.EvaluationException;
 import java.util.ArrayList;
@@ -93,8 +95,17 @@ public class Algorithm {
                     appendCommands(ifElseCommand.getCommandsIfPart(), false);
                     appendCommands(ifElseCommand.getCommandsElsePart(), false);
                 } else if (c.isWhileControlStructure()) {
-                    WhileControlStructure ifElseCommand = (WhileControlStructure) c;
-                    appendCommands(ifElseCommand.getCommands(), false);
+                    WhileControlStructure whileCommand = (WhileControlStructure) c;
+                    appendCommands(whileCommand.getCommands(), false);
+                } else if (c.isDoWhileControlStructure()) {
+                    DoWhileControlStructure doWhileCommand = (DoWhileControlStructure) c;
+                    appendCommands(doWhileCommand.getCommands(), false);
+                } else if (c.isForControlStructure()) {
+                    ForControlStructure forCommand = (ForControlStructure) c;
+                    appendCommands(forCommand.getInitialization(), false);
+                    appendCommands(forCommand.getEndLoopCommands(), false);
+                    appendCommands(forCommand.getLoopAssignment(), false);
+                    appendCommands(forCommand.getCommands(), false);
                 }
             }
             if (topLevel) {
