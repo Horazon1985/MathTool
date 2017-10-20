@@ -64,7 +64,6 @@ public abstract class AlgorithmOutputPrinter {
     }
 
     public static void printStartAlgorithmData() {
-//        outputArea.setText(withDate("Start algorithm execution."));
         if (outputArea == null) {
             return;
         }
@@ -119,7 +118,7 @@ public abstract class AlgorithmOutputPrinter {
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
         println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED, e.getMessage()));
     }
-
+    
     private static String withDate(String s) {
         return DATE_FORMAT.format(new Date()) + ": " + s;
     }

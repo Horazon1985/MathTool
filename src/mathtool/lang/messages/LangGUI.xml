@@ -575,10 +575,10 @@
         <Russian>Выполнеие алгоритма прервано.</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED">
-        <German>Folgender Fehler trat im Algorithmus auf: [0]</German>
-        <English>Following exception ocurred in algorithm: [0]</English>
+        <German>Folgender Fehler trat auf: [0]</German>
+        <English>Following exception ocurred: [0]</English>
         <Ukrainian>Виникла наступна помилка: [0]</Ukrainian>
-        <Russian>Возникла следующая ошибка [0]</Russian>
+        <Russian>Возникла следующая ошибка: [0]</Russian>
     </object>
     
 </objects>
