@@ -171,7 +171,7 @@ public class MathToolController {
 
     public static void loadSettings() {
 
-        MathToolPropertiesHandler.readMathToolProperties();
+//        MathToolPropertiesHandler.readMathToolProperties();
         // Konfigurationen setzen.
         MathToolGUI.setFontSizeGraphic(MathToolPropertiesHandler.getFontSizeGraphic());
         MathToolGUI.setFontSizeText(MathToolPropertiesHandler.getFontSizeText());

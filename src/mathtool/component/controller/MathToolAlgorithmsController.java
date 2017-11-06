@@ -82,10 +82,17 @@ public class MathToolAlgorithmsController {
                 formattedSourceCode += SIGN_NEXT_LINE;
             } else if (inputSourceCode.charAt(i) == ReservedChars.END.getValue()) {
                 wavedBracketCounter--;
-                newLine = true;
+
+                // Im Falle eines darauffolgenden "else" keine neue Zeile!
+                newLine = !(i < inputSourceCode.length() - 1 && inputSourceCode.substring(i + 1).startsWith(Keyword.ELSE.getValue()));
+
                 formattedSourceCode += writeMultipleTabs(wavedBracketCounter);
                 formattedSourceCode += inputSourceCode.charAt(i);
-                formattedSourceCode += SIGN_NEXT_LINE;
+
+                if (newLine) {
+                    formattedSourceCode += SIGN_NEXT_LINE;
+                }
+                
                 // Beim Beginn eines neuen Algorithmus eine zusätzliche Leerzeile lassen.
                 if (wavedBracketCounter == 0) {
                     formattedSourceCode += SIGN_NEXT_LINE;

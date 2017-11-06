@@ -185,9 +185,11 @@ public abstract class AlgorithmCommandCompiler {
             String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
             try {
                 Expression expr = Expression.build(rightSideReplaced, VALIDATOR);
-                Set<String> vars = expr.getContainedVars();
-                checkIfAllIdentifiersAreDefined(vars, scopeMemory);
-                areIdentifiersOfCorrectType(type, vars, scopeMemory);
+
+                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                checkIfAllIdentifiersAreDefined(expr.getContainedVars(), scopeMemory);
+                areIdentifiersOfCorrectType(type, expr.getContainedVars(), scopeMemory);
+
                 scopeMemory.getMemory().put(identifierName, identifier);
                 commands.add(new AssignValueCommand(identifier, expr, assignValueType));
                 return commands;
@@ -202,11 +204,14 @@ public abstract class AlgorithmCommandCompiler {
             List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
             String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
             try {
-                Map<String, IdentifierType> typesMap = CompilerUtils.extractTypesOfMemory(scopeMemory);
-                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, typesMap);
-                Set<String> vars = boolExpr.getContainedVars();
-                checkIfAllIdentifiersAreDefined(vars, scopeMemory);
-                areIdentifiersOfCorrectType(type, vars, scopeMemory);
+                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
+
+                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), scopeMemory);
+                areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, boolExpr.getContainedExpressionVars(), scopeMemory);
+                areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, boolExpr.getContainedBooleanVars(scopeMemory), scopeMemory);
+                areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, boolExpr.getContainedMatrixVars(), scopeMemory);
+
                 scopeMemory.getMemory().put(identifierName, identifier);
                 commands.add(new AssignValueCommand(identifier, boolExpr, assignValueType));
                 return commands;
@@ -222,9 +227,12 @@ public abstract class AlgorithmCommandCompiler {
         String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
         try {
             MatrixExpression matExpr = MatrixExpression.build(rightSideReplaced, VALIDATOR, VALIDATOR);
+
+            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
             checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), scopeMemory);
             areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), scopeMemory);
             areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), scopeMemory);
+
             scopeMemory.getMemory().put(identifierName, identifier);
             commands.add(new AssignValueCommand(identifier, matExpr, assignValueType));
             return commands;
@@ -235,16 +243,6 @@ public abstract class AlgorithmCommandCompiler {
     }
 
     private static int getPositionOfDefineCharIfIsAssignValueCommandIfValid(String line) {
-        /*
-        Prüfung, ob line einen Vergleichsoperator enthält, welcher "=" enthält.
-        Im positiven Fall kann es keine Zuweisung mehr sein, sondern höchstens eine
-        Kontrollstruktur.
-         */
-        for (ComparingOperators op : ComparingOperators.getOperatorsContainingEqualsSign()) {
-            if (line.contains(op.getValue())) {
-                return -1;
-            }
-        }
         int wavyBracketCounter = 0, bracketCounter = 0, squareBracketCounter = 0;
         for (int i = 0; i < line.length(); i++) {
             if (line.charAt(i) == ReservedChars.BEGIN.getValue()) {
@@ -262,6 +260,19 @@ public abstract class AlgorithmCommandCompiler {
             }
             if (wavyBracketCounter == 0 && bracketCounter == 0 && squareBracketCounter == 0
                     && String.valueOf(line.charAt(i)).equals(Operators.DEFINE.getValue())) {
+                /*
+                Prüfung, ob das Zeichen an dieser Stelle nicht Teil eines Vergleichsoperators 
+                ist, welcher "=" enthält. Im positiven Fall kann es keine Zuweisung mehr sein, 
+                sondern höchstens eine Kontrollstruktur.
+                 */
+                for (ComparingOperators op : ComparingOperators.getOperatorsContainingEqualsSign()) {
+                    if (line.substring(i - 1).startsWith(op.getValue())) {
+                        return -1;
+                    }
+                }
+                if (line.substring(i).startsWith(ComparingOperators.EQUALS.getValue())) {
+                    return -1;
+                }
                 return i;
             }
         }
@@ -279,7 +290,7 @@ public abstract class AlgorithmCommandCompiler {
     private static void areIdentifiersOfCorrectType(IdentifierType type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (memory.getMemory().get(var).getType() != type) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES, memory.getMemory().get(var).getType(), type);
+                throw new ParseAssignValueException(CompileExceptionTexts.AC_INCOMPATIBLE_TYPES, memory.getMemory().get(var).getType(), type);
             }
         }
     }
@@ -289,23 +300,65 @@ public abstract class AlgorithmCommandCompiler {
         // Kompatibilitätscheck
         Signature calledAlgSignature = getAlgorithmCallDataFromAlgorithmCall(rightSide, memory, assignType).getSignature();
         // Parameter auslesen;
-        Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, memory);
+        Identifier[] parameterIdentifiers = getParameterFromAlgorithmCall(rightSide, calledAlgSignature, commands, memory);
         memory.getMemory().put(identifier.getName(), identifier);
         commands.add(new AssignValueCommand(identifier, calledAlgSignature, parameterIdentifiers, assignValueType));
         return commands;
 
     }
 
-    private static Identifier[] getParameterFromAlgorithmCall(String input, AlgorithmMemory memory) throws ParseAssignValueException {
+    private static Identifier[] getParameterFromAlgorithmCall(String input, Signature calledAlgSignature, List<AlgorithmCommand> commands, AlgorithmMemory scopeMemory) throws ParseAssignValueException {
         try {
             CompilerUtils.AlgorithmParseData algParseData = CompilerUtils.getAlgorithmParseData(input);
             String[] params = algParseData.getParameters();
             Identifier[] identifiers = new Identifier[params.length];
             for (int i = 0; i < params.length; i++) {
-                if (memory.getMemory().get(params[i]) == null) {
+                // 1. Fall: der Parameter ist ein Bezeichner (welcher bereits in der Memory liegt).
+                if (scopeMemory.getMemory().get(params[i]) != null) {
+                    identifiers[i] = scopeMemory.getMemory().get(params[i]);
+                    continue;
+                }
+                // 2. Fall: der Parameter ist gültiger Ausdruck vom geforderten Typ.
+                AbstractExpression argument = null;
+                try {
+                    switch (calledAlgSignature.getParameterTypes()[i]) {
+                        case EXPRESSION:
+                            argument = Expression.build(params[i], VALIDATOR);
+                            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                            checkIfAllIdentifiersAreDefined(argument.getContainedVars(), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, argument.getContainedVars(), scopeMemory);
+                            break;
+                        case BOOLEAN_EXPRESSION:
+                            argument = BooleanExpression.build(params[i], VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
+                            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                            checkIfAllIdentifiersAreDefined(argument.getContainedVars(), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((BooleanExpression) argument).getContainedExpressionVars(), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, ((BooleanExpression) argument).getContainedBooleanVars(scopeMemory), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((BooleanExpression) argument).getContainedMatrixVars(), scopeMemory);
+                            break;
+                        case MATRIX_EXPRESSION:
+                            argument = MatrixExpression.build(params[i], VALIDATOR, VALIDATOR);
+                            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                            checkIfAllIdentifiersAreDefined(((MatrixExpression) argument).getContainedVars(), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((MatrixExpression) argument).getContainedExpressionVars(), scopeMemory);
+                            areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((MatrixExpression) argument).getContainedMatrixVars(), scopeMemory);
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (ExpressionException | BooleanExpressionException e) {
+                    throw new AlgorithmCompileException(e.getMessage());
+                }
+                if (argument != null) {
+                    String genVarName = CompilerUtils.generateTechnicalIdentifierName(scopeMemory);
+                    Identifier genVarIdentifier = Identifier.createIdentifier(scopeMemory, genVarName, IdentifierType.identifierTypeOf(argument));
+                    identifiers[i] = genVarIdentifier;
+                    commands.add(new AssignValueCommand(genVarIdentifier, argument, AssignValueType.NEW));
+                    scopeMemory.addToMemoryInCompileTime(genVarIdentifier);
+                } else {
                     throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, params[i]);
                 }
-                identifiers[i] = memory.getMemory().get(params[i]);
             }
             return identifiers;
         } catch (AlgorithmCompileException e) {

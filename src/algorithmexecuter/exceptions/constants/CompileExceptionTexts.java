@@ -3,7 +3,7 @@ package algorithmexecuter.exceptions.constants;
 public abstract class CompileExceptionTexts {
     
     public static final String AC_IDENTIFIER_ALREADY_DEFINED = "AC_IDENTIFIER_ALREADY_DEFINED";
-    public static final String AC_INCOMPATIBEL_TYPES = "AC_INCOMPATIBEL_TYPES";    
+    public static final String AC_INCOMPATIBLE_TYPES = "AC_INCOMPATIBLE_TYPES";    
     public static final String AC_FILE_MUST_CONTAIN_A_BEGIN = "AC_FILE_MUST_CONTAIN_A_BEGIN";    
     public static final String AC_FILE_MUST_CONTAIN_AN_END = "AC_FILE_MUST_CONTAIN_AN_END";    
     public static final String AC_END_BEFORE_BEGIN = "AC_END_BEFORE_BEGIN";    

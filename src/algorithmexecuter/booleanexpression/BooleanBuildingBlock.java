@@ -36,8 +36,8 @@ public class BooleanBuildingBlock extends BooleanExpression {
     public void addContainedIndeterminates(Set<String> vars) {
         this.left.addContainedIndeterminates(vars);
         this.right.addContainedIndeterminates(vars);
-    }
-
+    }    
+    
     @Override
     public boolean evaluate(Map<String, AbstractExpression> valuesMap) {
         if (isComparisonOfExpressions()) {

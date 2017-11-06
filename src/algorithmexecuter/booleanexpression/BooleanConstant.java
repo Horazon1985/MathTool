@@ -12,6 +12,10 @@ public class BooleanConstant extends BooleanExpression {
         this.value = value;
     }
     
+    public boolean getValue() {
+        return this.value;
+    }
+    
     @Override
     public boolean contains(String var) {
         return false;

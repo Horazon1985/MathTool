@@ -1,9 +1,11 @@
 package algorithmexecuter.booleanexpression;
 
 import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Variable;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.interfaces.IdentifierValidator;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixVariable;
 import algorithmexecuter.enums.ComparingOperators;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
@@ -11,13 +13,14 @@ import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.BooleanExpressionException;
 import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
+import algorithmexecuter.model.AlgorithmMemory;
 import exceptions.ExpressionException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class BooleanExpression implements AbstractExpression {
-    
+
     public abstract boolean evaluate(Map<String, AbstractExpression> valuesMap);
 
     @Override
@@ -26,15 +29,81 @@ public abstract class BooleanExpression implements AbstractExpression {
         addContainedVars(vars);
         return vars;
     }
-    
+
     @Override
     public Set<String> getContainedIndeterminates() {
         Set<String> vars = new HashSet<>();
         addContainedIndeterminates(vars);
         return vars;
     }
-    
-    public static BooleanExpression build(String input, IdentifierValidator validator, 
+
+    public Set<String> getContainedExpressionVars() {
+        Set<String> allVars = getContainedVars();
+        Set<String> exprVars = new HashSet<>();
+        for (String var : allVars) {
+            if (Variable.doesVariableAlreadyExist(var)) {
+                exprVars.add(var);
+            }
+        }
+        return exprVars;
+    }
+
+    public Set<String> getContainedExpressionIndeterminates() {
+        Set<String> allVars = getContainedIndeterminates();
+        Set<String> exprVars = new HashSet<>();
+        for (String var : allVars) {
+            if (Variable.doesVariableAlreadyExist(var)) {
+                exprVars.add(var);
+            }
+        }
+        return exprVars;
+    }
+
+    public Set<String> getContainedBooleanVars(AlgorithmMemory scopeMemory) {
+        Set<String> allVars = getContainedVars();
+        Set<String> boolVars = new HashSet<>();
+        for (String var : allVars) {
+            if (scopeMemory.getMemory().get(var) != null && scopeMemory.getMemory().get(var).getType().equals(IdentifierType.BOOLEAN_EXPRESSION)) {
+                boolVars.add(var);
+            }
+        }
+        return boolVars;
+    }
+
+    public Set<String> getContainedBooleanIndeterminates(AlgorithmMemory scopeMemory) {
+        Set<String> allVars = getContainedIndeterminates();
+        Set<String> boolVars = new HashSet<>();
+        for (String var : allVars) {
+            if (scopeMemory.getMemory().get(var) != null && scopeMemory.getMemory().get(var).getType().equals(IdentifierType.BOOLEAN_EXPRESSION)) {
+                boolVars.add(var);
+            }
+        }
+        return boolVars;
+    }
+
+    public Set<String> getContainedMatrixVars() {
+        Set<String> allVars = getContainedVars();
+        Set<String> exprVars = new HashSet<>();
+        for (String var : allVars) {
+            if (MatrixVariable.doesMatrixVariableAlreadyExist(var)) {
+                exprVars.add(var);
+            }
+        }
+        return exprVars;
+    }
+
+    public Set<String> getContainedMatrixIndeterminates() {
+        Set<String> allVars = getContainedIndeterminates();
+        Set<String> exprVars = new HashSet<>();
+        for (String var : allVars) {
+            if (MatrixVariable.doesMatrixVariableAlreadyExist(var)) {
+                exprVars.add(var);
+            }
+        }
+        return exprVars;
+    }
+
+    public static BooleanExpression build(String input, IdentifierValidator validator,
             Map<String, IdentifierType> typesMap) throws BooleanExpressionException {
 
         /*
@@ -79,12 +148,12 @@ public abstract class BooleanExpression implements AbstractExpression {
             } else if (currentEnding.endsWith(Operators.NOT.getValue()) && priority > 3) {
                 priority = 2;
                 breakpoint = inputLength - i;
-            } else if ((currentEnding.endsWith(ComparingOperators.EQUALS.getValue()) 
+            } else if ((currentEnding.endsWith(ComparingOperators.EQUALS.getValue())
                     || currentEnding.endsWith(ComparingOperators.NOT_EQUALS.getValue())
-                    || currentEnding.endsWith(ComparingOperators.GREATER.getValue()) 
+                    || currentEnding.endsWith(ComparingOperators.GREATER.getValue())
                     || currentEnding.endsWith(ComparingOperators.GREATER_OR_EQUALS.getValue())
-                    || currentEnding.endsWith(ComparingOperators.SMALLER.getValue()) 
-                    || currentEnding.endsWith(ComparingOperators.SMALLER_OR_EQUALS.getValue())) 
+                    || currentEnding.endsWith(ComparingOperators.SMALLER.getValue())
+                    || currentEnding.endsWith(ComparingOperators.SMALLER_OR_EQUALS.getValue()))
                     && priority > 0) {
                 priority = 3;
                 breakpoint = inputLength - i;
@@ -109,10 +178,10 @@ public abstract class BooleanExpression implements AbstractExpression {
 
             switch (priority) {
                 case 0:
-                    return new BooleanBinaryOperation(build(inputLeft, validator, typesMap), 
+                    return new BooleanBinaryOperation(build(inputLeft, validator, typesMap),
                             build(inputRight, validator, typesMap), BooleanBinaryOperationType.OR);
                 case 1:
-                    return new BooleanBinaryOperation(build(inputLeft, validator, typesMap), 
+                    return new BooleanBinaryOperation(build(inputLeft, validator, typesMap),
                             build(inputRight, validator, typesMap), BooleanBinaryOperationType.AND);
                 default:    //Passiert zwar nicht, aber trotzdem!
                     return null;
@@ -135,6 +204,8 @@ public abstract class BooleanExpression implements AbstractExpression {
             ComparingOperators comparisonType = null;
             if (containsOperatorExactlyOneTime(input, ComparingOperators.EQUALS)) {
                 comparisonType = ComparingOperators.EQUALS;
+            } else if (containsOperatorExactlyOneTime(input, ComparingOperators.NOT_EQUALS)) {
+                comparisonType = ComparingOperators.NOT_EQUALS;
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.GREATER_OR_EQUALS)) {
                 comparisonType = ComparingOperators.GREATER_OR_EQUALS;
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.GREATER)) {
@@ -144,7 +215,7 @@ public abstract class BooleanExpression implements AbstractExpression {
             } else if (containsOperatorExactlyOneTime(input, ComparingOperators.SMALLER)) {
                 comparisonType = ComparingOperators.SMALLER;
             }
-            
+
             if (comparisonType != null) {
                 // Es kommt genau ein Vergleichsoperator in input vor.
                 String[] comparison = input.split(comparisonType.getValue());
@@ -179,7 +250,7 @@ public abstract class BooleanExpression implements AbstractExpression {
         // Falls der Ausdruck eine Variable ist
         if (priority == 4) {
             if (validator.isValidIdentifier(input)) {
-                return BooleanVariable.create(input);
+                return new BooleanVariable(input);
             }
         }
 
@@ -189,7 +260,7 @@ public abstract class BooleanExpression implements AbstractExpression {
     private static boolean containsOperatorExactlyOneTime(String input, ComparingOperators op) {
         return input.contains(op.getValue()) && input.length() - input.replaceAll(op.getValue(), "").length() == op.getValue().length();
     }
-    
+
     private static AbstractExpression parseAbstractExpression(String input, IdentifierValidator validator, Map<String, IdentifierType> typesMap) {
         // In valuesMap werden nur Variablen aufgenommen.
         AbstractExpression parsedInput;
@@ -211,7 +282,7 @@ public abstract class BooleanExpression implements AbstractExpression {
             /*
             Hier darf build() rekursiv angewendet werden, da input hier eine kleinere Länge
             besitzt, als der input im vorherigen Aufruf.
-            */
+             */
             parsedInput = MatrixExpression.build(input, validator, validator);
             if (doesValuesMapContainAllVarsOfCorrectType(parsedInput, typesMap)) {
                 return parsedInput;
@@ -227,7 +298,7 @@ public abstract class BooleanExpression implements AbstractExpression {
         }
         return null;
     }
-    
+
     private static boolean doesValuesMapContainAllVarsOfCorrectType(AbstractExpression abstrExpr, Map<String, IdentifierType> typesMap) {
         Set<String> vars = abstrExpr.getContainedVars();
         IdentifierType type = IdentifierType.identifierTypeOf(abstrExpr);

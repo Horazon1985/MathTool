@@ -53,6 +53,7 @@ import graphic.swing.GraphicPanelVectorField2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;
@@ -113,6 +114,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static final String GUI_HelpDialogGUI_LOGICAL_EXPRESSION = "GUI_HelpDialogGUI_LOGICAL_EXPRESSION";
     private static final String GUI_HelpDialogGUI_OPERATORS = "GUI_HelpDialogGUI_OPERATORS";
     private static final String GUI_HelpDialogGUI_COMMANDS = "GUI_HelpDialogGUI_COMMANDS";
+    private static final String GUI_HelpDialogGUI_ALGORITHMS = "GUI_HelpDialogGUI_ALGORITHMS";
     private static final String GUI_HelpDialogGUI_BUG_REPORT = "GUI_HelpDialogGUI_BUG_REPORT";
     private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTIONS_GROUP_NAME";
     private static final String GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS = "GUI_OutputOptionsDialogGUI_SIMPLIFY_OPTION_SIMPLIFY_ALGEBRAIC_EXPRESSIONS";
@@ -222,16 +224,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Prüfung, ob alle nötigen Resourcen vorhanden sind.
         MathToolController.checkExpressionBuilderResources();
         MathToolController.checkMathToolResources();
-
         // Vereinfachungsoptionen initialisieren.
         MathToolController.initSimplifyTypes();
 
         // Konfigurationen aus XML auslesen.
         MathToolController.loadSettings();
-
+        
         // Mindestfenstergröße festlegen
         setMinimumSize(minimumDimension);
-
+        
         // Labels ausrichten
         legendLabel = new JLabel(bold(Translator.translateOutputMessage(GUI_LEGEND)));
         legendLabel.setVisible(false);
@@ -247,7 +248,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         rotateLabel.setVisible(false);
         add(rotateLabel);
         rotateLabel.addMouseListener(this);
-
+        
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
         mathToolTextArea.setFont(new Font("Times New Roman", Font.BOLD, fontSizeText));
@@ -287,7 +288,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         getContentPane().add(inputField);
         inputField.setBounds(10, 336, 540, 20);
-
+        
         // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
         mathToolGraphicAreaY = 10;
@@ -341,7 +342,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Alle Buttons und Dropdowns ausrichten.
         buttonsAndDropDowns = new JComponent[]{approxButton, latexButton, clearButton, operatorChoice, commandChoice};
-
+        
         // Operatorbox aktualisieren.
         MathToolController.fillOperatorChoice(operatorChoice);
         // Befehlbox aktualisieren.
@@ -361,7 +362,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
-
+        
         validate();
         repaint();
 
@@ -412,7 +413,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
 
         });
-
     }
 
     /**
@@ -1287,12 +1287,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
         menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_LOGICAL_EXPRESSION));
         menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_OPERATORS));
         menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_COMMANDS));
+        menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_ALGORITHMS));
         menuCaptions.add(Translator.translateOutputMessage(GUI_HelpDialogGUI_BUG_REPORT));
         fileNames.add("Generalities");
         fileNames.add("Formulas");
         fileNames.add("LogicalExpressions");
         fileNames.add("Operators");
         fileNames.add("Commands");
+        fileNames.add("Algorithms");
         fileNames.add("Contact");
         HelpDialogGUI helpDialogGUI = HelpDialogGUI.getInstance(this.getX(), this.getY(),
                 this.getWidth(), this.getHeight(), menuCaptions, fileNames);

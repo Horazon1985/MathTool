@@ -4,6 +4,8 @@ import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecuter.CompilerUtils;
+import algorithmexecuter.booleanexpression.BooleanConstant;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
@@ -32,7 +34,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Identifier identifierSrc, AbstractExpression targetExpression, AssignValueType type) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, IdentifierType.identifierTypeOf(targetExpression))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBLE_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
@@ -43,7 +45,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     public AssignValueCommand(Identifier identifierSrc, Signature targetAlgorithmSignature, Identifier[] targetAlgorithmArguments, AssignValueType type) throws AlgorithmCompileException {
         if (!areTypesCompatible(identifierSrc, targetAlgorithmSignature.getReturnType())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBEL_TYPES);
+            throw new AlgorithmCompileException(CompileExceptionTexts.AC_INCOMPATIBLE_TYPES);
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
@@ -161,7 +163,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             }
             targetExprSimplified = matExprSimplified;
         } else {
-            targetExprSimplified = (BooleanExpression) this.targetExpression;
+            targetExprSimplified = new BooleanConstant(((BooleanExpression) this.targetExpression).evaluate(CompilerUtils.extractValuesOfIdentifiers(scopeMemory)));
         }
 
         if (targetExprSimplified instanceof Expression) {

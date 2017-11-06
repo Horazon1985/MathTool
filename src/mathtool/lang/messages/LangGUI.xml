@@ -256,6 +256,12 @@
         <Ukrainian>Команди</Ukrainian>
         <Russian>Команды</Russian>
     </object>
+    <object id = "GUI_HelpDialogGUI_ALGORITHMS">
+        <German>Algorithmen</German>
+        <English>Algorithms</English>
+        <Ukrainian>Алгоритми</Ukrainian>
+        <Russian>Алгоритмы</Russian>
+    </object>
     <object id = "GUI_HelpDialogGUI_BUG_REPORT">
         <German>Kontakt/Bugs melden</German>
         <English>Contact/Report bugs</English>
