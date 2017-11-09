@@ -168,21 +168,21 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             currentComponentLevel += this.algorithmEditorPane.getHeight() + STUB;
 
-            this.algorithmEditor.setText("expression main(){\n"
-                    + "	expression a=1;\n"
-                    + "	for(expression i=0,f(i)<=10,i=i+g(i)){\n"
-                    + "		a=3*a+2;\n"
-                    + "	}\n"
-                    + "	return a;\n"
-                    + "}\n"
-                    + "\n"
-                    + "expression f(expression i){\n"
-                    + "	return 2*i;\n"
-                    + "}\n"
-                    + "\n"
-                    + "expression g(expression i){\n"
-                    + "	return i^2+1;\n"
-                    + "}");
+//            this.algorithmEditor.setText("expression main(){\n"
+//                    + "	expression a=1;\n"
+//                    + "	for(expression i=0,f(i)<=10,i=i+g(i)){\n"
+//                    + "		a=3*a+2;\n"
+//                    + "	}\n"
+//                    + "	return a;\n"
+//                    + "}\n"
+//                    + "\n"
+//                    + "expression f(expression i){\n"
+//                    + "	return 2*i;\n"
+//                    + "}\n"
+//                    + "\n"
+//                    + "expression g(expression i){\n"
+//                    + "	return i^2+1;\n"
+//                    + "}");
 
             keyListener = new KeyListener() {
 

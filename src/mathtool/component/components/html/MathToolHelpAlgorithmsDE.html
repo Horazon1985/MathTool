@@ -1,5 +1,272 @@
-<font size="6"><strong>Algorithmen:</strong></font><br><br>
+<font size="6"><strong>Algorithmen in MathTool:</strong></font><br><br>
 
-Hilfe zur Formulierung mathematischer Algorithmen in MathTool finden Sie unter<br><br>
+<strong>Die Sprache MAL und ihre Syntax</strong><br><br>
 
-http://sergei-kovalenko.de/mathtool/mathtool-deutsch/
+MathTool bietet auch die Möglichkeit, eigene Algorithmen zu schreiben und auszuführen. Die Syntax dieser Algorithmensprache MAL (MathTool Algorithm Language) orientiert sich sehr stark an der Syntax der objektorientierten Programmiersprache Java, ist jedoch einfacher gestrickt, da hier speziell direkter Bezug auf mathematische Probleme und ihre Lösungen genommen wird.<br><br>
+
+<strong>Reservierte Zeichen und Schlüsselwörter</strong><br><br>
+
+Eine Reihe von Zeichen sind in MAL reserviert und dürfen nur im bestimmten Kontext verwendet werden, da der Compiler ihnen bestimmte Funktionen zuweist. Hier ist eine Übersicht über alle reservierten Zeichen und Operatoren.<br><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Reserviertes Zeichen</strong></td>
+            <td><strong>Bedeutung</strong></td>
+        </tr>
+        <tr>
+            <td>,</td>
+            <td>Trennung zwischen Parametern</td>
+        </tr>
+        <tr>
+            <td>;</td>
+            <td>Trennung von Befehlen</td>
+        </tr>
+        <tr>
+            <td>{ und }</td>
+            <td>Beginn und Ende eines Blocks</td>
+        </tr>
+        <tr>
+            <td>( und )</td>
+            <td>Beginn und Ende einer Methodenklammer oder einer Bedingung in einer Kontrollstruktur</td>
+        </tr>
+        <tr>
+            <td>[ und ]</td>
+            <td>Beginn und Ende einer Matrix</td>
+        </tr>
+        <tr>
+            <td>&</td>
+            <td>Und</td>
+        </tr>
+        <tr>
+            <td>|</td>
+            <td>Oder</td>
+        </tr>
+        <tr>
+            <td>!</td>
+            <td>Negation</td>
+        </tr>
+        <tr>
+            <td>=</td>
+            <td>Zuweisung</td>
+        </tr>
+        <tr>
+            <td>==</td>
+            <td>Vergleich auf Wertegleichheit</td>
+        </tr>
+        <tr>
+            <td>></td>
+            <td>Größer als</td>
+        </tr>
+        <tr>
+            <td>>=</td>
+            <td>Größer oder gleich</td>
+        </tr>
+        <tr>
+            <td><</td>
+            <td>Kleiner als</td>
+        </tr>
+        <tr>
+            <td><=</td>
+            <td>Kleiner oder gleich</td>
+        </tr>
+        <tr>
+            <td>+</td>
+            <td>Addition von Ausdrücken</td>
+        </tr>
+        <tr>
+            <td>-</td>
+            <td>Subtraktion von Ausdrücken</td>
+        </tr>
+        <tr>
+            <td>*</td>
+            <td>Multiplikation von Ausdrücken</td>
+        </tr>
+        <tr>
+            <td>/</td>
+            <td>Division von Ausdrücken</td>
+        </tr>
+        <tr>
+            <td>^</td>
+            <td>Potenzieren von Ausdrücken</td>
+        </tr>
+    </tbody>
+</table><br>
+
+Ebenso ist eine Reihe von Schlüsselwörtern in MAL reserviert und dürfen nur im bestimmten Kontext verwendet werden, da der Compiler ihnen bestimmte Bedeutungen zuweist. Hier ist eine Übersicht über alle reservierten Schlüsselwörter.<br><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Schlüsselwort</strong></td>
+            <td><strong>Bedeutung</strong></td>
+        </tr>
+        <tr>
+            <td>main</td>
+            <td>Name des Algorithmus für den Einstiegspunkt</td>
+        </tr>
+        <tr>
+            <td>false</td>
+            <td>Wahrheitswert „falsch“</td>
+        </tr>
+        <tr>
+            <td>true</td>
+            <td>Wahrheitswert „wahr“</td>
+        </tr>
+        <tr>
+            <td>return</td>
+            <td>Ausstiegspunkt für einen Algorithmus und Anweisung für die Rückgabe eines Bezeichners, wenn nötig.</td>
+        </tr>
+        <tr>
+            <td>break</td>
+            <td>Abbruch einer Schleife</td>
+        </tr>
+        <tr>
+            <td>continue</td>
+            <td>Anweisung, in einer Schleife fortzufahren</td>
+        </tr>
+        <tr>
+            <td>if</td>
+            <td>Wenn</td>
+        </tr>
+        <tr>
+            <td>else</td>
+            <td>Sonst</td>
+        </tr>
+        <tr>
+            <td>while</td>
+            <td>Beginn einer While-Kontrollstruktur</td>
+        </tr>
+        <tr>
+            <td>do</td>
+            <td>Beginn einer Do-While-Kontrollstruktur</td>
+        </tr>
+        <tr>
+            <td>for</td>
+            <td>Beginn einer For-Schleife</td>
+        </tr>
+    </tbody>
+</table><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Datentyp</strong></td>
+            <td><strong>Bedeutung</strong></td>
+        </tr>
+        <tr>
+            <td>expression</td>
+            <td>Arithmetischer Ausdruck</td>
+        </tr>
+        <tr>
+            <td>booleanexpression</td>
+            <td>Boolscher Ausdruck</td>
+        </tr>
+        <tr>
+            <td>matrixexpression</td>
+            <td>Matrizenausdruck</td>
+        </tr>
+    </tbody>
+</table><br><br>
+
+<strong>Aufbau und Prinzipien von MAL</strong><br><br>
+
+In einer Algorithmendatei können beliebig viele Algorithmen implementiert sein, sofern sie den folgenden Bedingungen genügen:
+<ul>
+    <li>Die Algorithmen haben alle verschiedene Signaturen. Eine Signatur besteht immer aus dem Namen des Algorithmus sowie aus dem geordneten Tupel von Eingabeparametertypen.</li>
+    <li>Es existiert ein Algorithmus mit dem Namen „main“, welcher parameterlos ist. Der Rückgabetyp kann beliebig sein (und auch leer). Dieser Algorithmus ist, ähnlich wie es in einer klassischen Java-Anwendung der Fall ist, der Haupteinstiegspunkt.</li>
+    <li>Bis auf wenige Ausnahmen sind Aufrufe von Unteralgorithmen (also Algorithmen, die nicht den Namen „main“ tragen) immer Call-By-Value. Letzteres bedeutet, dass falls ein Inputparameter innerhalb des Unteralgorithmus einen neuen Wert zugewiesen bekommen, dieser dann nach Beenden des Aufrufs des Unteralgorithmus seinen ursprünglichen Wert (also den Wert, welchen dieser unmittelbar vor dem Aufruf des Unteralgorithmus besessen hatte) wieder annimmt.</li>
+</ul><br><br>
+
+<strong>Datentypen</strong><br><br>
+
+MAL kennt hier zunächst drei verschiedene Datentypen:<br><br>
+
+Der Datentyp <i>expression</i>, also einen mathematischen Ausdruck. Hierbei wird nicht weiter unterschieden, der Ausdruck eine ganze Zahl (welche in vielen Programmiersprachen als int oder integer angegeben wird) oder ein komplexer Ausdruck ist.<br><br>
+
+<i>Beispielcode:</i> expression a = 15;<br><br>
+
+Der Datentyp <i>matrixexpression</i>, also ein Matrizenausdruck.<br><br>
+
+<i>Beispielcode:</i> matrixexpression a = [1,2;4,1+x;2,7];<br><br>
+
+Dabei sei x eine bereits definierte Variable vom Typ expression.<br><br>
+
+Der Datentyp <i>booleanexpression</i>, also ein boolscher Ausdruck.<br><br>
+
+<i>Beispielcode:</i> booleanexpression a = x >= 24;<br><br>
+
+Dabei sei x eine bereits definierte Variable vom Typ expression.<br><br>
+
+
+
+<strong>Beispiele</strong><br><br>
+
+Es folgen einige Codebeispiele mit einer detaillierten Diskussion.<br><br>
+
+<strong>Beispiel 1: Der erste Algorithmus</strong><br><br>
+
+Wir betrachten den folgenden Code:<br><br>
+
+expression main(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expression result=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if(result>0){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result=3*result;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+}<br><br>
+
+Ausführung dieses Codes liefert uns die Ausgabe <strong>3</strong>. Dem Bezeichner result wird zunächst der Wert 1 zugewiesen. Die Abfrage, ob result > 0 ist, liefert true, und somit wird result auf den Wert 3*result=3 gesetzt. Danach wird result ausgegeben.<br><br>
+
+<strong>Beispiel 2: Aufruf weiterer Algorithmen</strong><br><br>
+
+Wir betrachten den folgenden Code:<br><br>
+
+expression main(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expression a=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for(expression i=0,f(i)<=10,i=i+g(i)){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a=3*a+2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+}<br><br>
+
+expression f(expression i){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return 2*i;<br>
+}<br><br>
+
+expression g(expression i){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return i^2+1;<br>
+}<br><br>
+
+Nach der Ausführung dieses Codes wird für den Ausgabeparameter a das Ergebnis <strong>53</strong> zurückgegeben. Die Berechnung erfolgt hier wie folgt: In der For-Schleife nimmt i die folgenden Werte an: i = 0, i = 1 und i = 3 gemäß der Inkrementierungsanweisung i = i+g(i) = i<sup>2</sup>+i+1. Somit wird a dreimal ersetzt durch 3*a+2, was nacheinander die Werte 5, 17 und 53 liefert.<br><br>
+
+<strong>Beispiel 3: Algorithmus mit Matrizen</strong><br><br>
+
+Wir betrachten den folgenden Code:<br><br>
+
+matrixexpression main(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matrixexpression a=[1,2;3,4];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for(expression i=0,i<=3,i=i+1){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a=a^2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+}<br><br>
+
+Hier wird also 4 Mal die Matrix a quadriert, das Ergebnis wird also die Matrix a<sup>16</sup>=[115007491351,167615035490;251422553235,366430044586] sein.<br><br>
+
+<strong>Beispiel 4: Fehler aufgrund fehlender Wertrückgabe</strong><br><br>
+
+Der Algorithmus<br><br>
+
+expression main(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expression result=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if(result>0){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result=3*result;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br><br>
+
+liefert beim Kompilieren einen Fehler, da hier als Rückgabewert ein Ausdruck (expression) verlangt wird, dieser aber nichts zurückgibt.<br><br>
+
+<strong>In den nächsten Versionen</strong><br><br>
+
+Die Sprache MAL befindet sich noch im Aufbau. Entsprechend sind viele nützliche Features noch nicht implementiert. In den nächsten Versionen ist beispielsweise ein Umgang mit Arrays geplant, damit beispielsweise Lösungen von Gleichungen darin abgelegt und weiter behandelt werden können. Zudem wird eine Codehilfe angeboten, welche das Implementieren diverser Strukturen dem Benutzer abnimmt, um so potentielle Syntaxfehler zu vermeiden. Ebenso wird demnächst ein Debug-Modus implementiert, welcher die Fehlersuche erheblich verbessert.

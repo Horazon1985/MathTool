@@ -53,7 +53,6 @@ import graphic.swing.GraphicPanelVectorField2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import mathtool.annotations.GraphicPanel;
 import mathtool.enums.TypeMode;

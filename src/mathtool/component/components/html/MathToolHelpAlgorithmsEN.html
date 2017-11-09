@@ -1,5 +1,271 @@
-<font size="6"><strong>Algorithms:</strong></font><br><br>
+<font size="6"><strong>Algorithms in MathTool:</strong></font><br><br>
 
-Help for formulation mathematical algorithms in MathTool you can find here:<br><br>
+<strong>The language MAL und its syntax</strong><br><br>
 
-http://sergei-kovalenko.de/mathtool/mathtool-english/
+MathTool offers the possibility to write and to execute own algorithms. The syntax of this algorithm language called MAL (MathTool Algorithm Language) leans on the syntax of the object oriented language Java, but is quite more simple, because it is designed for solving mathematical problems.<br><br>
+
+<strong>Reserved characters and keywords</strong><br><br>
+
+A number of characters are reserved in MAL and may only be used in a specific context because the compiler assigns them specific functions. Here is an overview of all reserved characters and operators.<br><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Reserved character</strong></td>
+            <td><strong>Definition</strong></td>
+        </tr>
+        <tr>
+            <td>,</td>
+            <td>Separation of parametern</td>
+        </tr>
+        <tr>
+            <td>;</td>
+            <td>Separation of commands</td>
+        </tr>
+        <tr>
+            <td>{ und }</td>
+            <td>Beginning and end of a code block</td>
+        </tr>
+        <tr>
+            <td>( und )</td>
+            <td>Beginning and end of parameters within the signature of a method or of a condition inside a control structure</td>
+        </tr>
+        <tr>
+            <td>[ und ]</td>
+            <td>Beginning and end of a matrix</td>
+        </tr>
+        <tr>
+            <td>&</td>
+            <td>And</td>
+        </tr>
+        <tr>
+            <td>|</td>
+            <td>Or</td>
+        </tr>
+        <tr>
+            <td>!</td>
+            <td>Negation</td>
+        </tr>
+        <tr>
+            <td>=</td>
+            <td>Definition</td>
+        </tr>
+        <tr>
+            <td>==</td>
+            <td>Comparison on equality of values</td>
+        </tr>
+        <tr>
+            <td>></td>
+            <td>Greater than</td>
+        </tr>
+        <tr>
+            <td>>=</td>
+            <td>Greater or equal than</td>
+        </tr>
+        <tr>
+            <td><</td>
+            <td>Smaller than</td>
+        </tr>
+        <tr>
+            <td><=</td>
+            <td>Smaller or equal than</td>
+        </tr>
+        <tr>
+            <td>+</td>
+            <td>Addition of expressions</td>
+        </tr>
+        <tr>
+            <td>-</td>
+            <td>Subtraction of expressions</td>
+        </tr>
+        <tr>
+            <td>*</td>
+            <td>Multiplication of expressions</td>
+        </tr>
+        <tr>
+            <td>/</td>
+            <td>Division of expressions</td>
+        </tr>
+        <tr>
+            <td>^</td>
+            <td>Power of expressions</td>
+        </tr>
+    </tbody>
+</table><br>
+
+Similarly, a number of keywords are reserved in MAL and may only be used in a particular context because the compiler assigns them particular meanings. Here is an overview of all reserved keywords.<br><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Key word</strong></td>
+            <td><strong>Definition</strong></td>
+        </tr>
+        <tr>
+            <td>main</td>
+            <td>Name of the algorithm for the entry point</td>
+        </tr>
+        <tr>
+            <td>false</td>
+            <td>Boolean "false"</td>
+        </tr>
+        <tr>
+            <td>true</td>
+            <td>Boolean "true"</td>
+        </tr>
+        <tr>
+            <td>return</td>
+            <td>Exit point for an algorithm and instruction for returning an identifier, if necessary.</td>
+        </tr>
+        <tr>
+            <td>break</td>
+            <td>Cancel a loop</td>
+        </tr>
+        <tr>
+            <td>continue</td>
+            <td>Instruction to continue in a loop</td>
+        </tr>
+        <tr>
+            <td>if</td>
+            <td>If</td>
+        </tr>
+        <tr>
+            <td>else</td>
+            <td>Else</td>
+        </tr>
+        <tr>
+            <td>while</td>
+            <td>Beginning of a while loop</td>
+        </tr>
+        <tr>
+            <td>do</td>
+            <td>Beginning of a do while control structure</td>
+        </tr>
+        <tr>
+            <td>for</td>
+            <td>Beginning of a for loop</td>
+        </tr>
+    </tbody>
+</table><br>
+
+<table border=5>
+    <tbody>
+        <tr>
+            <td><strong>Data type</strong></td>
+            <td><strong>Definition</strong></td>
+        </tr>
+        <tr>
+            <td>expression</td>
+            <td>Arithmetical expression</td>
+        </tr>
+        <tr>
+            <td>booleanexpression</td>
+            <td>Boolean expression</td>
+        </tr>
+        <tr>
+            <td>matrixexpression</td>
+            <td>Matrix expression</td>
+        </tr>
+    </tbody>
+</table><br><br>
+
+<strong>Structure and principles of MAL</strong><br><br>
+
+Any number of algorithms can be implemented in an algorithm file as long as they satisfy the following conditions:
+<ul>
+    <li>The algorithms all have different signatures. A signature always consists of the name of the algorithm as well as the ordered tuple of input parameter types.</li>
+    <li>There exists an algorithm with the name "main", which is parameterless. The return type can be arbitrary (and empty). This algorithm is the main entry point, as is the case in a classic Java application.</li>
+    <li>With a few exceptions, subalgorithm calls (that is, algorithms that are not named "main") are always call-by-value. The latter means that if an input parameter within the subalgorithm is assigned a new value, it then returns to its original value (i.e. the value it had possessed immediately before the subroutine was called) after the call to the subalgorithm.</li>
+</ul><br><br>
+
+<strong>Data types</strong><br><br>
+
+MAL knows three different data types:<br><br>
+
+The data type <i>expression</i>, i.e. a mathematical expression. Here, no further distinction is made, the expression being an integer (which in many programming languages is indicated as int or integer) or a complex expression.<br><br>
+
+<i>Example code:</i> expression a = 15;<br><br>
+
+The Data type <i>matrixexpression</i>, i.e. a matrix expression.<br><br>
+
+<i>Example code:</i> matrixexpression a = [1,2;4,1+x;2,7];<br><br>
+
+Here x is an already defined variable of type expression.<br><br>
+
+The data type <i>booleanexpression</i>, i.e. a boolean expression.<br><br>
+
+<i>Example code:</i> booleanexpression a = x >= 24;<br><br>
+
+Here x is an already defined variable of type expression.<br><br>
+
+
+<strong>Examples</strong><br><br>
+
+Below are some code samples together with a detailed discussion.<br><br>
+
+<strong>Example 1: The first algorithm</strong><br><br>
+
+We consider the following code:<br><br>
+
+expression main(){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;expression result=1;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;if(result>0){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result=3*result;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+}<br><br>
+
+Execution of this code provides us with the output <strong>3</strong>. First, the identifier result is assigned the value 1. The query, if result> 0, returns true, and thus result is set to the value 3 * result = 3. Finally, result = 3 will be returned.<br><br>
+
+<strong>Example 2: Aufruf weiterer Algorithmen</strong><br><br>
+
+We consider the following code:<br><br>
+
+expression main(){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;expression a=1;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;for(expression i=0,f(i)<=10,i=i+g(i)){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a=3*a+2;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+}<br><br>
+
+expression f(expression i){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;return 2*i;<br>
+}<br><br>
+
+expression g(expression i){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;return i^2+1;<br>
+}<br><br>
+
+After executing this code, result <strong>53</strong> is returned for the output parameter a. The calculation here is as follows: In the For loop, i successively assumes the values i = 0, i = 1 and i = 3 according to the increment i = i+g(i) = i<sup>2</sup>+i+1. Thus, a is replaced three times by 3 * a + 2, giving successively the values 5, 17, and 53.<br><br>
+
+<strong>Example 3: Algorithms with matrices</strong><br><br>
+
+We consider the following code:<br><br>
+
+matrixexpression main(){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;matrixexpression a=[1,2;3,4];<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;for(expression i=0,i<=3,i=i+1){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a=a^2;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;return a;<br>
+}<br><br>
+
+So here the matrix a is squared 4 times, the result will be the matrix a<sup>16</sup>=[115007491351,167615035490;251422553235,366430044586].<br><br>
+
+<strong>Example 4: Error due to missing return value</strong><br><br>
+
+The algorithm<br><br>
+
+expression main(){<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;expression result=1;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;if(result>0){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result=3*result;<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br><br>
+
+returns an error when compiling, as it requires an expression as return value, but returns nothing.<br><br>
+
+<strong>In the next versions</strong><br><br>
+
+The language MAL is still under construction. Accordingly, many useful features are not yet implemented. In the next versions, for example, dealing with arrays is planned so that, for example, solutions of equations can be stored therein and be further processed. In addition, a code help is offered, which reduces the implementation of various structures to the user, so as to avoid potential syntax errors. Likewise, a debug mode will be implemented soon, which significantly improves the fixing of bugs.
