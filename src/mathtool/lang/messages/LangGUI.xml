@@ -508,6 +508,50 @@
         <Russian>Выход</Russian>
         <Ukrainian>Вихід</Ukrainian>
     </object>
+    
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF_ELSE">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_WHILE">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_DO_WHILE">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_FOR">
+        <German></German>
+        <English></English>
+        <Russian></Russian>
+        <Ukrainian></Ukrainian>
+    </object>
+    
     <object id = "GUI_MathToolAlgorithmsGUI_RUN">
         <German>Ausführen</German>
         <English>Run</English>

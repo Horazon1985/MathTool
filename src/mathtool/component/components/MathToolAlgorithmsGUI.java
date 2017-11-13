@@ -37,9 +37,16 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private JMenuBar algorithmsMenuBar;
     private JMenu algorithmsMenuFile;
+    private JMenu algorithmsMenuCode;
+    private JMenu algorithmsMenuCodeHelp;
     private JMenuItem algorithmsMenuItemOpen;
     private JMenuItem algorithmsMenuItemSave;
     private JMenuItem algorithmsMenuItemQuit;
+    private JMenuItem algorithmsMenuCodeHelpIf;
+    private JMenuItem algorithmsMenuCodeHelpIfElse;
+    private JMenuItem algorithmsMenuCodeHelpWhile;
+    private JMenuItem algorithmsMenuCodeHelpDoWhile;
+    private JMenuItem algorithmsMenuCodeHelpFor;
 
     private JPanel headerPanel;
     private JLabel headerLabel;
@@ -73,6 +80,15 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private static final String GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM = "GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_QUIT = "GUI_MathToolAlgorithmsGUI_QUIT";
+
+    private static final String GUI_MathToolAlgorithmsGUI_CODE = "GUI_MathToolAlgorithmsGUI_CODE";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP = "GUI_MathToolAlgorithmsGUI_CODE_HELP";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP_IF = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP_IF_ELSE = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF_ELSE";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP_WHILE = "GUI_MathToolAlgorithmsGUI_CODE_HELP_WHILE";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP_DO_WHILE = "GUI_MathToolAlgorithmsGUI_CODE_HELP_DO_WHILE";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_HELP_FOR = "GUI_MathToolAlgorithmsGUI_CODE_HELP_FOR";
+
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
     private static final String GUI_MathToolAlgorithmsGUI_STOP = "GUI_MathToolAlgorithmsGUI_STOP";
     private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
@@ -131,17 +147,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             setBounds(mathtoolGuiX + (mathtoolGuiWidth - this.headerImage.getIconWidth()) / 2, mathtoolGuiY, this.headerImage.getIconWidth(), mathtoolGuiHeight);
 
-            this.algorithmsMenuBar = new JMenuBar();
-            this.algorithmsMenuFile = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FILE));
-            this.algorithmsMenuItemOpen = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM));
-            this.algorithmsMenuItemSave = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM));
-            this.algorithmsMenuItemQuit = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_QUIT));
-            this.algorithmsMenuFile.add(this.algorithmsMenuItemOpen);
-            this.algorithmsMenuFile.add(this.algorithmsMenuItemSave);
-            this.algorithmsMenuFile.add(this.algorithmsMenuItemQuit);
-            this.algorithmsMenuBar.add(this.algorithmsMenuFile);
-            setJMenuBar(this.algorithmsMenuBar);
-
+            // Hauptmenü erstellen.
+            createMenu();
+            
             this.algorithmsMenuItemOpen.addActionListener((ActionEvent e) -> {
                 MathToolAlgorithmsController.loadAlgorithm();
             });
@@ -287,6 +295,33 @@ public class MathToolAlgorithmsGUI extends JDialog {
         } catch (IOException e) {
         }
 
+    }
+    
+    private void createMenu() {
+            this.algorithmsMenuBar = new JMenuBar();
+            this.algorithmsMenuFile = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FILE));
+            this.algorithmsMenuItemOpen = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM));
+            this.algorithmsMenuItemSave = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM));
+            this.algorithmsMenuItemQuit = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_QUIT));
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemOpen);
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemSave);
+            this.algorithmsMenuFile.add(this.algorithmsMenuItemQuit);
+            this.algorithmsMenuBar.add(this.algorithmsMenuFile);
+            this.algorithmsMenuCode = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE));
+            this.algorithmsMenuCodeHelp = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP));
+            this.algorithmsMenuCodeHelpIf = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP_IF));
+            this.algorithmsMenuCodeHelpIfElse = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP_IF_ELSE));
+            this.algorithmsMenuCodeHelpWhile = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP_WHILE));
+            this.algorithmsMenuCodeHelpDoWhile = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP_DO_WHILE));
+            this.algorithmsMenuCodeHelpFor = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_HELP_FOR));
+            this.algorithmsMenuCodeHelp.add(this.algorithmsMenuCodeHelpIf);
+            this.algorithmsMenuCodeHelp.add(this.algorithmsMenuCodeHelpIfElse);
+            this.algorithmsMenuCodeHelp.add(this.algorithmsMenuCodeHelpWhile);
+            this.algorithmsMenuCodeHelp.add(this.algorithmsMenuCodeHelpDoWhile);
+            this.algorithmsMenuCodeHelp.add(this.algorithmsMenuCodeHelpFor);
+            this.algorithmsMenuCode.add(this.algorithmsMenuCodeHelp);
+            this.algorithmsMenuBar.add(this.algorithmsMenuCode);
+            setJMenuBar(this.algorithmsMenuBar);
     }
     
     private void formatCode() {
