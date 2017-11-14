@@ -1,7 +1,10 @@
 package mathtool.component.controller;
 
 import algorithmexecuter.CompilerUtils;
+import algorithmexecuter.enums.FixedAlgorithmNames;
+import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
+import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.model.Algorithm;
 import java.io.BufferedReader;
@@ -19,6 +22,25 @@ public class MathToolAlgorithmsController {
     private static final String SIGN_TAB = "\t";
     private static final String SIGN_NEXT_LINE = "\n";
 
+    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_VOID = FixedAlgorithmNames.MAIN.getValue()
+            + ReservedChars.OPEN_BRACKET.getStringValue()
+            + ReservedChars.CLOSE_BRACKET.getStringValue()
+            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION = IdentifierType.EXPRESSION.getValue() + " "
+            + FixedAlgorithmNames.MAIN.getValue()
+            + ReservedChars.OPEN_BRACKET.getStringValue()
+            + ReservedChars.CLOSE_BRACKET.getStringValue()
+            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION = IdentifierType.BOOLEAN_EXPRESSION.getValue() + " "
+            + FixedAlgorithmNames.MAIN.getValue()
+            + ReservedChars.OPEN_BRACKET.getStringValue()
+            + ReservedChars.CLOSE_BRACKET.getStringValue()
+            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION = IdentifierType.MATRIX_EXPRESSION.getValue() + " "
+            + FixedAlgorithmNames.MAIN.getValue()
+            + ReservedChars.OPEN_BRACKET.getStringValue()
+            + ReservedChars.CLOSE_BRACKET.getStringValue()
+            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
     private static final String CODE_IF = Keyword.IF.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
             + ReservedChars.CLOSE_BRACKET.getStringValue()
@@ -43,7 +65,6 @@ public class MathToolAlgorithmsController {
             + ReservedChars.ARGUMENT_SEPARATOR.getStringValue()
             + ReservedChars.CLOSE_BRACKET.getStringValue()
             + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
-    ;
 
     private static MathToolAlgorithmsGUI mathToolAlgorithmsGUI;
 
@@ -92,7 +113,7 @@ public class MathToolAlgorithmsController {
                 if (newLine) {
                     formattedSourceCode += SIGN_NEXT_LINE;
                 }
-                
+
                 // Beim Beginn eines neuen Algorithmus eine zusätzliche Leerzeile lassen.
                 if (wavedBracketCounter == 0) {
                     formattedSourceCode += SIGN_NEXT_LINE;
@@ -195,6 +216,54 @@ public class MathToolAlgorithmsController {
             } catch (IOException e) {
             }
         }
+    }
+
+    //////////////////////////////// Codegenerierung //////////////////////////////////////
+    public static String generateMainAlgorithmWithReturnTypeVoid() {
+        return CODE_MAIN_ALGORITHM_RETURN_TYPE_VOID;
+    }
+
+    public static String generateMainAlgorithmWithReturnTypeExpression() {
+        return CODE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION;
+    }
+
+    public static String generateMainAlgorithmWithReturnTypeBooleanExpression() {
+        return CODE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION;
+    }
+
+    public static String generateMainAlgorithmWithReturnTypeMatrixExpression() {
+        return CODE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION;
+    }
+
+    public static String generateControlStructureIf() {
+        return CODE_IF;
+    }
+
+    public static String generateControlStructureIfElse() {
+        return CODE_IF_ELSE;
+    }
+
+    public static String generateControlStructureWhile() {
+        return CODE_WHILE;
+    }
+
+    public static String generateControlStructureDoWhile() {
+        return CODE_DO_WHILE;
+    }
+
+    public static String generateControlStructureFor() {
+        return CODE_FOR;
+    }
+
+    public static String generateCommandDefine(IdentifierType type, String identifierName, String expr) {
+        if (expr.isEmpty()) {
+            return type.getValue() + " " + identifierName + ReservedChars.LINE_SEPARATOR.getValue();
+        }
+        return type.getValue() + " " + identifierName + Operators.DEFINE.getValue() + expr + ReservedChars.LINE_SEPARATOR.getValue();
+    }
+
+    public static String generateCommandReturn(String identifierName) {
+        return Keyword.RETURN.getValue() + " " + identifierName + ReservedChars.LINE_SEPARATOR.getValue();
     }
 
 }

@@ -508,50 +508,132 @@
         <Russian>Выход</Russian>
         <Ukrainian>Вихід</Ukrainian>
     </object>
-    
     <object id = "GUI_MathToolAlgorithmsGUI_CODE">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+        <German>Code</German>
+        <English>Code</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE">
+        <German>Code generieren</German>
+        <English>Generate code</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM">
+        <German>Hauptalgorithmus generieren</German>
+        <English>Generate main algorithm</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_IF_ELSE">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID">
+        <German>Rückgabetyp: leer</German>
+        <English>Return type: void</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_WHILE">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION">
+        <German>Rückgabetyp: Ausdruck</German>
+        <English>Return type: expression</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_DO_WHILE">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION">
+        <German>Rückgabetyp: Boolscher Ausdruck</German>
+        <English>Return type: boolean expression</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_HELP_FOR">
-        <German></German>
-        <English></English>
-        <Russian></Russian>
-        <Ukrainian></Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION">
+        <German>Rückgabetyp: Matrizenausdruck</German>
+        <English>Return type: matrix expression</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
-    
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE">
+        <German>Subroutine generieren</German>
+        <English>Generate sub-routine</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_CONTROL_STRUCTURES">
+        <German>Kontrollstruktur generieren</German>
+        <English>Generate control structure</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF">
+        <German>Wenn-Kontrollstruktur generieren</German>
+        <English>Generate if control structure</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF_ELSE">
+        <German>Wenn-Dann-Kontrollstruktur generieren</German>
+        <English>Generate if else control structure</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_WHILE">
+        <German>While-Schleife generieren</German>
+        <English>Generate while loop</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_DO_WHILE">
+        <German>Do-While-Schleife generieren</German>
+        <English>Generate do while loop</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_FOR">
+        <German>For-Schleife generieren</German>
+        <English>Generate for loop</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND">
+        <German>Befehl generieren</German>
+        <English>Generate command</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE">
+        <German>Bezeichnerdefinition</German>
+        <English>Definition of identifier</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_TYPE">
+        <German>Typ:</German>
+        <English>type:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME">
+        <German>Name:</German>
+        <English>Name:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_VALUE">
+        <German>Wert:</German>
+        <English>Value:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON">
+        <German>Befehl generieren</German>
+        <English>Generate command</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_RETURN">
+        <German>Rückgabebefehl generieren</German>
+        <English>Generate return command</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_RUN">
         <German>Ausführen</German>
         <English>Run</English>

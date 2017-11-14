@@ -35,10 +35,10 @@ public class LegendGUI extends MathToolInfoComponentTemplate {
 
     }
 
-    public static LegendGUI getInstance(int mathtoolGUIX, int mathtoolGUIY, int mathtoolGUIWidth, int mathtoolGUIHeight,
+    public static LegendGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight,
             ArrayList<String> instructions, ArrayList<Color> colors, ArrayList<String> exprs) {
         if (instance == null) {
-            instance = new LegendGUI(mathtoolGUIX, mathtoolGUIY, mathtoolGUIWidth, mathtoolGUIHeight, instructions, colors, exprs);
+            instance = new LegendGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, instructions, colors, exprs);
         }
         return instance;
     }

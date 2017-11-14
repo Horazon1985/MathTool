@@ -37,8 +37,8 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
      * (4) Eine Reihe von Menüpunkten.<br>
      * (5) Eine TextArea, die mal ein-, mal ausgeblendet werden kann.
      */
-    public MathToolInfoComponentTemplate(int mathtoolGUIX, int mathtoolGUIY,
-            int mathtoolGUIWidth, int mathtoolGUIHeight,
+    public MathToolInfoComponentTemplate(int mathtoolGuiX, int mathtoolGuiY,
+            int mathtoolGuiWidth, int mathtoolGuiHeight,
             String titleID, String headerImageFilePath,
             ArrayList<String> informations, ArrayList<String> coloredInformations,
             ArrayList<Color> colors, ArrayList<String> menuCaptions, ArrayList<String> files) {
@@ -47,7 +47,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
-        this.getContentPane().setBackground(Color.white);
+        getContentPane().setBackground(Color.white);
 
         int currentComponentLevel;
 
@@ -109,8 +109,8 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
                 // Standardbreite = 500 Pixel.
                 width = 500;
             }
-            this.setBounds((mathtoolGUIWidth - width) / 2 + mathtoolGUIX,
-                    (mathtoolGUIHeight - height) / 2 + mathtoolGUIY,
+            this.setBounds((mathtoolGuiWidth - width) / 2 + mathtoolGuiX,
+                    (mathtoolGuiHeight - height) / 2 + mathtoolGuiY,
                     width, height);
 
             // Info-Labels einfügen
