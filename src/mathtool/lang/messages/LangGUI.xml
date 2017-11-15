@@ -556,11 +556,17 @@
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER">
-        <German>Parameter:</German>
-        <English>Parameter:</English>
-        <Russian>Параметр:</Russian>
-        <Ukrainian>Параметр:</Ukrainian>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME">
+        <German>Name:</German>
+        <English>Name:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_RETURN_TYPE">
+        <German>Rückgabetyp:</German>
+        <English>Return type:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER">
         <German>Parameter:</German>
@@ -568,13 +574,13 @@
         <Russian>Параметр:</Russian>
         <Ukrainian>Параметр:</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_TYPE">
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER_TYPE">
         <German>Typ:</German>
         <English>Type:</English>
         <Russian>Тип:</Russian>
         <Ukrainian>Тип:</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME">
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER_NAME">
         <German>Name:</German>
         <English>Name:</English>
         <Russian>???</Russian>
@@ -591,12 +597,6 @@
         <English>Add parameter</English>
         <Russian>Добавить параметр</Russian>
         <Ukrainian>Додати параметр</Ukrainian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_REMOVE_PARAMETER_BUTTON">
-        <German>Parameter entfernen</German>
-        <English>Remove parameter</English>
-        <Russian>Удалить параметр</Russian>
-        <Ukrainian>Видалити параметр</Ukrainian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_BUTTON">
         <German>Unterroutine generieren</German>
