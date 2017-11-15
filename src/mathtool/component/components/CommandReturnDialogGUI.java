@@ -1,36 +1,29 @@
 package mathtool.component.components;
 
-import algorithmexecuter.enums.IdentifierType;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import mathtool.component.controller.MathToolAlgorithmsController;
-import mathtool.lang.translator.Translator;
+import mathtool.component.templates.CommandComponentTemplate;
 
 /**
  * Dialog für Bezeichnerdefinition.
  */
-public class CommandReturnDialogGUI extends JDialog {
+public class CommandReturnDialogGUI extends CommandComponentTemplate {
 
     private static final String TITLE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_RETURN";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON";
+//    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON";
 
-    private static JTextArea algorithmEditor;
+//    private static JTextArea algorithmEditor;
 
-    private JLabel nameLabel;
+//    private JLabel nameLabel;
 
-    private JTextField nameField;
+//    private JTextField nameField;
 
-    private JButton generateButton;
+//    private JButton generateButton;
 
     private static final int DIALOG_WIDTH = 400;
     private static final int DIALOG_HEIGHT = 175;
@@ -38,14 +31,8 @@ public class CommandReturnDialogGUI extends JDialog {
     private static CommandReturnDialogGUI instance = null;
 
     private CommandReturnDialogGUI(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh) {
-        setTitle(Translator.translateOutputMessage(TITLE));
-        setLayout(null);
-//        setResizable(false);
-        setAlwaysOnTop(true);
-        setModal(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        getContentPane().setBackground(Color.white);
-        init(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
+        super(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh, new String[]{},
+                new String[]{GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME}, new Object[][]{}, TITLE);
     }
 
     private void init(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh) {
@@ -53,40 +40,40 @@ public class CommandReturnDialogGUI extends JDialog {
                 (algorithmGuiHeigh - DIALOG_HEIGHT) / 2 + algorithmGuiY,
                 DIALOG_WIDTH, DIALOG_HEIGHT);
 
-        this.nameLabel = new JLabel(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME));
-        this.add(this.nameLabel);
-        this.nameLabel.setBounds(25, 25, 50, 25);
-
-        this.nameField = new JTextField();
-        this.add(this.nameField);
-        this.nameField.setBounds(100, 25, 250, 25);
-
-        this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON));
-        this.add(this.generateButton);
-        this.generateButton.setBounds(25, 75, 200, 30);
+//        this.nameLabel = new JLabel(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME));
+//        this.add(this.nameLabel);
+//        this.nameLabel.setBounds(25, 25, 50, 25);
+//
+//        this.nameField = new JTextField();
+//        this.add(this.nameField);
+//        this.nameField.setBounds(100, 25, 250, 25);
+//
+//        this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON));
+//        this.add(this.generateButton);
+//        this.generateButton.setBounds(25, 75, 200, 30);
         this.generateButton.setEnabled(false);
         this.generateButton.addActionListener((ActionEvent e) -> {
             try {
                 algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(),
-                        MathToolAlgorithmsController.generateCommandReturn(nameField.getText()), null);
+                        MathToolAlgorithmsController.generateCommandReturn(textFields[0].getText()), null);
                 dispose();
             } catch (BadLocationException ex) {
             }
         });
-        this.nameField.getDocument().addDocumentListener(new DocumentListener() {
+        this.textFields[0].getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
-                generateButton.setEnabled(!nameField.getText().replaceAll(" ", "").isEmpty());
+                generateButton.setEnabled(!textFields[0].getText().replaceAll(" ", "").isEmpty());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                generateButton.setEnabled(!nameField.getText().replaceAll(" ", "").isEmpty());
+                generateButton.setEnabled(!textFields[0].getText().replaceAll(" ", "").isEmpty());
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                generateButton.setEnabled(!nameField.getText().replaceAll(" ", "").isEmpty());
+                generateButton.setEnabled(!textFields[0].getText().replaceAll(" ", "").isEmpty());
             }
         });
 
@@ -106,7 +93,7 @@ public class CommandReturnDialogGUI extends JDialog {
     }
 
     private void resetAllFields() {
-        this.nameField.setText("");
+        this.textFields[0].setText("");
     }
 
 }

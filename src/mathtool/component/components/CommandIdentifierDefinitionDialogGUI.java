@@ -24,7 +24,7 @@ public class CommandIdentifierDefinitionDialogGUI extends JDialog {
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_TYPE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_TYPE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_NAME";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_VALUE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_VALUE";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON";
 
     private static JTextArea algorithmEditor;
 
@@ -83,7 +83,7 @@ public class CommandIdentifierDefinitionDialogGUI extends JDialog {
         this.valueField.setVisible(true);
         this.valueField.setBounds(100, 125, 250, 25);
 
-        this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON));
+        this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON));
         this.add(this.generateButton);
         this.generateButton.setBounds(25, 175, 200, 30);
         this.generateButton.setEnabled(false);

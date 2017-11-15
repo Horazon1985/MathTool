@@ -622,7 +622,7 @@
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE_BUTTON">
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON">
         <German>Befehl generieren</German>
         <English>Generate command</English>
         <Russian>???</Russian>
