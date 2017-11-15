@@ -32,6 +32,7 @@ import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
 
+    private static final String ICON_PATH = "/mathtool/icons/MathToolIcon.png";
     private static final String PATH_LOGO_MATHTOOL_ALGORITHMS = "icons/MathToolAlgorithmsLogo.png";
     private static final String PATH_RUN_LOGO = "icons/RunLogo.png";
     private static final String PATH_STOP_LOGO = "icons/StopLogo.png";
@@ -150,6 +151,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
         int currentComponentLevel;
 
+        // Icon setzen.
+        setIconImage(new ImageIcon(getClass().getResource(ICON_PATH)).getImage());
         try {
             // Logo ganz oben laden.
             this.headerPanel = new JPanel();
@@ -374,6 +377,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
         });
         this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeMatrixExpression.addActionListener((ActionEvent e) -> {
             algorithmEditor.append(MathToolAlgorithmsController.generateMainAlgorithmWithReturnTypeMatrixExpression());
+        });
+        this.algorithmsMenuItemCodeGenerateSubroutine.addActionListener((ActionEvent e) -> {
+            SubroutineDefinitionDialogGUI.createSubroutineDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateIf.addActionListener((ActionEvent e) -> {
             try {

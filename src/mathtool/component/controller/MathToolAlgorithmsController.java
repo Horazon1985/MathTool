@@ -235,6 +235,22 @@ public class MathToolAlgorithmsController {
         return CODE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION;
     }
 
+    public static String generateSubroutine(IdentifierType returnType, String subroutineName, IdentifierType[] parameterTypes, String[] parameterNames) {
+        String subroutineCode = "";
+        if (returnType != null) {
+            subroutineCode += returnType.getValue() + " ";
+        }
+        subroutineCode += subroutineName + ReservedChars.OPEN_BRACKET.getStringValue();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            subroutineCode += parameterTypes[i].getValue() + " " + parameterNames[i];
+            if (i < parameterTypes.length - 1) {
+                subroutineCode += ReservedChars.ARGUMENT_SEPARATOR.getStringValue();
+            }
+        }
+        subroutineCode += ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+        return subroutineCode;
+    }
+    
     public static String generateControlStructureIf() {
         return CODE_IF;
     }

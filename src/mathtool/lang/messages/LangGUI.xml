@@ -552,7 +552,55 @@
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE">
         <German>Subroutine generieren</German>
-        <English>Generate sub-routine</English>
+        <English>Generate subroutine</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER">
+        <German>Parameter:</German>
+        <English>Parameter:</English>
+        <Russian>Параметр:</Russian>
+        <Ukrainian>Параметр:</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER">
+        <German>Parameter:</German>
+        <English>Parameter:</English>
+        <Russian>Параметр:</Russian>
+        <Ukrainian>Параметр:</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_TYPE">
+        <German>Typ:</German>
+        <English>Type:</English>
+        <Russian>Тип:</Russian>
+        <Ukrainian>Тип:</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME">
+        <German>Name:</German>
+        <English>Name:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_GENERAL_PARAMETER">
+        <German>[0]. Parameter:</German>
+        <English>[0]. parameter:</English>
+        <Russian>[0]. параметр:</Russian>
+        <Ukrainian>[0]. параметр:</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_ADD_PARAMETER_BUTTON">
+        <German>Parameter hinzufügen</German>
+        <English>Add parameter</English>
+        <Russian>Добавить параметр</Russian>
+        <Ukrainian>Додати параметр</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_REMOVE_PARAMETER_BUTTON">
+        <German>Parameter entfernen</German>
+        <English>Remove parameter</English>
+        <Russian>Удалить параметр</Russian>
+        <Ukrainian>Видалити параметр</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_BUTTON">
+        <German>Unterroutine generieren</German>
+        <English>Generate subroutine</English>
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
