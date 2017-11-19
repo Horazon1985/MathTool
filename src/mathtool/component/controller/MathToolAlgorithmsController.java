@@ -260,16 +260,16 @@ public class MathToolAlgorithmsController {
         return CODE_IF_ELSE.replaceAll(PLACEHOLFER_0, ifCondition);
     }
 
-    public static String generateControlStructureWhile() {
-        return CODE_WHILE;
+    public static String generateControlStructureWhile(String ifCondition) {
+        return CODE_WHILE.replaceAll(PLACEHOLFER_0, ifCondition);
     }
 
-    public static String generateControlStructureDoWhile() {
-        return CODE_DO_WHILE;
+    public static String generateControlStructureDoWhile(String ifCondition) {
+        return CODE_DO_WHILE.replaceAll(PLACEHOLFER_0, ifCondition);
     }
 
-    public static String generateControlStructureFor() {
-        return CODE_FOR;
+    public static String generateControlStructureFor(String initialization, String endCondition, String increment) {
+        return CODE_FOR.replaceAll(PLACEHOLFER_0, initialization).replaceAll(PLACEHOLFER_1, endCondition).replaceAll(PLACEHOLFER_2, increment);
     }
 
     public static String generateCommandDefine(IdentifierType type, String identifierName, String expr) {

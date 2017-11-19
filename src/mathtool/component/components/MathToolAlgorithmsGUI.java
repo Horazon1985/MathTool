@@ -367,22 +367,13 @@ public class MathToolAlgorithmsGUI extends JDialog {
             CommandControlStructureIfElseDialogGUI.createCommandControlStructureIfElseDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateWhile.addActionListener((ActionEvent e) -> {
-            try {
-                algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(), MathToolAlgorithmsController.generateControlStructureWhile(), null);
-            } catch (BadLocationException ex) {
-            }
+            CommandControlStructureWhileDialogGUI.createCommandControlStructureWhileDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateDoWhile.addActionListener((ActionEvent e) -> {
-            try {
-                algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(), MathToolAlgorithmsController.generateControlStructureDoWhile(), null);
-            } catch (BadLocationException ex) {
-            }
+            CommandControlStructureDoWhileDialogGUI.createCommandControlStructureDoWhileDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateFor.addActionListener((ActionEvent e) -> {
-            try {
-                algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(), MathToolAlgorithmsController.generateControlStructureFor(), null);
-            } catch (BadLocationException ex) {
-            }
+            CommandControlStructureForDialogGUI.createCommandControlStructureForDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
 
         this.algorithmsMenuItemCodeGenerateCommandDefine.addActionListener((ActionEvent e) -> {

@@ -628,12 +628,6 @@
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_CONDITION">
-        <German>Bedingung:</German>
-        <English>Condition:</English>
-        <Russian>???</Russian>
-        <Ukrainian>???</Ukrainian>
-    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_WHILE">
         <German>While-Schleife generieren</German>
         <English>Generate while loop</English>
@@ -643,6 +637,30 @@
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_DO_WHILE">
         <German>Do-While-Schleife generieren</German>
         <English>Generate do while loop</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_DO_WHILE_CONDITION">
+        <German>Bedingung:</German>
+        <English>Condition:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_FOR_INITIALIZATION">
+        <German>Initialisierung:</German>
+        <English>Initialization:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_FOR_END_CONDITION">
+        <German>Abbruchbedingung:</German>
+        <English>Condition for break:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_FOR_INCREMENT">
+        <German>Inkrement:</German>
+        <English>Increment:</English>
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
