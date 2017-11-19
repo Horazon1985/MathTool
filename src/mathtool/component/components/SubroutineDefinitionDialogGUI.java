@@ -3,7 +3,10 @@ package mathtool.component.components;
 import algorithmexecuter.enums.IdentifierType;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,7 +17,6 @@ import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import mathtool.component.controller.MathToolAlgorithmsController;
 import mathtool.lang.translator.Translator;
 
@@ -23,7 +25,11 @@ import mathtool.lang.translator.Translator;
  */
 public class SubroutineDefinitionDialogGUI extends JDialog {
 
-    private static final String ICON_PATH = "/mathtool/icons/MathToolIcon.png";
+    private static final String MATHTOOL_ICON_PATH = "/mathtool/icons/MathToolIcon.png";
+    private static final String CROSS_ICON_PATH = "/mathtool/icons/CrossIcon.png";
+
+    private static final String SIGN_TAB = "\t";
+    private static final String SIGN_NEXT_LINE = "\n";
 
     private static final String TITLE_ID = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME";
@@ -40,24 +46,24 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
     private JLabel routineNameLabel;
 
     private JTextField routineNameField;
-    
+
     private JLabel routineReturnTypeLabel;
 
-    private JComboBox<IdentifierType> routineReturnTypeCombobox;
-    
+    private JComboBox routineReturnTypeCombobox;
+
     private JLabel parameterLabel;
 
     private JLabel typeLabel;
 
     private JLabel nameLabel;
 
-    private final ArrayList<JLabel> parameterLabels = new ArrayList<>();
+    private final List<JLabel> parameterLabels = new ArrayList<>();
 
-    private final ArrayList<JComboBox> comboBoxes = new ArrayList<>();
+    private final List<JComboBox<IdentifierType>> parameterTypeComboBoxes = new ArrayList<>();
 
-    private final ArrayList<JTextField> textFields = new ArrayList<>();
+    private final List<JTextField> parameterNameFields = new ArrayList<>();
 
-    private final ArrayList<JButton> removeButtons = new ArrayList<>();
+    private final List<JButton> removeButtons = new ArrayList<>();
 
     private JButton addParameterButton;
 
@@ -70,7 +76,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
 
     private SubroutineDefinitionDialogGUI(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh) {
         // Icon setzen.
-        setIconImage(new ImageIcon(getClass().getResource(ICON_PATH)).getImage());
+        setIconImage(new ImageIcon(getClass().getResource(MATHTOOL_ICON_PATH)).getImage());
         setTitle(Translator.translateOutputMessage(TITLE_ID));
         setLayout(null);
 //        setResizable(false);
@@ -87,7 +93,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         this.routineNameLabel = new JLabel(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME));
         this.add(this.routineNameLabel);
         this.routineNameLabel.setBounds(25, 25, 100, 25);
-        
+
         this.routineNameField = new JTextField();
         this.add(this.routineNameField);
         this.routineNameField.setBounds(150, 25, 200, 25);
@@ -96,10 +102,11 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         this.add(this.routineReturnTypeLabel);
         this.routineReturnTypeLabel.setBounds(25, 75, 100, 25);
 
-        this.routineReturnTypeCombobox = new JComboBox<>(IdentifierType.values());
+        initAndFillReturnTypeValues();
+        
         this.add(this.routineReturnTypeCombobox);
         this.routineReturnTypeCombobox.setBounds(150, 75, 200, 25);
-        
+
         this.parameterLabel = new JLabel(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER));
         this.add(this.parameterLabel);
         this.parameterLabel.setBounds(25, 125, 75, 25);
@@ -122,16 +129,94 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_BUTTON));
         this.add(this.generateButton);
         this.generateButton.setBounds(250, 175, 200, 25);
+        this.generateButton.setEnabled(false);
         this.generateButton.addActionListener((ActionEvent e) -> {
-            
+            IdentifierType[] parameterTypes = new IdentifierType[parameterTypeComboBoxes.size()];
+            String[] parameterNames = new String[parameterTypeComboBoxes.size()];
+            for (int i = 0; i < parameterTypeComboBoxes.size(); i++) {
+                parameterTypes[i] = (IdentifierType) parameterTypeComboBoxes.get(i).getSelectedItem();
+                parameterNames[i] = parameterNameFields.get(i).getText();
+            }
+
+            String subroutineCode = MathToolAlgorithmsController.generateSubroutine((IdentifierType) routineReturnTypeCombobox.getSelectedItem(), routineNameField.getText(), parameterTypes, parameterNames);
+
+            if (algorithmEditor.getText().replaceAll(" ", "").replaceAll(SIGN_NEXT_LINE, "").replaceAll(SIGN_TAB, "").isEmpty()) {
+                algorithmEditor.setText(subroutineCode);
+            } else {
+                algorithmEditor.append(SIGN_NEXT_LINE + SIGN_NEXT_LINE + subroutineCode);
+            }
+            algorithmEditor.setCaretPosition(algorithmEditor.getText().length() - 2);
+
+            dispose();
         });
+
+        // Changelistener für das Aktivieren des Generierenbuttons.
+        this.routineNameField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+        });
+
+    }
+    
+    private void initAndFillReturnTypeValues() {
+        ArrayList returnTypes = new ArrayList();
+        returnTypes.add(null);
+        for (IdentifierType type : IdentifierType.values()) {
+            returnTypes.add(type);
+        }
+        this.routineReturnTypeCombobox = new JComboBox(returnTypes.toArray());
+    }
+
+    private boolean isGenerateButtonEnabled() {
+        if (this.routineNameField.getText().replaceAll(" ", "").isEmpty()) {
+            return false;
+        }
+        for (JTextField tf : this.parameterNameFields) {
+            if (tf.getText().replaceAll(" ", "").isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void removeParameter(int i) {
-        // TO DO.
-        
+
+        remove(this.parameterLabels.get(i));
+        remove(this.parameterTypeComboBoxes.get(i));
+        remove(this.parameterNameFields.get(i));
+        remove(this.removeButtons.get(i));
+
+        this.parameterLabels.remove(i);
+        this.parameterTypeComboBoxes.remove(i);
+        this.parameterNameFields.remove(i);
+        this.removeButtons.remove(i);
+
+        for (int j = i; j < this.removeButtons.size(); j++) {
+            this.parameterLabels.get(j).setBounds(this.parameterLabels.get(j).getX(), this.parameterLabels.get(j).getY() - 50,
+                    this.parameterLabels.get(j).getWidth(), this.parameterLabels.get(j).getHeight());
+            this.parameterTypeComboBoxes.get(j).setBounds(this.parameterTypeComboBoxes.get(j).getX(), this.parameterTypeComboBoxes.get(j).getY() - 50,
+                    this.parameterTypeComboBoxes.get(j).getWidth(), this.parameterTypeComboBoxes.get(j).getHeight());
+            this.parameterNameFields.get(j).setBounds(this.parameterNameFields.get(j).getX(), this.parameterNameFields.get(j).getY() - 50,
+                    this.parameterNameFields.get(j).getWidth(), this.parameterNameFields.get(j).getHeight());
+            this.removeButtons.get(j).setBounds(this.removeButtons.get(j).getX(), this.removeButtons.get(j).getY() - 50,
+                    this.removeButtons.get(j).getWidth(), this.removeButtons.get(j).getHeight());
+        }
+
         relocateButtonsAfterNewParameter();
         updateBounds();
+        this.generateButton.setEnabled(isGenerateButtonEnabled());
         revalidate();
         repaint();
     }
@@ -142,21 +227,46 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         this.add(this.parameterLabels.get(this.parameterLabels.size() - 1));
         this.parameterLabels.get(this.parameterLabels.size() - 1).setBounds(25, 125 + 50 * this.parameterLabels.size(), 100, 25);
 
-        this.comboBoxes.add(new JComboBox(IdentifierType.values()));
-        this.add(this.comboBoxes.get(this.comboBoxes.size() - 1));
-        this.comboBoxes.get(this.comboBoxes.size() - 1).setBounds(125, 125 + 50 * this.parameterLabels.size(), 100, 25);
-        
-        this.textFields.add(new JTextField());
-        this.add(this.textFields.get(this.textFields.size() - 1));
-        this.textFields.get(this.textFields.size() - 1).setBounds(250, 125 + 50 * this.parameterLabels.size(), 150, 25);
+        this.parameterTypeComboBoxes.add(new JComboBox(IdentifierType.values()));
+        this.add(this.parameterTypeComboBoxes.get(this.parameterTypeComboBoxes.size() - 1));
+        this.parameterTypeComboBoxes.get(this.parameterTypeComboBoxes.size() - 1).setBounds(125, 125 + 50 * this.parameterLabels.size(), 100, 25);
 
-        this.removeButtons.add(new JButton("X"));
+        this.parameterNameFields.add(new JTextField());
+        this.add(this.parameterNameFields.get(this.parameterNameFields.size() - 1));
+        this.parameterNameFields.get(this.parameterNameFields.size() - 1).setBounds(250, 125 + 50 * this.parameterLabels.size(), 150, 25);
+
+        ImageIcon crossIcon = null;
+        try {
+            crossIcon = new ImageIcon(ImageIO.read(getClass().getResource(CROSS_ICON_PATH)));
+        } catch (IOException e) {
+        }
+
+        this.removeButtons.add(new JButton(crossIcon));
         this.add(this.removeButtons.get(this.removeButtons.size() - 1));
-        this.removeButtons.get(this.removeButtons.size() - 1).setBounds(415, 125 + 50 * this.parameterLabels.size(), 35, 25);
+        this.removeButtons.get(this.removeButtons.size() - 1).setBounds(420, 125 + 50 * this.parameterLabels.size(), 30, 25);
         this.removeButtons.get(this.removeButtons.size() - 1).addActionListener((ActionEvent e) -> {
-            
+            removeParameter(removeButtons.indexOf(e.getSource()));
         });
-        
+
+        // Changelistener für das Aktivieren des Generierenbuttons.
+        this.generateButton.setEnabled(false);
+        this.parameterNameFields.get(this.parameterNameFields.size() - 1).getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                generateButton.setEnabled(isGenerateButtonEnabled());
+            }
+        });
+
         relocateButtonsAfterNewParameter();
         updateBounds();
         revalidate();
@@ -175,9 +285,9 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
     }
 
     private void relocateButtonsAfterNewParameter() {
-        this.addParameterButton.setBounds(this.addParameterButton.getX(), 175 + 50 * this.parameterLabels.size(), 
+        this.addParameterButton.setBounds(this.addParameterButton.getX(), 175 + 50 * this.parameterLabels.size(),
                 this.addParameterButton.getWidth(), this.addParameterButton.getHeight());
-        this.generateButton.setBounds(this.generateButton.getX(), 175 + 50 * this.parameterLabels.size(), 
+        this.generateButton.setBounds(this.generateButton.getX(), 175 + 50 * this.parameterLabels.size(),
                 this.generateButton.getWidth(), this.generateButton.getHeight());
     }
 
@@ -187,8 +297,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         if (instance == null) {
             instance = new SubroutineDefinitionDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
-        instance.resetAllFields();
-        instance.resetAllChoices();
+        instance.reset();
         instance.setVisible(true);
 
         instance.revalidate();
@@ -196,16 +305,30 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         return instance;
     }
 
-    private void resetAllChoices() {
-        for (JComboBox<IdentifierType> cb : this.comboBoxes) {
-            cb.setSelectedItem(IdentifierType.EXPRESSION);
+    private void reset() {
+        
+        for (JLabel l : this.parameterLabels) {
+            remove(l);
         }
-    }
-
-    private void resetAllFields() {
-        for (JTextField tf : this.textFields) {
-            tf.setText("");
+        for (JComboBox cb : this.parameterTypeComboBoxes) {
+            remove(cb);
         }
+        for (JTextField tf : this.parameterNameFields) {
+            remove(tf);
+        }
+        for (JButton b : this.removeButtons) {
+            remove(b);
+        }
+        
+        this.routineNameField.setText("");
+        this.routineReturnTypeCombobox.setSelectedIndex(0);
+        this.parameterLabels.clear();
+        this.parameterTypeComboBoxes.clear();
+        this.parameterNameFields.clear();
+        this.removeButtons.clear();
+    
+        relocateButtonsAfterNewParameter();
+        updateBounds();
     }
-
+    
 }

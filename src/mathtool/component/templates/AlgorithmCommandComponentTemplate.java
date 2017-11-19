@@ -16,6 +16,9 @@ import mathtool.lang.translator.Translator;
 public class AlgorithmCommandComponentTemplate extends JDialog {
 
     private static final String ICON_PATH = "/mathtool/icons/MathToolIcon.png";
+
+    protected static final String SIGN_TAB = "\t";
+    protected static final String SIGN_NEXT_LINE = "\n";
     
     protected static JTextArea algorithmEditor;
 
@@ -48,7 +51,7 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
     private void init(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh,
             String[] choiceLabelStringIds, String[] textFieldlabelStringIds, Object[][] comboboxCoices) {
 
-        int dialogWidth = 400;
+        int dialogWidth = 450;
         int dialogHeight = 125 + 50 * (choiceLabelStringIds.length + textFieldlabelStringIds.length);
 
         setBounds((algorithmGuiWidth - dialogWidth) / 2 + algorithmGuiX,
@@ -60,10 +63,10 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
         for (int i = 0; i < choiceLabelStringIds.length; i++) {
             this.choicelabels[i] = new JLabel(Translator.translateOutputMessage(choiceLabelStringIds[i]));
             this.add(this.choicelabels[i]);
-            this.choicelabels[i].setBounds(25, 25 + 50 * i, 75, 25);
+            this.choicelabels[i].setBounds(25, 25 + 50 * i, 125, 25);
             this.comboBoxes[i] = new JComboBox<>(comboboxCoices[i]);
             this.add(this.comboBoxes[i]);
-            this.comboBoxes[i].setBounds(100, 25 + 50 * i, 250, 25);
+            this.comboBoxes[i].setBounds(150, 25 + 50 * i, 250, 25);
         }
 
         this.textFieldlabels = new JLabel[textFieldlabelStringIds.length];
@@ -71,16 +74,16 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
         for (int i = 0; i < textFieldlabelStringIds.length; i++) {
             this.textFieldlabels[i] = new JLabel(Translator.translateOutputMessage(textFieldlabelStringIds[i]));
             this.add(this.textFieldlabels[i]);
-            this.textFieldlabels[i].setBounds(25, 25 + 50 * (choiceLabelStringIds.length + i), 75, 25);
+            this.textFieldlabels[i].setBounds(25, 25 + 50 * (choiceLabelStringIds.length + i), 125, 25);
             this.textFields[i] = new JTextField();
             this.add(this.textFields[i]);
-            this.textFields[i].setBounds(100, 25 + 50 * (choiceLabelStringIds.length + i), 250, 25);
+            this.textFields[i].setBounds(150, 25 + 50 * (choiceLabelStringIds.length + i), 250, 25);
         }
 
         this.generateButton = new JButton(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON));
         this.add(this.generateButton);
         this.generateButton.setBounds(25, 25 + 50 * (choiceLabelStringIds.length + textFieldlabelStringIds.length), 200, 30);
-        this.generateButton.setEnabled(false);
+        this.generateButton.setEnabled(textFields.length == 0);
     }
 
     protected void resetAllFields() {

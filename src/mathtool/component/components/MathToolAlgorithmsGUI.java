@@ -42,12 +42,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JMenu algorithmsMenuCode;
     private JMenu algorithmsMenuCodeGenerate;
     private JMenu algorithmsMenuCodeGenerateControlStructures;
-    private JMenu algorithmsMenuCodeGenerateMainAlgorithm;
     private JMenu algorithmsMenuCodeGenerateCommand;
-    private JMenuItem algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeVoid;
-    private JMenuItem algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeExpression;
-    private JMenuItem algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeBooleanExpression;
-    private JMenuItem algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeMatrixExpression;
+    private JMenuItem algorithmsMenuCodeGenerateMainAlgorithm;
     private JMenuItem algorithmsMenuItemCodeGenerateSubroutine;
     private JMenuItem algorithmsMenuItemOpen;
     private JMenuItem algorithmsMenuItemSave;
@@ -321,15 +317,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
         this.algorithmsMenuBar.add(this.algorithmsMenuFile);
         this.algorithmsMenuCode = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE));
         this.algorithmsMenuCodeGenerate = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE));
-        this.algorithmsMenuCodeGenerateMainAlgorithm = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM));
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeVoid = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID));
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeExpression = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION));
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeBooleanExpression = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION));
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeMatrixExpression = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION));
-        this.algorithmsMenuCodeGenerateMainAlgorithm.add(this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeVoid);
-        this.algorithmsMenuCodeGenerateMainAlgorithm.add(this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeExpression);
-        this.algorithmsMenuCodeGenerateMainAlgorithm.add(this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeBooleanExpression);
-        this.algorithmsMenuCodeGenerateMainAlgorithm.add(this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeMatrixExpression);
+        this.algorithmsMenuCodeGenerateMainAlgorithm = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM));
         this.algorithmsMenuItemCodeGenerateSubroutine = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE));
         this.algorithmsMenuCodeGenerateControlStructures = new JMenu(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_CONTROL_STRUCTURES));
         this.algorithmsMenuItemCodeGenerateIf = new JMenuItem(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF));
@@ -366,32 +354,17 @@ public class MathToolAlgorithmsGUI extends JDialog {
             instance = null;
         });
 
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeVoid.addActionListener((ActionEvent e) -> {
-            algorithmEditor.append(MathToolAlgorithmsController.generateMainAlgorithmWithReturnTypeVoid());
-        });
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeExpression.addActionListener((ActionEvent e) -> {
-            algorithmEditor.append(MathToolAlgorithmsController.generateMainAlgorithmWithReturnTypeExpression());
-        });
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeBooleanExpression.addActionListener((ActionEvent e) -> {
-            algorithmEditor.append(MathToolAlgorithmsController.generateMainAlgorithmWithReturnTypeBooleanExpression());
-        });
-        this.algorithmsMenuItemCodeGenerateMainAlgorithmReturnTypeMatrixExpression.addActionListener((ActionEvent e) -> {
-            algorithmEditor.append(MathToolAlgorithmsController.generateMainAlgorithmWithReturnTypeMatrixExpression());
+        this.algorithmsMenuCodeGenerateMainAlgorithm.addActionListener((ActionEvent e) -> {
+            MainAlgorithmDefinitionDialogGUI.createMainAlgorithmDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateSubroutine.addActionListener((ActionEvent e) -> {
             SubroutineDefinitionDialogGUI.createSubroutineDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateIf.addActionListener((ActionEvent e) -> {
-            try {
-                algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(), MathToolAlgorithmsController.generateControlStructureIf(), null);
-            } catch (BadLocationException ex) {
-            }
+            CommandControlStructureIfDialogGUI.createCommandControlStructureIfDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateIfElse.addActionListener((ActionEvent e) -> {
-            try {
-                algorithmEditor.getDocument().insertString(algorithmEditor.getCaretPosition(), MathToolAlgorithmsController.generateControlStructureIfElse(), null);
-            } catch (BadLocationException ex) {
-            }
+            CommandControlStructureIfElseDialogGUI.createCommandControlStructureIfElseDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
         this.algorithmsMenuItemCodeGenerateWhile.addActionListener((ActionEvent e) -> {
             try {

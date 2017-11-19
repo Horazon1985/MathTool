@@ -526,6 +526,12 @@
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE">
+        <German>Rückgabetyp:</German>
+        <English>Return type:</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID">
         <German>Rückgabetyp: leer</German>
         <English>Return type: void</English>
@@ -619,6 +625,12 @@
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF_ELSE">
         <German>Wenn-Dann-Kontrollstruktur generieren</German>
         <English>Generate if else control structure</English>
+        <Russian>???</Russian>
+        <Ukrainian>???</Ukrainian>
+    </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_CONDITION">
+        <German>Bedingung:</German>
+        <English>Condition:</English>
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>

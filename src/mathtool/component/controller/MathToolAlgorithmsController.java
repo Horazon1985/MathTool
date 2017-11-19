@@ -22,49 +22,58 @@ public class MathToolAlgorithmsController {
     private static final String SIGN_TAB = "\t";
     private static final String SIGN_NEXT_LINE = "\n";
 
-    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_VOID = FixedAlgorithmNames.MAIN.getValue()
+    private static final String PLACEHOLFER_0 = "0";
+    private static final String PLACEHOLFER_1 = "1";
+    private static final String PLACEHOLFER_2 = "2";
+
+    private static final String CODE_MAIN_ALGORITHM_WITHOUT_RETURN_TYPE = FixedAlgorithmNames.MAIN.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
             + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
-    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION = IdentifierType.EXPRESSION.getValue() + " "
-            + FixedAlgorithmNames.MAIN.getValue()
-            + ReservedChars.OPEN_BRACKET.getStringValue()
-            + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
-    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION = IdentifierType.BOOLEAN_EXPRESSION.getValue() + " "
-            + FixedAlgorithmNames.MAIN.getValue()
-            + ReservedChars.OPEN_BRACKET.getStringValue()
-            + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
-    private static final String CODE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION = IdentifierType.MATRIX_EXPRESSION.getValue() + " "
-            + FixedAlgorithmNames.MAIN.getValue()
-            + ReservedChars.OPEN_BRACKET.getStringValue()
-            + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+            + ReservedChars.BEGIN.getStringValue() + SIGN_NEXT_LINE + SIGN_NEXT_LINE + ReservedChars.END.getStringValue();
     private static final String CODE_IF = Keyword.IF.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
+            + PLACEHOLFER_0
             + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue();
     private static final String CODE_IF_ELSE = Keyword.IF.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
+            + PLACEHOLFER_0
             + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue()
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue()
             + Keyword.ELSE.getValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue();
     private static final String CODE_WHILE = Keyword.WHILE.getValue()
-            + ReservedChars.OPEN_BRACKET.getStringValue() + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+            + ReservedChars.OPEN_BRACKET.getStringValue()
+            + PLACEHOLFER_0
+            + ReservedChars.CLOSE_BRACKET.getStringValue()
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue();
     private static final String CODE_DO_WHILE = Keyword.DO.getValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue()
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue()
             + Keyword.WHILE.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
+            + PLACEHOLFER_0
             + ReservedChars.CLOSE_BRACKET.getStringValue();
     private static final String CODE_FOR = Keyword.FOR.getValue()
             + ReservedChars.OPEN_BRACKET.getStringValue()
+            + PLACEHOLFER_0
             + ReservedChars.ARGUMENT_SEPARATOR.getStringValue()
+            + PLACEHOLFER_1
             + ReservedChars.ARGUMENT_SEPARATOR.getStringValue()
+            + PLACEHOLFER_2
             + ReservedChars.CLOSE_BRACKET.getStringValue()
-            + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+            + ReservedChars.BEGIN.getStringValue()
+            + SIGN_NEXT_LINE + SIGN_NEXT_LINE
+            + ReservedChars.END.getStringValue();
 
     private static MathToolAlgorithmsGUI mathToolAlgorithmsGUI;
 
@@ -219,20 +228,12 @@ public class MathToolAlgorithmsController {
     }
 
     //////////////////////////////// Codegenerierung //////////////////////////////////////
-    public static String generateMainAlgorithmWithReturnTypeVoid() {
-        return CODE_MAIN_ALGORITHM_RETURN_TYPE_VOID;
-    }
-
-    public static String generateMainAlgorithmWithReturnTypeExpression() {
-        return CODE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION;
-    }
-
-    public static String generateMainAlgorithmWithReturnTypeBooleanExpression() {
-        return CODE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION;
-    }
-
-    public static String generateMainAlgorithmWithReturnTypeMatrixExpression() {
-        return CODE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION;
+    public static String generateMainAlgorithm(IdentifierType returnType) {
+        String mainAlgorithmCode = "";
+        if (returnType != null) {
+            mainAlgorithmCode += returnType.getValue() + " ";
+        }
+        return mainAlgorithmCode + CODE_MAIN_ALGORITHM_WITHOUT_RETURN_TYPE;
     }
 
     public static String generateSubroutine(IdentifierType returnType, String subroutineName, IdentifierType[] parameterTypes, String[] parameterNames) {
@@ -247,16 +248,16 @@ public class MathToolAlgorithmsController {
                 subroutineCode += ReservedChars.ARGUMENT_SEPARATOR.getStringValue();
             }
         }
-        subroutineCode += ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue() + ReservedChars.END.getStringValue();
+        subroutineCode += ReservedChars.CLOSE_BRACKET.getStringValue() + ReservedChars.BEGIN.getStringValue() + SIGN_NEXT_LINE + SIGN_NEXT_LINE + ReservedChars.END.getStringValue();
         return subroutineCode;
     }
-    
-    public static String generateControlStructureIf() {
-        return CODE_IF;
+
+    public static String generateControlStructureIf(String ifCondition) {
+        return CODE_IF.replaceAll(PLACEHOLFER_0, ifCondition);
     }
 
-    public static String generateControlStructureIfElse() {
-        return CODE_IF_ELSE;
+    public static String generateControlStructureIfElse(String ifCondition) {
+        return CODE_IF_ELSE.replaceAll(PLACEHOLFER_0, ifCondition);
     }
 
     public static String generateControlStructureWhile() {
