@@ -557,7 +557,7 @@
         <Ukrainian>???</Ukrainian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE">
-        <German>Subroutine generieren</German>
+        <German>Unterroutine generieren</German>
         <English>Generate subroutine</English>
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
@@ -677,8 +677,8 @@
         <Ukrainian>???</Ukrainian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE">
-        <German>Bezeichnerdefinition</German>
-        <English>Definition of identifier</English>
+        <German>Bezeichnerdefinition generieren</German>
+        <English>Generate definition of identifier</English>
         <Russian>???</Russian>
         <Ukrainian>???</Ukrainian>
     </object>

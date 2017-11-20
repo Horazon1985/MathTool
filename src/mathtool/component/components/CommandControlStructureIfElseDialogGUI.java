@@ -14,13 +14,13 @@ import mathtool.component.templates.AlgorithmCommandComponentTemplate;
 public class CommandControlStructureIfElseDialogGUI extends AlgorithmCommandComponentTemplate {
 
     private static final String TITLE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF_ELSE";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_CONDITION = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_CONDITION";
+    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_DO_WHILE_CONDITION = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_DO_WHILE_CONDITION";
 
     private static CommandControlStructureIfElseDialogGUI instance = null;
 
     private CommandControlStructureIfElseDialogGUI(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh) {
         super(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh, new String[]{},
-                new String[]{GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_CONDITION},
+                new String[]{GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_CONTROLLSTRUCTURE_IF_ELSE_DO_WHILE_CONDITION},
                 new Object[][]{}, TITLE);
         init();
     }
