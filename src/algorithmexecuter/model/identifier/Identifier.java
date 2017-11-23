@@ -3,6 +3,7 @@ package algorithmexecuter.model.identifier;
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.model.AlgorithmMemory;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Identifier {
@@ -10,6 +11,7 @@ public class Identifier {
     private final IdentifierType type;
     private final String name;
     private AbstractExpression value;
+    private Object[] stringValue;
 
     private Identifier(IdentifierType type, String name) {
         this.type = type;
@@ -32,12 +34,21 @@ public class Identifier {
         this.value = value;
     }
 
+    public Object[] getStringValue() {
+        return stringValue;
+    }
+
+    public void setStringValue(Object[] stringValue) {
+        this.stringValue = stringValue;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.type);
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.value);
+        hash = 79 * hash + Objects.hashCode(this.type);
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + Objects.hashCode(this.value);
+        hash = 79 * hash + Arrays.deepHashCode(this.stringValue);
         return hash;
     }
 
@@ -59,13 +70,39 @@ public class Identifier {
         if (this.type != other.type) {
             return false;
         }
-        return Objects.equals(this.value, other.value);
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        if (!Arrays.deepEquals(this.stringValue, other.stringValue)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
+        if (this.type == IdentifierType.STRING) {
+            String result = "Identifier[type = " + this.type + ", name = " + this.name
+                    + ", stringValue = ";
+            if (this.stringValue != null) {
+                return result + stringArrayToString(this.stringValue) + "]";
+            } else {
+                return result + "null]";
+            }
+        }
         return "Identifier[type = " + this.type + ", name = " + this.name
                 + ", value = " + this.value + "]";
+    }
+
+    private String stringArrayToString(Object[] objects) {
+        String result = "(";
+        for (int i = 0; i < objects.length; i++) {
+            result += objects[i];
+            if (i < objects.length - 1) {
+                result += ", ";
+            }
+        }
+        return result + ")";
     }
 
     public static Identifier createIdentifier(String identifierName, IdentifierType type) {

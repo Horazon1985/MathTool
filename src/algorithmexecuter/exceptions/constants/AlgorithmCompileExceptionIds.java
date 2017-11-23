@@ -1,6 +1,6 @@
 package algorithmexecuter.exceptions.constants;
 
-public abstract class CompileExceptionTexts {
+public abstract class AlgorithmCompileExceptionIds {
     
     public static final String AC_IDENTIFIER_ALREADY_DEFINED = "AC_IDENTIFIER_ALREADY_DEFINED";
     public static final String AC_INCOMPATIBLE_TYPES = "AC_INCOMPATIBLE_TYPES";    
@@ -35,6 +35,7 @@ public abstract class CompileExceptionTexts {
     public static final String AC_LEFT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY = "AC_LEFT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY";
     public static final String AC_RIGHT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY = "AC_RIGHT_SIDE_OF_BOOLEAN_BINARY_EXPRESSION_IS_EMPTY";
     public static final String AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED = "AC_BOOLEAN_EXPRESSION_CANNOT_BE_INTERPRETED";
+    public static final String AC_NOT_A_VALID_STRING = "AC_NOT_A_VALID_STRING";
     
     public static final String AC_UNKNOWN_ERROR = "AC_UNKNOWN_ERROR";    
     

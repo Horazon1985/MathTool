@@ -1,5 +1,6 @@
 package algorithmexecuter.output;
 
+import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,7 @@ public abstract class AlgorithmOutputPrinter {
     private static final String GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL";
     private static final String GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED";
     private static final String GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED";
-    
+
     private static JTextPane outputArea;
 
     public static void setOutputArea(JTextPane outputArea) {
@@ -40,7 +41,7 @@ public abstract class AlgorithmOutputPrinter {
         } catch (Exception e) {
         }
     }
-    
+
     private static void println(StyledDocument doc, SimpleAttributeSet keyWord, String line) {
         print(doc, keyWord, line + "\n");
     }
@@ -68,19 +69,17 @@ public abstract class AlgorithmOutputPrinter {
             return;
         }
         StyledDocument doc = outputArea.getStyledDocument();
-
-        //  Define a keyword attribute
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-//        StyleConstants.setForeground(keyWord, Color.RED);
-//        StyleConstants.setBackground(keyWord, Color.YELLOW);
-//        StyleConstants.setBold(keyWord, true);
-
         println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM));
-        try {
-//            doc.insertString(0, "Start of text\n", null);
-//            doc.insertString(doc.getLength(), "\nEnd of text", keyWord);
-        } catch (Exception e) {
+    }
+
+    public static void printLine(String s) {
+        if (outputArea == null) {
+            return;
         }
+        StyledDocument doc = outputArea.getStyledDocument();
+        SimpleAttributeSet keyWord = new SimpleAttributeSet();
+        println(doc, keyWord, s);
     }
 
     public static void printOutput(Algorithm alg, Identifier identifier) {
@@ -89,7 +88,15 @@ public abstract class AlgorithmOutputPrinter {
         }
         StyledDocument doc = outputArea.getStyledDocument();
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
-        println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM, alg.getName(), identifier.getValue()));
+        if (identifier.getType().equals(IdentifierType.STRING)) {
+            String printedValue = "";
+            for (Object obj : identifier.getStringValue()) {
+                printedValue += obj.toString();
+            }
+            println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM, alg.getName(), printedValue));
+        } else {
+            println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM, alg.getName(), identifier.getValue()));
+        }
     }
 
     public static void printEndAlgorithmData() {
@@ -118,7 +125,7 @@ public abstract class AlgorithmOutputPrinter {
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
         println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED, e.getMessage()));
     }
-    
+
     private static String withDate(String s) {
         return DATE_FORMAT.format(new Date()) + ": " + s;
     }

@@ -8,7 +8,7 @@ import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.ReservedChars;
-import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.AlgorithmCompileExceptionIds;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;
@@ -53,10 +53,10 @@ public abstract class AlgorithmCompiler {
         }
 
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (bracketCounter < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
         }
 
         // Prüfung, ob die Signatur des Main-Algorithmus existiert.
@@ -70,13 +70,13 @@ public abstract class AlgorithmCompiler {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_A_BEGIN);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_FILE_MUST_CONTAIN_A_BEGIN);
         }
         if (input.indexOf(ReservedChars.CLOSE_BRACKET.getValue()) < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_AN_END);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_FILE_MUST_CONTAIN_AN_END);
         }
         if (indexBeginParameters > input.indexOf(ReservedChars.CLOSE_BRACKET.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_END_BEFORE_BEGIN);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_END_BEFORE_BEGIN);
         }
 
         // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
@@ -99,7 +99,7 @@ public abstract class AlgorithmCompiler {
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_ALGORITHM_ALREADY_EXISTS, signature);
         }
 
         return signature;
@@ -141,10 +141,10 @@ public abstract class AlgorithmCompiler {
         }
         
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (bracketCounter < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.BEGIN.getValue());
         }
 
         // Prüfung, ob ein Main-Algorithmus existiert.
@@ -159,13 +159,13 @@ public abstract class AlgorithmCompiler {
 
         int indexBeginParameters = input.indexOf(ReservedChars.OPEN_BRACKET.getValue());
         if (indexBeginParameters < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_A_BEGIN);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_FILE_MUST_CONTAIN_A_BEGIN);
         }
         if (input.indexOf(ReservedChars.CLOSE_BRACKET.getValue()) < 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_FILE_MUST_CONTAIN_AN_END);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_FILE_MUST_CONTAIN_AN_END);
         }
         if (indexBeginParameters > input.indexOf(ReservedChars.CLOSE_BRACKET.getValue())) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_END_BEFORE_BEGIN);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_END_BEFORE_BEGIN);
         }
 
         // Rückgabewert ermitteln (führende Leerzeichen existieren nicht).
@@ -187,7 +187,7 @@ public abstract class AlgorithmCompiler {
 
         // Falls ein Algorithmus mit derselben Signatur bereits vorhanden ist, Fehler werfen.
         if (containsAlgorithmWithSameSignature(signature)) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_ALREADY_EXISTS, signature);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_ALGORITHM_ALREADY_EXISTS, signature);
         }
 
         // Algorithmusparameter zum Variablenpool hinzufügen.
@@ -205,10 +205,10 @@ public abstract class AlgorithmCompiler {
         input = input.substring(indexEndParameters + 1, input.length());
         // input muss mit "{" beginnen und auf "}" enden.
         if (!input.startsWith(String.valueOf(ReservedChars.BEGIN.getValue()))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_MUST_START_WITH_BEGIN);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_ALGORITHM_MUST_START_WITH_BEGIN);
         }
         if (!input.endsWith(String.valueOf(ReservedChars.END.getValue()))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_ALGORITHM_MUST_END_WITH_END);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_ALGORITHM_MUST_END_WITH_END);
         }
         // Öffnende {-Klammer und schließende }-Klammer am Anfang und am Ende beseitigen.
         input = input.substring(1, input.length() - 1);
@@ -238,7 +238,7 @@ public abstract class AlgorithmCompiler {
         for (int i = 0; i < parameter.length; i++) {
             for (int j = i + 1; j < parameter.length; j++) {
                 if (parameter[i].getName().equals(parameter[j].getName())) {
-                    throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, parameter[i].getName());
+                    throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_IDENTIFIER_ALREADY_DEFINED, parameter[i].getName());
                 }
             }
         }
@@ -258,17 +258,17 @@ public abstract class AlgorithmCompiler {
                 }
             }
             if (parameterType == null) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, parameterStrings[i]);
+                throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, parameterStrings[i]);
             }
             parameterName = parameterStrings[i].substring((parameterType.toString() + " ").length());
 
             // Validierung des Parameternamen.
             if (!VALIDATOR.isValidIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, parameterName);
+                throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_ILLEGAL_CHARACTER, parameterName);
             }
             // Prüfung auf doppelte Deklaration.
             if (memory.containsIdentifier(parameterName)) {
-                throw new AlgorithmCompileException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, parameterName);
+                throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_IDENTIFIER_ALREADY_DEFINED, parameterName);
             }
             resultIdentifiers[i] = Identifier.createIdentifier(parameterName, parameterType);
 

@@ -3,7 +3,7 @@ package algorithmexecuter;
 import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
-import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
+import algorithmexecuter.exceptions.constants.AlgorithmExecutionExceptionIds;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Algorithm;
@@ -28,7 +28,7 @@ public abstract class AlgorithmExecuter {
             AlgorithmOutputPrinter.printOutput(mainAlg, result);
             return result;
         } catch (AlgorithmCompileException e) {
-            throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_MAIN_NOT_FOUND);
+            throw new AlgorithmExecutionException(AlgorithmExecutionExceptionIds.AE_MAIN_NOT_FOUND);
         }
     }
 

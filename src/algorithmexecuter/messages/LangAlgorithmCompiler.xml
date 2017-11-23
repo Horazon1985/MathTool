@@ -197,6 +197,12 @@
         <Ukrainian>Наступний булів вираз/частина логічного виразу не може бути проінтерпритована: [0]</Ukrainian>
         <Russian>Следующее булевое выражение/часть логического выражения не может быть проинтерпритирована: [0]</Russian>
     </object>
+    <object id = "AC_NOT_A_VALID_STRING">
+        <German></German>
+        <English></English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
 
     <object id = "AC_UNKNOWN_ERROR">
         <German>Unbekannter Fehler.</German>

@@ -81,6 +81,25 @@ public class AlgorithmExecutionTests {
     }
 
     @Test
+    public void executeAlgorithmsWithStringReturnTypeTest() {
+        String input = "string main(){expression a=3;string s=\"a hat den Wert \"+a;return s;}";
+        Algorithm mainAlg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            mainAlg = AlgorithmCompiler.ALGORITHMS.getMainAlgorithm();
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(mainAlg));
+            assertTrue(result.getType() == IdentifierType.STRING);
+            assertTrue(result.getName().equals("s"));
+            assertEquals(1, result.getStringValue().length);
+            assertEquals("a hat den Wert 3", result.getStringValue()[0]);
+        } catch (AlgorithmCompileException e) {
+            fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + mainAlg + " konnte nicht ausgeführt werden.");
+        }
+    }
+
+    @Test
     public void executeAlgorithmsWithIfElseControlStructureTest() {
         String input = "expression main(){\n"
                 + "	expression a=exp(1);\n"
@@ -488,7 +507,7 @@ public class AlgorithmExecutionTests {
                 + "		expression c=a;\n"
                 + "		a=b;\n"
                 + "		b=mod(c,b);\n"
-		+ "             r=mod(a,b);"
+                + "             r=mod(a,b);"
                 + "	}\n"
                 + "	return b;\n"
                 + "}";

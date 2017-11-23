@@ -9,7 +9,8 @@ public enum ReservedChars {
     OPEN_SQUARE_BRACKET('['),
     CLOSE_SQUARE_BRACKET(']'),
     OPEN_BRACKET('('),
-    CLOSE_BRACKET(')');
+    CLOSE_BRACKET(')'),
+    STRING_DELIMITER('"');
     
     private final char value;
     

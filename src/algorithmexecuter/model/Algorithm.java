@@ -7,7 +7,7 @@ import algorithmexecuter.model.command.WhileControlStructure;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
-import algorithmexecuter.exceptions.constants.ExecutionExceptionTexts;
+import algorithmexecuter.exceptions.constants.AlgorithmExecutionExceptionIds;
 import algorithmexecuter.model.command.DoWhileControlStructure;
 import algorithmexecuter.model.command.ForControlStructure;
 import algorithmexecuter.model.identifier.Identifier;
@@ -129,7 +129,7 @@ public class Algorithm {
             if (this.returnType == null) {
                 return null;
             } else {
-                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_RETURN_TYPE_EXPECTED);
+                throw new AlgorithmExecutionException(AlgorithmExecutionExceptionIds.AE_RETURN_TYPE_EXPECTED);
             }
         }
 
@@ -142,7 +142,7 @@ public class Algorithm {
     private void checkForIdentifierWithoutValues() throws AlgorithmExecutionException {
         for (int i = 0; i < this.inputParameters.length; i++) {
             if (this.inputParameters[i].getValue() == null) {
-                throw new AlgorithmExecutionException(ExecutionExceptionTexts.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET, i, this.getName());
+                throw new AlgorithmExecutionException(AlgorithmExecutionExceptionIds.AE_ALGORITHM_NOT_ALL_INPUT_PARAMETERS_SET, i, this.getName());
             }
         }
     }

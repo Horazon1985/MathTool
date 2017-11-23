@@ -23,7 +23,7 @@ import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.BlockCompileException;
 import algorithmexecuter.exceptions.BooleanExpressionException;
-import algorithmexecuter.exceptions.constants.CompileExceptionTexts;
+import algorithmexecuter.exceptions.constants.AlgorithmCompileExceptionIds;
 import algorithmexecuter.exceptions.DeclareIdentifierException;
 import algorithmexecuter.exceptions.NotDesiredCommandException;
 import algorithmexecuter.exceptions.ParseAssignValueException;
@@ -100,7 +100,7 @@ public abstract class AlgorithmCommandCompiler {
         } catch (NotDesiredCommandException e) {
         }
 
-        throw new AlgorithmCompileException(CompileExceptionTexts.AC_COMMAND_COUND_NOT_BE_PARSED, line);
+        throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_COMMAND_COUND_NOT_BE_PARSED, line);
     }
 
     private static List<AlgorithmCommand> parseDeclareIdentifierCommand(String line, AlgorithmMemory scopeMemory) throws AlgorithmCompileException, NotDesiredCommandException {
@@ -112,11 +112,11 @@ public abstract class AlgorithmCommandCompiler {
 
         String identifierName = line.substring(type.toString().length() + 1);
         if (!VALIDATOR.isValidIdentifier(identifierName)) {
-            throw new DeclareIdentifierException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, identifierName);
+            throw new DeclareIdentifierException(AlgorithmCompileExceptionIds.AC_ILLEGAL_CHARACTER, identifierName);
         }
         // Prüfung, ob dieser Identifier bereits existiert.
         if (scopeMemory.containsIdentifier(identifierName)) {
-            throw new ParseAssignValueException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, identifierName);
+            throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_IDENTIFIER_ALREADY_DEFINED, identifierName);
         }
         Identifier identifier = Identifier.createIdentifier(scopeMemory, identifierName, type);
         scopeMemory.getMemory().put(identifierName, identifier);
@@ -143,12 +143,11 @@ public abstract class AlgorithmCommandCompiler {
         String rightSide = line.substring(defineCharPosition + 1);
         // Linke Seite behandeln.
         IdentifierType type = null;
-        if (leftSide.startsWith(IdentifierType.EXPRESSION.toString() + " ")) {
-            type = IdentifierType.EXPRESSION;
-        } else if (leftSide.startsWith(IdentifierType.BOOLEAN_EXPRESSION.toString() + " ")) {
-            type = IdentifierType.BOOLEAN_EXPRESSION;
-        } else if (leftSide.startsWith(IdentifierType.MATRIX_EXPRESSION.toString() + " ")) {
-            type = IdentifierType.MATRIX_EXPRESSION;
+        for (IdentifierType t : IdentifierType.values()) {
+            if (leftSide.startsWith(t.toString() + " ")) {
+                type = t;
+                break;
+            }
         }
 
         String identifierName;
@@ -159,86 +158,111 @@ public abstract class AlgorithmCommandCompiler {
             assignValueType = AssignValueType.NEW;
             // Prüfung, ob dieser Identifier gültigen Namen besitzt.
             if (!VALIDATOR.isValidIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_ILLEGAL_CHARACTER, identifierName);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_ILLEGAL_CHARACTER, identifierName);
             }
             // Prüfung, ob dieser Identifier bereits existiert.
             if (scopeMemory.containsIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_IDENTIFIER_ALREADY_DEFINED, identifierName);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_IDENTIFIER_ALREADY_DEFINED, identifierName);
             }
         } else {
             identifierName = leftSide;
             assignValueType = AssignValueType.CHANGE;
             // Prüfung, ob dieser Identifier bereits existiert.
             if (!scopeMemory.containsIdentifier(identifierName)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, identifierName);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, identifierName);
             }
             type = scopeMemory.getMemory().get(identifierName).getType();
         }
 
         // Rechte Seite behandeln.
         Identifier identifier = Identifier.createIdentifier(scopeMemory, identifierName, type);
-        if (type == IdentifierType.EXPRESSION) {
+        if (null != type) {
+            switch (type) {
+                case EXPRESSION: {
 
-            // Fall: Arithmetischer / Analytischer Ausdruck.
-            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
-            List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-            String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
-            try {
-                Expression expr = Expression.build(rightSideReplaced, VALIDATOR);
+                    // Fall: Arithmetischer / Analytischer Ausdruck.
+                    AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
+                    List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+                    String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+                    try {
+                        Expression expr = Expression.build(rightSideReplaced, VALIDATOR);
 
-                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
-                checkIfAllIdentifiersAreDefined(expr.getContainedVars(), scopeMemory);
-                areIdentifiersOfCorrectType(type, expr.getContainedVars(), scopeMemory);
+                        // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                        checkIfAllIdentifiersAreDefined(expr.getContainedVars(), scopeMemory);
+                        areIdentifiersOfCorrectType(type, expr.getContainedVars(), scopeMemory);
 
-                scopeMemory.getMemory().put(identifierName, identifier);
-                commands.add(new AssignValueCommand(identifier, expr, assignValueType));
-                return commands;
-            } catch (ExpressionException e) {
-                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.EXPRESSION, identifier, assignValueType);
+                        scopeMemory.getMemory().put(identifierName, identifier);
+                        commands.add(new AssignValueCommand(identifier, expr, assignValueType));
+                        return commands;
+                    } catch (ExpressionException e) {
+                        return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.EXPRESSION, identifier, assignValueType);
+                    }
+
+                }
+                case BOOLEAN_EXPRESSION: {
+
+                    // Fall: boolscher Ausdruck.
+                    AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
+                    List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+                    String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+                    try {
+                        BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
+
+                        // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                        checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), scopeMemory);
+                        areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, boolExpr.getContainedExpressionVars(), scopeMemory);
+                        areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, boolExpr.getContainedBooleanVars(scopeMemory), scopeMemory);
+                        areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, boolExpr.getContainedMatrixVars(), scopeMemory);
+
+                        scopeMemory.getMemory().put(identifierName, identifier);
+                        commands.add(new AssignValueCommand(identifier, boolExpr, assignValueType));
+                        return commands;
+                    } catch (BooleanExpressionException e) {
+                        return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.BOOLEAN_EXPRESSION, identifier, assignValueType);
+                    }
+
+                }
+                case MATRIX_EXPRESSION: {
+
+                    // Fall: Matrizenausdruck.
+                    AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
+                    List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+                    String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+                    try {
+                        MatrixExpression matExpr = MatrixExpression.build(rightSideReplaced, VALIDATOR, VALIDATOR);
+
+                        // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                        checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), scopeMemory);
+                        areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), scopeMemory);
+                        areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), scopeMemory);
+
+                        scopeMemory.getMemory().put(identifierName, identifier);
+                        commands.add(new AssignValueCommand(identifier, matExpr, assignValueType));
+                        return commands;
+                    } catch (ExpressionException e) {
+                        return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.MATRIX_EXPRESSION, identifier, assignValueType);
+                    }
+
+                }
+                case STRING: {
+
+                    // Fall: (Zusammengesetzter) String.
+                    AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
+                    List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
+                    String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
+
+                    Object[] stringValues = decomposeStringValueInObjects(rightSideReplaced, scopeMemory);
+                    scopeMemory.getMemory().put(identifierName, identifier);
+                    commands.add(new AssignValueCommand(identifier, stringValues, assignValueType));
+                    return commands;
+
+                }
+                default:
+                    break;
             }
-
-        } else if (type == IdentifierType.BOOLEAN_EXPRESSION) {
-
-            // Fall: boolscher Ausdruck.
-            AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
-            List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-            String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
-            try {
-                BooleanExpression boolExpr = BooleanExpression.build(rightSideReplaced, VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
-
-                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
-                checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), scopeMemory);
-                areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, boolExpr.getContainedExpressionVars(), scopeMemory);
-                areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, boolExpr.getContainedBooleanVars(scopeMemory), scopeMemory);
-                areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, boolExpr.getContainedMatrixVars(), scopeMemory);
-
-                scopeMemory.getMemory().put(identifierName, identifier);
-                commands.add(new AssignValueCommand(identifier, boolExpr, assignValueType));
-                return commands;
-            } catch (BooleanExpressionException e) {
-                return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.BOOLEAN_EXPRESSION, identifier, assignValueType);
-            }
-
         }
 
-        // Fall: Matrizenausdruck.
-        AlgorithmCommandReplacementList algorithmCommandReplacementList = decomposeAbstractExpressionInvolvingAlgorithmCalls(rightSide, scopeMemory);
-        List<AlgorithmCommand> commands = algorithmCommandReplacementList.getCommands();
-        String rightSideReplaced = algorithmCommandReplacementList.getSubstitutedExpression();
-        try {
-            MatrixExpression matExpr = MatrixExpression.build(rightSideReplaced, VALIDATOR, VALIDATOR);
-
-            // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
-            checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), scopeMemory);
-            areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), scopeMemory);
-            areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), scopeMemory);
-
-            scopeMemory.getMemory().put(identifierName, identifier);
-            commands.add(new AssignValueCommand(identifier, matExpr, assignValueType));
-            return commands;
-        } catch (ExpressionException e) {
-            return parseAlgorithmCall(scopeMemory, commands, rightSideReplaced, IdentifierType.MATRIX_EXPRESSION, identifier, assignValueType);
-        }
+        throw new NotDesiredCommandException();
 
     }
 
@@ -282,7 +306,7 @@ public abstract class AlgorithmCommandCompiler {
     private static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (!memory.getMemory().containsKey(var)) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, var);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, var);
             }
         }
     }
@@ -290,7 +314,7 @@ public abstract class AlgorithmCommandCompiler {
     private static void areIdentifiersOfCorrectType(IdentifierType type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
         for (String var : vars) {
             if (memory.getMemory().get(var).getType() != type) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_INCOMPATIBLE_TYPES, memory.getMemory().get(var).getType(), type);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_INCOMPATIBLE_TYPES, memory.getMemory().get(var).getType(), type);
             }
         }
     }
@@ -357,7 +381,7 @@ public abstract class AlgorithmCommandCompiler {
                     commands.add(new AssignValueCommand(genVarIdentifier, argument, AssignValueType.NEW));
                     scopeMemory.addToMemoryInCompileTime(genVarIdentifier);
                 } else {
-                    throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, params[i]);
+                    throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, params[i]);
                 }
             }
             return identifiers;
@@ -410,13 +434,13 @@ public abstract class AlgorithmCommandCompiler {
                 }
             }
             if (algorithmCandidate == null) {
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, algName);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, algName);
             }
 
             // Prüfung, ob Rückgabewert korrekt ist.
             if (!algorithmCandidate.getReturnType().equals(returnType)) {
                 // TODO: Fehlermeldung korrigieren.
-                throw new ParseAssignValueException(CompileExceptionTexts.AC_WRONG_RETURN_TYPE);
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_WRONG_RETURN_TYPE);
             }
             return new AlgorithmCallData(algorithmCandidate, paramValues);
         } catch (AlgorithmCompileException e) {
@@ -527,7 +551,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String booleanConditionString = line.substring((Keyword.IF.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
@@ -546,7 +570,7 @@ public abstract class AlgorithmCommandCompiler {
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
                 || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
@@ -566,7 +590,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
         AlgorithmMemory memoryBeforeIfElsePart = memory.copyMemory();
@@ -587,7 +611,7 @@ public abstract class AlgorithmCommandCompiler {
 
         String restLine = line.substring(endBlockPosition + 1);
         if (!restLine.startsWith(Keyword.ELSE.getValue() + ReservedChars.BEGIN.getValue())) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_KEYWORD_EXPECTED, Keyword.ELSE.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_KEYWORD_EXPECTED, Keyword.ELSE.getValue());
         }
 
         bracketCounter = 0;
@@ -605,10 +629,10 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         if (endBlockPosition != restLine.length() - 1) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
         }
 
         List<AlgorithmCommand> commandsElsePart;
@@ -644,7 +668,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String booleanConditionString = line.substring((Keyword.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfBooleanCondition);
@@ -663,7 +687,7 @@ public abstract class AlgorithmCommandCompiler {
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
                 || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfBooleanCondition + 1) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
@@ -683,7 +707,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
         AlgorithmMemory memoryBeforWhileLoop = memory.copyMemory();
@@ -698,7 +722,7 @@ public abstract class AlgorithmCommandCompiler {
             return commands;
         }
 
-        throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
+        throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
     }
 
     private static List<AlgorithmCommand> parseDoWhileControlStructure(String line, AlgorithmMemory memory, Algorithm alg)
@@ -724,7 +748,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
 
         AlgorithmMemory memoryBeforWhileLoop = memory.copyMemory();
@@ -734,10 +758,10 @@ public abstract class AlgorithmCommandCompiler {
         // While-Bedingung kompilieren
         String whilePart = line.substring(endBlockPosition + 1);
         if (!whilePart.startsWith(Keyword.WHILE.getValue() + ReservedChars.OPEN_BRACKET.getValue())) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_KEYWORD_EXPECTED, Keyword.WHILE.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_KEYWORD_EXPECTED, Keyword.WHILE.getValue());
         }
         if (!whilePart.endsWith(String.valueOf(ReservedChars.CLOSE_BRACKET.getValue()))) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String whileConditionString = line.substring(endBlockPosition + Keyword.WHILE.getValue().length() + 2, line.length() - 1);
@@ -779,7 +803,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         String forControlString = line.substring((Keyword.FOR.getValue() + ReservedChars.OPEN_BRACKET.getValue()).length(), endOfForControlPart);
@@ -791,10 +815,10 @@ public abstract class AlgorithmCommandCompiler {
 
         // Es müssen genau 3 Befehle in der For-Struktur stehen.
         if (forControlParts.length < 3) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_EXPECTED, ReservedChars.ARGUMENT_SEPARATOR.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_EXPECTED, ReservedChars.ARGUMENT_SEPARATOR.getValue());
         }
         if (forControlParts.length > 3) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET.getValue());
         }
 
         List<AlgorithmCommand> initialization = parseAssignValueCommand(forControlParts[0], currentMemory);
@@ -819,7 +843,7 @@ public abstract class AlgorithmCommandCompiler {
         if (!line.contains(ReservedChars.BEGIN.getStringValue())
                 || !line.contains(ReservedChars.END.getStringValue())
                 || line.indexOf(ReservedChars.BEGIN.getValue()) > endOfForControlPart + 1) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END,
                     ReservedChars.BEGIN.getValue(), ReservedChars.END.getValue());
         }
 
@@ -839,7 +863,7 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (bracketCounter > 0) {
-            throw new ParseControlStructureException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
+            throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END.getValue());
         }
         List<AlgorithmCommand> commandsForPart = parseConnectedBlockWithKeywords(line.substring(beginBlockPosition, endBlockPosition), currentMemory, alg);
         ForControlStructure forControlStructure = new ForControlStructure(commandsForPart, initialization, commandsEndLoopCondition, endLoopCondition, loopAssignment);
@@ -850,13 +874,13 @@ public abstract class AlgorithmCommandCompiler {
             return Collections.singletonList(forControlStructure);
         }
 
-        throw new ParseControlStructureException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
+        throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, line.substring(endBlockPosition + 1));
     }
 
     private static void checkIfNewIdentifierOccur(AlgorithmMemory memoryBeforeLoop, AlgorithmMemory currentMemory) throws ParseControlStructureException {
         for (String identifierName : currentMemory.getMemory().keySet()) {
             if (!memoryBeforeLoop.getMemory().containsKey(identifierName) && !CompilerUtils.isTechnicalIdentifierName(identifierName)) {
-                throw new ParseControlStructureException(CompileExceptionTexts.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, identifierName);
+                throw new ParseControlStructureException(AlgorithmCompileExceptionIds.AC_CONTROL_STRUCTURE_FOR_NEW_IDENTIFIER_NOT_ALLOWED, identifierName);
             }
         }
     }
@@ -866,13 +890,13 @@ public abstract class AlgorithmCommandCompiler {
             if (keywordsAllowed) {
                 return Collections.singletonList(new KeywordCommand(Keyword.BREAK));
             }
-            throw new ParseKeywordException(CompileExceptionTexts.AC_KEYWORD_NOT_ALLOWED_HERE, Keyword.BREAK);
+            throw new ParseKeywordException(AlgorithmCompileExceptionIds.AC_KEYWORD_NOT_ALLOWED_HERE, Keyword.BREAK);
         }
         if (line.equals(Keyword.CONTINUE.toString())) {
             if (keywordsAllowed) {
                 return Collections.singletonList(new KeywordCommand(Keyword.CONTINUE));
             }
-            throw new ParseKeywordException(CompileExceptionTexts.AC_KEYWORD_NOT_ALLOWED_HERE, Keyword.CONTINUE);
+            throw new ParseKeywordException(AlgorithmCompileExceptionIds.AC_KEYWORD_NOT_ALLOWED_HERE, Keyword.CONTINUE);
         }
         throw new NotDesiredCommandException();
     }
@@ -894,7 +918,7 @@ public abstract class AlgorithmCommandCompiler {
                     return Collections.singletonList((AlgorithmCommand) new ReturnCommand(scopeMemory.getMemory().get(returnValueCandidate)));
                 }
                 if (VALIDATOR.isValidIdentifier(returnValueReplaced)) {
-                    throw new ParseReturnException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
+                    throw new ParseReturnException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, returnValueCandidate);
                 }
                 String genVarForReturn = CompilerUtils.generateTechnicalIdentifierName(scopeMemory);
                 String assignValueCommand = alg.getReturnType().toString() + " " + genVarForReturn + "=" + returnValueReplaced;
@@ -927,7 +951,7 @@ public abstract class AlgorithmCommandCompiler {
 
     private static List<AlgorithmCommand> parseCommandBlock(String input, AlgorithmMemory memory, Algorithm alg, boolean connectedBlock, boolean keywordsAllowed) throws AlgorithmCompileException {
         if (!input.isEmpty() && !input.endsWith(String.valueOf(ReservedChars.LINE_SEPARATOR.getValue()))) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_MISSING_LINE_SEPARATOR, ReservedChars.LINE_SEPARATOR.getValue());
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_MISSING_LINE_SEPARATOR, ReservedChars.LINE_SEPARATOR.getValue());
         }
 
         AlgorithmMemory memoryBeforeBlockBeginning;
@@ -964,16 +988,16 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         if (wavedBracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.END);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.END);
         }
         if (bracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
         }
         if (squareBracketCounter > 0) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET);
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_SQUARE_BRACKET);
         }
         if (endBlockPosition != input.length() - 1) {
-            throw new AlgorithmCompileException(CompileExceptionTexts.AC_CANNOT_FIND_SYMBOL, input.substring(endBlockPosition));
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, input.substring(endBlockPosition));
         }
 
         String[] lines = linesAsList.toArray(new String[linesAsList.size()]);
@@ -985,6 +1009,94 @@ public abstract class AlgorithmCommandCompiler {
             }
         }
         return commands;
+    }
+
+    ///////////////////// Methoden für die Zerlegung eines Strings ///////////////////////
+    private static Object[] decomposeStringValueInObjects(String input, AlgorithmMemory scopeMemory) throws AlgorithmCompileException {
+        List<String> stringValuesAsStrings = decomposeByConcat(input);
+        List stringValues = new ArrayList();
+        for (String s : stringValuesAsStrings) {
+            if (isValidString(s)) {
+                stringValues.add(s.substring(1, s.length() - 1));
+            } else {
+                AbstractExpression abstrExpr = null;
+                try {
+                    abstrExpr = Expression.build(s, VALIDATOR);
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, abstrExpr.getContainedVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (ExpressionException e) {
+                }
+                try {
+                    abstrExpr = BooleanExpression.build(s, VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((BooleanExpression) abstrExpr).getContainedExpressionVars(), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, ((BooleanExpression) abstrExpr).getContainedBooleanVars(scopeMemory), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((BooleanExpression) abstrExpr).getContainedMatrixVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (BooleanExpressionException e) {
+                }
+                try {
+                    abstrExpr = MatrixExpression.build(s, VALIDATOR, VALIDATOR);
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((MatrixExpression) abstrExpr).getContainedExpressionVars(), scopeMemory);
+                    areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((MatrixExpression) abstrExpr).getContainedMatrixVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (ExpressionException e) {
+                }
+                if (abstrExpr == null) {
+                    throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_NOT_A_VALID_STRING, s);
+                }
+            }
+        }
+
+        return stringValues.toArray();
+    }
+
+    private static List<String> decomposeByConcat(String input) throws AlgorithmCompileException {
+        List<String> stringValues = new ArrayList<>();
+
+        int bracketCounter = 0;
+        int beginBlockPosition = 0;
+        int endBlockPosition = -1;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                if (Operators.CONCAT.getValue().equals(String.valueOf(input.charAt(i)))) {
+                    endBlockPosition = i;
+                    stringValues.add(input.substring(beginBlockPosition, endBlockPosition));
+                    beginBlockPosition = i + 1;
+                } else if (i == input.length() - 1) {
+                    endBlockPosition = input.length();
+                    stringValues.add(input.substring(beginBlockPosition, endBlockPosition));
+                    beginBlockPosition = i + 1;
+                }
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
+        }
+        if (endBlockPosition != input.length()) {
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, input.substring(endBlockPosition));
+        }
+
+        return stringValues;
+    }
+
+    private static boolean isValidString(String input) {
+        return input.startsWith(ReservedChars.STRING_DELIMITER.getStringValue())
+                && input.endsWith(ReservedChars.STRING_DELIMITER.getStringValue())
+                && input.replaceAll(ReservedChars.STRING_DELIMITER.getStringValue(), "").length() == input.length() - 2;
     }
 
     ///////////////////// Methoden für die Zerlegung eines Ausdrucks, welcher Algorithmenaufrufe enthält, in mehrere Befehle ///////////////////////

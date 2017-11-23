@@ -8,8 +8,8 @@ public class AlgorithmCompileException extends AlgorithmException {
         super(e.getMessage());
     }
     
-    public AlgorithmCompileException(String message, Object... params) {
-        super(Translator.translateOutputMessage(message, params));
+    public AlgorithmCompileException(String messageId, Object... params) {
+        super(Translator.translateOutputMessage(messageId, params));
     }
     
 }

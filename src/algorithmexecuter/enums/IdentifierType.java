@@ -7,7 +7,7 @@ import algorithmexecuter.booleanexpression.BooleanExpression;
 
 public enum IdentifierType {
 
-    EXPRESSION("expression"), BOOLEAN_EXPRESSION("booleanexpression"), MATRIX_EXPRESSION("matrixexpression");
+    EXPRESSION("expression"), BOOLEAN_EXPRESSION("booleanexpression"), MATRIX_EXPRESSION("matrixexpression"), STRING("string");
 
     private final String value;
     
