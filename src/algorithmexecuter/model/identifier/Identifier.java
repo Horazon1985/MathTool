@@ -3,7 +3,7 @@ package algorithmexecuter.model.identifier;
 import abstractexpressions.interfaces.AbstractExpression;
 import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.model.AlgorithmMemory;
-import java.util.Arrays;
+import algorithmexecuter.model.utilclasses.MalString;
 import java.util.Objects;
 
 public class Identifier {
@@ -11,7 +11,7 @@ public class Identifier {
     private final IdentifierType type;
     private final String name;
     private AbstractExpression value;
-    private Object[] stringValue;
+    private MalString stringValue;
 
     private Identifier(IdentifierType type, String name) {
         this.type = type;
@@ -34,21 +34,26 @@ public class Identifier {
         this.value = value;
     }
 
-    public Object[] getStringValue() {
+    public MalString getMalString() {
         return stringValue;
     }
 
-    public void setStringValue(Object[] stringValue) {
+    public void setStringValue(MalString stringValue) {
         this.stringValue = stringValue;
     }
 
+    public void setAllValuesFromAnotherIdentifier(Identifier identifier) {
+        this.value = identifier.value;
+        this.stringValue = identifier.stringValue;
+    }
+    
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.type);
-        hash = 79 * hash + Objects.hashCode(this.name);
-        hash = 79 * hash + Objects.hashCode(this.value);
-        hash = 79 * hash + Arrays.deepHashCode(this.stringValue);
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.type);
+        hash = 43 * hash + Objects.hashCode(this.name);
+        hash = 43 * hash + Objects.hashCode(this.value);
+        hash = 43 * hash + Objects.hashCode(this.stringValue);
         return hash;
     }
 
@@ -73,7 +78,7 @@ public class Identifier {
         if (!Objects.equals(this.value, other.value)) {
             return false;
         }
-        if (!Arrays.deepEquals(this.stringValue, other.stringValue)) {
+        if (!Objects.equals(this.stringValue, other.stringValue)) {
             return false;
         }
         return true;
@@ -85,7 +90,7 @@ public class Identifier {
             String result = "Identifier[type = " + this.type + ", name = " + this.name
                     + ", stringValue = ";
             if (this.stringValue != null) {
-                return result + stringArrayToString(this.stringValue) + "]";
+                return result + malStringToString(this.stringValue) + "]";
             } else {
                 return result + "null]";
             }
@@ -94,11 +99,11 @@ public class Identifier {
                 + ", value = " + this.value + "]";
     }
 
-    private String stringArrayToString(Object[] objects) {
+    private String malStringToString(MalString malString) {
         String result = "(";
-        for (int i = 0; i < objects.length; i++) {
-            result += objects[i];
-            if (i < objects.length - 1) {
+        for (int i = 0; i < malString.getStringValues().length; i++) {
+            result += malString.getStringValues()[i];
+            if (i < malString.getStringValues().length - 1) {
                 result += ", ";
             }
         }
@@ -115,5 +120,5 @@ public class Identifier {
         }
         return new Identifier(type, identifierName);
     }
-
+    
 }

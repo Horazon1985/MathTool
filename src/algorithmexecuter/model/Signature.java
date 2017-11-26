@@ -60,7 +60,11 @@ public class Signature implements Comparable {
 
     @Override
     public String toString() {
-        String signature = this.returnType + " " + this.name + "(";
+        String signature = "";
+        if (this.returnType != null) {
+            signature += this.returnType + " ";
+        }
+        signature += this.name + "(";
         for (int i = 0; i < this.parameterTypes.length; i++) {
             signature += this.parameterTypes[i];
             if (i < this.parameterTypes.length - 1) {

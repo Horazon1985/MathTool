@@ -1,6 +1,5 @@
 package test.algorithm;
 
-import abstractexpressions.expression.classes.Expression;
 import abstractexpressions.expression.classes.Variable;
 import algorithmexecuter.AlgorithmCompiler;
 import algorithmexecuter.CompilerUtils;
@@ -12,10 +11,12 @@ import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.constants.AlgorithmCompileExceptionIds;
 import algorithmexecuter.model.Algorithm;
+import algorithmexecuter.model.Signature;
 import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.model.command.DoWhileControlStructure;
 import algorithmexecuter.model.command.ForControlStructure;
 import algorithmexecuter.model.command.ReturnCommand;
+import algorithmexecuter.model.command.VoidCommand;
 import java.util.List;
 import mathtool.lang.translator.Translator;
 import static org.junit.Assert.assertEquals;
@@ -95,16 +96,43 @@ public class AlgorithmCompileTests {
             assertEquals(mainAlg.getCommands().size(), 3);
             assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
             assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
-            assertEquals(2, ((AssignValueCommand) mainAlg.getCommands().get(1)).getStringValues().length);
-            assertEquals("a hat den Wert ", ((AssignValueCommand) mainAlg.getCommands().get(1)).getStringValues()[0]);
-            assertEquals(Variable.create("a"), ((AssignValueCommand) mainAlg.getCommands().get(1)).getStringValues()[1]);
+            assertEquals(2, ((AssignValueCommand) mainAlg.getCommands().get(1)).getMalString().getStringValues().length);
+            assertEquals("a hat den Wert ", ((AssignValueCommand) mainAlg.getCommands().get(1)).getMalString().getStringValues()[0]);
+            assertEquals(Variable.create("a"), ((AssignValueCommand) mainAlg.getCommands().get(1)).getMalString().getStringValues()[1]);
             assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
             assertEquals("s", ((ReturnCommand) mainAlg.getCommands().get(2)).getIdentifier().getName());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
     }
-    
+
+    @Test
+    public void parseSimpleAlgorithmWithPrintCommandTest() {
+        String input = "expression main(){\n"
+                + "	expression a=5;\n"
+                + "	print(\"Wert: \"+a);\n"
+                + "	return a;\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getName(), "main");
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isVoidCommand());
+            assertEquals(((VoidCommand) mainAlg.getCommands().get(2)).getName(), "print");
+            assertEquals(((VoidCommand) mainAlg.getCommands().get(2)).getIdentifiers().length, 1);
+            assertEquals(((VoidCommand) mainAlg.getCommands().get(2)).getIdentifiers()[0].getType(), IdentifierType.STRING);
+            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
+            assertEquals("a", ((ReturnCommand) mainAlg.getCommands().get(3)).getIdentifier().getName());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
     @Test
     public void parseSimpleAlgorithmWithIfElseTest() {
         String input = "expression main(){expression a=3;expression b=5;if(a==3){return a;}else{return b;}}";
@@ -321,16 +349,16 @@ public class AlgorithmCompileTests {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}return a;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
-            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
-            assertEquals(alg.getName(), "main");
-            assertEquals(alg.getInputParameters().length, 0);
-            assertEquals(alg.getCommands().size(), 3);
-            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
-            assertTrue(alg.getCommands().get(1).isForControlStructure());
-            assertTrue(alg.getCommands().get(2).isReturnCommand());
-            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
-            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getName(), "main");
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 3);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isForControlStructure());
+            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+            assertEquals(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
@@ -345,14 +373,7 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 2);
 
-            Algorithm mainAlg = null;
-            for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
-                if (alg.getName().equals("main")) {
-                    mainAlg = alg;
-                    break;
-                }
-            }
-
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
             assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
             assertEquals(mainAlg.getCommands().size(), 3);
             assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
@@ -370,19 +391,19 @@ public class AlgorithmCompileTests {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2; if (i==5){break;}}return a;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
-            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
-            assertEquals(alg.getName(), "main");
-            assertEquals(alg.getInputParameters().length, 0);
-            assertEquals(alg.getCommands().size(), 3);
-            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
-            assertTrue(alg.getCommands().get(1).isForControlStructure());
-            assertTrue(alg.getCommands().get(2).isReturnCommand());
-            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 2);
-            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
-            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(1).isIfElseControlStructure());
-            assertEquals(((ControlStructure) ((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(1)).getCommandBlocks()[0].size(), 1);
-            assertTrue(((ControlStructure) ((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(1)).getCommandBlocks()[0].get(0).isKeywordCommand());
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getName(), "main");
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 3);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isForControlStructure());
+            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+            assertEquals(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].size(), 2);
+            assertTrue(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
+            assertTrue(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(1).isIfElseControlStructure());
+            assertEquals(((ControlStructure) ((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) ((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(1)).getCommandBlocks()[0].get(0).isKeywordCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
@@ -393,17 +414,17 @@ public class AlgorithmCompileTests {
         String input = "expression main(){expression a=5;for(expression i=0, i<7, i=i+1){a=a+i^2;}expression i=10;return a;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);
-            Algorithm alg = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage().get(0);
-            assertEquals(alg.getReturnType(), IdentifierType.EXPRESSION);
-            assertEquals(alg.getName(), "main");
-            assertEquals(alg.getInputParameters().length, 0);
-            assertEquals(alg.getCommands().size(), 4);
-            assertTrue(alg.getCommands().get(0).isAssignValueCommand());
-            assertTrue(alg.getCommands().get(1).isForControlStructure());
-            assertTrue(alg.getCommands().get(2).isAssignValueCommand());
-            assertTrue(alg.getCommands().get(3).isReturnCommand());
-            assertEquals(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
-            assertTrue(((ControlStructure) alg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            assertEquals(mainAlg.getReturnType(), IdentifierType.EXPRESSION);
+            assertEquals(mainAlg.getName(), "main");
+            assertEquals(mainAlg.getInputParameters().length, 0);
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isForControlStructure());
+            assertTrue(mainAlg.getCommands().get(2).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
+            assertEquals(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].size(), 1);
+            assertTrue(((ControlStructure) mainAlg.getCommands().get(1)).getCommandBlocks()[0].get(0).isAssignValueCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
@@ -418,13 +439,12 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 2);
 
-            Algorithm mainAlg, ggtAlg;
-            if (algorithmList.get(0).getName().equals("main")) {
-                mainAlg = algorithmList.get(0);
-                ggtAlg = algorithmList.get(1);
-            } else {
-                mainAlg = algorithmList.get(1);
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            Algorithm ggtAlg;
+            if (algorithmList.get(0).getName().equals("computeggt")) {
                 ggtAlg = algorithmList.get(0);
+            } else {
+                ggtAlg = algorithmList.get(1);
             }
 
             // Prüfung für den Hauptalgorithmus "main".
@@ -458,12 +478,9 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 3);
 
-            Algorithm mainAlg = null, ggtAlg = null, myggtAlg = null;
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS), ggtAlg = null, myggtAlg = null;
             for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
                 switch (alg.getName()) {
-                    case "main":
-                        mainAlg = alg;
-                        break;
                     case "ggt":
                         ggtAlg = alg;
                         break;
@@ -506,13 +523,11 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 2);
 
-            Algorithm mainAlg, ggtAlg;
-            if (algorithmList.get(0).getName().equals("main")) {
-                mainAlg = algorithmList.get(0);
-                ggtAlg = algorithmList.get(1);
-            } else {
-                mainAlg = algorithmList.get(1);
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS), ggtAlg;
+            if (algorithmList.get(0).getName().equals("computeggt")) {
                 ggtAlg = algorithmList.get(0);
+            } else {
+                ggtAlg = algorithmList.get(1);
             }
 
             // Prüfung für den Hauptalgorithmus "main".
@@ -539,13 +554,89 @@ public class AlgorithmCompileTests {
             List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
             assertEquals(algorithmList.size(), 1);
 
-            Algorithm mainAlg = algorithmList.get(0);
-
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
             // Prüfung für den Hauptalgorithmus "main".
             assertEquals(mainAlg.getCommands().size(), 3);
             assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
             assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
             assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+
+    @Test
+    public void parseAlgorithmWithAlgorithmCallContainingStringArgumentTest1() {
+        String input = "expression main(){\n"
+                + "	expression a=5;\n"
+                + "	string s=\"Aufruf\"; \n"
+                + "	f(s);\n"
+                + "	return a;\n"
+                + "}\n"
+                + "\n"
+                + "f(string s){\n"
+                + "	print(s);\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 2);
+
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            Algorithm printAlg;
+            if (algorithmList.get(0).getName().equals("f")) {
+                printAlg = algorithmList.get(0);
+            } else {
+                printAlg = algorithmList.get(1);
+            }
+
+            // Prüfung für den Hauptalgorithmus "main" und den Algorithmus f.
+            assertEquals(mainAlg.getCommands().size(), 4);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isVoidCommand());
+            assertTrue(mainAlg.getCommands().get(3).isReturnCommand());
+
+            assertTrue(printAlg.getCommands().get(0).isVoidCommand());
+            assertEquals(((VoidCommand) printAlg.getCommands().get(0)).getSignature(),
+                    new Signature(null, "print", new IdentifierType[]{IdentifierType.STRING}));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        }
+    }
+    
+    @Test
+    public void parseAlgorithmWithAlgorithmCallContainingStringArgumentTest2() {
+        String input = "expression main(){\n"
+                + "	expression a=5;\n"
+                + "	string s=f(a); \n"
+                + "	return a;\n"
+                + "}\n"
+                + "\n"
+                + "string f(expression a){\n"
+                + "	return \"Test!\";\n"
+                + "}";
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            List<Algorithm> algorithmList = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+            assertEquals(algorithmList.size(), 2);
+
+            Algorithm mainAlg = CompilerUtils.getMainAlgorithm(AlgorithmCompiler.ALGORITHMS);
+            Algorithm stringAlg;
+            if (algorithmList.get(0).getName().equals("f")) {
+                stringAlg = algorithmList.get(0);
+            } else {
+                stringAlg = algorithmList.get(1);
+            }
+
+            // Prüfung für den Hauptalgorithmus "main" und den Algorithmus f.
+            assertEquals(mainAlg.getCommands().size(), 3);
+            assertTrue(mainAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(1).isAssignValueCommand());
+            assertTrue(mainAlg.getCommands().get(2).isReturnCommand());
+
+            assertTrue(stringAlg.getCommands().get(0).isAssignValueCommand());
+            assertTrue(stringAlg.getCommands().get(1).isReturnCommand());
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         }
@@ -572,7 +663,7 @@ public class AlgorithmCompileTests {
     }
 
     @Test
-    public void parseAlgorithmWithoutReturnCommandTest() {
+    public void parseAlgorithmWithoutReturnCommandTest1() {
         String input = "expression main(){expression x=2;}";
         try {
             AlgorithmCompiler.parseAlgorithmFile(input);

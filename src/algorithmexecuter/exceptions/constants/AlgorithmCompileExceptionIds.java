@@ -14,7 +14,9 @@ public abstract class AlgorithmCompileExceptionIds {
     public static final String AC_IDENTIFIER_EXPECTED = "AC_IDENTIFIER_EXPECTED";    
     public static final String AC_BRACKET_EXPECTED = "AC_BRACKET_EXPECTED";    
     public static final String AC_EXPECTED = "AC_EXPECTED";
-    public static final String AC_CANNOT_FIND_SYMBOL = "AC_CANNOT_FIND_SYMBOL";    
+    public static final String AC_CANNOT_FIND_SYMBOL = "AC_CANNOT_FIND_SYMBOL";  
+    public static final String AC_CANNOT_PARSE_GENERAL_PARAMETER_IN_COMMAND = "AC_CANNOT_PARSE_GENERAL_PARAMETER_IN_COMMAND";
+    public static final String AC_NO_SUCH_COMMAND = "AC_NO_SUCH_COMMAND";
     public static final String AC_ILLEGAL_CHARACTER = "AC_ILLEGAL_CHARACTER";    
     public static final String AC_COMMAND_COUND_NOT_BE_PARSED = "AC_COMMAND_COUND_NOT_BE_PARSED";    
     public static final String AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END = "AC_CONTROL_STRUCTURE_MUST_CONTAIN_BEGIN_AND_END";    

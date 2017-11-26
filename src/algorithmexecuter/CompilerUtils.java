@@ -1,14 +1,22 @@
 package algorithmexecuter;
 
+import abstractexpressions.expression.classes.Expression;
+import static abstractexpressions.expression.classes.Expression.VALIDATOR;
 import abstractexpressions.interfaces.AbstractExpression;
+import abstractexpressions.interfaces.IdentifierValidator;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import algorithmexecuter.booleanexpression.BooleanExpression;
 import algorithmexecuter.enums.FixedAlgorithmNames;
 import algorithmexecuter.model.command.AlgorithmCommand;
 import algorithmexecuter.model.command.ControlStructure;
 import algorithmexecuter.model.command.IfElseControlStructure;
 import algorithmexecuter.model.command.ReturnCommand;
 import algorithmexecuter.enums.IdentifierType;
+import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
+import algorithmexecuter.exceptions.BooleanExpressionException;
+import algorithmexecuter.exceptions.ParseAssignValueException;
 import algorithmexecuter.exceptions.constants.AlgorithmCompileExceptionIds;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.AlgorithmMemory;
@@ -18,6 +26,9 @@ import algorithmexecuter.model.AlgorithmStorage;
 import algorithmexecuter.model.Signature;
 import algorithmexecuter.model.command.AssignValueCommand;
 import algorithmexecuter.model.command.DeclareIdentifierCommand;
+import algorithmexecuter.model.utilclasses.MalString;
+import algorithmexecuter.model.utilclasses.Parameter;
+import exceptions.ExpressionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -268,6 +279,22 @@ public final class CompilerUtils {
             }
         }
         throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_MAIN_ALGORITHM_DOES_NOT_EXIST);
+    }
+
+    public static void checkIfAllIdentifiersAreDefined(Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
+        for (String var : vars) {
+            if (!memory.getMemory().containsKey(var)) {
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, var);
+            }
+        }
+    }
+
+    public static void areIdentifiersOfCorrectType(IdentifierType type, Set<String> vars, AlgorithmMemory memory) throws ParseAssignValueException {
+        for (String var : vars) {
+            if (memory.getMemory().get(var).getType() != type) {
+                throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_INCOMPATIBLE_TYPES, memory.getMemory().get(var).getType(), type);
+            }
+        }
     }
 
     public static Signature getMainAlgorithmSignature(AlgorithmSignatureStorage signatures) throws AlgorithmCompileException {
@@ -535,6 +562,153 @@ public final class CompilerUtils {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    ///////////////////// Parsing-HilfsMethoden /////////////////////
+    public static Object parseParameterAgaingstType(String input, IdentifierValidator validator, AlgorithmMemory scopeMemory, IdentifierType type) throws AlgorithmCompileException, ExpressionException, BooleanExpressionException {
+        switch (type) {
+            case EXPRESSION:
+                Expression expr = Expression.build(input, validator);
+                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                checkIfAllIdentifiersAreDefined(expr.getContainedVars(), scopeMemory);
+                areIdentifiersOfCorrectType(type, expr.getContainedVars(), scopeMemory);
+                return expr;
+            case BOOLEAN_EXPRESSION:
+                BooleanExpression boolExpr = BooleanExpression.build(input, validator, extractTypesOfMemory(scopeMemory));
+                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                CompilerUtils.checkIfAllIdentifiersAreDefined(boolExpr.getContainedVars(), scopeMemory);
+                CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, boolExpr.getContainedExpressionVars(), scopeMemory);
+                CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, boolExpr.getContainedBooleanVars(scopeMemory), scopeMemory);
+                CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, boolExpr.getContainedMatrixVars(), scopeMemory);
+                return boolExpr;
+            case MATRIX_EXPRESSION:
+                MatrixExpression matExpr = MatrixExpression.build(input, validator, validator);
+                // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                CompilerUtils.checkIfAllIdentifiersAreDefined(matExpr.getContainedVars(), scopeMemory);
+                CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, matExpr.getContainedExpressionVars(), scopeMemory);
+                CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, matExpr.getContainedMatrixVars(), scopeMemory);
+                return matExpr;
+            default:
+                // Fall: String. 
+                return getMalString(input, scopeMemory);
+        }
+    }
+
+    public static Parameter parseParameterWithoutType(String input, IdentifierValidator validator, AlgorithmMemory scopeMemory) throws AlgorithmCompileException {
+        try {
+            // Prüfung, ob der Parameter ein Ausdruck ist.
+            Expression expr = Expression.build(input, validator);
+            return new Parameter(expr);
+        } catch (ExpressionException eExpr) {
+            // Prüfung, ob der Parameter ein boolscher Ausdruck ist.
+            Map<String, IdentifierType> typeMap = CompilerUtils.extractTypesOfMemory(scopeMemory);
+            try {
+                BooleanExpression boolExpr = BooleanExpression.build(input, validator, typeMap);
+                return new Parameter(boolExpr);
+            } catch (BooleanExpressionException eBoolExpr) {
+                try {
+                    // Prüfung, ob der Parameter ein Matrizenausdruck ist.
+                    MatrixExpression matExpr = MatrixExpression.build(input, validator, validator);
+                    return new Parameter(matExpr);
+                } catch (ExpressionException eMatExpr) {
+                    // Prüfung, ob der Parameter ein String ist.
+                    try {
+                        MalString malString = CompilerUtils.getMalString(input, scopeMemory);
+                        return new Parameter(malString);
+                    } catch (AlgorithmCompileException e) {
+                        throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, input);
+                    }
+                }
+            }
+        }
+    }
+
+    ///////////////////// Methoden für die Zerlegung eines Strings ///////////////////////
+    public static MalString getMalString(String input, AlgorithmMemory scopeMemory) throws AlgorithmCompileException {
+        List<String> stringValuesAsStrings = decomposeByConcat(input);
+        List stringValues = new ArrayList();
+        for (String s : stringValuesAsStrings) {
+            if (isValidString(s)) {
+                stringValues.add(s.substring(1, s.length() - 1));
+            } else {
+                AbstractExpression abstrExpr = null;
+                try {
+                    abstrExpr = Expression.build(s, VALIDATOR);
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    CompilerUtils.checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, abstrExpr.getContainedVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (ExpressionException e) {
+                }
+                try {
+                    abstrExpr = BooleanExpression.build(s, VALIDATOR, CompilerUtils.extractTypesOfMemory(scopeMemory));
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    CompilerUtils.checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((BooleanExpression) abstrExpr).getContainedExpressionVars(), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.BOOLEAN_EXPRESSION, ((BooleanExpression) abstrExpr).getContainedBooleanVars(scopeMemory), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((BooleanExpression) abstrExpr).getContainedMatrixVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (BooleanExpressionException e) {
+                }
+                try {
+                    abstrExpr = MatrixExpression.build(s, VALIDATOR, VALIDATOR);
+                    // Prüfung auf Wohldefiniertheit aller auftretenden Bezeichner.
+                    CompilerUtils.checkIfAllIdentifiersAreDefined(abstrExpr.getContainedVars(), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.EXPRESSION, ((MatrixExpression) abstrExpr).getContainedExpressionVars(), scopeMemory);
+                    CompilerUtils.areIdentifiersOfCorrectType(IdentifierType.MATRIX_EXPRESSION, ((MatrixExpression) abstrExpr).getContainedMatrixVars(), scopeMemory);
+                    stringValues.add(abstrExpr);
+                    continue;
+                } catch (ExpressionException e) {
+                }
+                if (abstrExpr == null) {
+                    throw new ParseAssignValueException(AlgorithmCompileExceptionIds.AC_NOT_A_VALID_STRING, s);
+                }
+            }
+        }
+
+        return new MalString(stringValues.toArray());
+    }
+
+    private static List<String> decomposeByConcat(String input) throws AlgorithmCompileException {
+        List<String> stringValues = new ArrayList<>();
+
+        int bracketCounter = 0;
+        int beginBlockPosition = 0;
+        int endBlockPosition = -1;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {
+                bracketCounter++;
+            } else if (input.charAt(i) == ReservedChars.CLOSE_BRACKET.getValue()) {
+                bracketCounter--;
+            }
+            if (bracketCounter == 0) {
+                if (Operators.CONCAT.getValue().equals(String.valueOf(input.charAt(i)))) {
+                    endBlockPosition = i;
+                    stringValues.add(input.substring(beginBlockPosition, endBlockPosition));
+                    beginBlockPosition = i + 1;
+                } else if (i == input.length() - 1) {
+                    endBlockPosition = input.length();
+                    stringValues.add(input.substring(beginBlockPosition, endBlockPosition));
+                    beginBlockPosition = i + 1;
+                }
+            }
+        }
+        if (bracketCounter > 0) {
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_BRACKET_EXPECTED, ReservedChars.CLOSE_BRACKET);
+        }
+        if (endBlockPosition != input.length()) {
+            throw new AlgorithmCompileException(AlgorithmCompileExceptionIds.AC_CANNOT_FIND_SYMBOL, input.substring(endBlockPosition));
+        }
+
+        return stringValues;
+    }
+
+    private static boolean isValidString(String input) {
+        return input.startsWith(ReservedChars.STRING_DELIMITER.getStringValue())
+                && input.endsWith(ReservedChars.STRING_DELIMITER.getStringValue())
+                && input.replaceAll(ReservedChars.STRING_DELIMITER.getStringValue(), "").length() == input.length() - 2;
     }
 
 }

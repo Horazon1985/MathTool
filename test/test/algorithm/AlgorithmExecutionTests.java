@@ -8,6 +8,7 @@ import algorithmexecuter.enums.IdentifierType;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
+import algorithmexecuter.model.utilclasses.MalString;
 import algorithmexecuter.output.AlgorithmOutputPrinter;
 import java.util.Collections;
 import java.util.List;
@@ -90,8 +91,8 @@ public class AlgorithmExecutionTests {
             Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(mainAlg));
             assertTrue(result.getType() == IdentifierType.STRING);
             assertTrue(result.getName().equals("s"));
-            assertEquals(1, result.getStringValue().length);
-            assertEquals("a hat den Wert 3", result.getStringValue()[0]);
+            assertEquals(1, result.getMalString().getStringValues().length);
+            assertEquals("a hat den Wert 3", result.getMalString().getStringValues()[0]);
         } catch (AlgorithmCompileException e) {
             fail("Der Algorithmus " + input + " konnte nicht kompiliert werden.");
         } catch (Exception e) {
@@ -519,6 +520,33 @@ public class AlgorithmExecutionTests {
             assertTrue(result.getType() == IdentifierType.EXPRESSION);
             assertTrue(result.getName().equals("a"));
             assertTrue(((Expression) result.getValue()).equals(Expression.build("17")));
+        } catch (AlgorithmCompileException e) {
+            fail(input + " konnte nicht geparst werden.");
+        } catch (Exception e) {
+            fail("Der Algorithmus " + mainAlg + " konnte nicht ausgeführt werden.");
+        }
+    }
+
+    @Test
+    public void executeAlgorithmCallingAlgorithmOfStringTypeTest() {
+        String input = "string main(){\n"
+                + "	expression a=5;\n"
+                + "	string s=f(a); \n"
+                + "	return s;\n"
+                + "}\n"
+                + "\n"
+                + "string f(expression a){\n"
+                + "	return \"Test!\";\n"
+                + "}";
+        Algorithm mainAlg = null;
+        try {
+            AlgorithmCompiler.parseAlgorithmFile(input);
+            mainAlg = AlgorithmCompiler.ALGORITHMS.getMainAlgorithm();
+            Identifier result = AlgorithmExecuter.executeAlgorithm(Collections.singletonList(mainAlg));
+            assertTrue(result.getType() == IdentifierType.STRING);
+            assertTrue(result.getName().equals("s"));
+            assertEquals(1, ((MalString) result.getMalString()).getStringValues().length);
+            assertEquals("Test!", ((MalString) result.getMalString()).getStringValues()[0]);
         } catch (AlgorithmCompileException e) {
             fail(input + " konnte nicht geparst werden.");
         } catch (Exception e) {

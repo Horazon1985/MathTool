@@ -19,6 +19,7 @@ import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Signature;
+import algorithmexecuter.model.utilclasses.MalString;
 import exceptions.EvaluationException;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     private final Identifier identifierSrc;
     private final AbstractExpression targetExpression;
-    private final Object[] stringValues;
+    private final MalString malString;
     private final AssignValueType type;
     private final Signature targetAlgorithmSignature;
     private final Identifier[] targetAlgorithmArguments;
@@ -39,7 +40,7 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = targetExpression;
-        this.stringValues = null;
+        this.malString = null;
         this.type = type;
         this.targetAlgorithmSignature = null;
         this.targetAlgorithmArguments = null;
@@ -51,16 +52,16 @@ public class AssignValueCommand extends AlgorithmCommand {
         }
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
-        this.stringValues = null;
+        this.malString = null;
         this.type = type;
         this.targetAlgorithmSignature = targetAlgorithmSignature;
         this.targetAlgorithmArguments = targetAlgorithmArguments;
     }
 
-    public AssignValueCommand(Identifier identifierSrc, Object[] stringValues, AssignValueType type) throws AlgorithmCompileException {
+    public AssignValueCommand(Identifier identifierSrc, MalString malString, AssignValueType type) {
         this.identifierSrc = identifierSrc;
         this.targetExpression = null;
-        this.stringValues = stringValues;
+        this.malString = malString;
         this.type = type;
         this.targetAlgorithmSignature = null;
         this.targetAlgorithmArguments = null;
@@ -74,8 +75,8 @@ public class AssignValueCommand extends AlgorithmCommand {
         return this.targetExpression;
     }
 
-    public Object[] getStringValues() {
-        return this.stringValues;
+    public MalString getMalString() {
+        return this.malString;
     }
 
     public Identifier getIdentifierSrc() {
@@ -106,15 +107,15 @@ public class AssignValueCommand extends AlgorithmCommand {
     public String toString() {
         String command = "AssignValueCommand[type = " + this.type + ", identifierSrc = " + this.identifierSrc;
         // Typ: String.
-        if (this.stringValues != null) {
+        if (this.malString != null) {
             String values = "(";
-            for (int i = 0; i < this.stringValues.length; i++) {
-                if (this.stringValues[i] instanceof String) {
-                    values += "\"" + this.stringValues[i] + "\"";
+            for (int i = 0; i < this.malString.getStringValues().length; i++) {
+                if (this.malString.getStringValues()[i] instanceof String) {
+                    values += "\"" + this.malString.getStringValues()[i] + "\"";
                 } else {
-                    values += this.stringValues[i].toString();
+                    values += this.malString.getStringValues()[i].toString();
                 }
-                if (i < this.stringValues.length - 1) {
+                if (i < this.malString.getStringValues().length - 1) {
                     values += ", ";
                 }
             }
@@ -142,16 +143,16 @@ public class AssignValueCommand extends AlgorithmCommand {
 
     @Override
     public Identifier execute(AlgorithmMemory scopeMemory) throws AlgorithmExecutionException, EvaluationException {
-        if (this.stringValues != null) {
+        if (this.malString != null) {
             String resultValue = "";
-            for (Object obj : this.stringValues) {
+            for (Object obj : this.malString.getStringValues()) {
                 if (obj instanceof String) {
                     resultValue += obj;
                 } else if (obj instanceof AbstractExpression) {
                     resultValue += simplifyTargetExpression((AbstractExpression) obj, scopeMemory);
                 }
             }
-            this.identifierSrc.setStringValue(new Object[]{resultValue});
+            this.identifierSrc.setStringValue(new MalString(resultValue));
         } else if (this.targetExpression != null) {
             Set<String> varsInTargetExpr = this.targetExpression.getContainedIndeterminates();
             checkForUnknownIdentifier(scopeMemory, varsInTargetExpr);
@@ -161,8 +162,7 @@ public class AssignValueCommand extends AlgorithmCommand {
             this.targetAlgorithm.initInputParameter(this.targetAlgorithmArguments);
             Set<String> varsInTargetExpr = getVarsFromAlgorithmParameters(this.targetAlgorithm);
             checkForUnknownIdentifier(scopeMemory, varsInTargetExpr);
-            AbstractExpression targetExprSimplified = this.targetAlgorithm.execute().getValue();
-            this.identifierSrc.setValue(targetExprSimplified);
+            this.identifierSrc.setAllValuesFromAnotherIdentifier(this.targetAlgorithm.execute());
         }
         scopeMemory.addToMemoryInRuntime(this.identifierSrc);
         return null;
@@ -226,14 +226,14 @@ public class AssignValueCommand extends AlgorithmCommand {
             commandString += this.identifierSrc.getType().toString() + " ";
         }
         commandString += this.identifierSrc.getName() + Operators.DEFINE.getValue();
-        if (this.stringValues != null) {
-            for (int i = 0; i < this.stringValues.length; i++) {
-                if (this.stringValues[i] instanceof String) {
-                    commandString += "\"" + this.stringValues[i] + "\"";
+        if (this.malString != null) {
+            for (int i = 0; i < this.malString.getStringValues().length; i++) {
+                if (this.malString.getStringValues()[i] instanceof String) {
+                    commandString += "\"" + this.malString.getStringValues()[i] + "\"";
                 } else {
-                    commandString += this.stringValues[i].toString();
+                    commandString += this.malString.getStringValues()[i].toString();
                 }
-                if (i < this.stringValues.length - 1) {
+                if (i < this.malString.getStringValues().length - 1) {
                     commandString += Operators.CONCAT.getValue();
                 }
             }

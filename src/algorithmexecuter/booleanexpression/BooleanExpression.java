@@ -165,7 +165,7 @@ public abstract class BooleanExpression implements AbstractExpression {
         }
 
         // Aufteilung, falls eine Elementaroperation (|, &, !) vorliegt
-        if (priority <= 2) {
+        if (priority < 2) {
             String inputLeft = input.substring(0, breakpoint);
             String inputRight = input.substring(breakpoint + 1, inputLength);
 
@@ -183,8 +183,6 @@ public abstract class BooleanExpression implements AbstractExpression {
                 case 1:
                     return new BooleanBinaryOperation(build(inputLeft, validator, typesMap),
                             build(inputRight, validator, typesMap), BooleanBinaryOperationType.AND);
-                default:    //Passiert zwar nicht, aber trotzdem!
-                    return null;
             }
         }
 

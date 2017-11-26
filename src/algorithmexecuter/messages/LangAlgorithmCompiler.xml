@@ -77,7 +77,19 @@
         <Ukrainian>Не можливо знайти символ: '[0]'.</Ukrainian>
         <Russian>Не возможно найти символ: '[0]'.</Russian>
     </object>
-    <object id = "AC_ILLEGAL_CHARACTER">
+     <object id = "AC_CANNOT_PARSE_GENERAL_PARAMETER_IN_COMMAND">
+        <German>Der [0]. Parameter im Befehl '[1]' konnte nicht geparst werden.</German>
+        <English>The [0]. parameter in command '[1]' could not be parsed.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
+    <object id = "AC_NO_SUCH_COMMAND">
+        <German>Ein Befehl mit der Signatur '[0]' wurde nicht gefunden.</German>
+        <English>A command with signature '[0]' could not be found.</English>
+        <Ukrainian>Команду з сігнатурою '[0]' не знайдено.</Ukrainian>
+        <Russian>Команда с сигнатурой '[0]' не найдена.</Russian>
+    </object>
+   <object id = "AC_ILLEGAL_CHARACTER">
         <German>Illegales Zeiches in: '[0]'.</German>
         <English>Illegal character in: '[0]'.</English>
         <Ukrainian>Недопустимий символ у: '[0]'.</Ukrainian>

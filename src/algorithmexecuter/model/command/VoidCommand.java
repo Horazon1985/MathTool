@@ -11,6 +11,7 @@ import algorithmexecuter.model.identifier.Identifier;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.model.AlgorithmMemory;
 import algorithmexecuter.model.Signature;
+import algorithmexecuter.model.utilclasses.MalString;
 import algorithmexecuter.output.AlgorithmOutputPrinter;
 import exceptions.EvaluationException;
 
@@ -34,7 +35,18 @@ public class VoidCommand extends AlgorithmCommand {
 
     @Override
     public String toString() {
-        return "VoidCommand[name = " + this.name + ", identifiers = " + this.identifiers + "]";
+        return "VoidCommand[name = " + this.name + ", identifiers = " + identifierArrayToString(this.identifiers) + "]";
+    }
+    
+    private String identifierArrayToString(Identifier[] identifiers) {
+        String result = "(";
+        for (int i = 0; i < identifiers.length; i++) {
+            result += identifiers[i];
+            if (i < identifiers.length - 1) {
+                result += ", ";
+            }
+        }
+        return result + ")";
     }
 
     public Signature getSignature() {
@@ -50,7 +62,7 @@ public class VoidCommand extends AlgorithmCommand {
         // Zunächst über alle definierten Algorithmen iterieren.
         for (Algorithm alg : AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage()) {
             if (alg.getSignature().equals(getSignature()) && alg.getReturnType() == null) {
-                // TO DO: Algorithmenparameter durch Bezeichnerwerte ersetzen. 
+                alg.initInputParameter(this.identifiers);
                 alg.execute();
                 return null;
             }
@@ -73,16 +85,16 @@ public class VoidCommand extends AlgorithmCommand {
             if (this.identifiers[0].getType() != IdentifierType.STRING) {
                 AlgorithmOutputPrinter.printLine(this.identifiers[0].toString());
             } else {
-                AlgorithmOutputPrinter.printLine(stringArrayToOutputString(this.identifiers[0].getStringValue()));
+                AlgorithmOutputPrinter.printLine(stringArrayToOutputString(this.identifiers[0].getMalString()));
             }
             return null;
         }
         throw new AlgorithmExecutionException(AlgorithmExecutionExceptionIds.AE_NO_SUCH_COMMAND);
     }
 
-    private String stringArrayToOutputString(Object[] objects) {
+    private String stringArrayToOutputString(MalString malString) {
         String result = "";
-        for (Object obj : objects) {
+        for (Object obj : malString.getStringValues()) {
             result += obj;
         }
         return result;

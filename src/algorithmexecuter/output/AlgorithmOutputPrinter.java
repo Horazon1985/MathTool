@@ -90,7 +90,7 @@ public abstract class AlgorithmOutputPrinter {
         SimpleAttributeSet keyWord = new SimpleAttributeSet();
         if (identifier.getType().equals(IdentifierType.STRING)) {
             String printedValue = "";
-            for (Object obj : identifier.getStringValue()) {
+            for (Object obj : identifier.getMalString().getStringValues()) {
                 printedValue += obj.toString();
             }
             println(doc, keyWord, Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM, alg.getName(), printedValue));

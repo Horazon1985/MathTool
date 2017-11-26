@@ -114,13 +114,10 @@ public class Algorithm {
         }
     }
 
-    public AlgorithmMemory initInputParameter(Identifier[] identifiers) {
-        AlgorithmMemory memory = new AlgorithmMemory(this);
+    public void initInputParameter(Identifier[] identifiers) {
         for (int i = 0; i < this.inputParameters.length; i++) {
             this.inputParameters[i].setValue(identifiers[i].getValue());
-            memory.addToMemoryInRuntime(identifiers[i]);
         }
-        return memory;
     }
 
     public Identifier execute() throws AlgorithmExecutionException, EvaluationException {
