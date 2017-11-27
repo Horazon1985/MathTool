@@ -748,47 +748,4 @@
         <Ukrainian>Дивитися код редагування</Ukrainian>
         <Russian>Смотреть код редактирования</Russian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_START_COMPILING_ALGORITHM">
-        <German>Kompiliere Algoirithmus ...</German>
-        <English>Start compiling algorithm ...</English>
-        <Ukrainian>Компілювати алгоритм ...</Ukrainian>
-        <Russian>Компилировать алгоритм ...</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_COMPILING_ALGORITHM_SUCCESSFUL">
-        <German>Kompilieren des Algorithmus erfolgreich.</German>
-        <English>Compiling algorithm successful.</English>
-        <Ukrainian>Компіляція завершена успішно.</Ukrainian>
-        <Russian>Компиляция заверншена успешно.</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_START_EXECUTING_ALGORITHM">
-        <German>Starte Ausführung des Algoirithmus ...</German>
-        <English>Start executing algorithm ...</English>
-        <Ukrainian>Почати виконання алгоритму ...</Ukrainian>
-        <Russian>Начать выполнение алгоритма ...</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_OUTPUT_OF_ALGORITHM">
-        <German>Ausgabe des Algorithmus [0]: [1]</German>
-        <English>Output of algorithm [0]: [1]</English>
-        <Ukrainian>Результат виконання алгоритму [0]: [1]</Ukrainian>
-        <Russian>Результат выполнения алгоритма [0]: [1]</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_SUCCESSFUL">
-        <German>Ausführung des Algorithmus erfolgreich.</German>
-        <English>Execution of algorithm successful.</English>
-        <Ukrainian>Виконання алгоритма завершено успішно.</Ukrainian>
-        <Russian>Выполнеие алгоритма заверншено успешно.</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_EXECUTION_OF_ALGORITHM_ABORTED">
-        <German>Ausführung des Algorithmus abgebrochen.</German>
-        <English>Execution of algorithm aborted.</English>
-        <Ukrainian>Виконання алгоритма перервано.</Ukrainian>
-        <Russian>Выполнеие алгоритма прервано.</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_EXCEPTION_IN_ALGORITHM_OCCURRED">
-        <German>Folgender Fehler trat auf: [0]</German>
-        <English>Following exception ocurred: [0]</English>
-        <Ukrainian>Виникла наступна помилка: [0]</Ukrainian>
-        <Russian>Возникла следующая ошибка: [0]</Russian>
-    </object>
-    
 </objects>
