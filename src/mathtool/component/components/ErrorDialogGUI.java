@@ -46,7 +46,7 @@ public class ErrorDialogGUI extends JDialog {
     private void init(Set<String> resourcePaths, int errorCode) {
         Dimension dim = getToolkit().getScreenSize();
         setBounds(200, dim.height / 2 - 50, dim.width - 400, 100 + 30 * resourcePaths.size());
-        infoLabels = new JLabel[resourcePaths.size()];
+        infoLabels = new JLabel[resourcePaths.size() + 1];
         infoLabels[0] = new JLabel();
         add(infoLabels[0]);
         infoLabels[0].setBounds(25, 25, getWidth() - 50, 25);

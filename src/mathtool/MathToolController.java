@@ -81,7 +81,7 @@ public class MathToolController {
      * sind. Falls Ressourcen fehlen, wird ein entsprechender Dialog angezeigt.
      */
     public static void checkExpressionBuilderResources() {
-        Collection<String> resourcesExpressionBuilder = lang.translator.Translator.getResources();
+        Collection<String> resourcesExpressionBuilder = algorithmexecuter.lang.translator.Translator.getResources();
         checkResources(resourcesExpressionBuilder);
     }
 
