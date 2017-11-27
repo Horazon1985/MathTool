@@ -64,6 +64,7 @@ public class CommandIdentifierDefinitionDialogGUI extends AlgorithmCommandCompon
         if (instance == null) {
             instance = new CommandIdentifierDefinitionDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateTemplateGui();
         instance.resetAllFields();
         instance.resetAllChoices();
         instance.setVisible(true);

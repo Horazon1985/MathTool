@@ -19,8 +19,12 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
 
     protected static final String SIGN_TAB = "\t";
     protected static final String SIGN_NEXT_LINE = "\n";
-    
+
     protected static JTextArea algorithmEditor;
+
+    private final String[] choiceLabelStringIds;
+
+    private final String[] textFieldlabelStringIds;
 
     protected JLabel[] choicelabels;
 
@@ -45,11 +49,13 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().setBackground(Color.white);
-        init(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh, choiceLabelStringIds, textFieldlabelStringIds, comboboxCoices);
+        this.choiceLabelStringIds = choiceLabelStringIds;
+        this.textFieldlabelStringIds = textFieldlabelStringIds;
+        init(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh, comboboxCoices);
     }
 
     private void init(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh,
-            String[] choiceLabelStringIds, String[] textFieldlabelStringIds, Object[][] comboboxCoices) {
+            Object[][] comboboxCoices) {
 
         int dialogWidth = 450;
         int dialogHeight = 125 + 50 * (choiceLabelStringIds.length + textFieldlabelStringIds.length);
@@ -89,6 +95,16 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
     protected void resetAllFields() {
         for (JTextField tf : this.textFields) {
             tf.setText("");
+        }
+    }
+
+    protected void updateTemplateGui() {
+        this.generateButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON));
+        for (int i = 0; i < choiceLabelStringIds.length; i++) {
+            this.choicelabels[i].setText(Translator.translateOutputMessage(choiceLabelStringIds[i]));
+        }
+        for (int i = 0; i < textFieldlabelStringIds.length; i++) {
+            this.textFieldlabels[i].setText(Translator.translateOutputMessage(textFieldlabelStringIds[i]));
         }
     }
 

@@ -60,6 +60,7 @@ public class CommandControlStructureDoWhileDialogGUI extends AlgorithmCommandCom
         if (instance == null) {
             instance = new CommandControlStructureDoWhileDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateTemplateGui();
         instance.resetAllFields();
         instance.setVisible(true);
 
@@ -67,5 +68,5 @@ public class CommandControlStructureDoWhileDialogGUI extends AlgorithmCommandCom
         instance.repaint();
         return instance;
     }
-
+    
 }

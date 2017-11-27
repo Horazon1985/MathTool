@@ -103,7 +103,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         this.routineReturnTypeLabel.setBounds(25, 75, 100, 25);
 
         initAndFillReturnTypeValues();
-        
+
         this.add(this.routineReturnTypeCombobox);
         this.routineReturnTypeCombobox.setBounds(150, 75, 200, 25);
 
@@ -169,7 +169,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         });
 
     }
-    
+
     private void initAndFillReturnTypeValues() {
         ArrayList returnTypes = new ArrayList();
         returnTypes.add(null);
@@ -297,6 +297,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         if (instance == null) {
             instance = new SubroutineDefinitionDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateGui();
         instance.reset();
         instance.setVisible(true);
 
@@ -306,7 +307,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
     }
 
     private void reset() {
-        
+
         for (JLabel l : this.parameterLabels) {
             remove(l);
         }
@@ -319,16 +320,31 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         for (JButton b : this.removeButtons) {
             remove(b);
         }
-        
+
         this.routineNameField.setText("");
         this.routineReturnTypeCombobox.setSelectedIndex(0);
         this.parameterLabels.clear();
         this.parameterTypeComboBoxes.clear();
         this.parameterNameFields.clear();
         this.removeButtons.clear();
-    
+
         relocateButtonsAfterNewParameter();
         updateBounds();
     }
-    
+
+    private void updateGui() {
+        setTitle(Translator.translateOutputMessage(TITLE_ID));
+        this.routineNameLabel.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_NAME));
+        this.routineReturnTypeLabel.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_RETURN_TYPE));
+        this.parameterLabel.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER));
+        this.typeLabel.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER_TYPE));
+        this.nameLabel.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_PARAMETER_NAME));
+        for (JLabel label : this.parameterLabels) {
+            label.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_GENERAL_PARAMETER));
+        }
+        this.addParameterButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_ADD_PARAMETER_BUTTON));
+        this.generateButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE_BUTTON));
+
+    }
+
 }

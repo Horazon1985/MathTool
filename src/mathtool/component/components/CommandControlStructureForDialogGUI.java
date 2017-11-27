@@ -76,6 +76,7 @@ public class CommandControlStructureForDialogGUI extends AlgorithmCommandCompone
         if (instance == null) {
             instance = new CommandControlStructureForDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateTemplateGui();
         instance.resetAllFields();
         instance.setVisible(true);
 

@@ -59,6 +59,7 @@ public class CommandReturnDialogGUI extends AlgorithmCommandComponentTemplate {
         if (instance == null) {
             instance = new CommandReturnDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateTemplateGui();
         instance.resetAllFields();
         instance.setVisible(true);
         instance.revalidate();

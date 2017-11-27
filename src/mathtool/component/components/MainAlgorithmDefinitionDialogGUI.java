@@ -54,6 +54,7 @@ public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentT
         if (instance == null) {
             instance = new MainAlgorithmDefinitionDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
+        instance.updateTemplateGui();
         instance.resetAllFields();
         instance.resetAllChoices();
         instance.setVisible(true);
