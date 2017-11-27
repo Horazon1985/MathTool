@@ -83,6 +83,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private boolean computing;
 
+    private static final String GUI_MENU_ALGORITHMS = "GUI_MENU_ALGORITHMS";
+
     private static final String GUI_MathToolAlgorithmsGUI_FILE = "GUI_MathToolAlgorithmsGUI_FILE";
     private static final String GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM = "GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM = "GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM";
@@ -119,10 +121,11 @@ public class MathToolAlgorithmsGUI extends JDialog {
         return this.algorithmEditor;
     }
 
-    public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight, String titleID) {
+    public static MathToolAlgorithmsGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight) {
         if (instance == null) {
-            instance = new MathToolAlgorithmsGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, titleID);
+            instance = new MathToolAlgorithmsGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight);
         }
+        instance.updateGui();
         return instance;
     }
 
@@ -133,12 +136,12 @@ public class MathToolAlgorithmsGUI extends JDialog {
      * (3) Ausgabefenster.<br>
      * (4) Buttons.<br>
      */
-    private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight, String titleID) {
+    private MathToolAlgorithmsGUI(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight) {
 
         this.computing = false;
-        this.codeVisible = true;
+        this.codeVisible = false;
 
-        setTitle(titleID);
+        setTitle(Translator.translateOutputMessage(GUI_MENU_ALGORITHMS));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
@@ -184,21 +187,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             currentComponentLevel += this.algorithmEditorPane.getHeight() + STUB;
 
-//            this.algorithmEditor.setText("expression main(){\n"
-//                    + "	expression a=1;\n"
-//                    + "	for(expression i=0,f(i)<=10,i=i+g(i)){\n"
-//                    + "		a=3*a+2;\n"
-//                    + "	}\n"
-//                    + "	return a;\n"
-//                    + "}\n"
-//                    + "\n"
-//                    + "expression f(expression i){\n"
-//                    + "	return 2*i;\n"
-//                    + "}\n"
-//                    + "\n"
-//                    + "expression g(expression i){\n"
-//                    + "	return i^2+1;\n"
-//                    + "}");
             keyListener = new KeyListener() {
 
                 private boolean controlPressed = false;
@@ -279,6 +267,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             });
 
             this.seeCompiledCodeButton.addActionListener((ActionEvent e) -> {
+                codeVisible = !codeVisible;
                 if (codeVisible) {
                     seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_EDITOR_CODE));
                     code = algorithmEditor.getText();
@@ -289,7 +278,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     algorithmEditor.setBackground(Color.WHITE);
                     algorithmEditor.setText(code);
                 }
-                codeVisible = !codeVisible;
                 algorithmEditor.setEditable(codeVisible);
             });
 
@@ -382,6 +370,46 @@ public class MathToolAlgorithmsGUI extends JDialog {
             CommandReturnDialogGUI.createCommandReturnDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
         });
 
+    }
+
+    /**
+     * Aktualisiert sämtliche Texte gemäß der aktuellen Sprache.
+     */
+    private void updateGui() {
+        // Titel aktualisieren
+        setTitle(Translator.translateOutputMessage(GUI_MENU_ALGORITHMS));
+
+        // Menüeinträge aktualisieren
+        this.algorithmsMenuFile.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FILE));
+        this.algorithmsMenuItemOpen.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LOAD_ALGORITHM));
+        this.algorithmsMenuItemSave.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SAVE_ALGORITHM));
+        this.algorithmsMenuItemQuit.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_QUIT));
+        this.algorithmsMenuCode.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE));
+        this.algorithmsMenuCodeGenerate.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE));
+        this.algorithmsMenuCodeGenerateMainAlgorithm.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM));
+        this.algorithmsMenuItemCodeGenerateSubroutine.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE));
+        this.algorithmsMenuCodeGenerateControlStructures.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_CONTROL_STRUCTURES));
+        this.algorithmsMenuItemCodeGenerateIf.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF));
+        this.algorithmsMenuItemCodeGenerateIfElse.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF_ELSE));
+        this.algorithmsMenuItemCodeGenerateWhile.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_WHILE));
+        this.algorithmsMenuItemCodeGenerateDoWhile.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_DO_WHILE));
+        this.algorithmsMenuItemCodeGenerateFor.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_FOR));
+        this.algorithmsMenuCodeGenerateCommand.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND));
+        this.algorithmsMenuItemCodeGenerateCommandDefine.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE));
+        this.algorithmsMenuItemCodeGenerateCommandReturn.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_RETURN));
+
+        // Buttontexte aktualisieren
+        if (this.computing) {
+            this.runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_STOP));
+        } else {
+            this.runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_RUN));
+        }
+        this.formatButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_FORMAT));
+        if (this.codeVisible) {
+            this.seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_EDITOR_CODE));
+        } else {
+            this.seeCompiledCodeButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_SEE_COMPILED_CODE));
+        }
     }
 
     private void formatCode() {

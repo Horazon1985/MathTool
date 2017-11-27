@@ -405,7 +405,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 mathToolGraphicArea.updateSize();
 
                 // Abhängig von der Sprache alle Texte (neu) setzen.
-                updateGUI();
+                updateGui();
 
                 validate();
                 repaint();
@@ -534,7 +534,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     /**
      * Aktualisiert die Oberfläche nach Änderung von Einstellungen.
      */
-    private void updateGUI() {
+    private void updateGui() {
         // Captions neu setzen.
         initCaptions();
         // Im Sprachmenü die gewählte Sprache fett hervorheben.
@@ -1374,36 +1374,36 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     private void menuItemLanguageEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageEnglishActionPerformed
         Expression.setLanguage(TypeLanguage.EN);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemLanguageEnglishActionPerformed
 
     private void menuItemLanguageGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageGermanActionPerformed
         Expression.setLanguage(TypeLanguage.DE);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemLanguageGermanActionPerformed
 
     private void menuItemLanguageRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageRussianActionPerformed
         Expression.setLanguage(TypeLanguage.RU);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemLanguageRussianActionPerformed
 
     private void menuItemLanguageUkrainianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLanguageUkrainianActionPerformed
         Expression.setLanguage(TypeLanguage.UA);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemLanguageUkrainianActionPerformed
 
     private void menuItemRepresentationTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationTextActionPerformed
         typeMode = TypeMode.TEXT;
         scrollPaneGraphic.setVisible(false);
         scrollPaneText.setVisible(true);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemRepresentationTextActionPerformed
 
     private void menuItemRepresentationFormulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepresentationFormulaActionPerformed
         typeMode = TypeMode.GRAPHIC;
         scrollPaneGraphic.setVisible(true);
         scrollPaneText.setVisible(false);
-        updateGUI();
+        updateGui();
     }//GEN-LAST:event_menuItemRepresentationFormulaActionPerformed
 
     private void menuItemOutputOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOutputOptionsActionPerformed
@@ -1476,13 +1476,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemGraphicOptionsActionPerformed
 
     private void menuItemAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAlgorithmsActionPerformed
-        String algorithmsTitle = Translator.translateOutputMessage(GUI_MENU_ALGORITHMS);
-
-        MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                algorithmsTitle);
-
+        MathToolAlgorithmsGUI mathToolAlgorithmsGUI = MathToolAlgorithmsGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         mathToolAlgorithmsGUI.setVisible(true);
-
     }//GEN-LAST:event_menuItemAlgorithmsActionPerformed
 
     /**
