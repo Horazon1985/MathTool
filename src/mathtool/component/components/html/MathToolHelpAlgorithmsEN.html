@@ -146,7 +146,20 @@ Similarly, a number of keywords are reserved in MAL and may only be used in a pa
             <td>Beginning of a for loop</td>
         </tr>
     </tbody>
-</table><br>
+</table><br><br>
+
+<strong>Structure and principles of MAL</strong><br><br>
+
+Any number of algorithms can be implemented in an algorithm file as long as they satisfy the following conditions:
+<ul>
+    <li>The algorithms all have different signatures. A signature always consists of the name of the algorithm as well as the ordered tuple of input parameter types.</li>
+    <li>There exists an algorithm with the name "main", which is parameterless. The return type can be arbitrary (and empty). This algorithm is the main entry point, as is the case in a classic Java application.</li>
+    <li>With a few exceptions, subalgorithm calls (that is, algorithms that are not named "main") are always call-by-value. The latter means that if an input parameter within the subalgorithm is assigned a new value, it then returns to its original value (i.e. the value it had possessed immediately before the subroutine was called) after the call to the subalgorithm.</li>
+</ul><br><br>
+
+<strong>Data types</strong><br><br>
+
+MAL knows four different data types, which are as follows:<br><br>
 
 <table border=5>
     <tbody>
@@ -166,27 +179,18 @@ Similarly, a number of keywords are reserved in MAL and may only be used in a pa
             <td>matrixexpression</td>
             <td>Matrix expression</td>
         </tr>
+        <tr>
+            <td>string</td>
+            <td>A string (a chain of characters)</td>
+        </tr>
     </tbody>
 </table><br><br>
-
-<strong>Structure and principles of MAL</strong><br><br>
-
-Any number of algorithms can be implemented in an algorithm file as long as they satisfy the following conditions:
-<ul>
-    <li>The algorithms all have different signatures. A signature always consists of the name of the algorithm as well as the ordered tuple of input parameter types.</li>
-    <li>There exists an algorithm with the name "main", which is parameterless. The return type can be arbitrary (and empty). This algorithm is the main entry point, as is the case in a classic Java application.</li>
-    <li>With a few exceptions, subalgorithm calls (that is, algorithms that are not named "main") are always call-by-value. The latter means that if an input parameter within the subalgorithm is assigned a new value, it then returns to its original value (i.e. the value it had possessed immediately before the subroutine was called) after the call to the subalgorithm.</li>
-</ul><br><br>
-
-<strong>Data types</strong><br><br>
-
-MAL knows three different data types:<br><br>
 
 The data type <i>expression</i>, i.e. a mathematical expression. Here, no further distinction is made, the expression being an integer (which in many programming languages is indicated as int or integer) or a complex expression.<br><br>
 
 <i>Example code:</i> expression a = 15;<br><br>
 
-The Data type <i>matrixexpression</i>, i.e. a matrix expression.<br><br>
+The data type <i>matrixexpression</i>, i.e. a matrix expression.<br><br>
 
 <i>Example code:</i> matrixexpression a = [1,2;4,1+x;2,7];<br><br>
 
@@ -198,6 +202,11 @@ The data type <i>booleanexpression</i>, i.e. a boolean expression.<br><br>
 
 Here x is an already defined variable of type expression.<br><br>
 
+The data type <i>string</i>.<br><br>
+
+<i>Example code:</i> string a = “The variable a has the value “+a;<br><br>
+
+Here a is an already defined variable of an arbitrary type, for example of type expression.<br><br>
 
 <strong>Examples</strong><br><br>
 
@@ -268,4 +277,4 @@ returns an error when compiling, as it requires an expression as return value, b
 
 <strong>In the next versions</strong><br><br>
 
-The language MAL is still under construction. Accordingly, many useful features are not yet implemented. In the next versions, for example, dealing with arrays is planned so that, for example, solutions of equations can be stored therein and be further processed. In addition, a code help is offered, which reduces the implementation of various structures to the user, so as to avoid potential syntax errors. Likewise, a debug mode will be implemented soon, which significantly improves the fixing of bugs.
+The language MAL is still under construction. Accordingly, many useful features are not yet implemented. In the next versions, for example, dealing with arrays is planned so that, for example, solutions of equations can be stored therein and be further processed. Likewise, a debug mode will be implemented soon, which significantly improves the fixing of bugs.

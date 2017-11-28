@@ -146,7 +146,20 @@ Ebenso ist eine Reihe von Schlüsselwörtern in MAL reserviert und dürfen nur i
             <td>Beginn einer For-Schleife</td>
         </tr>
     </tbody>
-</table><br>
+</table><br><br>
+
+<strong>Aufbau und Prinzipien von MAL</strong><br><br>
+
+In einer Algorithmendatei können beliebig viele Algorithmen implementiert sein, sofern sie den folgenden Bedingungen genügen:
+<ul>
+    <li>Die Algorithmen haben alle verschiedene Signaturen. Eine Signatur besteht immer aus dem Namen des Algorithmus sowie aus dem geordneten Tupel von Eingabeparametertypen.</li>
+    <li>Es existiert ein Algorithmus mit dem Namen „main“, welcher parameterlos ist. Der Rückgabetyp kann beliebig sein (und auch leer). Dieser Algorithmus ist, ähnlich wie es in einer klassischen Java-Anwendung der Fall ist, der Haupteinstiegspunkt.</li>
+    <li>Bis auf wenige Ausnahmen sind Aufrufe von Unteralgorithmen (also Algorithmen, die nicht den Namen „main“ tragen) immer Call-By-Value. Letzteres bedeutet, dass falls ein Inputparameter innerhalb des Unteralgorithmus einen neuen Wert zugewiesen bekommen, dieser dann nach Beenden des Aufrufs des Unteralgorithmus seinen ursprünglichen Wert (also den Wert, welchen dieser unmittelbar vor dem Aufruf des Unteralgorithmus besessen hatte) wieder annimmt. Die (bisher) einzigen Unteralgorithmen, welche nach dem Call-By-Reference-Prinzip arbeiten, sind die MAL-internen Methoden <i>inc</i> und <i>dec</i>, welche als einzigen Parameter eine Variable vom Typ expression übergeben bekommen. Inc erhöht dabei den Wert der übergebenen Variablen um 1, dec senkt diesen um 1.</li>
+</ul><br><br>
+
+<strong>Datentypen</strong><br><br>
+
+MAL kennt hier zunächst vier verschiedene Datentypen, welche in der folgenden Übersicht zu finden sind:<br><br>
 
 <table border=5>
     <tbody>
@@ -166,21 +179,12 @@ Ebenso ist eine Reihe von Schlüsselwörtern in MAL reserviert und dürfen nur i
             <td>matrixexpression</td>
             <td>Matrizenausdruck</td>
         </tr>
+        <tr>
+            <td>string</td>
+            <td>Zeichenkette (String)</td>
+        </tr>
     </tbody>
 </table><br><br>
-
-<strong>Aufbau und Prinzipien von MAL</strong><br><br>
-
-In einer Algorithmendatei können beliebig viele Algorithmen implementiert sein, sofern sie den folgenden Bedingungen genügen:
-<ul>
-    <li>Die Algorithmen haben alle verschiedene Signaturen. Eine Signatur besteht immer aus dem Namen des Algorithmus sowie aus dem geordneten Tupel von Eingabeparametertypen.</li>
-    <li>Es existiert ein Algorithmus mit dem Namen „main“, welcher parameterlos ist. Der Rückgabetyp kann beliebig sein (und auch leer). Dieser Algorithmus ist, ähnlich wie es in einer klassischen Java-Anwendung der Fall ist, der Haupteinstiegspunkt.</li>
-    <li>Bis auf wenige Ausnahmen sind Aufrufe von Unteralgorithmen (also Algorithmen, die nicht den Namen „main“ tragen) immer Call-By-Value. Letzteres bedeutet, dass falls ein Inputparameter innerhalb des Unteralgorithmus einen neuen Wert zugewiesen bekommen, dieser dann nach Beenden des Aufrufs des Unteralgorithmus seinen ursprünglichen Wert (also den Wert, welchen dieser unmittelbar vor dem Aufruf des Unteralgorithmus besessen hatte) wieder annimmt.</li>
-</ul><br><br>
-
-<strong>Datentypen</strong><br><br>
-
-MAL kennt hier zunächst drei verschiedene Datentypen:<br><br>
 
 Der Datentyp <i>expression</i>, also einen mathematischen Ausdruck. Hierbei wird nicht weiter unterschieden, der Ausdruck eine ganze Zahl (welche in vielen Programmiersprachen als int oder integer angegeben wird) oder ein komplexer Ausdruck ist.<br><br>
 
@@ -198,7 +202,11 @@ Der Datentyp <i>booleanexpression</i>, also ein boolscher Ausdruck.<br><br>
 
 Dabei sei x eine bereits definierte Variable vom Typ expression.<br><br>
 
+Der Datentyp <i>string</i>, also eine Zeichenkette.<br><br>
 
+<i>Beispielcode:</i> string a = “Die Variable a hat den Wert “+a;<br><br>
+
+Dabei sei a eine bereits definierte Variable eines beliebigen Typs, beispielsweise des Typs expression.<br><br>
 
 <strong>Beispiele</strong><br><br>
 
@@ -269,4 +277,4 @@ liefert beim Kompilieren einen Fehler, da hier als Rückgabewert ein Ausdruck (e
 
 <strong>In den nächsten Versionen</strong><br><br>
 
-Die Sprache MAL befindet sich noch im Aufbau. Entsprechend sind viele nützliche Features noch nicht implementiert. In den nächsten Versionen ist beispielsweise ein Umgang mit Arrays geplant, damit beispielsweise Lösungen von Gleichungen darin abgelegt und weiter behandelt werden können. Zudem wird eine Codehilfe angeboten, welche das Implementieren diverser Strukturen dem Benutzer abnimmt, um so potentielle Syntaxfehler zu vermeiden. Ebenso wird demnächst ein Debug-Modus implementiert, welcher die Fehlersuche erheblich verbessert.
+Die Sprache MAL befindet sich noch im Aufbau. Entsprechend sind viele nützliche Features noch nicht implementiert. In den nächsten Versionen ist beispielsweise ein Umgang mit Arrays geplant, damit beispielsweise Lösungen von Gleichungen darin abgelegt und weiter behandelt werden können. Ebenso wird demnächst ein Debug-Modus implementiert, welcher die Fehlersuche erheblich verbessert.
