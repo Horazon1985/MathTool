@@ -154,7 +154,7 @@ Any number of algorithms can be implemented in an algorithm file as long as they
 <ul>
     <li>The algorithms all have different signatures. A signature always consists of the name of the algorithm as well as the ordered tuple of input parameter types.</li>
     <li>There exists an algorithm with the name "main", which is parameterless. The return type can be arbitrary (and empty). This algorithm is the main entry point, as is the case in a classic Java application.</li>
-    <li>With a few exceptions, subalgorithm calls (that is, algorithms that are not named "main") are always call-by-value. The latter means that if an input parameter within the subalgorithm is assigned a new value, it then returns to its original value (i.e. the value it had possessed immediately before the subroutine was called) after the call to the subalgorithm.</li>
+    <li>With a few exceptions, subalgorithm calls (that is, algorithms that are not named "main") are always call-by-value. The latter means that if an input parameter within the subalgorithm is assigned a new value, it then returns to its original value (i.e. the value it had possessed immediately before the subroutine was called) after the call of the subalgorithm. The (so far) only subalgorithms, which work according to the call-by-reference principle, are the MAL-internal methods inc and dec, which receive a variable of the type expression as the only parameter. Inc increases the value of the passed variable by 1, dec reduces it by 1.</li>
 </ul><br><br>
 
 <strong>Data types</strong><br><br>
