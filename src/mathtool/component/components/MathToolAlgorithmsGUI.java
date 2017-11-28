@@ -278,7 +278,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     algorithmEditor.setBackground(Color.WHITE);
                     algorithmEditor.setText(code);
                 }
-                algorithmEditor.setEditable(codeVisible);
+                algorithmEditor.setEditable(!codeVisible);
             });
 
             MathToolAlgorithmsController.setMathToolAlgorithmsGUI(this);
