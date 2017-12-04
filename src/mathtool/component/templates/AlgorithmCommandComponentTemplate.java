@@ -44,7 +44,7 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
         setIconImage(new ImageIcon(getClass().getResource(ICON_PATH)).getImage());
         setTitle(Translator.translateOutputMessage(titleId));
         setLayout(null);
-//        setResizable(false);
+        setResizable(false);
         setAlwaysOnTop(true);
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

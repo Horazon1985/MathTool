@@ -342,32 +342,50 @@ public class MathToolAlgorithmsGUI extends JDialog {
         });
 
         this.algorithmsMenuCodeGenerateMainAlgorithm.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             MainAlgorithmDefinitionDialogGUI.createMainAlgorithmDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateSubroutine.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             SubroutineDefinitionDialogGUI.createSubroutineDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateIf.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandControlStructureIfDialogGUI.createCommandControlStructureIfDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateIfElse.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandControlStructureIfElseDialogGUI.createCommandControlStructureIfElseDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateWhile.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandControlStructureWhileDialogGUI.createCommandControlStructureWhileDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateDoWhile.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandControlStructureDoWhileDialogGUI.createCommandControlStructureDoWhileDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateFor.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandControlStructureForDialogGUI.createCommandControlStructureForDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
 
         this.algorithmsMenuItemCodeGenerateCommandDefine.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandIdentifierDefinitionDialogGUI.createCommandIdentifierDefinitionDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
         this.algorithmsMenuItemCodeGenerateCommandReturn.addActionListener((ActionEvent e) -> {
+            setAlwaysOnTop(false);
             CommandReturnDialogGUI.createCommandReturnDialog(getX(), getY(), getWidth(), getHeight(), algorithmEditor);
+            setAlwaysOnTop(true);
         });
 
     }

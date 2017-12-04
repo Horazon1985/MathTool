@@ -79,7 +79,7 @@ public class SubroutineDefinitionDialogGUI extends JDialog {
         setIconImage(new ImageIcon(getClass().getResource(MATHTOOL_ICON_PATH)).getImage());
         setTitle(Translator.translateOutputMessage(TITLE_ID));
         setLayout(null);
-//        setResizable(false);
+        setResizable(false);
         setAlwaysOnTop(true);
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
