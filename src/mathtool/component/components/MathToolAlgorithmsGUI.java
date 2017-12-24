@@ -460,7 +460,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     printer.clearOutput();
                     printer.printStartParsingAlgorithms();
                     AlgorithmCompiler.parseAlgorithmFile(algorithm);
-//                    saveCompiledCode();
+                    saveCompiledCode();
                     printer.printEndParsingAlgorithms();
                     // Algorithmus ausführen.
                     printer.printStartExecutingAlgorithms();
@@ -468,6 +468,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                     printer.printException(e);
+                } catch (Exception e) {
+                    printer.printUnexpectedException(e);
                 }
 
                 return null;
