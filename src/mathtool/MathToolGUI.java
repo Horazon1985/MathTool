@@ -1301,7 +1301,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     }//GEN-LAST:event_menuItemHelpActionPerformed
 
     private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
-        DevelopersDialogGUI aboutMathToolGUI = new DevelopersDialogGUI(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        DevelopersDialogGUI aboutMathToolGUI = DevelopersDialogGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         aboutMathToolGUI.setVisible(true);
     }//GEN-LAST:event_menuItemAboutActionPerformed
 

@@ -38,10 +38,10 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
 
     }
 
-    public static HelpDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
+    public static HelpDialogGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight,
             ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
         if (instance == null) {
-            instance = new HelpDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight, menuCaptions, fileNames);
+            instance = new HelpDialogGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, menuCaptions, fileNames);
         }
         return instance;
     }

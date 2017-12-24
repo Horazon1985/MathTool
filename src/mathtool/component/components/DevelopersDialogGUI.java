@@ -4,6 +4,7 @@ import abstractexpressions.expression.classes.Expression;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -23,7 +24,9 @@ public class DevelopersDialogGUI extends JDialog {
     private final JEditorPane developersArea;
     private final JScrollPane scrollPaneDevelopers;
 
-    public DevelopersDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight) {
+    private static DevelopersDialogGUI instance = null;
+    
+    private DevelopersDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight) {
 
         setTitle(Translator.translateOutputMessage(GUI_DevelopersDialogGUI_ABOUT));
         setLayout(null);
@@ -62,6 +65,13 @@ public class DevelopersDialogGUI extends JDialog {
 
         validate();
         repaint();
+    }
+    
+    public static DevelopersDialogGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight) {
+        if (instance == null) {
+            instance = new DevelopersDialogGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight);
+        }
+        return instance;
     }
 
 }

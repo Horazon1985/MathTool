@@ -71,6 +71,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JScrollPane outputAreaPane;
     private JTextPane outputArea;
 
+    private static AlgorithmOutputPrinter printer;
+    
     KeyListener keyListener;
 
     private ImageIcon runIcon;
@@ -227,10 +229,11 @@ public class MathToolAlgorithmsGUI extends JDialog {
             add(this.outputAreaPane);
             this.outputAreaPane.setVisible(true);
 
+            // Ausgabeprinter festlegen.
+            printer = AlgorithmOutputPrinter.getInstance();
+            printer.setOutputArea(this.outputArea);
+            
             currentComponentLevel += this.outputAreaPane.getHeight() + STUB;
-
-            // outputArea als Ausgabe deklarieren.
-            AlgorithmOutputPrinter.setOutputArea(this.outputArea);
 
             // Buttons definieren.
             this.runIcon = new ImageIcon(ImageIO.read(getClass().getResource(PATH_RUN_LOGO)));
@@ -454,17 +457,17 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     // Zunächst formatieren.
                     formatCode();
                     // Algorithmus kompilieren.
-                    AlgorithmOutputPrinter.clearOutput();
-                    AlgorithmOutputPrinter.printStartParsingAlgorithms();
+                    printer.clearOutput();
+                    printer.printStartParsingAlgorithms();
                     AlgorithmCompiler.parseAlgorithmFile(algorithm);
-                    saveCompiledCode();
-                    AlgorithmOutputPrinter.printEndParsingAlgorithms();
+//                    saveCompiledCode();
+                    printer.printEndParsingAlgorithms();
                     // Algorithmus ausführen.
-                    AlgorithmOutputPrinter.printStartAlgorithmData();
+                    printer.printStartExecutingAlgorithms();
                     algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
-                    AlgorithmOutputPrinter.printEndAlgorithmData();
+                    printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
-                    AlgorithmOutputPrinter.printException(e);
+                    printer.printException(e);
                 }
 
                 return null;
