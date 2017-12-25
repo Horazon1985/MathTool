@@ -305,7 +305,7 @@ public abstract class MathCommandCompiler {
         mathToolTextArea.append(lineToPrint + " \n \n");
 
         // Grafische Ausgabe.
-        mathToolGraphicArea.addComponent(out);
+        mathToolGraphicArea.addComponent(out.toArray());
 
     }
 
