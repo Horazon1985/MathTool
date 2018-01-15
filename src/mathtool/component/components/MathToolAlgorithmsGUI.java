@@ -27,6 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import mathtool.lang.translator.Translator;
 
 public class MathToolAlgorithmsGUI extends JDialog {
@@ -72,8 +74,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JTextPane outputArea;
 
     private static AlgorithmOutputPrinter printer;
-    
-    KeyListener keyListener;
 
     private ImageIcon runIcon;
     private ImageIcon stopIcon;
@@ -189,7 +189,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             currentComponentLevel += this.algorithmEditorPane.getHeight() + STUB;
 
-            keyListener = new KeyListener() {
+            this.algorithmEditor.addKeyListener(new KeyListener() {
 
                 private boolean controlPressed = false;
 
@@ -213,9 +213,25 @@ public class MathToolAlgorithmsGUI extends JDialog {
                         controlPressed = false;
                     }
                 }
-            };
-            this.algorithmEditor.addKeyListener(this.keyListener);
+            });
 
+            this.algorithmEditor.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent de) {
+                    MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent de) {
+                    MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent de) {
+                    MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                }
+            });
+            
             // Ausgabefeld definieren.
             this.outputArea = new JTextPane();
             add(this.outputArea);
@@ -232,7 +248,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             // Ausgabeprinter festlegen.
             printer = AlgorithmOutputPrinter.getInstance();
             printer.setOutputArea(this.outputArea);
-            
+
             currentComponentLevel += this.outputAreaPane.getHeight() + STUB;
 
             // Buttons definieren.
@@ -257,7 +273,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.runButton.addActionListener((ActionEvent ae) -> {
                 if (!computing) {
                     computing = true;
-                    String algString = MathToolAlgorithmsController.getPlainCode(algorithmEditor.getText());
+                    String algString = algorithmEditor.getText();
                     compileAndExecuteAlgorithmAlgorithmFile(algString);
                 } else {
                     computing = false;
@@ -459,7 +475,15 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     // Algorithmus kompilieren.
                     printer.clearOutput();
                     printer.printStartParsingAlgorithms();
-                    AlgorithmCompiler.parseAlgorithmFile(algorithm);
+
+                    try {
+                        AlgorithmCompiler.parseAlgorithmFile(algorithm);
+                    } catch (AlgorithmCompileException e) {
+                        Integer[] errorLines = e.getErrorLines();
+                        MathToolAlgorithmsController.markLinesWithInvalidCode(errorLines);
+                        throw e;
+                    }
+
                     saveCompiledCode();
                     printer.printEndParsingAlgorithms();
                     // Algorithmus ausführen.
@@ -483,6 +507,10 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private void saveCompiledCode() {
         List<Algorithm> algorithms = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
         this.compiledCode = MathToolAlgorithmsController.writeCompiledCode(algorithms);
+    }
+    
+    public boolean isComputing() {
+        return computing;
     }
 
 }

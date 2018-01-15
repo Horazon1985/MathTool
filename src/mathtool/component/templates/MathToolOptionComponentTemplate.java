@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,8 +21,8 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
     private final ImageIcon headerImage;
     private final int numberOfColums;
     private final JLabel optionGroupLabel;
-    private final ArrayList<JCheckBox> optionCheckBoxes;
-    private final ArrayList<JComboBox<String>> optionDropDowns;
+    private final List<JCheckBox> optionCheckBoxes;
+    private final List<JComboBox<String>> optionDropDowns;
     private final JButton saveButton;
     private final JButton cancelButton;
 
@@ -39,8 +40,8 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
     public MathToolOptionComponentTemplate(int mathtoolformX, int mathtoolformY,
             int mathtoolformWidth, int mathtoolformHeight,
             String titleID, String headerImageFilePath,
-            int numberOfColumns, String optionGroupName, ArrayList<String> optionCheckBoxes,
-            ArrayList<String[]> optionsDropDowns, String saveButtonLabel, String cancelButtonLabel) {
+            int numberOfColumns, String optionGroupName, List<String> optionCheckBoxes,
+            List<String[]> optionsDropDowns, String saveButtonLabel, String cancelButtonLabel) {
 
         setTitle(Translator.translateOutputMessage(titleID));
         setLayout(null);
@@ -173,11 +174,11 @@ public abstract class MathToolOptionComponentTemplate extends JDialog {
         return this.cancelButton;
     }
     
-    public ArrayList<JCheckBox> getOptionCheckBoxes() {
+    public List<JCheckBox> getOptionCheckBoxes() {
         return optionCheckBoxes;
     }
 
-    public ArrayList<JComboBox<String>> getOptionDropDowns() {
+    public List<JComboBox<String>> getOptionDropDowns() {
         return optionDropDowns;
     }
     

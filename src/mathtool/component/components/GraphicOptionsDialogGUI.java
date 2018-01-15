@@ -5,6 +5,7 @@ import graphic.swing.AbstractGraphicPanel3D;
 import graphic.swing.GraphicPanel3D;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 import mathtool.lang.translator.Translator;
 import mathtool.component.templates.MathToolOptionComponentTemplate;
@@ -24,7 +25,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
     private static GraphicOptionsDialogGUI instance = null;
 
     private GraphicOptionsDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
-            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            int numberOfColumns, String optionGroupName, List<String> options, List<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight, GUI_GraphicOptionsDialogGUI_GRAPHIC_OPTIONS_TITLE,
                 PATH_LOGO_GRAPHIC_OPTIONS, numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
@@ -41,7 +42,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
     }
 
     public static GraphicOptionsDialogGUI getInstance(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
-            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            int numberOfColumns, String optionGroupName, List<String> options, List<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         if (instance == null) {
             instance = new GraphicOptionsDialogGUI(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight,
@@ -62,7 +63,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
 
     private void getGraphicOptions() {
 
-        ArrayList<JComboBox<String>> comboBoxes = getOptionDropDowns();
+        List<JComboBox<String>> comboBoxes = getOptionDropDowns();
         JComboBox<String> comboBoxBackgroundColor = comboBoxes.get(0);
         JComboBox<String> comboBoxPresentationMode = comboBoxes.get(1);
         JComboBox<String> comboBoxMouseCursor = comboBoxes.get(2);
@@ -87,7 +88,7 @@ public final class GraphicOptionsDialogGUI extends MathToolOptionComponentTempla
 
     private void setGraphicOptions() {
 
-        ArrayList<JComboBox<String>> comboBoxes = getOptionDropDowns();
+        List<JComboBox<String>> comboBoxes = getOptionDropDowns();
         JComboBox<String> comboBoxBackgroundColor = comboBoxes.get(0);
         JComboBox<String> comboBoxPresentationMode = comboBoxes.get(1);
         JComboBox<String> comboBoxMouseCursor = comboBoxes.get(2);

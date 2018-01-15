@@ -135,7 +135,7 @@ public class MathToolController {
      * Setzt die Einträge in den Operator-Dropdown.
      */
     public static void fillOperatorChoice(JComboBox operatorChoice) {
-        ArrayList<String> operators = new ArrayList<>();
+        List<String> operators = new ArrayList<>();
         // Operatoren
         for (TypeOperator value : TypeOperator.values()) {
             operators.add(Operator.getNameFromType(value));
@@ -158,7 +158,7 @@ public class MathToolController {
      * Setzt die Einträge in den Befehl-Dropdown.
      */
     public static void fillCommandChoice(JComboBox commandChoice) {
-        ArrayList<String> commands = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
         for (TypeCommand value : TypeCommand.values()) {
             commands.add(value.toString());
         }

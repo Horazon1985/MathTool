@@ -64,6 +64,7 @@ import graphic.util.MarchingSquare;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Set;
 import notations.NotationLoader;
 import mathtool.annotations.Execute;
@@ -139,10 +140,10 @@ public abstract class MathCommandCompiler {
     private static GraphicArea mathToolGraphicArea;
     private static JTextArea mathToolTextArea;
 
-    private static final HashSet<TypeSimplify> simplifyTypesExpand = new HashSet<>();
-    private static final HashSet<TypeSimplify> simplifyTypesExpandShort = new HashSet<>();
-    private static final HashSet<TypeSimplify> simplifyTypesPlot = new HashSet<>();
-    private static final HashSet<TypeSimplify> simplifyTypesSolveSystem = new HashSet<>();
+    private static final Set<TypeSimplify> simplifyTypesExpand = new HashSet<>();
+    private static final Set<TypeSimplify> simplifyTypesExpandShort = new HashSet<>();
+    private static final Set<TypeSimplify> simplifyTypesPlot = new HashSet<>();
+    private static final Set<TypeSimplify> simplifyTypesSolveSystem = new HashSet<>();
 
     static {
         simplifyTypesExpand.add(TypeSimplify.order_difference_and_division);
@@ -283,7 +284,7 @@ public abstract class MathCommandCompiler {
      * Leitet die Ausgabe an die textliche und die grafische Ausgabeoberfläche
      * weiter.
      */
-    private static void doPrintOutput(ArrayList out) {
+    private static void doPrintOutput(List out) {
 
         // Textliche Ausgabe.
         String lineToPrint = "";
@@ -688,7 +689,7 @@ public abstract class MathCommandCompiler {
                 throw new ExpressionException(Translator.translateOutputMessage("MCC_NOT_A_VALID_VARIABLE_IN_NORMAL", params[i].substring(0, params[i].indexOf("="))));
             }
             try {
-                Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<String>());
+                Expression point = Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length()), new HashSet<>());
                 if (!point.isConstant()) {
                     throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_FORM_OF_GENERAL_POINT_PARAMETER_IN_NORMAL", i + 1));
                 }
@@ -707,10 +708,10 @@ public abstract class MathCommandCompiler {
         }
 
         /*
-         Einzelne Punktkoordinaten werden in der HashMap
+         Einzelne Punktkoordinaten werden in der Map
          varsContainedInParams gespeichert.
          */
-        HashMap<String, Expression> varsContainedInParams = new HashMap<>();
+        Map<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
                     Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
@@ -732,7 +733,7 @@ public abstract class MathCommandCompiler {
         }
 
         Object[] commandParams = new Object[params.length];
-        HashSet<String> vars = new HashSet<>();
+        Set<String> vars = new HashSet<>();
 
         for (int i = 0; i < params.length - 3; i++) {
             try {
@@ -1622,10 +1623,10 @@ public abstract class MathCommandCompiler {
         }
 
         /*
-         Einzelne Punktkoordinaten werden in der HashMap
+         Einzelne Punktkoordinaten werden in der Map
          varsContainedInParams gespeichert.
          */
-        HashMap<String, Expression> varsContainedInParams = new HashMap<>();
+        Map<String, Expression> varsContainedInParams = new HashMap<>();
         for (int i = 1; i < params.length; i++) {
             varsContainedInParams.put(params[i].substring(0, params[i].indexOf("=")),
                     Expression.build(params[i].substring(params[i].indexOf("=") + 1, params[i].length())));
@@ -2005,16 +2006,16 @@ public abstract class MathCommandCompiler {
                 (MatrixExpression) command.getParams()[0],
                 Translator.translateOutputMessage("MCC_EIGENVALUES_OF_MATRIX_2"));
 
-        ArrayList eigenvaluesAsArrayList = new ArrayList();
+        List eigenvaluesAsList = new ArrayList();
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
-            eigenvaluesAsArrayList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvalues.get(i)));
+            eigenvaluesAsList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvalues.get(i)));
             if (i < eigenvalues.getBound() - 1) {
-                eigenvaluesAsArrayList.add(", ");
+                eigenvaluesAsList.add(", ");
             }
         }
 
-        doPrintOutput(eigenvaluesAsArrayList);
+        doPrintOutput(eigenvaluesAsList);
 
     }
 
@@ -2031,7 +2032,7 @@ public abstract class MathCommandCompiler {
         MatrixExpressionCollection eigenvectors;
         MatrixExpression matrix = (MatrixExpression) command.getParams()[0];
 
-        ArrayList eigenvectorsAsArrayList;
+        List eigenvectorsAsList;
 
         for (int i = 0; i < eigenvalues.getBound(); i++) {
 
@@ -2042,22 +2043,22 @@ public abstract class MathCommandCompiler {
             // Eigenvektoren berechnen.
             eigenvectors = EigenvaluesEigenvectorsUtils.getEigenvectorsForEigenvalue(matrix, eigenvalues.get(i));
 
-            eigenvectorsAsArrayList = new ArrayList();
-            eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
-            eigenvectorsAsArrayList.add(eigenvalues.get(i));
-            eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
+            eigenvectorsAsList = new ArrayList();
+            eigenvectorsAsList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_1"));
+            eigenvectorsAsList.add(eigenvalues.get(i));
+            eigenvectorsAsList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_FOR_EIGENVALUE_2"));
             if (eigenvectors.isEmpty()) {
-                eigenvectorsAsArrayList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
+                eigenvectorsAsList.add(Translator.translateOutputMessage("MCC_EIGENVECTORS_NO_EXPLICIT_EIGENVECTORS"));
             } else {
                 for (int j = 0; j < eigenvectors.getBound(); j++) {
-                    eigenvectorsAsArrayList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvectors.get(j)));
+                    eigenvectorsAsList.add(MathToolUtilities.convertToEditableAbstractExpression(eigenvectors.get(j)));
                     if (j < eigenvectors.getBound() - 1) {
-                        eigenvectorsAsArrayList.add(", ");
+                        eigenvectorsAsList.add(", ");
                     }
                 }
             }
 
-            doPrintOutput(eigenvectorsAsArrayList);
+            doPrintOutput(eigenvectorsAsList);
 
         }
 
@@ -2185,7 +2186,7 @@ public abstract class MathCommandCompiler {
         doPrintOutput(Translator.translateOutputMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], ":");
 
         MultiIndexVariable multiVar;
-        ArrayList<BigInteger> multiIndex;
+        List<BigInteger> multiIndex;
         for (int i = 0; i < extremaPoints.getBound(); i++) {
             multiVar = new MultiIndexVariable(Variable.create(var));
             multiIndex = multiVar.getIndices();
@@ -2227,7 +2228,7 @@ public abstract class MathCommandCompiler {
             }
             maxIndex--;
 
-            ArrayList freeParametersInfoArray = new ArrayList();
+            List freeParametersInfoArray = new ArrayList();
 
             for (int i = 1; i <= maxIndex; i++) {
                 freeParametersInfoArray.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR, BigInteger.valueOf(i)));
@@ -2303,10 +2304,10 @@ public abstract class MathCommandCompiler {
         Expression secondDerivateive = derivative.diff(var);
         double secondDerAtZero;
 
-        ArrayList<Double> zeros = NumericalUtils.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
-        ArrayList<Double> extremaPoints = new ArrayList<>();
-        ArrayList<Double> valuesOfSecondDerivative = new ArrayList<>();
-        ArrayList<Double> extremaValues = new ArrayList<>();
+        List<Double> zeros = NumericalUtils.solveEquation(derivative, var, x_0.evaluate(), x_1.evaluate(), n);
+        List<Double> extremaPoints = new ArrayList<>();
+        List<Double> valuesOfSecondDerivative = new ArrayList<>();
+        List<Double> extremaValues = new ArrayList<>();
 
         for (Double zero : zeros) {
             try {
@@ -2332,7 +2333,7 @@ public abstract class MathCommandCompiler {
         doPrintOutput(Translator.translateOutputMessage("MCC_EXTREMA"), (Expression) command.getParams()[0], ":");
 
         MultiIndexVariable multiVar;
-        ArrayList<BigInteger> multiIndex;
+        List<BigInteger> multiIndex;
         for (int i = 0; i < extremaPoints.size(); i++) {
 
             multiVar = new MultiIndexVariable(Variable.create(var));
@@ -2361,7 +2362,7 @@ public abstract class MathCommandCompiler {
         }
 
         // Graphen der Funktion zeichnen, inkl. der Extrema (als rot markierte Punkte).
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
         exprs.add(expr);
         graphicPanel2D.setVarAbsc(var);
         graphicPanel2D.setSpecialPoints(extremaAsArray);
@@ -2394,7 +2395,7 @@ public abstract class MathCommandCompiler {
 
         doPrintOutput(Translator.translateOutputMessage("MCC_BASIS_OF_KER_1"), matExpr, Translator.translateOutputMessage("MCC_BASIS_OF_KER_2"));
 
-        ArrayList basisAsArray = new ArrayList();
+        List basisAsArray = new ArrayList();
         for (int i = 0; i < basisOfKer.getBound(); i++) {
             // Für graphische Ausgabe
             basisAsArray.add(MathToolUtilities.convertToEditableAbstractExpression(basisOfKer.get(i)));
@@ -2434,9 +2435,9 @@ public abstract class MathCommandCompiler {
             throws EvaluationException {
 
         Expression f = (Expression) command.getParams()[0];
-        HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
+        Map<String, Expression> vars = (Map<String, Expression>) command.getParams()[1];
 
-        ArrayList normalInfoForGraphicArea = new ArrayList();
+        List normalInfoForGraphicArea = new ArrayList();
         normalInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_PARAMETRIZATION_OF_NORMAL_SPACE_1"));
         normalInfoForGraphicArea.add(f);
         normalInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_PARAMETRIZATION_OF_NORMAL_SPACE_2"));
@@ -2450,7 +2451,7 @@ public abstract class MathCommandCompiler {
         normalInfoForGraphicArea.remove(normalInfoForGraphicArea.size() - 1);
         normalInfoForGraphicArea.add(":");
 
-        HashMap<String, Expression> normalLineParametrization = AnalysisUtils.getNormalLineParametrization(f.simplify(), vars);
+        Map<String, Expression> normalLineParametrization = AnalysisUtils.getNormalLineParametrization(f.simplify(), vars);
 
         doPrintOutput(normalInfoForGraphicArea);
 
@@ -2539,7 +2540,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 3; i++) {
@@ -2652,7 +2653,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 6; i++) {
@@ -2896,7 +2897,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 3; i++) {
@@ -2950,7 +2951,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 6; i++) {
@@ -3017,7 +3018,7 @@ public abstract class MathCommandCompiler {
             return;
         }
 
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
 
         Expression expr, exprSimplified;
         for (int i = 0; i < command.getParams().length - 6; i++) {
@@ -3269,7 +3270,7 @@ public abstract class MathCommandCompiler {
                 y_1 = y_1.add(1);
             }
 
-            ArrayList<Expression> exprs = new ArrayList<>();
+            List<Expression> exprs = new ArrayList<>();
             exprs.add(regressionLine);
             graphicPanel2D.setVars("X", "Y");
             graphicPanel2D.setSpecialPoints(pts);
@@ -3335,7 +3336,7 @@ public abstract class MathCommandCompiler {
             doPrintOutput(Translator.translateOutputMessage("MCC_ALL_REALS"));
         } else {
             MultiIndexVariable multiVar;
-            ArrayList<BigInteger> multiIndex;
+            List<BigInteger> multiIndex;
             for (int i = 0; i < zeros.getBound(); i++) {
                 multiVar = new MultiIndexVariable(Variable.create(var));
                 multiIndex = multiVar.getIndices();
@@ -3368,7 +3369,7 @@ public abstract class MathCommandCompiler {
             }
             maxIndex--;
 
-            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            List<MultiIndexVariable> freeParameterVars = new ArrayList<>();
             for (int i = 1; i <= maxIndex; i++) {
                 freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_INTEGER_PARAMETER_VAR + "_" + i));
             }
@@ -3378,7 +3379,7 @@ public abstract class MathCommandCompiler {
                 infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_ARBITRARY_INTEGERS");
             }
 
-            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+            List infoAboutFreeParametersForGraphicArea = new ArrayList();
             for (int i = 0; i < freeParameterVars.size(); i++) {
                 infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
                 if (i < freeParameterVars.size() - 1) {
@@ -3438,7 +3439,7 @@ public abstract class MathCommandCompiler {
             }
 
             // Graphen der linken und der rechten Seite zeichnen.
-            ArrayList<Expression> exprs = new ArrayList<>();
+            List<Expression> exprs = new ArrayList<>();
             exprs.add(f);
             exprs.add(g);
             graphicPanel2D.setVarAbsc(var);
@@ -3447,13 +3448,13 @@ public abstract class MathCommandCompiler {
 
         }
 
-        ArrayList<Double> zeros = NumericalUtils.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
+        List<Double> zeros = NumericalUtils.solveEquation(equation, var, x_0.evaluate(), x_1.evaluate(), n);
 
         doPrintOutput(Translator.translateOutputMessage("MCC_SOLUTIONS_OF_EQUATION"), ((Expression[]) command.getParams()[0])[0],
                 " = ", ((Expression[]) command.getParams()[0])[1], ":");
 
         MultiIndexVariable multiVar;
-        ArrayList<BigInteger> multiIndex;
+        List<BigInteger> multiIndex;
         for (int i = 0; i < zeros.size(); i++) {
             // Grafische Ausgabe
             multiVar = new MultiIndexVariable(Variable.create(var));
@@ -3479,7 +3480,7 @@ public abstract class MathCommandCompiler {
          Graphen der linken und der rechten Seite zeichnen, inkl. der
          Lösungen (als rot markierte Punkte).
          */
-        ArrayList<Expression> exprs = new ArrayList<>();
+        List<Expression> exprs = new ArrayList<>();
         exprs.add(f);
         exprs.add(g);
         graphicPanel2D.setVarAbsc(var);
@@ -3551,7 +3552,7 @@ public abstract class MathCommandCompiler {
         if (!solutionsExplicit.isEmpty()) {
             doPrintOutput(Translator.translateOutputMessage("MCC_EXPLICIT_OF_DIFFEQ"));
             MultiIndexVariable multiVar;
-            ArrayList<BigInteger> multiIndex;
+            List<BigInteger> multiIndex;
             for (int i = 0; i < solutionsExplicit.getBound(); i++) {
                 multiVar = new MultiIndexVariable(Variable.create(varOrd));
                 multiIndex = multiVar.getIndices();
@@ -3560,8 +3561,8 @@ public abstract class MathCommandCompiler {
             }
         }
 
-        ArrayList<Variable> integrationConstants = SolveGeneralDifferentialEquationUtils.getListOfFreeIntegrationConstants(solutions);
-        ArrayList integrationConstantsInfoMessage = new ArrayList();
+        List<Variable> integrationConstants = SolveGeneralDifferentialEquationUtils.getListOfFreeIntegrationConstants(solutions);
+        List integrationConstantsInfoMessage = new ArrayList();
 
         for (int i = 0; i < integrationConstants.size(); i++) {
             integrationConstantsInfoMessage.add(integrationConstants.get(i));
@@ -3622,7 +3623,7 @@ public abstract class MathCommandCompiler {
 
             // Formulierung und Ausgabe des AWP.
             String formulationOfAWP = Translator.translateOutputMessage("MCC_SOLUTION_OF_DIFFEQ") + varOrd;
-            ArrayList formulationOfAWPForGraphicArea = new ArrayList();
+            List formulationOfAWPForGraphicArea = new ArrayList();
 
             for (int i = 0; i < ord; i++) {
                 formulationOfAWP = formulationOfAWP + "'";
@@ -3693,7 +3694,7 @@ public abstract class MathCommandCompiler {
         }
 
         // Die Anzahl der Parameter, welche Instanzen von String sind, beträgt mindestens 1.
-        ArrayList<String> solutionVars = new ArrayList<>();
+        List<String> solutionVars = new ArrayList<>();
         for (int i = numberOfEquations; i < params.length; i++) {
             solutionVars.add((String) params[i]);
         }
@@ -3704,7 +3705,7 @@ public abstract class MathCommandCompiler {
             equations[i] = ((Expression[]) params[i])[0].sub(((Expression[]) params[i])[1]).simplify(simplifyTypesSolveSystem);
         }
 
-        ArrayList<Expression[]> solutions = SolveGeneralSystemOfEquationsUtils.solveSystemOfEquations(equations, solutionVars);
+        List<Expression[]> solutions = SolveGeneralSystemOfEquationsUtils.solveSystemOfEquations(equations, solutionVars);
 
         // Sonderfälle: keine Lösungen, alle reellen Zahlentupel.
         if (solutions == SolveGeneralSystemOfEquationsUtils.ALL_REALS) {
@@ -3762,7 +3763,7 @@ public abstract class MathCommandCompiler {
             }
             maxIndex--;
 
-            ArrayList<MultiIndexVariable> freeParameterVars = new ArrayList<>();
+            List<MultiIndexVariable> freeParameterVars = new ArrayList<>();
             for (int i = 0; i <= maxIndex; i++) {
                 freeParameterVars.add(new MultiIndexVariable(NotationLoader.FREE_REAL_PARAMETER_VAR, BigInteger.valueOf(i)));
             }
@@ -3772,7 +3773,7 @@ public abstract class MathCommandCompiler {
                 infoAboutFreeParameters = Translator.translateOutputMessage("MCC_ARE_FREE_VARIABLES_IN_SOLVESYSTEM");
             }
 
-            ArrayList infoAboutFreeParametersForGraphicArea = new ArrayList();
+            List infoAboutFreeParametersForGraphicArea = new ArrayList();
             for (int i = 0; i < freeParameterVars.size(); i++) {
                 infoAboutFreeParametersForGraphicArea.add(freeParameterVars.get(i));
                 if (i < freeParameterVars.size() - 1) {
@@ -3854,7 +3855,7 @@ public abstract class MathCommandCompiler {
         logExpr = logExpr.simplify();
 
         // Nummerierung der logischen Variablen.
-        HashMap<Integer, String> varsEnumerated = new HashMap<>();
+        Map<Integer, String> varsEnumerated = new HashMap<>();
 
         Iterator iter = vars.iterator();
         for (int i = 0; i < vars.size(); i++) {
@@ -3913,7 +3914,7 @@ public abstract class MathCommandCompiler {
             throws EvaluationException {
 
         Expression f = (Expression) command.getParams()[0];
-        HashMap<String, Expression> vars = (HashMap<String, Expression>) command.getParams()[1];
+        Map<String, Expression> vars = (Map<String, Expression>) command.getParams()[1];
 
         ArrayList tangentInfoForGraphicArea = new ArrayList();
         tangentInfoForGraphicArea.add(Translator.translateOutputMessage("MCC_EQUATION_OF_TANGENT_SPACE_1"));
@@ -4041,7 +4042,7 @@ public abstract class MathCommandCompiler {
 
             // Formulierung und Ausgabe des AWP.
             String formulationOfAWP = Translator.translateOutputMessage("MCC_TAYLORPOLYNOMIAL_FOR_SOLUTION_OF_DIFFEQ", k) + varOrd;
-            ArrayList formulationOfAWPForGraphicArea = new ArrayList();
+            List formulationOfAWPForGraphicArea = new ArrayList();
 
             for (int i = 0; i < ord; i++) {
                 formulationOfAWP = formulationOfAWP + "'";
@@ -4112,9 +4113,9 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.undefallfuncs)
     private static void executeUndefAllFuncs(Command command) {
 
-        HashMap<String, Expression> abstractExpressions = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions();
-        HashMap<String, Expression[]> innerExpressions = SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions();
-        HashMap<String, String[]> arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions();
+        Map<String, Expression> abstractExpressions = SelfDefinedFunction.getAbstractExpressionsForSelfDefinedFunctions();
+        Map<String, Expression[]> innerExpressions = SelfDefinedFunction.getInnerExpressionsForSelfDefinedFunctions();
+        Map<String, String[]> arguments = SelfDefinedFunction.getArgumentsForSelfDefinedFunctions();
 
         /*
          Einfach nur keySet() zu benutzen würde beim Iterieren zu NullPointerExceptions 

@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -18,11 +19,11 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
     private JPanel headerPanel;
     private JLabel headerLabel;
     private ImageIcon headerImage;
-    private ArrayList<JLabel> infoLabels;
-    private ArrayList<Color> colors;
-    private ArrayList<JLabel> coloredInfoLabels;
-    private ArrayList<JLabel> menuLabels;
-    private ArrayList<String> fileNames;
+    private List<JLabel> infoLabels;
+    private List<Color> colors;
+    private List<JLabel> coloredInfoLabels;
+    private List<JLabel> menuLabels;
+    private List<String> fileNames;
     private JEditorPane infoEditorPane;
     private JScrollPane infoScrollPane;
     private int heightTextArea;
@@ -40,8 +41,8 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
     public MathToolInfoComponentTemplate(int mathtoolGuiX, int mathtoolGuiY,
             int mathtoolGuiWidth, int mathtoolGuiHeight,
             String titleID, String headerImageFilePath,
-            ArrayList<String> informations, ArrayList<String> coloredInformations,
-            ArrayList<Color> colors, ArrayList<String> menuCaptions, ArrayList<String> files) {
+            List<String> informations, List<String> coloredInformations,
+            List<Color> colors, List<String> menuCaptions, List<String> files) {
 
         setTitle(Translator.translateOutputMessage(titleID));
         setLayout(null);
@@ -243,35 +244,35 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
     /**
      * @return the infoLabels
      */
-    public ArrayList<JLabel> getInfoLabels() {
+    public List<JLabel> getInfoLabels() {
         return infoLabels;
     }
 
     /**
      * @return the colors
      */
-    public ArrayList<Color> getColors() {
+    public List<Color> getColors() {
         return colors;
     }
 
     /**
      * @return the coloredInfoLabels
      */
-    public ArrayList<JLabel> getColoredInfoLabels() {
+    public List<JLabel> getColoredInfoLabels() {
         return coloredInfoLabels;
     }
 
     /**
      * @return the menuLabels
      */
-    public ArrayList<JLabel> getMenuLabels() {
+    public List<JLabel> getMenuLabels() {
         return menuLabels;
     }
 
     /**
      * @return the fileNames
      */
-    public ArrayList<String> getFileNames() {
+    public List<String> getFileNames() {
         return fileNames;
     }
 

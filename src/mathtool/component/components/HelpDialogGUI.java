@@ -6,7 +6,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hilfemenü. Singletonklasse.
@@ -22,7 +22,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
     private static HelpDialogGUI instance = null;
 
     private HelpDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
-            ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
+            List<String> menuCaptions, List<String> fileNames) {
 
         super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight,
                 GUI_HelpDialogGUI_HELP, PATH_LOGO_HELP,
@@ -39,7 +39,7 @@ public class HelpDialogGUI extends MathToolInfoComponentTemplate {
     }
 
     public static HelpDialogGUI getInstance(int mathtoolGuiX, int mathtoolGuiY, int mathtoolGuiWidth, int mathtoolGuiHeight,
-            ArrayList<String> menuCaptions, ArrayList<String> fileNames) {
+            List<String> menuCaptions, List<String> fileNames) {
         if (instance == null) {
             instance = new HelpDialogGUI(mathtoolGuiX, mathtoolGuiY, mathtoolGuiWidth, mathtoolGuiHeight, menuCaptions, fileNames);
         }

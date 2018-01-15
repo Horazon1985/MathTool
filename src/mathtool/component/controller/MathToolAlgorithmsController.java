@@ -7,14 +7,19 @@ import algorithmexecuter.enums.Keyword;
 import algorithmexecuter.enums.Operators;
 import algorithmexecuter.enums.ReservedChars;
 import algorithmexecuter.model.Algorithm;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import mathtool.component.components.MathToolAlgorithmsGUI;
 
 public class MathToolAlgorithmsController {
@@ -76,7 +81,11 @@ public class MathToolAlgorithmsController {
             + ReservedChars.END.getStringValue();
 
     private static MathToolAlgorithmsGUI mathToolAlgorithmsGUI;
+    
+    private static final Highlighter.HighlightPainter WHITE_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.WHITE);
 
+    private static final Highlighter.HighlightPainter ERROR_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+    
     public static void setMathToolAlgorithmsGUI(MathToolAlgorithmsGUI mtAlgorithmsGUI) {
         mathToolAlgorithmsGUI = mtAlgorithmsGUI;
     }
@@ -281,6 +290,60 @@ public class MathToolAlgorithmsController {
 
     public static String generateCommandReturn(String identifierName) {
         return Keyword.RETURN.getValue() + " " + identifierName + ReservedChars.LINE_SEPARATOR.getValue();
+    }
+
+    ///////////////////// Methoden für Fehlerrückmeldungen ////////////////////////
+    public static void markLinesWithInvalidCode(Integer... lineNumbers) {
+        markLinesWithInvalidCode(Color.RED, lineNumbers);
+    }
+
+    public static void unmarkLinesWithInvalidCode() {
+        if (mathToolAlgorithmsGUI.isComputing()) {
+            return;
+        }
+        try {
+            mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().removeAllHighlights();
+            mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(0, mathToolAlgorithmsGUI.getAlgorithmEditor().getText().length(), WHITE_PAINTER);
+        } catch (BadLocationException e) {
+        }
+    }
+
+    private static void markLinesWithInvalidCode(Color lineColor, Integer... lineNumbers) {
+        if (lineNumbers == null || lineNumbers.length == 0) {
+            return;
+        }
+
+        String algorithmCode = mathToolAlgorithmsGUI.getAlgorithmEditor().getText();
+
+        List<Integer> lineEndIndices = new ArrayList<>();
+        int lineBeginning;
+        while (algorithmCode.contains(SIGN_NEXT_LINE)) {
+            if (lineEndIndices.isEmpty()) {
+                lineBeginning = 0;
+            } else {
+                lineBeginning = lineEndIndices.get(lineEndIndices.size() - 1) + 1;
+            }
+            lineEndIndices.add(lineBeginning + algorithmCode.indexOf(SIGN_NEXT_LINE));
+            algorithmCode = algorithmCode.substring(algorithmCode.indexOf(SIGN_NEXT_LINE) + 1);
+        }
+        if (!algorithmCode.isEmpty()) {
+            lineEndIndices.add(mathToolAlgorithmsGUI.getAlgorithmEditor().getText().length());
+        }
+
+        for (Integer lineNumber : lineNumbers) {
+            if (lineNumber < 0 || lineNumber >= lineEndIndices.size()) {
+                continue;
+            }
+            try {
+                if (lineNumber == 0) {
+                    mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(0, lineEndIndices.get(1), ERROR_PAINTER);
+                } else {
+                    mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(lineEndIndices.get(lineNumber - 1) + 1, lineEndIndices.get(lineNumber), ERROR_PAINTER);
+                }
+            } catch (BadLocationException e) {
+            }
+        }
+
     }
 
 }

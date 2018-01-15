@@ -6,6 +6,7 @@ import enums.TypeSimplify;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -33,7 +34,7 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
     private Set<TypeSimplify> simplifyTypes;
 
     private OutputOptionsDialogGUI(int mathToolGuiX, int mathToolGuiY, int mathToolGuiWidth, int mathToolGuiHeight,
-            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            int numberOfColumns, String optionGroupName, List<String> options, List<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         super(mathToolGuiX, mathToolGuiY, mathToolGuiWidth, mathToolGuiHeight, GUI_OutputOptionsDialogGUI_OUTPUT_OPTIONS_TITLE,
                 PATH_LOGO_OUTPUT_OPTIONS, numberOfColumns, optionGroupName, options, dropDownOptions, saveButtonLabel, cancelButtonLabel);
@@ -51,7 +52,7 @@ public final class OutputOptionsDialogGUI extends MathToolOptionComponentTemplat
     }
 
     public static OutputOptionsDialogGUI getInstance(int mathtoolformX, int mathtoolformY, int mathtoolformWidth, int mathtoolformHeight,
-            int numberOfColumns, String optionGroupName, ArrayList<String> options, ArrayList<String[]> dropDownOptions,
+            int numberOfColumns, String optionGroupName, List<String> options, List<String[]> dropDownOptions,
             String saveButtonLabel, String cancelButtonLabel) {
         if (instance == null) {
             instance = new OutputOptionsDialogGUI(mathtoolformX, mathtoolformY, mathtoolformWidth, mathtoolformHeight,
