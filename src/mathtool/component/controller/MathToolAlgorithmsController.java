@@ -15,7 +15,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -293,10 +296,6 @@ public class MathToolAlgorithmsController {
     }
 
     ///////////////////// Methoden für Fehlerrückmeldungen ////////////////////////
-    public static void markLinesWithInvalidCode(Integer... lineNumbers) {
-        markLinesWithInvalidCode(Color.RED, lineNumbers);
-    }
-
     public static void unmarkLinesWithInvalidCode() {
         if (mathToolAlgorithmsGUI.isComputing()) {
             return;
@@ -308,7 +307,7 @@ public class MathToolAlgorithmsController {
         }
     }
 
-    private static void markLinesWithInvalidCode(Color lineColor, Integer... lineNumbers) {
+    public static void markLinesWithInvalidCode(Integer... lineNumbers) {
         if (lineNumbers == null || lineNumbers.length == 0) {
             return;
         }
@@ -330,7 +329,10 @@ public class MathToolAlgorithmsController {
             lineEndIndices.add(mathToolAlgorithmsGUI.getAlgorithmEditor().getText().length());
         }
 
-        for (Integer lineNumber : lineNumbers) {
+        Set<Integer> linesToMark = new HashSet<>();
+        linesToMark.addAll(Arrays.asList(lineNumbers));
+        
+        for (Integer lineNumber : linesToMark) {
             if (lineNumber < 0 || lineNumber >= lineEndIndices.size()) {
                 continue;
             }
