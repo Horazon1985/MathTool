@@ -1,7 +1,7 @@
 package mathtool.component.components;
 
 import mathtool.component.controller.MathToolAlgorithmsController;
-import algorithmexecuter.AlgorithmCompiler;
+import algorithmexecuter.AlgorithmBuilder;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.Algorithm;
@@ -27,6 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import mathtool.lang.translator.Translator;
@@ -73,6 +75,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private JScrollPane outputAreaPane;
     private JTextPane outputArea;
 
+    private JLabel lineNumberCaptionLabel;
+    private JLabel lineNumberCounterLabel;
+
     private static AlgorithmOutputPrinter printer;
 
     private ImageIcon runIcon;
@@ -110,6 +115,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_DEFINE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_RETURN = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_RETURN";
 
+    private static final String GUI_MathToolAlgorithmsGUI_LINE = "GUI_MathToolAlgorithmsGUI_LINE";
     private static final String GUI_MathToolAlgorithmsGUI_RUN = "GUI_MathToolAlgorithmsGUI_RUN";
     private static final String GUI_MathToolAlgorithmsGUI_STOP = "GUI_MathToolAlgorithmsGUI_STOP";
     private static final String GUI_MathToolAlgorithmsGUI_DEBUG = "GUI_MathToolAlgorithmsGUI_DEBUG";
@@ -182,7 +188,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             this.algorithmEditorPane = new JScrollPane(this.algorithmEditor,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 520);
+            this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 570);
             this.algorithmEditor.setCaretPosition(this.algorithmEditor.getDocument().getLength());
             add(this.algorithmEditorPane);
             this.algorithmEditorPane.setVisible(true);
@@ -231,7 +237,27 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
                 }
             });
+
+            // Label für Zeilenangabe definieren
+            this.lineNumberCaptionLabel = new JLabel(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_LINE));
+            add(this.lineNumberCaptionLabel);
+            this.lineNumberCaptionLabel.setBounds(PADDING, currentComponentLevel, 50, 25);
+            this.lineNumberCaptionLabel.setVisible(true);
+            this.algorithmEditor.addCaretListener(new CaretListener() {
+                @Override
+                public void caretUpdate(CaretEvent ce) {
+                    int line = getCursorLineNumber();
+                    lineNumberCounterLabel.setText(Integer.toString(line));
+                }
+            });
             
+            this.lineNumberCounterLabel = new JLabel();
+            add(this.lineNumberCounterLabel);
+            this.lineNumberCounterLabel.setBounds(PADDING + 50, currentComponentLevel, 50, 25);
+            this.lineNumberCounterLabel.setVisible(true);
+
+            currentComponentLevel += this.lineNumberCaptionLabel.getHeight() + STUB;
+
             // Ausgabefeld definieren.
             this.outputArea = new JTextPane();
             add(this.outputArea);
@@ -273,6 +299,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.runButton.addActionListener((ActionEvent ae) -> {
                 if (!computing) {
                     computing = true;
+                    // Zunächst formatieren.
+                    formatCode();
                     String algString = algorithmEditor.getText();
                     compileAndExecuteAlgorithmAlgorithmFile(algString);
                 } else {
@@ -450,8 +478,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
     }
 
     private void formatCode() {
-        String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(algorithmEditor.getText());
-        algorithmEditor.setText(formattedCode);
+        String formattedCode = MathToolAlgorithmsController.formatSourceCodeFromEditor(this.algorithmEditor.getText());
+        this.algorithmEditor.setText(formattedCode);
     }
 
     private void compileAndExecuteAlgorithmAlgorithmFile(String algorithm) {
@@ -470,14 +498,12 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 runButton.setIcon(stopIcon);
 
                 try {
-                    // Zunächst formatieren.
-                    formatCode();
                     // Algorithmus kompilieren.
                     printer.clearOutput();
                     printer.printStartParsingAlgorithms();
 
                     try {
-                        AlgorithmCompiler.parseAlgorithmFile(algorithm);
+                        AlgorithmBuilder.parseAlgorithmFile(algorithm);
                     } catch (AlgorithmCompileException e) {
                         Integer[] errorLines = e.getErrorLines();
                         MathToolAlgorithmsController.markLinesWithInvalidCode(errorLines);
@@ -488,7 +514,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     printer.printEndParsingAlgorithms();
                     // Algorithmus ausführen.
                     printer.printStartExecutingAlgorithms();
-                    algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage());
+                    algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmBuilder.ALGORITHMS.getAlgorithmStorage());
                     printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                     printer.printException(e);
@@ -505,12 +531,24 @@ public class MathToolAlgorithmsGUI extends JDialog {
     }
 
     private void saveCompiledCode() {
-        List<Algorithm> algorithms = AlgorithmCompiler.ALGORITHMS.getAlgorithmStorage();
+        List<Algorithm> algorithms = AlgorithmBuilder.ALGORITHMS.getAlgorithmStorage();
         this.compiledCode = MathToolAlgorithmsController.writeCompiledCode(algorithms);
     }
-    
+
     public boolean isComputing() {
         return computing;
+    }
+
+    private int getCursorLineNumber() {
+        int caretpos = this.algorithmEditor.getCaretPosition();
+        String t = this.algorithmEditor.getText();
+        int line = 1;
+        for (int i = 0; i < caretpos; i++) {
+            if (t.charAt(i) == '\n') {
+                line++;
+            }
+        }
+        return line;
     }
 
 }

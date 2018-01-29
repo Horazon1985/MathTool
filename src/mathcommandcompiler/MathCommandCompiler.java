@@ -66,6 +66,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JScrollPane;
 import notations.NotationLoader;
 import mathtool.annotations.Execute;
 import mathtool.annotations.GetCommand;
@@ -138,6 +139,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
 
     private static GraphicArea mathToolGraphicArea;
+    private static JScrollPane mathToolGraphicScrollPane;
     private static JTextArea mathToolTextArea;
 
     private static final Set<TypeSimplify> simplifyTypesExpand = new HashSet<>();
@@ -242,8 +244,9 @@ public abstract class MathCommandCompiler {
         graphicPanelVectorField2D = gPVectorField2D;
     }
 
-    public static void setMathToolGraphicArea(GraphicArea mTGraphicArea) {
+    public static void setMathToolGraphicArea(GraphicArea mTGraphicArea, JScrollPane scrollPane) {
         mathToolGraphicArea = mTGraphicArea;
+        mathToolGraphicScrollPane = scrollPane;
     }
 
     public static void setMathToolTextArea(JTextArea mTTextArea) {
@@ -1894,6 +1897,7 @@ public abstract class MathCommandCompiler {
         mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
                 MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
         mathToolGraphicArea.clearArea();
+        int c = 1;
     }
 
     @Execute(type = TypeCommand.def)

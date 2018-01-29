@@ -360,7 +360,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelSurface(graphicPanelSurface);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
-        MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea);
+        MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
         
         validate();
         repaint();

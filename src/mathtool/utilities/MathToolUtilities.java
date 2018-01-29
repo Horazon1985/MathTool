@@ -4,6 +4,7 @@ import abstractexpressions.interfaces.AbstractExpression;
 import abstractexpressions.output.EditableAbstractExpression;
 import abstractexpressions.output.EditableString;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility-Klasse.
@@ -39,8 +40,8 @@ public abstract class MathToolUtilities {
      * ArrayList von Arrays zurück, in dem jeder Ausdruck zu einem bearbeitbaren
      * / kopierbaren Ausdruck konvertiert wurde.
      */
-    public static ArrayList<EditableAbstractExpression> convertToEditableAbstractExpression(ArrayList<AbstractExpression> outList) {
-        ArrayList<EditableAbstractExpression> convertedOutputs = new ArrayList<>();
+    public static List<EditableAbstractExpression> convertToEditableAbstractExpression(List<AbstractExpression> outList) {
+        List<EditableAbstractExpression> convertedOutputs = new ArrayList<>();
         for (AbstractExpression abstrExpr : outList) {
             convertedOutputs.add(MathToolUtilities.convertToEditableAbstractExpression(abstrExpr));
         }

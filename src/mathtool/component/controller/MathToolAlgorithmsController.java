@@ -338,7 +338,7 @@ public class MathToolAlgorithmsController {
             }
             try {
                 if (lineNumber == 0) {
-                    mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(0, lineEndIndices.get(1), ERROR_PAINTER);
+                    mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(0, lineEndIndices.get(0), ERROR_PAINTER);
                 } else {
                     mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(lineEndIndices.get(lineNumber - 1) + 1, lineEndIndices.get(lineNumber), ERROR_PAINTER);
                 }

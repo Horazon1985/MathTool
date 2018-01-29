@@ -45,6 +45,7 @@ public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentT
                 algorithmEditor.append(SIGN_NEXT_LINE + SIGN_NEXT_LINE + mainAlgorithmCode);
             }
             algorithmEditor.setCaretPosition(algorithmEditor.getText().length() - 2);
+            dispose();
         });
     }
 

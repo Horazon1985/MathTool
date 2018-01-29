@@ -712,6 +712,12 @@
         <Ukrainian>Генерувати команду return</Ukrainian>
         <Russian>Генерировать команду return</Russian>
     </object>
+    <object id = "GUI_MathToolAlgorithmsGUI_LINE">
+        <German>Zeile: </German>
+        <English>Line: </English>
+        <Ukrainian>Рядок: </Ukrainian>
+        <Russian>Строка: </Russian>
+    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_RUN">
         <German>Ausführen</German>
         <English>Run</English>
