@@ -4,7 +4,6 @@ import abstractexpressions.expression.classes.Expression;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
