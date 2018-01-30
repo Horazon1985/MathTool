@@ -1,4 +1,4 @@
-package mathcommandcompiler;
+package mathtool.mathcommandcompiler;
 
 import command.Command;
 import command.TypeCommand;
@@ -77,6 +77,14 @@ import util.OperationDataTO;
 import util.OperationParsingUtils;
 
 public abstract class MathCommandCompiler {
+    
+    // Konstanten für Meldungen / Fehler.
+    private static final String MCC_PARAMETER_IN_APPROX_IS_INVALID = "MCC_PARAMETER_IN_APPROX_IS_INVALID"; 
+    private static final String MCC_INVALID_COMMAND = "MCC_INVALID_COMMAND";
+    private static final String MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF";
+    private static final String MCC_NO_EQUAL_IN_DEF = "MCC_NO_EQUAL_IN_DEF";
+    private static final String MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE = "MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE";
+    private static final String MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE = "MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE";
 
     // Patterns für die einzelnen Befehle.
     public static final String PATTERN_APPROX_EXPR = "approx(expr)";
@@ -397,7 +405,7 @@ public abstract class MathCommandCompiler {
                     try {
                         return OperationParser.parseDefaultCommand(commandName, params, PATTERN_APPROX_MATEXPR);
                     } catch (ExpressionException ex) {
-                        throw new ExpressionException(Translator.translateOutputMessage("MCC_PARAMETER_IN_APPROX_IS_INVALID"));
+                        throw new ExpressionException(Translator.translateOutputMessage(MCC_PARAMETER_IN_APPROX_IS_INVALID));
                     }
                 }
             case "extrema":
@@ -452,13 +460,13 @@ public abstract class MathCommandCompiler {
                     if (e.getCause() instanceof CancellationException) {
                         throw (CancellationException) e.getCause();
                     }
-                    throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
+                    throw new ExpressionException(Translator.translateOutputMessage(MCC_INVALID_COMMAND));
                 }
             }
         }
 
         // Sollte theoretisch nie vorkommen.
-        throw new ExpressionException(Translator.translateOutputMessage("MCC_INVALID_COMMAND"));
+        throw new ExpressionException(Translator.translateOutputMessage(MCC_INVALID_COMMAND));
 
     }
 
@@ -467,11 +475,11 @@ public abstract class MathCommandCompiler {
 
         // Struktur: def(VAR = VALUE) oder def(FUNCTION(VAR_1, ..., VAR_n) = EXPRESSION(VAR_1, ..., VAR_n))
         if (params.length != 1) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF"));
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_NUMBER_OF_PARAMETERS_IN_DEF));
         }
 
         if (!params[0].contains("=")) {
-            throw new ExpressionException(Translator.translateOutputMessage("MCC_NO_EQUAL_IN_DEF"));
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_NO_EQUAL_IN_DEF));
         }
 
         String functionNameAndArguments = params[0].substring(0, params[0].indexOf("="));
@@ -491,10 +499,10 @@ public abstract class MathCommandCompiler {
                 preciseExpression = Expression.build(functionTerm);
                 vars = preciseExpression.getContainedIndeterminates();
             } catch (ExpressionException e) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE"));
+                throw new ExpressionException(Translator.translateOutputMessage(MCC_TO_VARIABLE_MUST_BE_ASSIGNED_REAL_VALUE));
             }
             if (!vars.isEmpty()) {
-                throw new ExpressionException(Translator.translateOutputMessage("MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE"));
+                throw new ExpressionException(Translator.translateOutputMessage(MCC_TO_VARIABLE_MUST_BE_ASSIGNED_CONSTANT_REAL_VALUE));
             }
 
             return new Command(TypeCommand.def, new Object[]{functionNameAndArguments, preciseExpression});
@@ -1897,7 +1905,8 @@ public abstract class MathCommandCompiler {
         mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
                 MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
         mathToolGraphicArea.clearArea();
-        int c = 1;
+        mathToolGraphicScrollPane = new JScrollPane(mathToolGraphicArea,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
     @Execute(type = TypeCommand.def)

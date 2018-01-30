@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
-import mathcommandcompiler.MathCommandCompiler;
+import mathtool.mathcommandcompiler.MathCommandCompiler;
 import static mathtool.MathToolGUI.mathToolGraphicAreaHeight;
 import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
 import static mathtool.MathToolGUI.mathToolGraphicAreaX;

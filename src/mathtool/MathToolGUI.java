@@ -66,7 +66,7 @@ import mathtool.component.components.OutputOptionsDialogGUI;
 import mathtool.component.components.GraphicOptionsDialogGUI;
 import mathtool.component.components.OutputDetailsGUI;
 import mathtool.utilities.MathToolUtilities;
-import mathcommandcompiler.MathCommandCompiler;
+import mathtool.mathcommandcompiler.MathCommandCompiler;
 import static mathtool.MathToolController.bold;
 import static mathtool.MathToolController.boldAndUnderlined;
 import mathtool.component.components.MathToolAlgorithmsGUI;
