@@ -370,10 +370,10 @@
         <Russian>У команды 'latex' должен быть ровно один параметр. Этот параметр должен состоять из цепи действительных выражений объединенных знаком равенства.</Russian>
     </object>
     <object id = "MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY">
-        <German>Der Ausdruck zwischen zwei Gleichheitszeichen im Parameter des Befehls 'latex' ist leer.</German>
-        <English>The expression between two equality signs in the parameter of command 'latex' is empty.</English>
-        <Ukrainian>Вираз між двома знаками рівності у параметрі команди 'latex' порожній.</Ukrainian>
-        <Russian>Выражение между двумя знаками равенства в параметре команды 'latex' пусто.</Russian>
+        <German>Der Ausdruck links oder rechts von einem Gleichheitszeichen im Parameter des Befehls 'latex' ist leer.</German>
+        <English>The expression left or right of an equals sign in the parameter of the command 'latex' is empty.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
     </object>
     <object id = "MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX">
         <German>Fehler im Parameter des Befehls 'latex': </German>
@@ -459,7 +459,7 @@
         <Ukrainian>Вирази у команді 'plot2d' мають містити максимум змінну [0]. Але вони містять крым неъ ще змінні.</Ukrainian>
         <Russian>Выражения в команде 'plot2d' должны содержать максимум переменную [0]. Но они содержат кроме неё ещё переменные.</Russian>
     </object>
-    <object id = "MCC_WRONG_FORM_OF_LAST_PARAMETERS_IN_PLOT2D">
+    <object id = "MCC_WRONG_FORM_OF_LAST_PARAMETER_IN_PLOT2D">
         <German>Der [0]. Parameter im Befehl 'plot2d' muss eine reelle Zahl sein.</German>
         <English>The [0]. parameter in command 'plot2d' must be a real number.</English>
         <Ukrainian>[0]. параметр команди 'plot2d' має бути дійсним числом.</Ukrainian>
@@ -1241,10 +1241,10 @@
         <Russian>Логическое выражение [0] содержит более 20 переменных. Каноническая конъюнктивная нормальная форма слишком большая для вывода.</Russian>
     </object>
     <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_TOO_MANY_VARIABLES_FOR_CDNF">
-        <German>Der logische Ausdruck [0] enthält mehr als 20 Veränderliche. Die kanonische disjunktive Normalform ist damit zu groß für die Ausgabe.</German>
-        <English>The logical expression [0] contains more than 20 variables. The canonical disjunctive normal form is too big for output.</English>
-        <Ukrainian>Логічний вираз [0] містить більше 20 змінних. Канонічна диз'юнктивна нормальна форма завелика для виводу.</Ukrainian>
-        <Russian>Логическое выражение [0] содержит более 20 переменных. Каноническая дизъюнктивная нормальная форма слишком большая для вывода.</Russian>
+        <German>Der logische Ausdruck [0] enthält mehr als [1] Veränderliche. Die kanonische disjunktive Normalform ist damit zu groß für die Ausgabe.</German>
+        <English>The logical expression [0] contains more than [1] variables. The canonical disjunctive normal form is too big for output.</English>
+        <Ukrainian>Логічний вираз [0] містить більше [1] змінних. Канонічна диз'юнктивна нормальна форма завелика для виводу.</Ukrainian>
+        <Russian>Логическое выражение [0] содержит более [1] переменных. Каноническая дизъюнктивная нормальная форма слишком большая для вывода.</Russian>
     </object>
     <object id = "MCC_LOGICAL_EXPRESSION_CONTAINS_MORE_THAN_20_VARIABLES">
         <German>Der logische Ausdruck [0] enthält mehr als 20 Veränderliche. Die Wertetabelle ist damit zu groß für die Ausgabe.</German>
@@ -1301,7 +1301,7 @@
         <Ukrainian>Список усіх функцій, яким було присвоєно значення: </Ukrainian>
         <Russian>Список всех функций, которым было присвоено значение: </Russian>
     </object>
-    <object id = "MCC_NO_DEFINED_VARS">
+    <object id = "MCC_NO_DEFINED_VARIABLES">
         <German>Es wurden keine Variablen definiert.</German>
         <English>No variables were defined.</English>
         <Ukrainian>Не задано жодної змінної.</Ukrainian>
