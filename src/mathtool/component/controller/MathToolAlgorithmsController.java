@@ -84,11 +84,9 @@ public class MathToolAlgorithmsController {
             + ReservedChars.END.getStringValue();
 
     private static MathToolAlgorithmsGUI mathToolAlgorithmsGUI;
-    
-    private static final Highlighter.HighlightPainter WHITE_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.WHITE);
 
     private static final Highlighter.HighlightPainter ERROR_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
-    
+
     public static void setMathToolAlgorithmsGUI(MathToolAlgorithmsGUI mtAlgorithmsGUI) {
         mathToolAlgorithmsGUI = mtAlgorithmsGUI;
     }
@@ -300,11 +298,7 @@ public class MathToolAlgorithmsController {
         if (mathToolAlgorithmsGUI.isComputing()) {
             return;
         }
-        try {
-            mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().removeAllHighlights();
-            mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().addHighlight(0, mathToolAlgorithmsGUI.getAlgorithmEditor().getText().length(), WHITE_PAINTER);
-        } catch (BadLocationException e) {
-        }
+        mathToolAlgorithmsGUI.getAlgorithmEditor().getHighlighter().removeAllHighlights();
     }
 
     public static void markLinesWithInvalidCode(Integer... lineNumbers) {
@@ -331,7 +325,7 @@ public class MathToolAlgorithmsController {
 
         Set<Integer> linesToMark = new HashSet<>();
         linesToMark.addAll(Arrays.asList(lineNumbers));
-        
+
         for (Integer lineNumber : linesToMark) {
             if (lineNumber < 0 || lineNumber >= lineEndIndices.size()) {
                 continue;
