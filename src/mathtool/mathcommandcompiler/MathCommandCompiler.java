@@ -53,7 +53,6 @@ import abstractexpressions.expression.equation.SolveGeneralSystemOfEquationsUtil
 import abstractexpressions.output.EditableAbstractExpression;
 import abstractexpressions.output.EditableString;
 import computationbounds.ComputationBounds;
-import static computationbounds.ComputationBounds.BOUND_COMMAND_MAX_NUMBER_OF_VARS_IN_LOGICAL_EXPRESSION;
 import exceptions.CancellationException;
 import graphic.swing.GraphicPanelCylindrical;
 import graphic.swing.GraphicPanelImplicit3D;
