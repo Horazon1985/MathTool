@@ -372,8 +372,8 @@
     <object id = "MCC_GENERAL_PARAMETER_IN_LATEX_EMPTY">
         <German>Der Ausdruck links oder rechts von einem Gleichheitszeichen im Parameter des Befehls 'latex' ist leer.</German>
         <English>The expression left or right of an equals sign in the parameter of the command 'latex' is empty.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Вираз зліва чи зправа від знака рівності у параметрі команди 'latex'´ порожній.</Ukrainian>
+        <Russian>Виражение слева или справа от знака равенства в параметре команды пуст.</Russian>
     </object>
     <object id = "MCC_WRONG_FORM_OF_PARAMETER_IN_LATEX">
         <German>Fehler im Parameter des Befehls 'latex': </German>
