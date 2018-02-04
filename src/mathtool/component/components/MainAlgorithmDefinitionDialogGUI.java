@@ -7,12 +7,13 @@ import java.util.List;
 import javax.swing.JTextArea;
 import mathtool.component.controller.MathToolAlgorithmsController;
 import mathtool.component.templates.AlgorithmCommandComponentTemplate;
+import mathtool.lang.translator.Translator;
 
 /**
  * Dialog für das Generieren des Main-Algorithmus.
  */
 public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentTemplate {
-    
+
     private static final String TITLE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE";
 
@@ -38,7 +39,7 @@ public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentT
 
         this.generateButton.addActionListener((ActionEvent e) -> {
             String mainAlgorithmCode = MathToolAlgorithmsController.generateMainAlgorithm((IdentifierType) comboBoxes[0].getSelectedItem());
-            
+
             if (algorithmEditor.getText().replaceAll(" ", "").replaceAll(SIGN_NEXT_LINE, "").replaceAll(SIGN_TAB, "").isEmpty()) {
                 algorithmEditor.setText(mainAlgorithmCode);
             } else {
@@ -56,6 +57,7 @@ public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentT
             instance = new MainAlgorithmDefinitionDialogGUI(algorithmGuiX, algorithmGuiY, algorithmGuiWidth, algorithmGuiHeigh);
         }
         instance.updateTemplateGui();
+        instance.updateGui();
         instance.resetAllFields();
         instance.resetAllChoices();
         instance.setVisible(true);
@@ -67,6 +69,15 @@ public class MainAlgorithmDefinitionDialogGUI extends AlgorithmCommandComponentT
 
     private void resetAllChoices() {
         this.comboBoxes[0].setSelectedIndex(0);
+    }
+
+    /**
+     * Aktualisiert sämtliche Texte gemäß der aktuellen Sprache, welche in der
+     * entsprechenden Template-Aktualisierungsmethode noch nicht aktualisiert
+     * wurden.
+     */
+    private void updateGui() {
+        setTitle(Translator.translateOutputMessage(TITLE));
     }
 
 }

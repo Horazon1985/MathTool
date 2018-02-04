@@ -68,5 +68,5 @@ public class CommandControlStructureIfDialogGUI extends AlgorithmCommandComponen
         instance.repaint();
         return instance;
     }
-
+    
 }

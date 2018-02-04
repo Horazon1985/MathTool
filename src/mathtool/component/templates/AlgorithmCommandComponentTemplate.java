@@ -38,11 +38,14 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
 
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON";
 
+    private final String TITLE;
+    
     protected AlgorithmCommandComponentTemplate(int algorithmGuiX, int algorithmGuiY, int algorithmGuiWidth, int algorithmGuiHeigh,
             String[] choiceLabelStringIds, String[] textFieldlabelStringIds, Object[][] comboboxCoices, String titleId) {
+        TITLE = titleId;
         // Icon setzen.
         setIconImage(new ImageIcon(getClass().getResource(ICON_PATH)).getImage());
-        setTitle(Translator.translateOutputMessage(titleId));
+        setTitle(Translator.translateOutputMessage(TITLE));
         setLayout(null);
         setResizable(false);
         setAlwaysOnTop(true);
@@ -99,6 +102,7 @@ public class AlgorithmCommandComponentTemplate extends JDialog {
     }
 
     protected void updateTemplateGui() {
+        setTitle(Translator.translateOutputMessage(TITLE));
         this.generateButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_CODE_GENERATE_COMMAND_BUTTON));
         for (int i = 0; i < choiceLabelStringIds.length; i++) {
             this.choicelabels[i].setText(Translator.translateOutputMessage(choiceLabelStringIds[i]));
