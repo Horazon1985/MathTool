@@ -623,10 +623,10 @@
         <Russian>Генерировать структуру "если" контрола</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF_ELSE">
-        <German>Wenn-Dann-Kontrollstruktur generieren</German>
+        <German>Wenn-Sonst-Kontrollstruktur generieren</German>
         <English>Generate if else control structure</English>
-        <Ukrainian>Генерувати структуру "якщо то" контролу</Ukrainian>
-        <Russian>Генерировать структуру "если то" контрола</Russian>
+        <Ukrainian>Генерувати структуру "якщо інакше" контролу</Ukrainian>
+        <Russian>Генерировать структуру "если иначе" контрола</Russian>
     </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_WHILE">
         <German>While-Schleife generieren</German>
