@@ -33,10 +33,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import abstractexpressions.logicalexpression.classes.LogicalExpression;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
-import static mathtool.MathToolGUI.mathToolGraphicAreaHeight;
-import static mathtool.MathToolGUI.mathToolGraphicAreaWidth;
-import static mathtool.MathToolGUI.mathToolGraphicAreaX;
-import static mathtool.MathToolGUI.mathToolGraphicAreaY;
 import abstractexpressions.matrixexpression.classes.MatrixExpression;
 import abstractexpressions.matrixexpression.classes.MatrixOperator;
 import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
@@ -76,6 +72,12 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
 
+    private static MathToolGUI gui;
+    
+    public static void SetGui(MathToolGUI mathToolGui) {
+        gui = mathToolGui;
+    }
+    
     /**
      * Prüfung, ob alle benötigten Ressources im ExpressionBuilder vorhanden
      * sind. Falls Ressourcen fehlen, wird ein entsprechender Dialog angezeigt.
@@ -588,10 +590,10 @@ public class MathToolController {
         scrollPaneGraphic.setBounds(x, y, width, height);
         mathToolTextArea.setBounds(0, 0, scrollPaneText.getWidth(), scrollPaneText.getHeight());
         mathToolGraphicArea.setBounds(0, 0, scrollPaneGraphic.getWidth(), scrollPaneGraphic.getHeight());
-        mathToolGraphicAreaX = 0;
-        mathToolGraphicAreaY = 0;
-        mathToolGraphicAreaWidth = scrollPaneGraphic.getWidth();
-        mathToolGraphicAreaHeight = scrollPaneGraphic.getHeight();
+        gui.setMathToolGraphicAreaX(10);
+        gui.setMathToolGraphicAreaY(10);
+        gui.setMathToolGraphicAreaWidth(scrollPaneGraphic.getWidth());
+        gui.setMathToolGraphicAreaHeight(scrollPaneGraphic.getHeight());
         inputField.setBounds(10, scrollPaneText.getHeight() + 20, scrollPaneText.getWidth() - 150, 30);
         inputButton.setBounds(mathToolTextArea.getWidth() - 130, scrollPaneText.getHeight() + 20, inputButton.getWidth(), inputButton.getHeight());
 

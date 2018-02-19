@@ -203,10 +203,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static boolean computing = false;
 
     // Koordinaten und Maße für die graphische Ausgabeoberfläche.
-    public static int mathToolGraphicAreaX;
-    public static int mathToolGraphicAreaY;
-    public static int mathToolGraphicAreaWidth;
-    public static int mathToolGraphicAreaHeight;
+    private int mathToolGraphicAreaX;
+    private int mathToolGraphicAreaY;
+    private int mathToolGraphicAreaWidth;
+    private int mathToolGraphicAreaHeight;
 
     // Optionen
     private static Set<TypeSimplify> simplifyTypes = new HashSet<>();
@@ -216,6 +216,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     public MathToolGUI() {
 
+        MathToolController.SetGui(this);
+        
         initComponents();
         initCaptions();
         setLayout(null);
@@ -228,10 +230,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Konfigurationen aus XML auslesen.
         MathToolController.loadSettings();
-        
+
         // Mindestfenstergröße festlegen
         setMinimumSize(minimumDimension);
-        
+
         // Labels ausrichten
         legendLabel = new JLabel(bold(Translator.translateOutputMessage(GUI_LEGEND)));
         legendLabel.setVisible(false);
@@ -247,7 +249,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         rotateLabel.setVisible(false);
         add(rotateLabel);
         rotateLabel.addMouseListener(this);
-        
+
         // Textliches Ausgabefeld ausrichten
         mathToolTextArea = new JTextArea();
         mathToolTextArea.setFont(new Font("Times New Roman", Font.BOLD, fontSizeText));
@@ -287,7 +289,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         getContentPane().add(inputField);
         inputField.setBounds(10, 336, 540, 20);
-        
+
         // Graphisches Ausgabefeld ausrichten
         mathToolGraphicAreaX = 10;
         mathToolGraphicAreaY = 10;
@@ -341,13 +343,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
         // Alle Buttons und Dropdowns ausrichten.
         buttonsAndDropDowns = new JComponent[]{approxButton, latexButton, clearButton, operatorChoice, commandChoice};
-        
+
         // Operatorbox aktualisieren.
         MathToolController.fillOperatorChoice(operatorChoice);
         // Befehlbox aktualisieren.
         MathToolController.fillCommandChoice(commandChoice);
 
         // An MathCommandCompiler alle Anzeigeobjekte übergeben.
+        MathCommandCompiler.setGui(this);
         MathCommandCompiler.setGraphicPanel2D(graphicPanel2D);
         MathCommandCompiler.setGraphicPanel3D(graphicPanel3D);
         MathCommandCompiler.setGraphicPanelCurves2D(graphicPanelCurves2D);
@@ -361,7 +364,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
-        
+
         validate();
         repaint();
 
@@ -412,6 +415,38 @@ public class MathToolGUI extends JFrame implements MouseListener {
             }
 
         });
+    }
+
+    public int getMathToolGraphicAreaX() {
+        return mathToolGraphicAreaX;
+    }
+
+    public int getMathToolGraphicAreaY() {
+        return mathToolGraphicAreaY;
+    }
+
+    public int getMathToolGraphicAreaWidth() {
+        return mathToolGraphicAreaWidth;
+    }
+
+    public int getMathToolGraphicAreaHeight() {
+        return mathToolGraphicAreaHeight;
+    }
+
+    public void setMathToolGraphicAreaX(int x) {
+        this.mathToolGraphicAreaX = x;
+    }
+
+    public void setMathToolGraphicAreaY(int y) {
+        this.mathToolGraphicAreaY = y;
+    }
+
+    public void setMathToolGraphicAreaWidth(int w) {
+        this.mathToolGraphicAreaWidth = w;
+    }
+
+    public void setMathToolGraphicAreaHeight(int h) {
+        this.mathToolGraphicAreaHeight = h;
     }
 
     /**

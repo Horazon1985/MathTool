@@ -362,6 +362,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelSurface graphicPanelSurface;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
 
+    private static MathToolGUI mathToolGui;
     private static GraphicArea mathToolGraphicArea;
     private static JScrollPane mathToolGraphicScrollPane;
     private static JTextArea mathToolTextArea;
@@ -422,6 +423,10 @@ public abstract class MathCommandCompiler {
         simplifyTypesSolveSystem.add(TypeSimplify.simplify_pull_apart_powers);
         simplifyTypesSolveSystem.add(TypeSimplify.simplify_functional_relations);
         simplifyTypesSolveSystem.add(TypeSimplify.order_sums_and_products);
+    }
+
+    public static void setGui(MathToolGUI gui) {
+        mathToolGui = gui;
     }
 
     public static void setGraphicPanel2D(GraphicPanel2D gP2D) {
@@ -2118,11 +2123,21 @@ public abstract class MathCommandCompiler {
     @Execute(type = TypeCommand.clear)
     private static void executeClear(Command command) {
         mathToolTextArea.setText("");
-        mathToolGraphicArea.initializeBounds(MathToolGUI.mathToolGraphicAreaX, MathToolGUI.mathToolGraphicAreaY,
-                MathToolGUI.mathToolGraphicAreaWidth, MathToolGUI.mathToolGraphicAreaHeight);
+        mathToolGraphicArea.initializeBounds(mathToolGui.getMathToolGraphicAreaX(), mathToolGui.getMathToolGraphicAreaY(),
+                mathToolGui.getMathToolGraphicAreaWidth(), mathToolGui.getMathToolGraphicAreaHeight());
         mathToolGraphicArea.clearArea();
-        mathToolGraphicScrollPane = new JScrollPane(mathToolGraphicArea,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        mathToolGui.remove(mathToolGraphicScrollPane);
+//        mathToolGui.validate();
+//        mathToolGui.repaint();
+//
+//        mathToolGraphicArea = new GraphicArea(mathToolGui.getMathToolGraphicAreaX(), mathToolGui.getMathToolGraphicAreaY(),
+//                mathToolGui.getMathToolGraphicAreaWidth(), mathToolGui.getMathToolGraphicAreaHeight(), mathToolGui);
+//
+//        mathToolGraphicScrollPane = new JScrollPane(mathToolGraphicArea,
+//                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        mathToolGui.add(mathToolGraphicScrollPane);
+//        mathToolGui.validate();
+//        mathToolGui.repaint();
     }
 
     @Execute(type = TypeCommand.def)
