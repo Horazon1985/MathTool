@@ -532,30 +532,6 @@
         <Ukrainian>Повертає тип:</Ukrainian>
         <Russian>Возвращает тип:</Russian>
     </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID">
-        <German>Rückgabetyp: leer</German>
-        <English>Return type: void</English>
-        <Ukrainian>Повертає тип: порожній</Ukrainian>
-        <Russian>Возвращает тип: пустой</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION">
-        <German>Rückgabetyp: Ausdruck</German>
-        <English>Return type: expression</English>
-        <Ukrainian>Повертає тип: вираз</Ukrainian>
-        <Russian>Возвращает тип: выражение</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION">
-        <German>Rückgabetyp: Boolscher Ausdruck</German>
-        <English>Return type: boolean expression</English>
-        <Ukrainian>Повертає тип: булів вираз</Ukrainian>
-        <Russian>Возвращает тип: булевое выражение</Russian>
-    </object>
-    <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION">
-        <German>Rückgabetyp: Matrizenausdruck</German>
-        <English>Return type: matrix expression</English>
-        <Ukrainian>Повертає тип: матричний вираз</Ukrainian>
-        <Russian>Возвращает тип: матричное выражение</Russian>
-    </object>
     <object id = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE">
         <German>Unterroutine generieren</German>
         <English>Generate subroutine</English>

@@ -1,34 +1,15 @@
 package mathtool.component.components;
 
 import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.Element;
 
-public class AlgorithmEditor extends JTextArea {
+public class LineNumberHeader extends JTextArea {
 
     private final JTextArea textArea;
 
-    public AlgorithmEditor(JTextArea textArea) {
+    public LineNumberHeader(JTextArea textArea) {
         this.textArea = textArea;
         setEditable(false);
-
-        getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent documentEvent) {
-                updateLineNumbers();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent documentEvent) {
-                updateLineNumbers();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent documentEvent) {
-                updateLineNumbers();
-            }
-        });
     }
 
     public void updateLineNumbers() {

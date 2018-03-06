@@ -72,6 +72,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private JScrollPane algorithmEditorPane;
     private JTextArea algorithmEditor;
+    private LineNumberHeader lineNumberHeader;
     private JScrollPane outputAreaPane;
     private JTextPane outputArea;
 
@@ -100,10 +101,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
     private static final String GUI_MathToolAlgorithmsGUI_CODE = "GUI_MathToolAlgorithmsGUI_CODE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_VOID";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_EXPRESSION";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_BOOLEAN_EXPRESSION";
-    private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_MAIN_ALGORITHM_RETURN_TYPE_MATRIX_EXPRESSION";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_SUBROUTINE";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_CONTROL_STRUCTURES = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_CONTROL_STRUCTURES";
     private static final String GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF = "GUI_MathToolAlgorithmsGUI_CODE_GENERATE_IF";
@@ -180,14 +177,18 @@ public class MathToolAlgorithmsGUI extends JDialog {
             // Hauptmenü erstellen.
             createMenu();
 
-            // Algorithmeneditor definieren.
+            // Algorithmeneditor mit Header für Zeilennummern definieren.
             this.algorithmEditor = new JTextArea();
             add(this.algorithmEditor);
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
 
+            this.lineNumberHeader = new LineNumberHeader(algorithmEditor);
+            this.lineNumberHeader.updateLineNumbers();
+            
             this.algorithmEditorPane = new JScrollPane(this.algorithmEditor,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            this.algorithmEditorPane.setRowHeaderView(this.lineNumberHeader);
             this.algorithmEditorPane.setBounds(PADDING, 180, this.getWidth() - 2 * PADDING, this.getHeight() - 570);
             this.algorithmEditor.setCaretPosition(this.algorithmEditor.getDocument().getLength());
             add(this.algorithmEditorPane);
@@ -225,16 +226,19 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 @Override
                 public void insertUpdate(DocumentEvent de) {
                     MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                    lineNumberHeader.updateLineNumbers();
                 }
 
                 @Override
                 public void removeUpdate(DocumentEvent de) {
                     MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                    lineNumberHeader.updateLineNumbers();
                 }
 
                 @Override
                 public void changedUpdate(DocumentEvent de) {
                     MathToolAlgorithmsController.unmarkLinesWithInvalidCode();
+                    lineNumberHeader.updateLineNumbers();
                 }
             });
 
