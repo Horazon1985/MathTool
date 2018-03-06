@@ -59,6 +59,7 @@ import graphic.swing.GraphicPanelImplicit3D;
 import graphic.swing.GraphicPanelSpherical;
 import graphic.swing.GraphicPanelSurface;
 import graphic.swing.GraphicPanelVectorField2D;
+import graphic.swing.GraphicPanelVectorFieldPolar;
 import graphic.util.MarchingCube;
 import graphic.util.MarchingSquare;
 import java.lang.reflect.Field;
@@ -164,6 +165,12 @@ public abstract class MathCommandCompiler {
     private static final String MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELD2D = "MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELD2D";
     private static final String MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D = "MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELD2D";
     private static final String MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD2D = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELD2D";
+    private static final String MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELDPOLAR = "MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELDPOLAR = "MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELDPOLAR = "MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELDPOLAR = "MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELDPOLAR = "MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELDPOLAR = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELDPOLAR";
     private static final String MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR = "MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR";
     private static final String MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR = "MCC_WRONG_FORM_OF_GENERAL_PARAMETER_IN_PLOTPOLAR";
     private static final String MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTPOLAR = "MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTPOLAR";
@@ -252,6 +259,7 @@ public abstract class MathCommandCompiler {
     private static final String MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR = "MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR";
     private static final String MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_3_DIM_VECTOR = "MCC_PLOTCURVE2D_1_PARAMETER_MUST_BE_3_DIM_VECTOR";
     private static final String MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR = "MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR";
+    private static final String MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTPOLAR = "MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTPOLAR";
     private static final String MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL = "MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTCYLINDRICAL";
     private static final String MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL = "MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTCYLINDRICAL";
     private static final String MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL = "MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTCYLINDRICAL";
@@ -259,7 +267,10 @@ public abstract class MathCommandCompiler {
     private static final String MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTSPHERICAL = "MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTSPHERICAL";
     private static final String MCC_PLOTSURFACE_1_PARAMETER_MUST_BE_3_DIM_VECTOR = "MCC_PLOTSURFACE_1_PARAMETER_MUST_BE_3_DIM_VECTOR";
     private static final String MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR = "MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR";
+    private static final String MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR = "MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR";
     private static final String MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED = "MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED";
+    private static final String MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR = "MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR";
+    private static final String MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_2_PI_IN_PLOTVECTORFIELDPOLAR = "MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_2_PI_IN_PLOTVECTORFIELDPOLAR";
     private static final String MCC_REGRESSIONLINE_CANNOT_BE_COMPUTED = "MCC_REGRESSIONLINE_CANNOT_BE_COMPUTED";
     private static final String MCC_REGRESSIONLINE_PARAMETERS_ARE_NOT_POINTS = "MCC_REGRESSIONLINE_PARAMETERS_ARE_NOT_POINTS";
     private static final String MCC_REGRESSIONLINE_MESSAGE = "MCC_REGRESSIONLINE_MESSAGE";
@@ -361,6 +372,7 @@ public abstract class MathCommandCompiler {
     private static GraphicPanelSpherical graphicPanelSpherical;
     private static GraphicPanelSurface graphicPanelSurface;
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
+    private static GraphicPanelVectorFieldPolar graphicPanelVectorFieldPolar;
 
     private static MathToolGUI mathToolGui;
     private static GraphicArea mathToolGraphicArea;
@@ -471,6 +483,10 @@ public abstract class MathCommandCompiler {
 
     public static void setGraphicPanelVectorField2D(GraphicPanelVectorField2D gPVectorField2D) {
         graphicPanelVectorField2D = gPVectorField2D;
+    }
+
+    public static void setGraphicPanelVectorFieldPolar(GraphicPanelVectorFieldPolar gPVectorFieldPolar) {
+        graphicPanelVectorFieldPolar = gPVectorFieldPolar;
     }
 
     public static void setMathToolGraphicArea(GraphicArea mTGraphicArea, JScrollPane scrollPane) {
@@ -1568,12 +1584,69 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @GetCommand(type = TypeCommand.plotvectorfieldpolar)
+    private static Command getCommandPlotVectorFieldPolar(String[] params) throws ExpressionException {
+
+        /*
+         Struktur: plotvectorfieldpolar(f(r, t), r, t, r_0, r_1, t_0, t_1), f(r, t): 
+         Matrizenusdruck in zwei Variablen. r_0 < r_1, t_0 < t_1: Grenzen des Zeichenbereichs.
+         */
+        if (params.length != 7) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_NUMBER_OF_PARAMETERS_IN_PLOTVECTORFIELDPOLAR));
+        }
+
+        Object[] commandParams = new Object[7];
+        Set<String> vars = new HashSet<>();
+
+        try {
+            commandParams[0] = MatrixExpression.build(params[0]);
+            ((MatrixExpression) commandParams[0]).addContainedIndeterminates(vars);
+        } catch (ExpressionException e) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_FORM_OF_FIRST_PARAMETER_IN_PLOTVECTORFIELDPOLAR, e.getMessage()));
+        }
+
+        if (!Expression.isValidDerivativeOfIndeterminate(params[1])) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELDPOLAR, 2));
+        }
+        if (!Expression.isValidDerivativeOfIndeterminate(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTVECTORFIELDPOLAR, 3));
+        }
+        if (params[1].equals(params[2])) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_INDETERMINATES_MUST_BE_PAIRWISE_DIFFERENT_IN_PLOTVECTORFIELDPOLAR));
+        }
+
+        commandParams[1] = params[1];
+        commandParams[2] = params[2];
+        vars.remove(params[1]);
+        vars.remove(params[2]);
+
+        if (!vars.isEmpty()) {
+            throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTVECTORFIELDPOLAR, params[1], params[2]));
+        }
+
+        Set<String> varsInLimits = new HashSet<>();
+        for (int i = 3; i < 7; i++) {
+            try {
+                commandParams[i] = Expression.build(params[i]);
+                ((Expression) commandParams[i]).addContainedIndeterminates(varsInLimits);
+                if (!varsInLimits.isEmpty()) {
+                    throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELDPOLAR, i + 1));
+                }
+            } catch (ExpressionException e) {
+                throw new ExpressionException(Translator.translateOutputMessage(MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTVECTORFIELDPOLAR, i + 1));
+            }
+        }
+
+        return new Command(TypeCommand.plotvectorfieldpolar, commandParams);
+
+    }
+
     @GetCommand(type = TypeCommand.plotpolar)
     private static Command getCommandPlotPolar(String[] params) throws ExpressionException {
 
         /*
          Struktur: plotpolar(f_1(t), ..., f_n(t), t, t_0, t_1). f_i(t): Ausdruck in 
-         einer Variablen t. t_0 < t_1: Grenzen des Zeichenbereichs..
+         einer Variablen t. t_0 < t_1: Grenzen des Zeichenbereichs.
          */
         if (params.length < 4) {
             throw new ExpressionException(Translator.translateOutputMessage(MCC_NOT_ENOUGH_PARAMETERS_IN_PLOTPOLAR));
@@ -3139,6 +3212,9 @@ public abstract class MathCommandCompiler {
         if (phiStart >= phiEnd) {
             throw new EvaluationException(Translator.translateOutputMessage(MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTPOLAR, exprs.size() + 1, exprs.size() + 2));
         }
+        if (phiEnd - phiStart > 20 * Math.PI) {
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_20_PI_IN_PLOTPOLAR, exprs.size() + 1, exprs.size() + 2));
+        }
 
         String var = (String) command.getParams()[command.getParams().length - 3];
 
@@ -3410,6 +3486,80 @@ public abstract class MathCommandCompiler {
 
     }
 
+    @Execute(type = TypeCommand.plotvectorfieldpolar)
+    private static void executePlotVectorFieldPolar(Command command) throws EvaluationException {
+
+        if (graphicPanelVectorFieldPolar == null || mathToolGraphicArea == null) {
+            return;
+        }
+
+        MatrixExpression matExpr = (MatrixExpression) command.getParams()[0];
+        try {
+            matExpr = matExpr.simplify(simplifyTypesPlot);
+            Dimension dim = matExpr.getDimension();
+            if (!(matExpr instanceof Matrix) || dim.width != 1 || dim.height != 2) {
+                throw new EvaluationException(Translator.translateOutputMessage(MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR));
+            }
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR));
+        }
+
+        Expression[] components = new Expression[2];
+        for (int i = 0; i < 2; i++) {
+            components[i] = ((Matrix) matExpr).getEntry(i, 0);
+        }
+
+        Expression exprSimplified;
+        for (int i = 0; i < 2; i++) {
+
+            exprSimplified = components[i].simplify(simplifyTypesPlot);
+            // Falls eines der Graphen nicht gezeichnet werden kann.
+            if (exprSimplified.containsOperator()) {
+                doPrintOutput(Translator.translateOutputMessage(MCC_OPERATOR_CANNOT_BE_EVALUATED_1),
+                        components[i], Translator.translateOutputMessage(MCC_OPERATOR_CANNOT_BE_EVALUATED_2));
+                // Schließlich noch Fehler werfen.
+                throw new EvaluationException(Translator.translateOutputMessage(MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED));
+
+            }
+            components[i] = exprSimplified;
+
+        }
+
+        String varR = (String) command.getParams()[1];
+        String varPhi = (String) command.getParams()[2];
+        Expression r_0 = ((Expression) command.getParams()[3]).simplify(simplifyTypesPlot);
+        Expression r_1 = ((Expression) command.getParams()[4]).simplify(simplifyTypesPlot);
+        Expression phi_0 = ((Expression) command.getParams()[5]).simplify(simplifyTypesPlot);
+        Expression phi_1 = ((Expression) command.getParams()[6]).simplify(simplifyTypesPlot);
+
+        // Validierung der Zeichenbereichsgrenzen.
+        double rMin, rMax, phiMin, phiMax;
+        try {
+            rMin = r_0.evaluate();
+            rMax = r_1.evaluate();
+            phiMin = phi_0.evaluate();
+            phiMax = phi_1.evaluate();
+        } catch (EvaluationException e) {
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED));
+        }
+        if (rMin < 0) {
+            throw new EvaluationException(Translator.translateOutputMessage("", 4));
+        }
+        if (rMax <= rMin) {
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR, 4, 5));
+        }
+        if (phiMax - phiMin > 2 * Math.PI) {
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_2_PI_IN_PLOTVECTORFIELDPOLAR, 6, 7));
+        }
+
+        // Vektorfeld zeichnen.
+        graphicPanelVectorFieldPolar.setVars(varR, varPhi);
+        graphicPanelVectorFieldPolar.drawVectorFieldPolar(r_0, r_1, phi_0, phi_1, components);
+        // Alte Legende schließen
+        LegendGUI.close();
+
+    }
+    
     @Execute(type = TypeCommand.regressionline)
     private static void executeRegressionLine(Command command)
             throws EvaluationException {

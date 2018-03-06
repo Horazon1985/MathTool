@@ -50,6 +50,7 @@ import graphic.swing.GraphicPanelImplicit3D;
 import graphic.swing.GraphicPanelSpherical;
 import graphic.swing.GraphicPanelSurface;
 import graphic.swing.GraphicPanelVectorField2D;
+import graphic.swing.GraphicPanelVectorFieldPolar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -177,6 +178,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static GraphicPanelSurface graphicPanelSurface;
     @GraphicPanel
     private static GraphicPanelVectorField2D graphicPanelVectorField2D;
+    @GraphicPanel
+    private static GraphicPanelVectorFieldPolar graphicPanelVectorFieldPolar;
 
     private static JPanel[] graphicPanels = new JPanel[0];
     private final JComponent[] buttonsAndDropDowns;
@@ -217,7 +220,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     public MathToolGUI() {
 
         MathToolController.SetGui(this);
-        
+
         initComponents();
         initCaptions();
         setLayout(null);
@@ -337,6 +340,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         graphicPanelVectorField2D = new GraphicPanelVectorField2D();
         add(graphicPanelVectorField2D);
 
+        graphicPanelVectorFieldPolar = new GraphicPanelVectorFieldPolar();
+        add(graphicPanelVectorFieldPolar);
+
         // Alle Grafikpanels unsichtbar machen.
         graphicPanels = getAllGraphicPanels();
         MathToolController.setGraphicPanelsVisible(graphicPanels, false);
@@ -362,6 +368,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setGraphicPanelSpherical(graphicPanelSpherical);
         MathCommandCompiler.setGraphicPanelSurface(graphicPanelSurface);
         MathCommandCompiler.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
+        MathCommandCompiler.setGraphicPanelVectorFieldPolar(graphicPanelVectorFieldPolar);
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
 
@@ -667,6 +674,10 @@ public class MathToolGUI extends JFrame implements MouseListener {
             rotateLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfield2d)) {
             graphicPanelVectorField2D.setVisible(true);
+            legendLabel.setVisible(true);
+            saveLabel.setVisible(true);
+        } else if (c.getTypeCommand().equals(TypeCommand.plotvectorfieldpolar)) {
+            graphicPanelVectorFieldPolar.setVisible(true);
             legendLabel.setVisible(true);
             saveLabel.setVisible(true);
         } else if (c.getTypeCommand().equals(TypeCommand.regressionline) && c.getParams().length >= 2) {
@@ -1560,6 +1571,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         instructions.add(boldAndUnderlined(Translator.translateOutputMessage(GUI_LegendGUI_CONTROLS)));
 
         if (e.getSource() == legendLabel && e.getButton() == MouseEvent.BUTTON1) {
+            List<Color> colors = new ArrayList<>();
             switch (typeGraphic) {
                 case GRAPH2D:
                     instructions.addAll(GraphicPanel2D.getInstructions());
@@ -1574,7 +1586,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION,
                             graphicPanelImplicit2D.getExpressions().get(0).toString(),
                             graphicPanelImplicit2D.getExpressions().get(1).toString()));
-                    ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelImplicit2D.getColor());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
@@ -1593,7 +1604,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_EQUATION_OF_IMPLICIT_FUNCTION,
                             graphicPanelImplicit3D.getExpressions().get(0).toString(),
                             graphicPanelImplicit3D.getExpressions().get(1).toString()));
-                    ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelImplicit3D.getColor());
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
@@ -1601,7 +1611,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
                 case GRAPHCURVE2D: {
                     instructions.addAll(GraphicPanelCurves2D.getInstructions());
-                    ArrayList<Color> colors = new ArrayList<>();
                     colors.add(Color.blue);
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_PARAMETERIZED_CURVE,
                             "(" + graphicPanelCurves2D.getExpressions()[0]
@@ -1612,7 +1621,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
                 case GRAPHCURVE3D: {
                     instructions.addAll(GraphicPanelCurves3D.getInstructions());
-                    ArrayList<Color> colors = new ArrayList<>();
                     colors.add(Color.blue);
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_PARAMETERIZED_CURVE,
                             "(" + graphicPanelCurves3D.getExpressions()[0]
@@ -1657,9 +1665,15 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case VECTORFIELD2D:
                     instructions.addAll(GraphicPanelVectorField2D.getInstructions());
-                    ArrayList<Color> colors = new ArrayList<>();
                     colors.add(graphicPanelVectorField2D.getColor());
                     exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD, graphicPanelVectorField2D.getVectorFieldExpression().toString()));
+                    legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                            instructions, colors, exprs);
+                    break;
+                case VECTORFIELDPOLAR:
+                    instructions.addAll(GraphicPanelVectorFieldPolar.getInstructions());
+                    colors.add(graphicPanelVectorFieldPolar.getColor());
+                    exprs.add(Translator.translateOutputMessage(GUI_LegendGUI_VECTORFIELD, graphicPanelVectorFieldPolar.getVectorFieldExpression().toString()));
                     legendGUI = LegendGUI.getInstance(this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                             instructions, colors, exprs);
                     break;
@@ -1701,6 +1715,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     break;
                 case VECTORFIELD2D:
                     saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorField2D);
+                    break;
+                case VECTORFIELDPOLAR:
+                    saveDialog = new MathToolSaveGraphicDialog(graphicPanelVectorFieldPolar);
                     break;
                 default:
                     break;
