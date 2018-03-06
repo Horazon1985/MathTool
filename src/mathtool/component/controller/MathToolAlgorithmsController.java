@@ -129,12 +129,12 @@ public class MathToolAlgorithmsController {
                 formattedSourceCode += writeMultipleTabs(wavedBracketCounter);
                 formattedSourceCode += inputSourceCode.charAt(i);
 
-                if (newLine) {
+                if (i < inputSourceCode.length() - 1 && newLine) {
                     formattedSourceCode += SIGN_NEXT_LINE;
                 }
 
                 // Beim Beginn eines neuen Algorithmus eine zusätzliche Leerzeile lassen.
-                if (wavedBracketCounter == 0) {
+                if (i < inputSourceCode.length() - 1 && wavedBracketCounter == 0) {
                     formattedSourceCode += SIGN_NEXT_LINE;
                 }
             } else if (inputSourceCode.charAt(i) == ReservedChars.OPEN_BRACKET.getValue()) {

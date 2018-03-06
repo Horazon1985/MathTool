@@ -183,6 +183,19 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
 
+            this.algorithmEditor.setText("expression main() {\n" +
+            "	expression x = f(g());\n" +
+            "	return x;\n" +
+            "}\n" +
+            "\n" +
+            "expression g() {\n" +
+            "	return 1;\n" +
+            "}\n" +
+            "\n" +
+            "expression f(expression a) {\n" +
+            "	return a+2;\n" +
+            "}");
+            
             this.lineNumberHeader = new LineNumberHeader(algorithmEditor);
             this.lineNumberHeader.updateLineNumbers();
             
