@@ -183,19 +183,6 @@ public class MathToolAlgorithmsGUI extends JDialog {
             this.algorithmEditor.setVisible(true);
             this.algorithmEditor.setBorder(new LineBorder(Color.black, 1));
 
-            this.algorithmEditor.setText("expression main() {\n" +
-            "	expression x = f(g());\n" +
-            "	return x;\n" +
-            "}\n" +
-            "\n" +
-            "expression g() {\n" +
-            "	return 1;\n" +
-            "}\n" +
-            "\n" +
-            "expression f(expression a) {\n" +
-            "	return a+2;\n" +
-            "}");
-            
             this.lineNumberHeader = new LineNumberHeader(algorithmEditor);
             this.lineNumberHeader.updateLineNumbers();
             
@@ -531,7 +518,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     printer.printEndParsingAlgorithms();
                     // Algorithmus ausführen.
                     printer.printStartExecutingAlgorithms();
-                    algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmBuilder.ALGORITHMS.getAlgorithmStorage());
+                    algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmBuilder.ALGORITHMS.getAlgorithms());
                     printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
                     printer.printException(e);
@@ -548,7 +535,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
     }
 
     private void saveCompiledCode() {
-        List<Algorithm> algorithms = AlgorithmBuilder.ALGORITHMS.getAlgorithmStorage();
+        List<Algorithm> algorithms = AlgorithmBuilder.ALGORITHMS.getAlgorithms();
         this.compiledCode = MathToolAlgorithmsController.writeCompiledCode(algorithms);
     }
 
