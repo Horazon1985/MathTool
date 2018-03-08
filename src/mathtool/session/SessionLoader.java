@@ -64,7 +64,7 @@ public class SessionLoader {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             
             jaxbMarshaller.marshal(session, file);
-            jaxbMarshaller.marshal(session, System.out);
+//            jaxbMarshaller.marshal(session, System.out);
             
         } catch (JAXBException e) {
             e.printStackTrace();
