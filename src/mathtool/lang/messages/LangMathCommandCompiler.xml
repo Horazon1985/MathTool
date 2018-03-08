@@ -975,6 +975,12 @@
         <Ukrainian>Не вдалося побудувати графік векторного поля.</Ukrainian>
         <Russian>Не удалось построить график векторного поля.</Russian>
     </object>
+    <object id = "MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTVECTORFIELDPOLAR">
+        <German>Der [0]. Parameter im Befehl 'plotvectorfieldpolar' muss ein gültiger konstanter nichtnegativer Ausdruck sein.</German>
+        <English>The [0]. parameter in command 'plotvectorfieldpolar' must be a valid constant non-negative expression.</English>
+        <Ukrainian>[0]. параметр команди 'plotvectorfieldpolar' має бути діючою невід'ємною константою.</Ukrainian>
+        <Russian>[0]. Параматр команды 'plotvectorfieldpolar' должен быть действительной неотрицательной констатой.</Russian>
+    </object>    
     <object id = "MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR">
         <German>Der [0]. Parameter im Befehl 'plotvectorfieldpolar' muss kleiner sein als der [1]. Parameter.</German>
         <English>The [0]. parameter in command 'plotvectorfieldpolar' must be smaller than the [1]. parameter.</English>

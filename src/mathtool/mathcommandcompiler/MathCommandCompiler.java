@@ -269,6 +269,7 @@ public abstract class MathCommandCompiler {
     private static final String MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR = "MCC_PLOTVECTORFIELD2D_1_PARAMETER_MUST_BE_2_DIM_VECTOR";
     private static final String MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR = "MCC_PLOTVECTORFIELDPOLAR_1_PARAMETER_MUST_BE_2_DIM_VECTOR";
     private static final String MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED = "MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED";
+    private static final String MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTVECTORFIELDPOLAR = "MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTVECTORFIELDPOLAR";
     private static final String MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR = "MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR";
     private static final String MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_2_PI_IN_PLOTVECTORFIELDPOLAR = "MCC_DIFFERENCE_OF_ANGLES_MUST_BE_AT_MOST_2_PI_IN_PLOTVECTORFIELDPOLAR";
     private static final String MCC_REGRESSIONLINE_CANNOT_BE_COMPUTED = "MCC_REGRESSIONLINE_CANNOT_BE_COMPUTED";
@@ -3543,7 +3544,7 @@ public abstract class MathCommandCompiler {
             throw new EvaluationException(Translator.translateOutputMessage(MCC_PLOTVECTORFIELD_CANNOT_BE_PLOTTED));
         }
         if (rMin < 0) {
-            throw new EvaluationException(Translator.translateOutputMessage("", 4));
+            throw new EvaluationException(Translator.translateOutputMessage(MCC_MIN_RADIUS_MUST_BE_NONNEGATIVE_IN_PLOTVECTORFIELDPOLAR, 4));
         }
         if (rMax <= rMin) {
             throw new EvaluationException(Translator.translateOutputMessage(MCC_LIMITS_MUST_BE_WELL_ORDERED_IN_PLOTVECTORFIELDPOLAR, 4, 5));
