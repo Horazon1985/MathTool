@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -179,9 +178,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            JLabel sourceLabel;
-                            for (Iterator<JLabel> iterator = getMenuLabels().iterator(); iterator.hasNext();) {
-                                sourceLabel = iterator.next();
+                            for (JLabel sourceLabel : getMenuLabels()) {
                                 if (e.getSource() == sourceLabel) {
                                     sourceLabel.setText("<html><u>" + sourceLabel.getText() + "</u></html>");
                                     break;
@@ -193,9 +190,7 @@ public abstract class MathToolInfoComponentTemplate extends JDialog {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            JLabel sourceLabel;
-                            for (Iterator<JLabel> iterator = getMenuLabels().iterator(); iterator.hasNext();) {
-                                sourceLabel = iterator.next();
+                            for (JLabel sourceLabel : getMenuLabels()) {
                                 if (e.getSource() == sourceLabel) {
                                     sourceLabel.setText(sourceLabel.getText().substring(9, sourceLabel.getText().length() - 11));
                                     break;
