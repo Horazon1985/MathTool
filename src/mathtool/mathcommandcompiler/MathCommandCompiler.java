@@ -840,10 +840,7 @@ public abstract class MathCommandCompiler {
          durch Variablen der Form var_ABSTRACT ersetzt und alle Variablen
          im HashSet vars ebenfalls.
          */
-        Iterator<String> iter = vars.iterator();
-        String var;
-        for (int i = 0; i < vars.size(); i++) {
-            var = iter.next();
+        for (String var : vars) {
             expr = expr.replaceVariable(var, Variable.create(NotationLoader.SELFDEFINEDFUNCTION_VAR + "_" + (functionVarsAsList.indexOf(var) + 1)));
             if (!functionVarsAsList.contains(var)) {
                 throw new ExpressionException(Translator.translateOutputMessage(MCC_RIGHT_SIDE_OF_DEF_CONTAINS_WRONG_VAR));
@@ -4214,9 +4211,8 @@ public abstract class MathCommandCompiler {
         // Nummerierung der logischen Variablen.
         Map<Integer, String> varsEnumerated = new HashMap<>();
 
-        Iterator iter = vars.iterator();
-        for (int i = 0; i < vars.size(); i++) {
-            varsEnumerated.put(varsEnumerated.size(), (String) iter.next());
+        for (String var : vars) {
+            varsEnumerated.put(varsEnumerated.size(), var);
         }
 
         int tableLength = BigInteger.valueOf(2).pow(numberOfVars).intValue();
