@@ -1,77 +1,81 @@
 package mathtool;
 
+import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import command.Command;
+import command.TypeCommand;
+import enums.TypeGraphic;
+import enums.TypeLanguage;
+import enums.TypeSimplify;
+import exceptions.CancellationException;
+import exceptions.EvaluationException;
+import exceptions.ExpressionException;
+import graphic.common.GraphicArea;
+import graphic.common.GraphicPanelFormula;
+import graphic.swing.GraphicPanel2D;
+import graphic.swing.GraphicPanel3D;
+import graphic.swing.GraphicPanelCurves2D;
+import graphic.swing.GraphicPanelCurves3D;
+import graphic.swing.GraphicPanelCylindrical;
+import graphic.swing.GraphicPanelImplicit2D;
+import graphic.swing.GraphicPanelImplicit3D;
+import graphic.swing.GraphicPanelPolar;
+import graphic.swing.GraphicPanelSpherical;
+import graphic.swing.GraphicPanelSurface;
+import graphic.swing.GraphicPanelVectorField2D;
+import graphic.swing.GraphicPanelVectorFieldPolar;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.KeyAdapter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import command.Command;
-import command.TypeCommand;
-import enums.TypeGraphic;
-import enums.TypeLanguage;
-import enums.TypeSimplify;
-import exceptions.EvaluationException;
-import exceptions.ExpressionException;
-import abstractexpressions.expression.classes.Expression;
-import graphic.common.GraphicArea;
-import graphic.swing.GraphicPanel2D;
-import graphic.swing.GraphicPanel3D;
-import graphic.swing.GraphicPanelCurves2D;
-import graphic.swing.GraphicPanelCurves3D;
-import graphic.swing.GraphicPanelImplicit2D;
-import graphic.swing.GraphicPanelPolar;
-import abstractexpressions.logicalexpression.classes.LogicalExpression;
-import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import exceptions.CancellationException;
-import graphic.swing.GraphicPanelCylindrical;
-import graphic.common.GraphicPanelFormula;
-import graphic.swing.GraphicPanelImplicit3D;
-import graphic.swing.GraphicPanelSpherical;
-import graphic.swing.GraphicPanelSurface;
-import graphic.swing.GraphicPanelVectorField2D;
-import graphic.swing.GraphicPanelVectorFieldPolar;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.swing.JTextField;
-import mathtool.annotations.GraphicPanel;
-import mathtool.enums.TypeMode;
-import mathtool.component.dialogs.MathToolSaveGraphicDialog;
-import mathtool.component.dialogs.MathToolSaveSessionDialog;
-import mathtool.component.components.ComputingDialogGUI;
-import mathtool.component.components.DevelopersDialogGUI;
-import mathtool.component.components.HelpDialogGUI;
-import mathtool.component.components.LegendGUI;
-import mathtool.component.components.OutputOptionsDialogGUI;
-import mathtool.component.components.GraphicOptionsDialogGUI;
-import mathtool.component.components.OutputDetailsGUI;
-import mathtool.utilities.MathToolUtilities;
-import mathtool.mathcommandcompiler.MathCommandCompiler;
 import static mathtool.MathToolController.bold;
 import static mathtool.MathToolController.boldAndUnderlined;
+import mathtool.annotations.GraphicPanel;
+import mathtool.component.components.ComputingDialogGUI;
+import mathtool.component.components.DevelopersDialogGUI;
+import mathtool.component.components.GraphicOptionsDialogGUI;
+import mathtool.component.components.HelpDialogGUI;
+import mathtool.component.components.LegendGUI;
 import mathtool.component.components.MathToolAlgorithmsGUI;
+import mathtool.component.components.OutputDetailsGUI;
+import mathtool.component.components.OutputOptionsDialogGUI;
+import mathtool.component.dialogs.MathToolSaveGraphicDialog;
+import mathtool.component.dialogs.MathToolSaveSessionDialog;
+import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
+import mathtool.mathcommandcompiler.MathCommandCompiler;
+import mathtool.utilities.MathToolUtilities;
 import util.OperationDataTO;
 import util.OperationParsingUtils;
 
@@ -190,6 +194,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private Thread rotateThread;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
+    
+    Logger log;
 
     /**
      * MathTool-Log mit allen bisher ausgeführten Befehlen.
@@ -372,6 +378,20 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
 
+        log = Logger.getLogger("MathToolLogger");
+        try {
+//            FileHandler fh = new FileHandler("C:/Users/L0F985/Documents/NetBeansProjectslog/logging.txt");
+            FileHandler fh = new FileHandler("logging.txt");
+            log.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter(); 
+            fh.setFormatter(formatter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        log.info("Hi");
+        log.info("Hi!");
+        
         validate();
         repaint();
 
