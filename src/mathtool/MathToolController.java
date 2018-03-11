@@ -38,6 +38,7 @@ import abstractexpressions.matrixexpression.classes.MatrixOperator;
 import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
 import graphic.swing.GraphicPanelImplicit3D;
 import java.awt.Dimension;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -46,6 +47,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.JTextField;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
@@ -57,6 +61,8 @@ import mathtool.session.classes.DefinedFunctions;
 import mathtool.session.classes.DefinedVar;
 import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
+import mathtool.utilities.LogFormatter;
+import mathtool.utilities.MathToolLogger;
 import notations.NotationLoader;
 import operationparser.ParseResultPattern;
 import util.OperationDataTO;
@@ -236,6 +242,19 @@ public class MathToolController {
 
     }
 
+    public static MathToolLogger initLogger() {
+        MathToolLogger log = MathToolLogger.getLogger();
+        try {
+            FileHandler fh = new FileHandler("log.txt");
+            fh.setFormatter(LogFormatter.getFormatter());
+            log.addHandler(fh);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return log;
+    }
+    
     public static void loadSession(String path) {
         try {
             MathToolSession session = SessionLoader.loadSession(path);

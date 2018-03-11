@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JComponent;
@@ -75,6 +76,7 @@ import mathtool.component.dialogs.MathToolSaveSessionDialog;
 import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
+import mathtool.utilities.MathToolLogger;
 import mathtool.utilities.MathToolUtilities;
 import util.OperationDataTO;
 import util.OperationParsingUtils;
@@ -195,7 +197,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
     
-    Logger log;
+    MathToolLogger log;
 
     /**
      * MathTool-Log mit allen bisher ausgeführten Befehlen.
@@ -378,19 +380,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandCompiler.setMathToolTextArea(mathToolTextArea);
         MathCommandCompiler.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
 
-        log = Logger.getLogger("MathToolLogger");
-        try {
-//            FileHandler fh = new FileHandler("C:/Users/L0F985/Documents/NetBeansProjectslog/logging.txt");
-            FileHandler fh = new FileHandler("logging.txt");
-            log.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter(); 
-            fh.setFormatter(formatter);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        log.info("Hi");
-        log.info("Hi!");
+        log = MathToolController.initLogger();
         
         validate();
         repaint();
@@ -1062,6 +1052,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     return null;
                 }
 
+                log.logInput(input);
+                
                 // Befehl loggen!
                 COMMANDS.add(input);
                 logPosition = COMMANDS.size();
