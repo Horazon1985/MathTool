@@ -48,8 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javax.swing.JTextField;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
@@ -243,16 +241,7 @@ public class MathToolController {
     }
 
     public static MathToolLogger initLogger() {
-        MathToolLogger log = MathToolLogger.getLogger();
-        try {
-            FileHandler fh = new FileHandler("log.txt");
-            fh.setFormatter(LogFormatter.getFormatter());
-            log.addHandler(fh);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        return log;
+        return MathToolLogger.initLogger();
     }
     
     public static void loadSession(String path) {

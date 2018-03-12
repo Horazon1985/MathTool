@@ -21,8 +21,7 @@ public class LogFormatter extends Formatter {
     public String format(LogRecord record) {
         return DATE_FORMAT.format(new Date(record.getMillis())) 
                 + " - "
-                + formatMessage(record)
-                + "\n";
+                + formatMessage(record);
     }
     
 }
