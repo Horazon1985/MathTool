@@ -21,8 +21,8 @@ public class MathToolLogger {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final String INPUT = "Input: ";
-    private static final String EXCEPTION = "Following exception occurred: ";
-    private static final String UNEXPECTED_EXCEPTION = "Following unexpected exception occurred: ";
+    private static final String EXCEPTION = "Exception occurred: ";
+    private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
     private static final String NEXT_LINE = System.lineSeparator();
 
     private final Logger log;
@@ -57,15 +57,15 @@ public class MathToolLogger {
     }
 
     public void logMathToolException(MathToolException e) {
-        log.log(Level.SEVERE, EXCEPTION + "{0}", e.getMessage());
+        log.log(Level.SEVERE, EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     public void logAlgorithmException(AlgorithmException e) {
-        log.log(Level.SEVERE, EXCEPTION + "{0}", e.getMessage());
+        log.log(Level.SEVERE, EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     public void logException(Exception e) {
-        log.log(Level.SEVERE, UNEXPECTED_EXCEPTION + e.getStackTrace());
+        log.log(Level.SEVERE, UNEXPECTED_EXCEPTION + e.getStackTrace() + NEXT_LINE, e);
     }
 
 }

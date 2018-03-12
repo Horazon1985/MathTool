@@ -1,0 +1,7 @@
+12.03.2018 10:20:43.015 - Input: 1/0
+12.03.2018 10:20:46.295 - Input: a+b+a
+12.03.2018 10:21:02.992 - Input: plot2d()
+12.03.2018 10:21:03.022 - Following exception occurred: Zu wenig Parameter im Befehl 'plot2d'.
+12.03.2018 10:21:03.800 - Input: plot2d()
+12.03.2018 10:21:03.829 - Following exception occurred: Zu wenig Parameter im Befehl 'plot2d'.
+12.03.2018 10:21:07.429 - Input: a+x+a
