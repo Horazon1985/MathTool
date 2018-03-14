@@ -38,6 +38,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1048,6 +1049,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                 }
 
                 log.logInput(input);
+                long beginningTime = new Date().getTime();
                 
                 // Befehl loggen!
                 COMMANDS.add(input);
@@ -1075,9 +1077,11 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         MathCommandCompiler.doPrintOutput(MathCommandCompiler.getCommand(commandName, params));
                         // Befehl verarbeiten.
                         MathCommandCompiler.executeCommand(input);
+                        log.logComputationDuration(beginningTime);
                         // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
                         activatePanelsForGraphs(commandName, params);
                         inputField.setText("");
+                        return null;
                     }
 
                 } catch (ExpressionException | EvaluationException e) {
@@ -1090,15 +1094,20 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     if (validCommand) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                         log.logMathToolException(e);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 } catch (CancellationException e) {
                     MathCommandCompiler.doPrintOutput(e.getMessage());
+                    log.logComputationAborted();
+                    log.logComputationDuration(beginningTime);
                     return null;
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (validCommand) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                        log.logException(exception);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 }
@@ -1124,22 +1133,29 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     try {
                         Expression exprSimplified = expr.simplify(simplifyTypes);
                         MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(exprSimplified));
+                        log.logComputationDuration(beginningTime);
                         inputField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                            log.logMathToolException(e);
+                            log.logComputationDuration(beginningTime);
                             inputField.setText("");
                             return null;
                         }
                     } catch (CancellationException e) {
                         MathCommandCompiler.doPrintOutput(e.getMessage());
-                        return null;
+                        log.logComputationAborted();
+                        log.logComputationDuration(beginningTime);
+                    return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                            log.logException(exception);
+                            log.logComputationDuration(beginningTime);
                             return null;
                         }
                     }
@@ -1152,12 +1168,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          arithmetischen Ausdrücken geworfen wurde.
                          */
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                        log.logMathToolException(e);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputAlgebraicExpression(input)) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                        log.logException(exception);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 }
@@ -1179,22 +1199,29 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         } else {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(matExprSimplified));
                         }
+                        log.logComputationDuration(beginningTime);
                         inputField.setText("");
                         return null;
                     } catch (EvaluationException e) {
                         if (MathToolController.isInputMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                            log.logMathToolException(e);
+                            log.logComputationDuration(beginningTime);
                             inputField.setText("");
                             return null;
                         }
                     } catch (CancellationException e) {
                         MathCommandCompiler.doPrintOutput(e.getMessage());
+                        log.logComputationAborted();
+                        log.logComputationDuration(beginningTime);
                         return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
                         if (MathToolController.isInputMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                            log.logException(exception);
+                            log.logComputationDuration(beginningTime);
                             return null;
                         }
                     }
@@ -1207,12 +1234,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
                          arithmetischen Ausdrücken geworfen wurde.
                          */
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                        log.logMathToolException(e);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
                     if (MathToolController.isInputMatrixExpression(input)) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                        log.logException(exception);
+                        log.logComputationDuration(beginningTime);
                         return null;
                     }
                 }
@@ -1227,17 +1258,25 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
                             Translator.translateOutputMessage(GUI_EQUIVALENT_TO),
                             MathToolUtilities.convertToEditableAbstractExpression(logExprSimplified));
+                    log.logComputationDuration(beginningTime);
                     inputField.setText("");
+                    return null;
                 } catch (ExpressionException | EvaluationException e) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                    log.logMathToolException(e);
+                    log.logComputationDuration(beginningTime);
                     return null;
                 } catch (CancellationException e) {
                     MathCommandCompiler.doPrintOutput(e.getMessage());
+                    log.logComputationAborted();
+                    log.logComputationDuration(beginningTime);
                     return null;
                 } catch (Exception exception) {
                     MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                    log.logException(exception);
+                    log.logComputationDuration(beginningTime);
                 }
-
+                
                 return null;
 
             }
@@ -1362,14 +1401,14 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private void approxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approxButtonActionPerformed
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
-        inputField.setText("approx(" + inputField.getText() + ")");
+        inputField.setText(TypeCommand.approx.toString() + "(" + inputField.getText() + ")");
         executeCommand();
     }//GEN-LAST:event_approxButtonActionPerformed
 
     private void latexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexButtonActionPerformed
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
-        inputField.setText("latex(" + inputField.getText() + ")");
+        inputField.setText(TypeCommand.latex.toString() + "(" + inputField.getText() + ")");
         executeCommand();
     }//GEN-LAST:event_latexButtonActionPerformed
 
@@ -1419,7 +1458,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         // Wichtig: Neuer Befehl/Neue Formel -> Rotation stoppen, falls diese aktiv ist.
         stopPossibleRotation();
         try {
-            MathCommandCompiler.executeCommand("clear()");
+            MathCommandCompiler.executeCommand(TypeCommand.clear.toString() + "()");
         } catch (ExpressionException | EvaluationException e) {
             mathToolTextArea.append(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + e.getMessage() + "\n \n");
             mathToolGraphicArea.addComponent(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + e.getMessage());

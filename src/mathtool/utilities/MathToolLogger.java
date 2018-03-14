@@ -22,7 +22,9 @@ public class MathToolLogger {
 
     private static final String INPUT = "Input: ";
     private static final String EXCEPTION = "Exception occurred: ";
+    private static final String COMPUTATION_ABORTED = "Computation aborted.";
     private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
+    private static final String COMPUTATION_DURATION = "Computation duration: {0} milliseconds.";
     private static final String NEXT_LINE = System.lineSeparator();
 
     private final Logger log;
@@ -64,8 +66,28 @@ public class MathToolLogger {
         log.log(Level.SEVERE, EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
-    public void logException(Exception e) {
-        log.log(Level.SEVERE, UNEXPECTED_EXCEPTION + e.getStackTrace() + NEXT_LINE, e);
+    public void logComputationAborted() {
+        log.log(Level.INFO, COMPUTATION_ABORTED + "{0}", NEXT_LINE);
     }
 
+    public void logException(Exception e) {
+        String stackTrace = stackTraceToString(e);
+        log.log(Level.SEVERE, UNEXPECTED_EXCEPTION + e.getMessage() + stackTrace + NEXT_LINE, e);
+    }
+
+    public void logComputationDuration(long beginningTime) {
+        log.log(Level.INFO, COMPUTATION_DURATION + NEXT_LINE, new Date().getTime() - beginningTime);
+    }
+
+    private String stackTraceToString(Exception e) {
+        StackTraceElement[] elements = e.getStackTrace();
+        String stackTrace = NEXT_LINE;
+        for (int i = 1; i < elements.length; i++) {
+            StackTraceElement s = elements[i];
+            stackTrace += "\tat " + s.getClassName() + "." + s.getMethodName()
+            + "(" + s.getFileName() + ":" + s.getLineNumber() + ")" + NEXT_LINE;
+        }
+        return stackTrace;
+    }
+    
 }
