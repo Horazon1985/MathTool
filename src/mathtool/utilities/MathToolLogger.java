@@ -1,6 +1,8 @@
 package mathtool.utilities;
 
 import algorithmexecuter.exceptions.AlgorithmException;
+import exceptions.EvaluationException;
+import exceptions.ExpressionException;
 import exceptions.MathToolException;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -21,7 +23,9 @@ public class MathToolLogger {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final String INPUT = "Input: ";
-    private static final String EXCEPTION = "Exception occurred: ";
+    private static final String EXPRESSION_EXCEPTION = "Exception while expression parsing occurred: ";
+    private static final String EVALUATION_EXCEPTION = "Exception while expression evaluation occurred: ";
+    private static final String ALGORITHM_EXCEPTION = "Exception while algorithm execution occurred: ";
     private static final String COMPUTATION_ABORTED = "Computation aborted.";
     private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
     private static final String COMPUTATION_DURATION = "Computation duration: {0} milliseconds.";
@@ -59,11 +63,23 @@ public class MathToolLogger {
     }
 
     public void logMathToolException(MathToolException e) {
-        log.log(Level.SEVERE, EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        if (e instanceof ExpressionException) {
+            logExpressionException((ExpressionException) e);
+        } else if (e instanceof EvaluationException) {
+            logEvaluationException((EvaluationException) e);
+        }
+    }
+
+    private void logExpressionException(ExpressionException e) {
+        log.log(Level.SEVERE, EXPRESSION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+    }
+
+    private void logEvaluationException(EvaluationException e) {
+        log.log(Level.SEVERE, EVALUATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     public void logAlgorithmException(AlgorithmException e) {
-        log.log(Level.SEVERE, EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        log.log(Level.SEVERE, ALGORITHM_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     public void logComputationAborted() {
