@@ -1,27 +1,44 @@
 package mathtool;
 
-import mathtool.enums.TypeMode;
+import abstractexpressions.expression.classes.Expression;
+import abstractexpressions.expression.classes.Operator;
+import abstractexpressions.expression.classes.SelfDefinedFunction;
+import abstractexpressions.expression.classes.TypeOperator;
+import abstractexpressions.expression.classes.Variable;
+import abstractexpressions.logicalexpression.classes.LogicalExpression;
+import abstractexpressions.logicalexpression.classes.TypeLogicalBinary;
+import abstractexpressions.logicalexpression.classes.TypeLogicalUnary;
+import abstractexpressions.matrixexpression.classes.MatrixExpression;
+import abstractexpressions.matrixexpression.classes.MatrixOperator;
+import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
 import command.Command;
 import command.TypeCommand;
 import enums.TypeGraphic;
 import enums.TypeLanguage;
 import enums.TypeSimplify;
 import exceptions.ExpressionException;
-import abstractexpressions.expression.classes.Expression;
-import abstractexpressions.expression.classes.Operator;
-import abstractexpressions.expression.classes.SelfDefinedFunction;
-import abstractexpressions.expression.classes.TypeOperator;
-import abstractexpressions.expression.classes.Variable;
 import graphic.common.GraphicArea;
 import graphic.swing.GraphicPanel3D;
 import graphic.swing.GraphicPanelCurves3D;
+import graphic.swing.GraphicPanelImplicit3D;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.FileHandler;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,28 +48,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import abstractexpressions.logicalexpression.classes.LogicalExpression;
-import mathtool.mathcommandcompiler.MathCommandCompiler;
-import abstractexpressions.matrixexpression.classes.MatrixExpression;
-import abstractexpressions.matrixexpression.classes.MatrixOperator;
-import abstractexpressions.matrixexpression.classes.TypeMatrixOperator;
-import graphic.swing.GraphicPanelImplicit3D;
-import java.awt.Dimension;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.FileHandler;
 import javax.swing.JTextField;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
 import mathtool.config.MathToolPropertiesHandler;
+import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
+import mathtool.mathcommandcompiler.MathCommandCompiler;
 import mathtool.session.SessionLoader;
 import mathtool.session.classes.DefinedFunction;
 import mathtool.session.classes.DefinedFunctions;
@@ -144,12 +146,12 @@ public class MathToolController {
         List<String> operators = new ArrayList<>();
         // Operatoren
         for (TypeOperator value : TypeOperator.values()) {
-            operators.add(Operator.getNameFromType(value));
+            operators.add(value.getOperatorName());
         }
         // Matrizenoperatoren
         for (TypeMatrixOperator value : TypeMatrixOperator.values()) {
-            if (!operators.contains(MatrixOperator.getNameFromType(value))) {
-                operators.add(MatrixOperator.getNameFromType(value));
+            if (!operators.contains(value.getOperatorName())) {
+                operators.add(value.getOperatorName());
             }
         }
         Collections.sort(operators);
@@ -806,11 +808,16 @@ public class MathToolController {
      * Gibt zurück, ob input, wenn überhaupt, nur ein gültiger arithmetischer
      * Ausdruck (und kein logischer und kein Matrizenausdruck) sein kann.
      */
-    public static boolean isInputAlgebraicExpression(String input) {
-        return !input.contains("&") && !input.contains("|")
-                && !input.contains(">") && !input.contains("=") && !input.contains("[")
-                && !input.contains("]") && input.length() > 0 && input.charAt(0) != '!'
-                && !input.contains("grad");
+    public static boolean isInputProbablyAlgebraicExpression(String input) {
+        return input.length() > 0 
+                && !input.contains(TypeLogicalBinary.AND.getValue()) 
+                && !input.contains(TypeLogicalBinary.OR.getValue())
+                && !input.contains(TypeLogicalBinary.IMPLICATION.getValue()) 
+                && !input.contains(TypeLogicalBinary.EQUIVALENCE.getValue()) 
+                && !input.contains(TypeLogicalUnary.NEGATION.getValue()) 
+                && !input.contains("[")
+                && !input.contains("]")
+                && !input.contains(TypeMatrixOperator.grad.getOperatorName());
     }
 
     /**
@@ -819,9 +826,12 @@ public class MathToolController {
      * isInputAlgebraicExpression(input) bereits geprüft und false
      * zurückgeliefert wurde.
      */
-    public static boolean isInputMatrixExpression(String input) {
-        return !input.contains("&") && !input.contains("|")
-                && !input.contains(">") && !input.contains("=");
+    public static boolean isInputProbablyMatrixExpression(String input) {
+        return input.length() > 0 
+                && !input.contains(TypeLogicalBinary.AND.getValue()) 
+                && !input.contains(TypeLogicalBinary.OR.getValue())
+                && !input.contains(TypeLogicalBinary.IMPLICATION.getValue()) 
+                && !input.contains(TypeLogicalBinary.EQUIVALENCE.getValue());
     }
 
     public static String bold(String s) {

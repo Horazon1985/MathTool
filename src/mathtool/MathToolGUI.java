@@ -1137,7 +1137,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         inputField.setText("");
                         return null;
                     } catch (EvaluationException e) {
-                        if (MathToolController.isInputAlgebraicExpression(input)) {
+                        if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                             log.logMathToolException(e);
@@ -1152,7 +1152,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
-                        if (MathToolController.isInputAlgebraicExpression(input)) {
+                        if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                             log.logException(exception);
                             log.logComputationDuration(beginningTime);
@@ -1161,7 +1161,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (MathToolController.isInputAlgebraicExpression(input)) {
+                    if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
                         /*
                          Dann ist der Ausdruck zumindest kein logischer
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -1174,7 +1174,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
-                    if (MathToolController.isInputAlgebraicExpression(input)) {
+                    if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                         log.logException(exception);
                         log.logComputationDuration(beginningTime);
@@ -1203,7 +1203,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         inputField.setText("");
                         return null;
                     } catch (EvaluationException e) {
-                        if (MathToolController.isInputMatrixExpression(input)) {
+                        if (MathToolController.isInputProbablyMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                             log.logMathToolException(e);
@@ -1218,7 +1218,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         return null;
                     } catch (Exception exception) {
                         // Falls ein unerwarteter Fehler auftritt.
-                        if (MathToolController.isInputMatrixExpression(input)) {
+                        if (MathToolController.isInputProbablyMatrixExpression(input)) {
                             MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                             log.logException(exception);
                             log.logComputationDuration(beginningTime);
@@ -1227,7 +1227,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
 
                 } catch (ExpressionException e) {
-                    if (MathToolController.isInputMatrixExpression(input)) {
+                    if (MathToolController.isInputProbablyMatrixExpression(input)) {
                         /*
                          Dann ist der Ausdruck zumindest kein logischer
                          Ausdruck -> Fehler ausgeben, welcher soeben bei
@@ -1240,7 +1240,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                     }
                 } catch (Exception exception) {
                     // Falls ein unerwarteter Fehler auftritt.
-                    if (MathToolController.isInputMatrixExpression(input)) {
+                    if (MathToolController.isInputProbablyMatrixExpression(input)) {
                         MathCommandCompiler.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                         log.logException(exception);
                         log.logComputationDuration(beginningTime);
