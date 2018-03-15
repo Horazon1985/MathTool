@@ -1,8 +1,8 @@
 package mathtool.component.components;
 
-import mathtool.component.controller.MathToolAlgorithmsController;
 import algorithmexecuter.AlgorithmBuilder;
 import algorithmexecuter.exceptions.AlgorithmCompileException;
+import algorithmexecuter.exceptions.AlgorithmException;
 import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import algorithmexecuter.model.Algorithm;
 import algorithmexecuter.output.AlgorithmOutputPrinter;
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -31,7 +32,9 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import mathtool.component.controller.MathToolAlgorithmsController;
 import mathtool.lang.translator.Translator;
+import mathtool.utilities.MathToolLogger;
 
 public class MathToolAlgorithmsGUI extends JDialog {
 
@@ -86,6 +89,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
     private SwingWorker<Void, Void> computingSwingWorker;
 
+    MathToolLogger log;
+    
     private boolean codeVisible;
     private String code, compiledCode;
 
@@ -501,6 +506,9 @@ public class MathToolAlgorithmsGUI extends JDialog {
                 runButton.setText(Translator.translateOutputMessage(GUI_MathToolAlgorithmsGUI_STOP));
                 runButton.setIcon(stopIcon);
 
+                log.logAlgorithmInput(algorithm);
+                long beginningTime = new Date().getTime();
+                
                 try {
                     // Algorithmus kompilieren.
                     printer.clearOutput();
@@ -511,6 +519,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     } catch (AlgorithmCompileException e) {
                         Integer[] errorLines = e.getErrorLines();
                         MathToolAlgorithmsController.markLinesWithInvalidCode(errorLines);
+                        log.logAlgorithmException(e);
+                        log.logComputationDuration(beginningTime);
                         throw e;
                     }
 
@@ -519,10 +529,19 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     // Algorithmus ausführen.
                     printer.printStartExecutingAlgorithms();
                     algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmBuilder.ALGORITHMS.getAlgorithms());
+                    log.logComputationDuration(beginningTime);
                     printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
+                    if (e instanceof AlgorithmException) {
+                        log.logAlgorithmException((AlgorithmException) e);
+                    } else {
+                        log.logMathToolException((EvaluationException) e);
+                    }
+                    log.logComputationDuration(beginningTime);
                     printer.printException(e);
                 } catch (Exception e) {
+                    log.logException(e);
+                    log.logComputationDuration(beginningTime);
                     printer.printUnexpectedException(e);
                 }
 

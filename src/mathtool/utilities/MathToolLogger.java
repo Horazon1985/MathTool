@@ -1,6 +1,8 @@
 package mathtool.utilities;
 
+import algorithmexecuter.exceptions.AlgorithmCompileException;
 import algorithmexecuter.exceptions.AlgorithmException;
+import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import exceptions.MathToolException;
@@ -25,10 +27,14 @@ public class MathToolLogger {
     private static final String INPUT = "Input: ";
     private static final String EXPRESSION_EXCEPTION = "Exception while expression parsing occurred: ";
     private static final String EVALUATION_EXCEPTION = "Exception while expression evaluation occurred: ";
-    private static final String ALGORITHM_EXCEPTION = "Exception while algorithm execution occurred: ";
+    private static final String ALGORITHM_COMPILATION_EXCEPTION = "Exception while compiling algorithm occurred: ";
+    private static final String ALGORITHM_EXECUTION_EXCEPTION = "Exception while algorithm execution occurred: ";
     private static final String COMPUTATION_ABORTED = "Computation aborted.";
     private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
     private static final String COMPUTATION_DURATION = "Computation duration: {0} milliseconds.";
+    
+    private static final String ALGORITHM_INPUT = "Algorithm input: ";
+    
     private static final String NEXT_LINE = System.lineSeparator();
 
     private final Logger log;
@@ -78,10 +84,6 @@ public class MathToolLogger {
         log.log(Level.SEVERE, EVALUATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
-    public void logAlgorithmException(AlgorithmException e) {
-        log.log(Level.SEVERE, ALGORITHM_EXCEPTION + e.getMessage() + NEXT_LINE, e);
-    }
-
     public void logComputationAborted() {
         log.log(Level.INFO, COMPUTATION_ABORTED + "{0}", NEXT_LINE);
     }
@@ -93,6 +95,26 @@ public class MathToolLogger {
 
     public void logComputationDuration(long beginningTime) {
         log.log(Level.INFO, COMPUTATION_DURATION + NEXT_LINE, new Date().getTime() - beginningTime);
+    }
+    
+    public void logAlgorithmInput(String algorithmInput) {
+        log.log(Level.INFO, ALGORITHM_INPUT + "{0}" + NEXT_LINE, algorithmInput);
+    }
+    
+    public void logAlgorithmException(AlgorithmException e) {
+        if (e instanceof AlgorithmCompileException) {
+            logAlgorithmCompileException((AlgorithmCompileException) e);
+        } else if (e instanceof AlgorithmExecutionException) {
+            logAlgorithmExecutionException((AlgorithmExecutionException) e);
+        }
+    }
+    
+    private void logAlgorithmCompileException(AlgorithmCompileException e) {
+        log.log(Level.SEVERE, ALGORITHM_COMPILATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+    }
+
+    private void logAlgorithmExecutionException(AlgorithmExecutionException e) {
+        log.log(Level.SEVERE, ALGORITHM_EXECUTION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     private String stackTraceToString(Exception e) {
