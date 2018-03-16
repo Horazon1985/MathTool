@@ -24,6 +24,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import mathtool.component.components.MathToolAlgorithmsGUI;
+import mathtool.utilities.MathToolLogger;
 
 public class MathToolAlgorithmsController {
 
@@ -91,6 +92,10 @@ public class MathToolAlgorithmsController {
         mathToolAlgorithmsGUI = mtAlgorithmsGUI;
     }
 
+    public static MathToolLogger initLogger() {
+        return MathToolLogger.initLogger();
+    }
+    
     public static String formatSourceCodeFromEditor(String inputSourceCode) {
         return MathToolAlgorithmsController.formatSourceCode(getPlainCode(inputSourceCode));
     }

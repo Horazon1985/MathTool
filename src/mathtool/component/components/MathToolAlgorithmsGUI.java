@@ -339,6 +339,8 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
             MathToolAlgorithmsController.setMathToolAlgorithmsGUI(this);
 
+            log = MathToolAlgorithmsController.initLogger();
+            
             // Zum Schluss: Komponenten korrekt ausrichten und alles nachzeichnen.
             validate();
             repaint();
