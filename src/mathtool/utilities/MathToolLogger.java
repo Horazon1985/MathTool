@@ -59,9 +59,7 @@ public class MathToolLogger {
             fh.setFormatter(LogFormatter.getFormatter());
             log.addHandler(fh);
         } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return log;
     }
 
@@ -111,11 +109,11 @@ public class MathToolLogger {
     }
 
     public void logAlgorithmCompilationSuccessful() {
-        log.log(Level.INFO, ALGORITHM_COMPILATION_SUCCESSFUL + NEXT_LINE);
+        log.log(Level.INFO, ALGORITHM_COMPILATION_SUCCESSFUL + "{0}", NEXT_LINE);
     }
     
     public void logAlgorithmExecutionSuccessful() {
-        log.log(Level.INFO, ALGORITHM_EXECUTION_SUCCESSFUL + NEXT_LINE);
+        log.log(Level.INFO, ALGORITHM_EXECUTION_SUCCESSFUL + "{0}", NEXT_LINE);
     }
     
     public void logAlgorithmException(AlgorithmException e) {

@@ -76,6 +76,8 @@ MathTool знает такие команды:<br><br>
 
 <strong>plotvectorfield2d([F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)], x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Строит векторное поле [F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)] для x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub> и y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. Фактор масштабирования может быть (почти) любым.<br><br>
 
+<strong>plotvectorfieldpolar([F<sub>1</sub>(r, t); F<sub>2</sub>(r, t)], r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the vector field [F<sub>1</sub>(r, t); F<sub>2</sub>(r, t)] for r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Here, (r, t) is the polar representation of the current point and F<sub>1</sub>(r, t) is the radius and F<sub>2</sub>(r, t) the angle of the polar representation of the vector field. The zoom factor can be (almost) arbitrary.<br><br>
+
 <strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Вычисляет уравнение регрессионной прямой для точек P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, и строит её график, если это возможно. Точки P<sub>i</sub> должны быть (после упрощения) в форме [a;b], то есть должны быть (2x1)-матрицами.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Возвращает алгебраические (точные) решения уравнения F<sub>1</sub>(x) = F<sub>2</sub>(x) по переменной x, если это возможно. Например уравнение вида exp(x) - x = 3 не имеют решений, которые можна выразить алгебраически или при помощи элементарных функций. В таком случае MathTool не вернёт никаких (точных) решений.

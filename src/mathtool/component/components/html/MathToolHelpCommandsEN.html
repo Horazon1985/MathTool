@@ -78,6 +78,8 @@ For memory reasons the number n is not allowed to exceed 100000.<br><br>
 
 <strong>plotvectorfield2d([F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)], x, y, x<sub>1</sub>, x<sub>2</sub>, y<sub>1</sub>, y<sub>2</sub>):</strong> Plots the vector field [F<sub>1</sub>(x, y); F<sub>2</sub>(x, y)] for x<sub>1</sub> &lt;= x &lt;= x<sub>2</sub> and y<sub>1</sub> &lt;= y &lt;= y<sub>2</sub>. The zoom factor can be (almost) arbitrary.<br><br>
 
+<strong>plotvectorfieldpolar([F<sub>1</sub>(r, t); F<sub>2</sub>(r, t)], r, t, r<sub>1</sub>, r<sub>2</sub>, t<sub>1</sub>, t<sub>2</sub>):</strong> Plots the vector field [F<sub>1</sub>(r, t); F<sub>2</sub>(r, t)] for r<sub>1</sub> &lt;= r &lt;= r<sub>2</sub> and t<sub>1</sub> &lt;= t &lt;= t<sub>2</sub>. Here, (r, t) is the polar representation of the current point and F<sub>1</sub>(r, t) is the radius and F<sub>2</sub>(r, t) the angle of the polar representation of the vector field. The zoom factor can be (almost) arbitrary.<br><br>
+
 <strong>regressionline(P<sub>1</sub>, ..., P<sub>n</sub>):</strong> Computes the equation of the regression line for the points P<sub>1</sub>, ..., P<sub>n</sub>, 2 &lt;= n, and also plots it, if possible. The points P<sub>i</sub> must be (after simplifying) of the form [a;b], i.e. they must be (2x1)-matrices.<br><br>
 
 <strong>solve(F<sub>1</sub>(x) = F<sub>2</sub>(x)):</strong> Returns the algebraic (exact) solutions of the equation F<sub>1</sub>(x) = F<sub>2</sub>(x) in x, if possible. Note, that not every equation can be solved exactly. For example, equations of the form exp(x) - x = 3 do not admit solutions which can be expressed in algebraic terms or elementary functions. In these cases, MathTool will not return any (exact) solution.
