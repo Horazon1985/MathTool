@@ -34,6 +34,8 @@ public class MathToolLogger {
     private static final String COMPUTATION_DURATION = "Computation duration: {0} milliseconds.";
     
     private static final String ALGORITHM_INPUT = "Algorithm input: ";
+    private static final String ALGORITHM_COMPILATION_SUCCESSFUL = "Algorithm compilation successful.";
+    private static final String ALGORITHM_EXECUTION_SUCCESSFUL = "Algorithm execution successful.";
     
     private static final String NEXT_LINE = System.lineSeparator();
 
@@ -99,6 +101,14 @@ public class MathToolLogger {
     
     public void logAlgorithmInput(String algorithmInput) {
         log.log(Level.INFO, ALGORITHM_INPUT + "{0}" + NEXT_LINE, algorithmInput);
+    }
+
+    public void logAlgorithmCompilationSuccessful() {
+        log.log(Level.INFO, ALGORITHM_COMPILATION_SUCCESSFUL + NEXT_LINE);
+    }
+    
+    public void logAlgorithmExecutionSuccessful() {
+        log.log(Level.INFO, ALGORITHM_EXECUTION_SUCCESSFUL + NEXT_LINE);
     }
     
     public void logAlgorithmException(AlgorithmException e) {

@@ -518,11 +518,10 @@ public class MathToolAlgorithmsGUI extends JDialog {
 
                     try {
                         AlgorithmBuilder.parseAlgorithmFile(algorithm);
+                        log.logAlgorithmCompilationSuccessful();
                     } catch (AlgorithmCompileException e) {
                         Integer[] errorLines = e.getErrorLines();
                         MathToolAlgorithmsController.markLinesWithInvalidCode(errorLines);
-                        log.logAlgorithmException(e);
-                        log.logComputationDuration(beginningTime);
                         throw e;
                     }
 
@@ -531,6 +530,7 @@ public class MathToolAlgorithmsGUI extends JDialog {
                     // Algorithmus ausführen.
                     printer.printStartExecutingAlgorithms();
                     algorithmexecuter.AlgorithmExecuter.executeAlgorithm(AlgorithmBuilder.ALGORITHMS.getAlgorithms());
+                    log.logAlgorithmExecutionSuccessful();
                     log.logComputationDuration(beginningTime);
                     printer.printEndExecutingAlgorithms();
                 } catch (AlgorithmCompileException | AlgorithmExecutionException | EvaluationException e) {
