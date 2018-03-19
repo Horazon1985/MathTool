@@ -6,6 +6,7 @@ import algorithmexecuter.exceptions.AlgorithmExecutionException;
 import exceptions.EvaluationException;
 import exceptions.ExpressionException;
 import exceptions.MathToolException;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ public class MathToolLogger {
 
     private static final String LOG_NAME = "MathToolLogger";
 
+    private static final String LOG_FILES_DIR = "log";
     private static final String LOG_FILE_PREFIX = "log ";
     private static final String LOG_FILE_FORMAT = ".txt";
 
@@ -48,7 +50,12 @@ public class MathToolLogger {
     public static MathToolLogger initLogger() {
         MathToolLogger log = new MathToolLogger();
         try {
-            FileHandler fh = new FileHandler(generateLogFileName(), true);
+            String fileName = generateLogFileName();
+            File logFile = new File(LOG_FILES_DIR);
+            if (!logFile.exists()) {
+                logFile.mkdir();
+            }
+            FileHandler fh = new FileHandler(fileName, true);
             fh.setFormatter(LogFormatter.getFormatter());
             log.addHandler(fh);
         } catch (IOException e) {
@@ -63,7 +70,7 @@ public class MathToolLogger {
     }
 
     private static String generateLogFileName() {
-        return LOG_FILE_PREFIX + DATE_FORMAT.format(new Date()) + LOG_FILE_FORMAT;
+        return LOG_FILES_DIR + "/" + LOG_FILE_PREFIX + DATE_FORMAT.format(new Date()) + LOG_FILE_FORMAT;
     }
 
     public void logInput(String input) {
