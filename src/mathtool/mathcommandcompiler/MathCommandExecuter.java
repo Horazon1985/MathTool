@@ -422,10 +422,7 @@ public abstract class MathCommandExecuter {
 
     }
     
-    /**
-     * Die folgenden Prozeduren führen einzelne Befehle aus. executePlot2D
-     * zeichnet einen 2D-Graphen, executePlot3D zeichnet einen 3D-Graphen, etc.
-     */
+    // Prozeduren zum Ausführen einzelner Befehle
     @Execute(type = TypeCommand.approx)
     private static void executeApprox(Command command)
             throws EvaluationException {
