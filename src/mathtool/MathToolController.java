@@ -24,7 +24,6 @@ import graphic.swing.GraphicPanelImplicit3D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -38,7 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.FileHandler;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -55,13 +53,13 @@ import mathtool.config.MathToolPropertiesHandler;
 import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
+import mathtool.mathcommandcompiler.MathCommandExecuter;
 import mathtool.session.SessionLoader;
 import mathtool.session.classes.DefinedFunction;
 import mathtool.session.classes.DefinedFunctions;
 import mathtool.session.classes.DefinedVar;
 import mathtool.session.classes.DefinedVars;
 import mathtool.session.classes.MathToolSession;
-import mathtool.utilities.LogFormatter;
 import mathtool.utilities.MathToolLogger;
 import notations.NotationLoader;
 import operationparser.ParseResultPattern;
@@ -303,8 +301,8 @@ public class MathToolController {
                 }
             }
             // Schließlich: geladene Inhalte (Variablen, Funktionen) ausgeben.
-            MathCommandCompiler.executeDefFuncs(new Command(TypeCommand.deffuncs, new Object[]{}));
-            MathCommandCompiler.executeDefVars(new Command(TypeCommand.defvars, new Object[]{}));
+            MathCommandExecuter.executeDefFuncs(new Command(TypeCommand.deffuncs, new Object[]{}));
+            MathCommandExecuter.executeDefVars(new Command(TypeCommand.defvars, new Object[]{}));
         } catch (Exception e) {
             // Es wird nichts geladen.
         }
