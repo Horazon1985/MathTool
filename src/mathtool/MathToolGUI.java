@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -193,7 +194,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private Thread rotateThread;
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
-    
+
     MathToolLogger log;
 
     /**
@@ -378,7 +379,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandExecuter.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
 
         log = MathToolController.initLogger();
-        
+
         validate();
         repaint();
 
@@ -1036,248 +1037,257 @@ public class MathToolGUI extends JFrame implements MouseListener {
             @Override
             protected Void doInBackground() throws Exception {
 
-                inputButton.setText(Translator.translateOutputMessage(GUI_CANCEL));
-                computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
-                MathToolController.initTimer(computingTimer, computingDialogGUI);
+                MathToolController.runWithTimeout(new Runnable() {
+                    @Override
+                    public void run() {
 
-                boolean validCommand = false;
+                        inputButton.setText(Translator.translateOutputMessage(GUI_CANCEL));
+                        computingDialogGUI = new ComputingDialogGUI(computingSwingWorker, mathToolGUI.getX(), mathToolGUI.getY(), mathToolGUI.getWidth(), mathToolGUI.getHeight());
+                        MathToolController.initTimer(computingTimer, computingDialogGUI);
 
-                // Leerzeichen werden im Vorfeld beseitigt.
-                String input = inputField.getText().replaceAll(" ", "").toLowerCase();
+                        boolean validCommand = false;
 
-                if (input.isEmpty()) {
-                    return null;
-                }
+                        // Leerzeichen werden im Vorfeld beseitigt.
+                        String input = inputField.getText().replaceAll(" ", "").toLowerCase();
 
-                log.logInput(input);
-                long beginningTime = new Date().getTime();
-                
-                // Befehl loggen!
-                COMMANDS.add(input);
-                logPosition = COMMANDS.size();
+                        if (input.isEmpty()) {
+                            return;
+                        }
 
-                /*
-                 1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
-                 bildet. Ja -> Befehl ausführen. Nein -> Weitere Möglichkeiten
-                 prüfen.
-                 */
-                try {
-                    OperationDataTO commandData = OperationParsingUtils.getOperationData(input);
+                        log.logInput(input);
+                        long beginningTime = new Date().getTime();
 
-                    String commandName = commandData.getOperationName();
-                    String[] params = commandData.getOperationArguments();
+                        // Befehl loggen!
+                        COMMANDS.add(input);
+                        logPosition = COMMANDS.size();
 
-                    for (TypeCommand commandType : TypeCommand.values()) {
-                        validCommand = validCommand || commandName.equals(commandType.toString());
+                        /*
+                         1. Versuch: Es wird geprüft, ob die Zeile einen Befehl
+                         bildet. Ja -> Befehl ausführen. Nein -> Weitere Möglichkeiten
+                         prüfen.
+                         */
+                        try {
+                            OperationDataTO commandData = OperationParsingUtils.getOperationData(input);
+
+                            String commandName = commandData.getOperationName();
+                            String[] params = commandData.getOperationArguments();
+
+                            for (TypeCommand commandType : TypeCommand.values()) {
+                                validCommand = validCommand || commandName.equals(commandType.toString());
+                                if (validCommand) {
+                                    break;
+                                }
+                            }
+
+                            if (validCommand) {
+                                MathCommandExecuter.doPrintOutput(MathCommandCompiler.getCommand(commandName, params));
+                                // Befehl verarbeiten.
+                                MathCommandExecuter.executeCommand(input);
+                                log.logComputationDuration(beginningTime);
+                                // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
+                                activatePanelsForGraphs(commandName, params);
+                                inputField.setText("");
+                                return;
+                            }
+
+                        } catch (ExpressionException | EvaluationException e) {
+                            /*
+                             Falls es ein gültiger Befehl war (unabhängig davon, ob
+                             dieser Fehler enthielt oder nicht) -> abbrechen und NICHT
+                             weiter prüfen, ob es sich um einen Ausdruck handeln
+                             könnte.
+                             */
+                            if (validCommand) {
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                                log.logMathToolException(e);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        } catch (CancellationException e) {
+                            MathCommandExecuter.doPrintOutput(e.getMessage());
+                            log.logComputationAborted();
+                            log.logComputationDuration(beginningTime);
+                            return;
+                        } catch (Exception exception) {
+                            // Falls ein unerwarteter Fehler auftritt.
+                            if (validCommand) {
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                                log.logException(exception);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        }
+
+                        /*
+                         Falls es ein gültiger Befehl war (unabhängig davon, ob dieser
+                         Fehler enthield oder nicht) -> abbrechen und NICHT weiter
+                         prüfen, ob es sich um einen Ausdruck handeln könnte.
+                         */
                         if (validCommand) {
-                            break;
+                            return;
                         }
-                    }
 
-                    if (validCommand) {
-                        MathCommandExecuter.doPrintOutput(MathCommandCompiler.getCommand(commandName, params));
-                        // Befehl verarbeiten.
-                        MathCommandExecuter.executeCommand(input);
-                        log.logComputationDuration(beginningTime);
-                        // Falls es ein Grafikbefehle war -> Grafik sichtbar machen.
-                        activatePanelsForGraphs(commandName, params);
-                        inputField.setText("");
-                        return null;
-                    }
+                        /*
+                         2. Versuch: Es wird geprüft, ob die Zeile einen
+                         mathematischen Ausdruck bildet. Ja -> Vereinfachen und
+                         ausgeben. Nein -> Weitere Möglichkeiten prüfen.
+                         */
+                        try {
 
-                } catch (ExpressionException | EvaluationException e) {
-                    /*
-                     Falls es ein gültiger Befehl war (unabhängig davon, ob
-                     dieser Fehler enthielt oder nicht) -> abbrechen und NICHT
-                     weiter prüfen, ob es sich um einen Ausdruck handeln
-                     könnte.
-                     */
-                    if (validCommand) {
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
-                        log.logMathToolException(e);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                } catch (CancellationException e) {
-                    MathCommandExecuter.doPrintOutput(e.getMessage());
-                    log.logComputationAborted();
-                    log.logComputationDuration(beginningTime);
-                    return null;
-                } catch (Exception exception) {
-                    // Falls ein unerwarteter Fehler auftritt.
-                    if (validCommand) {
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
-                        log.logException(exception);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                }
+                            Expression expr = Expression.build(input);
 
-                /*
-                 Falls es ein gültiger Befehl war (unabhängig davon, ob dieser
-                 Fehler enthield oder nicht) -> abbrechen und NICHT weiter
-                 prüfen, ob es sich um einen Ausdruck handeln könnte.
-                 */
-                if (validCommand) {
-                    return null;
-                }
+                            try {
+                                Expression exprSimplified = expr.simplify(simplifyTypes);
+                                MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(exprSimplified));
+                                log.logComputationDuration(beginningTime);
+                                inputField.setText("");
+                                return;
+                            } catch (EvaluationException e) {
+                                if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
+                                    MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
+                                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                                    log.logMathToolException(e);
+                                    log.logComputationDuration(beginningTime);
+                                    inputField.setText("");
+                                    return;
+                                }
+                            } catch (CancellationException e) {
+                                MathCommandExecuter.doPrintOutput(e.getMessage());
+                                log.logComputationAborted();
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            } catch (Exception exception) {
+                                // Falls ein unerwarteter Fehler auftritt.
+                                if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
+                                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                                    log.logException(exception);
+                                    log.logComputationDuration(beginningTime);
+                                    return;
+                                }
+                            }
 
-                /*
-                 2. Versuch: Es wird geprüft, ob die Zeile einen
-                 mathematischen Ausdruck bildet. Ja -> Vereinfachen und
-                 ausgeben. Nein -> Weitere Möglichkeiten prüfen.
-                 */
-                try {
+                        } catch (ExpressionException e) {
+                            if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
+                                /*
+                                 Dann ist der Ausdruck zumindest kein logischer
+                                 Ausdruck -> Fehler ausgeben, welcher soeben bei
+                                 arithmetischen Ausdrücken geworfen wurde.
+                                 */
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                                log.logMathToolException(e);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        } catch (Exception exception) {
+                            // Falls ein unerwarteter Fehler auftritt.
+                            if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                                log.logException(exception);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        }
 
-                    Expression expr = Expression.build(input);
+                        /*
+                         3. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                         Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
+                         Nein -> Weitere Möglichkeiten prüfen.
+                         */
+                        try {
 
-                    try {
-                        Expression exprSimplified = expr.simplify(simplifyTypes);
-                        MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(exprSimplified));
-                        log.logComputationDuration(beginningTime);
-                        inputField.setText("");
-                        return null;
-                    } catch (EvaluationException e) {
-                        if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
-                            MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(expr));
+                            MatrixExpression matExpr = MatrixExpression.build(input);
+
+                            try {
+                                MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
+                                // Hinzufügen zum textlichen Ausgabefeld.
+                                if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
+                                    MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()));
+                                } else {
+                                    MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(matExprSimplified));
+                                }
+                                log.logComputationDuration(beginningTime);
+                                inputField.setText("");
+                                return;
+                            } catch (EvaluationException e) {
+                                if (MathToolController.isInputProbablyMatrixExpression(input)) {
+                                    MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
+                                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                                    log.logMathToolException(e);
+                                    log.logComputationDuration(beginningTime);
+                                    inputField.setText("");
+                                    return;
+                                }
+                            } catch (CancellationException e) {
+                                MathCommandExecuter.doPrintOutput(e.getMessage());
+                                log.logComputationAborted();
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            } catch (Exception exception) {
+                                // Falls ein unerwarteter Fehler auftritt.
+                                if (MathToolController.isInputProbablyMatrixExpression(input)) {
+                                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                                    log.logException(exception);
+                                    log.logComputationDuration(beginningTime);
+                                    return;
+                                }
+                            }
+
+                        } catch (ExpressionException e) {
+                            if (MathToolController.isInputProbablyMatrixExpression(input)) {
+                                /*
+                                 Dann ist der Ausdruck zumindest kein logischer
+                                 Ausdruck -> Fehler ausgeben, welcher soeben bei
+                                 arithmetischen Ausdrücken geworfen wurde.
+                                 */
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
+                                log.logMathToolException(e);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        } catch (Exception exception) {
+                            // Falls ein unerwarteter Fehler auftritt.
+                            if (MathToolController.isInputProbablyMatrixExpression(input)) {
+                                MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
+                                log.logException(exception);
+                                log.logComputationDuration(beginningTime);
+                                return;
+                            }
+                        }
+
+                        /*
+                         4. Versuch: Es wird geprüft, ob die Zeile einen gültigen
+                         logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
+                         */
+                        try {
+                            LogicalExpression logExpr = LogicalExpression.build(input);
+                            LogicalExpression logExprSimplified = logExpr.simplify();
+                            MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
+                                    Translator.translateOutputMessage(GUI_EQUIVALENT_TO),
+                                    MathToolUtilities.convertToEditableAbstractExpression(logExprSimplified));
+                            log.logComputationDuration(beginningTime);
+                            inputField.setText("");
+                            return;
+                        } catch (ExpressionException | EvaluationException e) {
                             MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
                             log.logMathToolException(e);
                             log.logComputationDuration(beginningTime);
-                            inputField.setText("");
-                            return null;
-                        }
-                    } catch (CancellationException e) {
-                        MathCommandExecuter.doPrintOutput(e.getMessage());
-                        log.logComputationAborted();
-                        log.logComputationDuration(beginningTime);
-                    return null;
-                    } catch (Exception exception) {
-                        // Falls ein unerwarteter Fehler auftritt.
-                        if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
+                            return;
+                        } catch (CancellationException e) {
+                            MathCommandExecuter.doPrintOutput(e.getMessage());
+                            log.logComputationAborted();
+                            log.logComputationDuration(beginningTime);
+                            return;
+                        } catch (Exception exception) {
                             MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
                             log.logException(exception);
                             log.logComputationDuration(beginningTime);
-                            return null;
                         }
-                    }
 
-                } catch (ExpressionException e) {
-                    if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
-                        /*
-                         Dann ist der Ausdruck zumindest kein logischer
-                         Ausdruck -> Fehler ausgeben, welcher soeben bei
-                         arithmetischen Ausdrücken geworfen wurde.
-                         */
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
-                        log.logMathToolException(e);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                } catch (Exception exception) {
-                    // Falls ein unerwarteter Fehler auftritt.
-                    if (MathToolController.isInputProbablyAlgebraicExpression(input)) {
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
-                        log.logException(exception);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                }
+                        return;
 
-                /*
-                 3. Versuch: Es wird geprüft, ob die Zeile einen gültigen
-                 Matrizenausdruck bildet. Ja -> vereinfachen und ausgeben.
-                 Nein -> Weitere Möglichkeiten prüfen.
-                 */
-                try {
-
-                    MatrixExpression matExpr = MatrixExpression.build(input);
-
-                    try {
-                        MatrixExpression matExprSimplified = matExpr.simplify(simplifyTypes);
-                        // Hinzufügen zum textlichen Ausgabefeld.
-                        if (matExprSimplified.convertOneTimesOneMatrixToExpression() instanceof Expression) {
-                            MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression((Expression) matExprSimplified.convertOneTimesOneMatrixToExpression()));
-                        } else {
-                            MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr), "  =  ", MathToolUtilities.convertToEditableAbstractExpression(matExprSimplified));
-                        }
-                        log.logComputationDuration(beginningTime);
-                        inputField.setText("");
-                        return null;
-                    } catch (EvaluationException e) {
-                        if (MathToolController.isInputProbablyMatrixExpression(input)) {
-                            MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(matExpr));
-                            MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
-                            log.logMathToolException(e);
-                            log.logComputationDuration(beginningTime);
-                            inputField.setText("");
-                            return null;
-                        }
-                    } catch (CancellationException e) {
-                        MathCommandExecuter.doPrintOutput(e.getMessage());
-                        log.logComputationAborted();
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    } catch (Exception exception) {
-                        // Falls ein unerwarteter Fehler auftritt.
-                        if (MathToolController.isInputProbablyMatrixExpression(input)) {
-                            MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
-                            log.logException(exception);
-                            log.logComputationDuration(beginningTime);
-                            return null;
-                        }
                     }
+                }, 120, TimeUnit.SECONDS);
 
-                } catch (ExpressionException e) {
-                    if (MathToolController.isInputProbablyMatrixExpression(input)) {
-                        /*
-                         Dann ist der Ausdruck zumindest kein logischer
-                         Ausdruck -> Fehler ausgeben, welcher soeben bei
-                         arithmetischen Ausdrücken geworfen wurde.
-                         */
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
-                        log.logMathToolException(e);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                } catch (Exception exception) {
-                    // Falls ein unerwarteter Fehler auftritt.
-                    if (MathToolController.isInputProbablyMatrixExpression(input)) {
-                        MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
-                        log.logException(exception);
-                        log.logComputationDuration(beginningTime);
-                        return null;
-                    }
-                }
-
-                /*
-                 4. Versuch: Es wird geprüft, ob die Zeile einen gültigen
-                 logischen Ausdruck bildet. Ja -> vereinfachen und ausgeben.
-                 */
-                try {
-                    LogicalExpression logExpr = LogicalExpression.build(input);
-                    LogicalExpression logExprSimplified = logExpr.simplify();
-                    MathCommandExecuter.doPrintOutput(MathToolUtilities.convertToEditableAbstractExpression(logExpr),
-                            Translator.translateOutputMessage(GUI_EQUIVALENT_TO),
-                            MathToolUtilities.convertToEditableAbstractExpression(logExprSimplified));
-                    log.logComputationDuration(beginningTime);
-                    inputField.setText("");
-                    return null;
-                } catch (ExpressionException | EvaluationException e) {
-                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_ERROR) + e.getMessage());
-                    log.logMathToolException(e);
-                    log.logComputationDuration(beginningTime);
-                    return null;
-                } catch (CancellationException e) {
-                    MathCommandExecuter.doPrintOutput(e.getMessage());
-                    log.logComputationAborted();
-                    log.logComputationDuration(beginningTime);
-                    return null;
-                } catch (Exception exception) {
-                    MathCommandExecuter.doPrintOutput(Translator.translateOutputMessage(GUI_UNEXPECTED_EXCEPTION) + exception.getMessage());
-                    log.logException(exception);
-                    log.logComputationDuration(beginningTime);
-                }
-                
                 return null;
 
             }

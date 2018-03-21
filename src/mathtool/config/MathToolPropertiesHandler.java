@@ -15,8 +15,8 @@ import mathtool.enums.TypeMode;
 
 public class MathToolPropertiesHandler {
 
-//    private static final String PATH_PROPERTIES = "MathTool/mathtool/properties/MathToolProperties.properties";
-    private static final String PATH_PROPERTIES = "src/mathtool/properties/MathToolProperties.properties";
+//    private static final String PATH_PROPERTIES = "MathTool/mathtool/config/MathToolProperties.properties";
+    private static final String PATH_PROPERTIES = "src/mathtool/config/MathToolProperties.properties";
 
     private static final String KEY_FONTSIZE_GRAPHIC = "mathtool.fontsize.graphic";
     private static final String KEY_FONTSIZE_TEXT = "mathtool.fontsize.text";
