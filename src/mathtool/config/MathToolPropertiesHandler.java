@@ -29,6 +29,8 @@ public class MathToolPropertiesHandler {
     private static final String KEY_SIMPLIFY_EXPAND_COLLECT = "mathtool.option.expandAndCollectIfShorter";
     private static final String KEY_SIMPLIFY_FACTORIZE = "mathtool.option.factorizeDropDown";
     private static final String KEY_SIMPLIFY_LOGARITHMS = "mathtool.option.logarithmsDropDown";
+    private static final String KEY_TIMEOUT_COMPUTATION = "mathtool.timeout.computation";
+    private static final String KEY_TIMEOUT_ALGORITHM = "mathtool.timeout.algorithm";
 
     private static final String DEFAULT_VALUE_FONTSIZE_GRAPHIC = "20";
     private static final String DEFAULT_VALUE_FONTSIZE_TEXT = "15";
@@ -41,6 +43,8 @@ public class MathToolPropertiesHandler {
     private static final String DEFAULT_VALUE_SIMPLIFY_EXPAND_COLLECT = "true";
     private static final String DEFAULT_VALUE_SIMPLIFY_FACTORIZE = "factorize";
     private static final String DEFAULT_VALUE_SIMPLIFY_LOGARITHMS = "collect";
+    private static final String DEFAULT_VALUE_TIMEOUT_COMPUTATION = "120";
+    private static final String DEFAULT_VALUE_TIMEOUT_ALGORITHM = "300";
 
     private static final Properties PROPERTIES = new Properties();
 
@@ -131,4 +135,12 @@ public class MathToolPropertiesHandler {
         return LogarithmsDropDownOption.valueOf(PROPERTIES.getProperty(KEY_SIMPLIFY_LOGARITHMS, DEFAULT_VALUE_SIMPLIFY_LOGARITHMS));
     }
 
+    public static int getTimeoutComputation() {
+        return Integer.parseInt(PROPERTIES.getProperty(KEY_TIMEOUT_COMPUTATION, DEFAULT_VALUE_TIMEOUT_COMPUTATION));
+    }
+    
+    public static int getTimeoutAlgorithm() {
+        return Integer.parseInt(PROPERTIES.getProperty(KEY_TIMEOUT_ALGORITHM, DEFAULT_VALUE_TIMEOUT_ALGORITHM));
+    }
+    
 }

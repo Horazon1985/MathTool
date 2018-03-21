@@ -70,6 +70,7 @@ import mathtool.component.components.OutputDetailsGUI;
 import mathtool.component.components.OutputOptionsDialogGUI;
 import mathtool.component.dialogs.MathToolSaveGraphicDialog;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
+import mathtool.config.classes.MathToolConfig;
 import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
@@ -195,6 +196,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
 
+    MathToolConfig config;
+    
     MathToolLogger log;
 
     /**
@@ -225,6 +228,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     public MathToolGUI() {
 
+        config = MathToolController.loadConfig();
         MathToolController.SetGui(this);
 
         initComponents();

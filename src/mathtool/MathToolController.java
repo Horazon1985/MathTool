@@ -54,9 +54,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
+import mathtool.config.ConfigLoader;
 import mathtool.config.MathToolPropertiesHandler;
+import mathtool.config.classes.MathToolConfig;
 import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
@@ -87,6 +90,10 @@ public class MathToolController {
     
     public static void SetGui(MathToolGUI mathToolGui) {
         gui = mathToolGui;
+    }
+   
+    public static MathToolConfig loadConfig() {
+        return ConfigLoader.loadConfig();
     }
     
     /**

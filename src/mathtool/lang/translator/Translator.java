@@ -17,13 +17,9 @@ public abstract class Translator {
 
     private static final String PREFIX_MATHTOOL_GUI_MESSAGES = "GUI";
     private static final String PREFIX_MATH_COMMAND_COMPILER_MESSAGES = "MCC";
-//    private static final String PREFIX_ALGORITHM_COMPILLATION_MESSAGES = "AC";
-//    private static final String PREFIX_ALGORITHM_EXECUTION_MESSAGES = "AE";
 
     private static final String PATH_LANG_GUI_MESSAGES = "mathtool/lang/messages/LangGUI.xml";
     private static final String PATH_MATH_COMMAND_COMPILER_MESSAGES = "mathtool/lang/messages/LangMathCommandCompiler.xml";
-//    private static final String PATH_ALGORITHM_COMPILLATION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmCompiler.xml";
-//    private static final String PATH_ALGORITHM_EXECUTION_MESSAGES = "algorithmexecuter/messages/LangAlgorithmExecuter.xml";
 
     public static final String PATH_UNKNOWN_ERROR_MESSAGES = "mathtool/lang/messages/LangUndefinedError.xml";
 
@@ -42,8 +38,6 @@ public abstract class Translator {
     static {
         RESOURCES.put(PREFIX_MATHTOOL_GUI_MESSAGES, PATH_LANG_GUI_MESSAGES);
         RESOURCES.put(PREFIX_MATH_COMMAND_COMPILER_MESSAGES, PATH_MATH_COMMAND_COMPILER_MESSAGES);
-//        RESOURCES.put(PREFIX_ALGORITHM_COMPILLATION_MESSAGES, PATH_ALGORITHM_COMPILLATION_MESSAGES);
-//        RESOURCES.put(PREFIX_ALGORITHM_EXECUTION_MESSAGES, PATH_ALGORITHM_EXECUTION_MESSAGES);
     }
 
     public static Collection<String> getResources() {

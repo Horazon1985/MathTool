@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="mathToolConfig">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="fontSizeGraphic" type="xs:string"/>
+                <xs:element name="fontSizeText" type="xs:string"/>
+                <xs:element name="language" type="xs:string"/>
+                <xs:element name="mode" type="xs:string"/>
+                <xs:element name="screenWidth" type="xs:string"/>
+                <xs:element name="screenHeight" type="xs:string"/>
+                <xs:element name="optionAlgebraicRelations" type="xs:string"/>
+                <xs:element name="optionFunctionalRelations" type="xs:string"/>
+                <xs:element name="optionExpandAndCollectIfShorter" type="xs:string"/>
+                <xs:element name="optionFactorizeDropDown" type="xs:string"/>
+                <xs:element name="optionLogarithmsDropDown" type="xs:string"/>
+                <xs:element name="timeoutComputation" type="xs:string"/>
+                <xs:element name="timeoutAlgorithm" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
