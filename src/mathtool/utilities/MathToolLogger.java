@@ -26,6 +26,9 @@ public class MathToolLogger {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+    private static final String CONFIG_NOT_FOUND = "config.xml not found.";
+    private static final String CONFIG_CANNOT_BE_PARSED = "config.xml cannot be parsed. Loading default configurations.";
+    
     private static final String INPUT = "Input: ";
     private static final String EXPRESSION_EXCEPTION = "Exception while expression parsing occurred: ";
     private static final String EVALUATION_EXCEPTION = "Exception while expression evaluation occurred: ";
@@ -71,6 +74,14 @@ public class MathToolLogger {
         return LOG_FILES_DIR + "/" + LOG_FILE_PREFIX + DATE_FORMAT.format(new Date()) + LOG_FILE_FORMAT;
     }
 
+    public void logConfigNotFound() {
+        log.log(Level.WARNING, CONFIG_NOT_FOUND + "{0}", NEXT_LINE);
+    }
+
+    public void logConfigCannotBeParsed() {
+        log.log(Level.WARNING, CONFIG_CANNOT_BE_PARSED + "{0}", NEXT_LINE);
+    }
+
     public void logInput(String input) {
         log.log(Level.INFO, INPUT + "{0}" + NEXT_LINE, input);
     }
@@ -84,11 +95,11 @@ public class MathToolLogger {
     }
 
     private void logExpressionException(ExpressionException e) {
-        log.log(Level.SEVERE, EXPRESSION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        log.log(Level.WARNING, EXPRESSION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     private void logEvaluationException(EvaluationException e) {
-        log.log(Level.SEVERE, EVALUATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        log.log(Level.WARNING, EVALUATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     public void logComputationAborted() {
@@ -125,11 +136,11 @@ public class MathToolLogger {
     }
     
     private void logAlgorithmCompileException(AlgorithmCompileException e) {
-        log.log(Level.SEVERE, ALGORITHM_COMPILATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        log.log(Level.WARNING, ALGORITHM_COMPILATION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     private void logAlgorithmExecutionException(AlgorithmExecutionException e) {
-        log.log(Level.SEVERE, ALGORITHM_EXECUTION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+        log.log(Level.WARNING, ALGORITHM_EXECUTION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
     }
 
     private String stackTraceToString(Exception e) {

@@ -87,9 +87,19 @@ public class MathToolController {
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
 
     private static MathToolGUI gui;
+
+    private static MathToolLogger log;
     
-    public static void SetGui(MathToolGUI mathToolGui) {
+    public static void setGui(MathToolGUI mathToolGui) {
         gui = mathToolGui;
+    }
+    
+    public static MathToolLogger getLogger() {
+        return log;
+    }
+    
+    public static void setLogger(MathToolLogger logger) {
+        log = logger;
     }
    
     public static MathToolConfig loadConfig() {
@@ -189,7 +199,70 @@ public class MathToolController {
         }
     }
 
-    public static void loadSettings() {
+    public static void loadSettingsFromXML() {
+        MathToolConfig config = MathToolController.loadConfig();
+        MathToolGUI.setFontSizeGraphic(config.getFontSizeGraphic());
+        MathToolGUI.setFontSizeText(config.getFontSizeText());
+        MathToolGUI.setLanguage(config.getLanguage());
+        MathToolGUI.setMode(config.getMode());
+        MathToolGUI.setMinimumDimension(new Dimension(config.getScreenWidth(), config.getScreenHeight()));
+
+        // Setzen von: Algebraische Relationen
+        if (config.getOptionAlgebraicRelations()) {
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_algebraic_expressions);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_algebraic_expressions);
+        }
+        // Setzen von: Funktionale Relationen
+        if (config.getOptionFunctionalRelations()) {
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_functional_relations);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_functional_relations);
+        }
+        // Setzen von: Länge verkürzen
+        if (config.getOptionExpandAndCollectIfShorter()) {
+            MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+        } else {
+            MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_and_collect_equivalents_if_shorter);
+        }
+        // Setzen von: FaktorisierungsDropDown
+        switch (config.getOptionFactorizeDropDown()) {
+            case factorize:
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                break;
+            case expand:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_powerful);
+                break;
+            case no_options:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_factorize);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_powerful);
+                break;
+            default:
+                break;
+        }
+        // Setzen von: LogarithmenDropDown
+        switch (config.getOptionLogarithmsDropDown()) {
+            case collect:
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                break;
+            case expand:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().add(TypeSimplify.simplify_expand_logarithms);
+                break;
+            case no_options:
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_collect_logarithms);
+                MathToolGUI.getSimplifyTypes().remove(TypeSimplify.simplify_expand_logarithms);
+                break;
+            default:
+                break;
+        }
+        
+    }
+    
+    public static void loadSettingsFromProperties() {
 
 //        MathToolPropertiesHandler.readMathToolProperties();
         // Konfigurationen setzen.

@@ -196,9 +196,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private SwingWorker<Void, Void> computingSwingWorker;
     private Timer computingTimer;
 
-    MathToolConfig config;
-    
-    MathToolLogger log;
+    private MathToolLogger log;
 
     /**
      * MathTool-Log mit allen bisher ausgeführten Befehlen.
@@ -228,13 +226,16 @@ public class MathToolGUI extends JFrame implements MouseListener {
 
     public MathToolGUI() {
 
-        config = MathToolController.loadConfig();
-        MathToolController.SetGui(this);
+        MathToolController.setGui(this);
 
         initComponents();
         initCaptions();
         setLayout(null);
 
+        // Logger initialisieren.
+        log = MathToolController.initLogger();
+        MathToolController.setLogger(log);
+        
         // Prüfung, ob alle nötigen Resourcen vorhanden sind.
         MathToolController.checkExpressionBuilderResources();
         MathToolController.checkMathToolResources();
@@ -242,7 +243,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathToolController.initSimplifyTypes();
 
         // Konfigurationen aus XML auslesen.
-        MathToolController.loadSettings();
+        MathToolController.loadSettingsFromXML();
 
         // Mindestfenstergröße festlegen
         setMinimumSize(minimumDimension);
@@ -381,8 +382,6 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandExecuter.setGraphicPanelVectorFieldPolar(graphicPanelVectorFieldPolar);
         MathCommandExecuter.setMathToolTextArea(mathToolTextArea);
         MathCommandExecuter.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
-
-        log = MathToolController.initLogger();
 
         validate();
         repaint();
