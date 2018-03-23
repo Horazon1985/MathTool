@@ -82,6 +82,10 @@ public class MathToolLogger {
         log.log(Level.WARNING, CONFIG_CANNOT_BE_PARSED + "{0}", NEXT_LINE);
     }
 
+    public void logMessage(String message) {
+        log.log(Level.INFO, message + "{0}", NEXT_LINE);
+    }
+    
     public void logInput(String input) {
         log.log(Level.INFO, INPUT + "{0}" + NEXT_LINE, input);
     }

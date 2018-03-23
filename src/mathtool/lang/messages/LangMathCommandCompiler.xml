@@ -580,10 +580,10 @@
         <Russian>У команды 'plotimplicit3d' должен быть ровно один параметр. Этот параметр должен быть выражением максимум в трёх переменных.</Russian>
     </object>
     <object id = "MCC_FIRST_PARAMETER_IN_PLOTIMPLICIT3D_MUST_BE_A_VALID_EQUATION">
-        <German>Der [0]. Parameter im Befehl 'plotimplicit3d' muss kleiner sein als der [1]. Parameter.</German>
-        <English>The [0]. parameter in command 'plotimplicit3d' must be smaller than the [1]. parameter.</English>
-        <Ukrainian>[0]. параметр команди 'plotimplicit3d' має бути меншим ніж [1]. параметр.</Ukrainian>
-        <Russian>[0]. параметр команды 'plotimplicit3d' должен быть меньше чем [1]. параметр.</Russian>
+        <German>Der 1. Parameter im Befehl 'plotimplicit3d' muss eine gültige Gleichung der Form 'f = g' sein..</German>
+        <English>The 1. parameter in command 'plotimplicit3d' must be a valid equation of the form 'f = g'.</English>
+        <Ukrainian>1. параметр команди 'plotimplicit3d' має бути діючим рівнянням у формі 'f = g'.</Ukrainian>
+        <Russian>1. параметр команды 'plotimplicit3d' должен быть действительным уравнением в форме 'f = g'.</Russian>
     </object>
     <object id = "MCC_WRONG_FORM_OF_INDETERMINATE_PARAMETER_IN_PLOTIMPLICIT3D">
         <German>Der [0]. Parameter im Befehl 'plotimplicit3d' muss eine gültige Veränderliche sein, welcher kein fester Wert zugewiesen wurde.</German>
@@ -598,10 +598,10 @@
         <Russian>Переменные в команде 'plotimplicit3d' должны попарно отличаться.</Russian>
     </object>
     <object id = "MCC_WRONG_NUMBER_OF_INDETERMINATES_IN_PLOTIMPLICIT3D">
-        <German>Die Ausdrücke im Befehl 'plotimplicit3d' dürfen höchstens die Veränderlichen [0] und [1] enthalten. Diese enthalten jedoch weitere Veränderliche.</German>
-        <English>The expressions in command 'plotimplicit3d' must contain at most the variables [0] and [1]. But they contain further variables.</English>
-        <Ukrainian>Вирази у команді 'plotimplicit3d' мають містити максимум зміннуі [0] та [1]. Але вони містять крым неъ ще змінні.</Ukrainian>
-        <Russian>Выражения в команде 'plotimplicit3d' должны содержать максимум переменные [0] и [1]. Но они содержат кроме неё ещё переменные.</Russian>
+        <German>Die Ausdrücke im Befehl 'plotimplicit3d' dürfen höchstens die Veränderlichen [0], [1] und [2] enthalten. Diese enthalten jedoch weitere Veränderliche.</German>
+        <English>The expressions in command 'plotimplicit3d' must contain at most the variables [0], [1] and [2]. But they contain further variables.</English>
+        <Ukrainian>Вирази у команді 'plotimplicit3d' мають містити максимум зміннуі [0], [1] та [2]. Але вони містять крым неъ ще змінні.</Ukrainian>
+        <Russian>Выражения в команде 'plotimplicit3d' должны содержать максимум переменные [0], [1] и [2]. Но они содержат кроме них ещё переменные.</Russian>
     </object>
     <object id = "MCC_WRONG_FORM_OF_LIMIT_PARAMETER_IN_PLOTIMPLICIT3D">
         <German>Der [0]. Parameter im Befehl 'plotimplicit3d' muss eine reelle Zahl sein.</German>
@@ -1411,19 +1411,19 @@
     </object>
     <object id = "MCC_EXTREMA">
         <German>Lokale Extrema der Funktion </German>
-        <English>Lokal extrema of the function </English>
+        <English>Local extrema of the function </English>
         <Ukrainian>Локальний екстремум функції </Ukrainian>
         <Russian>Локальный экстремум функции </Russian>
     </object>
     <object id = "MCC_LOCAL_MINIMUM_IN">
         <German>Lokales Minimum in </German>
-        <English>Lokal minimum in </English>
+        <English>Local minimum in </English>
         <Ukrainian>Локальний мінімум у </Ukrainian>
         <Russian>Локальный минимум в </Russian>
     </object>
     <object id = "MCC_LOCAL_MAXIMUM_IN">
         <German>Lokales Maximum in </German>
-        <English>Lokal maximum in </English>
+        <English>Local maximum in </English>
         <Ukrainian>Локальний максимум у </Ukrainian>
         <Russian>Локальный максимум в  </Russian>
     </object>
