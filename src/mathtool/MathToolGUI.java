@@ -70,7 +70,6 @@ import mathtool.component.components.OutputDetailsGUI;
 import mathtool.component.components.OutputOptionsDialogGUI;
 import mathtool.component.dialogs.MathToolSaveGraphicDialog;
 import mathtool.component.dialogs.MathToolSaveSessionDialog;
-import mathtool.config.classes.MathToolConfig;
 import mathtool.enums.TypeMode;
 import mathtool.lang.translator.Translator;
 import mathtool.mathcommandcompiler.MathCommandCompiler;
@@ -209,6 +208,8 @@ public class MathToolGUI extends JFrame implements MouseListener {
     private static int fontSizeGraphic;
     private static int fontSizeText;
     private static Dimension minimumDimension;
+    private static int timeoutComputation;
+    private static int timeoutAlgorithm;
     private static boolean isRotating = false;
     private static boolean computing = false;
 
@@ -381,7 +382,9 @@ public class MathToolGUI extends JFrame implements MouseListener {
         MathCommandExecuter.setGraphicPanelVectorField2D(graphicPanelVectorField2D);
         MathCommandExecuter.setGraphicPanelVectorFieldPolar(graphicPanelVectorFieldPolar);
         MathCommandExecuter.setMathToolTextArea(mathToolTextArea);
-        MathCommandExecuter.setMathToolGraphicArea(mathToolGraphicArea, scrollPaneGraphic);
+        MathCommandExecuter.setMathToolGraphicAreaAndScrollPane(mathToolGraphicArea, scrollPaneGraphic);
+        MathToolController.setMathToolTextArea(mathToolTextArea);
+        MathToolController.setMathToolGraphicArea(mathToolGraphicArea);
 
         validate();
         repaint();
@@ -535,6 +538,20 @@ public class MathToolGUI extends JFrame implements MouseListener {
      */
     public static void setMinimumDimension(Dimension dim) {
         minimumDimension = dim;
+    }
+
+    /**
+     * Setter für timeoutComputation.
+     */
+    public static void setTimeoutComputation(int timeout) {
+        timeoutComputation = timeout;
+    }
+
+    /**
+     * Setter für timeoutAlgorithm.
+     */
+    public static void setTimeoutAlgorithm(int timeout) {
+        timeoutAlgorithm = timeout;
     }
 
     /**
@@ -1289,7 +1306,7 @@ public class MathToolGUI extends JFrame implements MouseListener {
                         return;
 
                     }
-                }, 120, TimeUnit.SECONDS);
+                }, timeoutComputation, TimeUnit.SECONDS);
 
                 return null;
 

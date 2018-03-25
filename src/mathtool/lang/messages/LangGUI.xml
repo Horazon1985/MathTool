@@ -1,5 +1,11 @@
 <objects>
     <!-- Grafische / Textliche Ausgabe -->
+    <object id = "GUI_TIMEOUT">
+        <German>Ein Timeout ist aufgetreten. Berechnung wurde abgebrochen.</German>
+        <English>Timeout occurred. Computation was aborted.</English>
+        <Ukrainian>???</Ukrainian>
+        <Russian>???</Russian>
+    </object>
     <object id = "GUI_ERROR">
         <German>FEHLER: </German>
         <English>ERROR: </English>

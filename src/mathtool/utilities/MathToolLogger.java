@@ -35,8 +35,9 @@ public class MathToolLogger {
     private static final String ALGORITHM_COMPILATION_EXCEPTION = "Exception while compiling algorithm occurred: ";
     private static final String ALGORITHM_EXECUTION_EXCEPTION = "Exception while algorithm execution occurred: ";
     private static final String COMPUTATION_ABORTED = "Computation aborted.";
-    private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
     private static final String COMPUTATION_DURATION = "Computation duration: {0} milliseconds.";
+    private static final String TIMEOUT_EXCEPTION = "Timeout occurred. Computation took too long.";
+    private static final String UNEXPECTED_EXCEPTION = "Unexpected exception occurred: ";
     
     private static final String ALGORITHM_INPUT = "Algorithm input: ";
     private static final String ALGORITHM_COMPILATION_SUCCESSFUL = "Algorithm compilation successful.";
@@ -145,6 +146,10 @@ public class MathToolLogger {
 
     private void logAlgorithmExecutionException(AlgorithmExecutionException e) {
         log.log(Level.WARNING, ALGORITHM_EXECUTION_EXCEPTION + e.getMessage() + NEXT_LINE, e);
+    }
+
+    public void logTimeoutException() {
+        log.log(Level.INFO, TIMEOUT_EXCEPTION + "{0}", NEXT_LINE);
     }
 
     private String stackTraceToString(Exception e) {

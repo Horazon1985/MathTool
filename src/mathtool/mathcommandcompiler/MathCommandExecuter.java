@@ -313,7 +313,7 @@ public abstract class MathCommandExecuter {
         graphicPanelVectorFieldPolar = gPVectorFieldPolar;
     }
 
-    public static void setMathToolGraphicArea(GraphicArea mTGraphicArea, JScrollPane scrollPane) {
+    public static void setMathToolGraphicAreaAndScrollPane(GraphicArea mTGraphicArea, JScrollPane scrollPane) {
         mathToolGraphicArea = mTGraphicArea;
         mathToolGraphicScrollPane = scrollPane;
     }

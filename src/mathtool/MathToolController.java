@@ -54,7 +54,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.xml.bind.JAXBException;
 import mathtool.component.components.ComputingDialogGUI;
 import mathtool.component.components.ErrorDialogGUI;
 import mathtool.config.ConfigLoader;
@@ -82,16 +81,32 @@ public class MathToolController {
     private static final String GUI_COMMAND = "GUI_COMMAND";
     private static final String GUI_ROTATE_GRAPH = "GUI_ROTATE_GRAPH";
 
+    private static final String GUI_TIMEOUT = "GUI_TIMEOUT";
+    
+    private static final String NEXT_LINE = System.lineSeparator();
+    
     private final static ImageIcon computingOwlEyesOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesOpen.png"));
     private final static ImageIcon computingOwlEyesHalfOpen = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesHalfOpen.png"));
     private final static ImageIcon computingOwlEyesClosed = new ImageIcon(MathToolController.class.getResource("component/components/icons/LogoOwlEyesClosed.png"));
 
     private static MathToolGUI gui;
 
+    private static JTextArea mathToolTextArea;
+
+    private static GraphicArea mathToolGraphicArea;
+    
     private static MathToolLogger log;
     
     public static void setGui(MathToolGUI mathToolGui) {
         gui = mathToolGui;
+    }
+    
+    public static void setMathToolTextArea(JTextArea area) {
+        mathToolTextArea = area;
+    }
+    
+    public static void setMathToolGraphicArea(GraphicArea area) {
+        mathToolGraphicArea = area;
     }
     
     public static MathToolLogger getLogger() {
@@ -206,6 +221,8 @@ public class MathToolController {
         MathToolGUI.setLanguage(config.getLanguage());
         MathToolGUI.setMode(config.getMode());
         MathToolGUI.setMinimumDimension(new Dimension(config.getScreenWidth(), config.getScreenHeight()));
+        MathToolGUI.setTimeoutComputation(config.getTimeoutComputation());
+        MathToolGUI.setTimeoutAlgorithm(config.getTimeoutAlgorithm());
 
         // Setzen von: Algebraische Relationen
         if (config.getOptionAlgebraicRelations()) {
@@ -943,8 +960,11 @@ public class MathToolController {
             return future.get(timeout, timeUnit);
         } catch (TimeoutException e) {
             future.cancel(true);
+            doPrintOutput(Translator.translateOutputMessage(GUI_TIMEOUT));
+            log.logTimeoutException();
             throw e;
         } catch (ExecutionException e) {
+            log.logException(e);
             Throwable t = e.getCause();
             if (t instanceof Error) {
                 throw (Error) t;
@@ -955,9 +975,9 @@ public class MathToolController {
         }
     }
     
-    
-    
-    
-    
+    private static void doPrintOutput(String out) {
+        mathToolTextArea.append(out + NEXT_LINE + NEXT_LINE);
+        mathToolGraphicArea.addComponent(out);
+    }
 
 }
