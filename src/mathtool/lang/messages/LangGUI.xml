@@ -3,8 +3,8 @@
     <object id = "GUI_TIMEOUT">
         <German>Ein Timeout ist aufgetreten. Berechnung wurde abgebrochen.</German>
         <English>Timeout occurred. Computation was aborted.</English>
-        <Ukrainian>???</Ukrainian>
-        <Russian>???</Russian>
+        <Ukrainian>Перевищено допустимий час очікування. Підрахунок зупинено.</Ukrainian>
+        <Russian>Превышено время ожидания. Расчет остановлен.</Russian>
     </object>
     <object id = "GUI_ERROR">
         <German>FEHLER: </German>
