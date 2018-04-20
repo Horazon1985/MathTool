@@ -20,7 +20,7 @@ public class LogFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
         return DATE_FORMAT.format(new Date(record.getMillis())) 
-                + " - "
+                + " - [" + record.getLevel().getName() + "]: "
                 + formatMessage(record);
     }
     
